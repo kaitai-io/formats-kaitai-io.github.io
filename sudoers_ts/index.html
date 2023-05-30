@@ -229,122 +229,122 @@ such as /run/sudo/ts/$USER or /var/lib/sudo/ts/$USER.</p>
         <h2>Format specification in Kaitai Struct YAML</h2>
 
         <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
-  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sudoers_ts</span>
-  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Sudoers Time Stamp file</span>
-  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
-  <span class="nt">tags</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">linux</span>
-  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
-<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-  <span class="no">This spec can be used to parse sudo time stamp files located in directories</span>
-  <span class="no">such as /run/sudo/ts/$USER or /var/lib/sudo/ts/$USER.</span>
-<span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://www.sudo.ws/docs/man/1.8.27/sudoers_timestamp.man/</span>
+<span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sudoers_ts</span>
+<span class="w">  </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Sudoers Time Stamp file</span>
+<span class="w">  </span><span class="nt">license</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+<span class="w">  </span><span class="nt">tags</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">linux</span>
+<span class="w">  </span><span class="nt">endian</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">le</span>
+<span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">  </span><span class="no">This spec can be used to parse sudo time stamp files located in directories</span>
+<span class="w">  </span><span class="no">such as /run/sudo/ts/$USER or /var/lib/sudo/ts/$USER.</span>
+<span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.sudo.ws/docs/man/1.8.27/sudoers_timestamp.man/</span>
 <span class="nt">seq</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">records</span>
-    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">record</span>
-    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">records</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">record</span>
+<span class="w">    </span><span class="nt">repeat</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eos</span>
 <span class="nt">types</span><span class="p">:</span>
-  <span class="nt">record</span><span class="p">:</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version number of the timestamp_entry struct</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_record</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">size of the record in bytes</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">size</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">payload</span>
-        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_record - 4</span>
-        <span class="nt">type</span><span class="p">:</span>
-          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version</span>
-          <span class="nt">cases</span><span class="p">:</span>
-            <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">record_v1</span>
-            <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">record_v2</span>
-  <span class="nt">record_v1</span><span class="p">:</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">record type</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
-        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ts_type</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">record flags</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ts_flag</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">auth_uid</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user ID that was used for authentication</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sid</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">session ID associated with tty/ppid</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ts</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">time stamp, from a monotonic time source</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">timespec</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ttydev</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">device number of the terminal associated with the session</span>
-        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type == ts_type::tty</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ppid</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ID of the parent process</span>
-        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type == ts_type::ppid</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-  <span class="nt">record_v2</span><span class="p">:</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">record type</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
-        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ts_type</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">record flags</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ts_flag</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">auth_uid</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user ID that was used for authentication</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sid</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ID of the user&#39;s terminal session, if present (when type is TS_TTY)</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">start_time</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">start time of the session leader for records of type TS_TTY or of the parent process for records of type TS_PPID</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">timespec</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ts</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">actual time stamp, from a monotonic time source</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">timespec</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ttydev</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">device number of the terminal associated with the session</span>
-        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type == ts_type::tty</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ppid</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ID of the parent process</span>
-        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type == ts_type::ppid</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-  <span class="nt">timespec</span><span class="p">:</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sec</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s8</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">seconds</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nsec</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s8</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nanoseconds</span>
-  <span class="nt">ts_flag</span><span class="p">:</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved0</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Reserved (unused) bits</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b6</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">anyuid</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ignore uid</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">TS_ANYUID</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">disabled</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entry disabled</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">TS_DISABLED</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved1</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Reserved (unused) bits</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b8</span>
+<span class="w">  </span><span class="nt">record</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">version</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">version number of the timestamp_entry struct</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u2</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len_record</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">size of the record in bytes</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u2</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">size</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payload</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len_record - 4</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">switch-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">version</span>
+<span class="w">          </span><span class="nt">cases</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">record_v1</span>
+<span class="w">            </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">record_v2</span>
+<span class="w">  </span><span class="nt">record_v1</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">type</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">record type</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u2</span>
+<span class="w">        </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ts_type</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">flags</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">record flags</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ts_flag</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">auth_uid</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">user ID that was used for authentication</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sid</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">session ID associated with tty/ppid</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ts</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">time stamp, from a monotonic time source</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">timespec</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ttydev</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">device number of the terminal associated with the session</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">type == ts_type::tty</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ppid</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ID of the parent process</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">type == ts_type::ppid</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">  </span><span class="nt">record_v2</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">type</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">record type</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u2</span>
+<span class="w">        </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ts_type</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">flags</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">record flags</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ts_flag</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">auth_uid</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">user ID that was used for authentication</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sid</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ID of the user&#39;s terminal session, if present (when type is TS_TTY)</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">start_time</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">start time of the session leader for records of type TS_TTY or of the parent process for records of type TS_PPID</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">timespec</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ts</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actual time stamp, from a monotonic time source</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">timespec</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ttydev</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">device number of the terminal associated with the session</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">type == ts_type::tty</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ppid</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ID of the parent process</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">type == ts_type::ppid</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">  </span><span class="nt">timespec</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sec</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s8</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">seconds</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nsec</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s8</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nanoseconds</span>
+<span class="w">  </span><span class="nt">ts_flag</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reserved0</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Reserved (unused) bits</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b6</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">anyuid</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ignore uid</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b1</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TS_ANYUID</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">disabled</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">entry disabled</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b1</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TS_DISABLED</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reserved1</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Reserved (unused) bits</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b8</span>
 <span class="nt">enums</span><span class="p">:</span>
-  <span class="nt">ts_type</span><span class="p">:</span>
-    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">global</span>
-    <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tty</span>
-    <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ppid</span>
-    <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lockexcl</span>
+<span class="w">  </span><span class="nt">ts_type</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">global</span>
+<span class="w">    </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tty</span>
+<span class="w">    </span><span class="nt">3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ppid</span>
+<span class="w">    </span><span class="nt">4</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lockexcl</span>
 </pre></div>
     </div>
 </section>

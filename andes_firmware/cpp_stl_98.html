@@ -255,23 +255,23 @@ and build them along with your project.</p>
         </ul>
         <div class="tab-content" style="margin-top: 6px">
             <div role="tabpanel" class="tab-pane active" id="example-local-file">
-<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;fstream&gt;</span><span class="cp"></span>
+<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;fstream&gt;</span>
 
-<span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="w"> </span><span class="nf">is</span><span class="p">(</span><span class="s">&quot;path/to/local/file.andes_firmware&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="o">::</span><span class="n">binary</span><span class="p">);</span><span class="w"></span>
+<span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="w"> </span><span class="n">is</span><span class="p">(</span><span class="s">&quot;path/to/local/file.andes_firmware&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="o">::</span><span class="n">binary</span><span class="p">);</span>
 </pre></div>
             </div>
             <div role="tabpanel" class="tab-pane" id="example-std-string">
-<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sstream&gt;</span><span class="cp"></span>
+<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sstream&gt;</span>
 
-<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span><span class="w"> </span><span class="nf">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span><span class="w"></span>
+<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span><span class="w"> </span><span class="nf">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
 </pre></div>
             </div>
             <div role="tabpanel" class="tab-pane" id="example-char-ptr">
-<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sstream&gt;</span><span class="cp"></span>
+<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sstream&gt;</span>
 
-<span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">buf</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">};</span><span class="w"></span>
-<span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">str</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="w"> </span><span class="n">buf</span><span class="p">);</span><span class="w"></span>
-<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span><span class="w"> </span><span class="nf">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span><span class="w"></span>
+<span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">buf</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">};</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">str</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="w"> </span><span class="n">buf</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span><span class="w"> </span><span class="nf">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
 </pre></div>
             </div>
         </div>
@@ -280,14 +280,14 @@ and build them along with your project.</p>
 
     <li>We need to wrap our input stream into Kaitai stream:
 
-<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/kaitaistream.h&quot;</span><span class="cp"></span>
+<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/kaitaistream.h&quot;</span>
 
-<span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="w"> </span><span class="nf">ks</span><span class="p">(</span><span class="o">&amp;</span><span class="n">is</span><span class="p">);</span><span class="w"></span>
+<span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="w"> </span><span class="nf">ks</span><span class="p">(</span><span class="o">&amp;</span><span class="n">is</span><span class="p">);</span>
 </pre></div>
     </li>
 
     <li>And finally, we can invoke the parsing:
-<div class="highlight"><pre><span></span><span class="n">andes_firmware_t</span><span class="w"> </span><span class="nf">data</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ks</span><span class="p">);</span><span class="w"></span>
+<div class="highlight"><pre><span></span><span class="n">andes_firmware_t</span><span class="w"> </span><span class="nf">data</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ks</span><span class="p">);</span>
 </pre></div>
     </li>
 </ol>
@@ -328,8 +328,8 @@ and build them along with your project.</p>
 
 <span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span><span class="cp"></span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdint.h&gt;</span>
 
 <span class="cp">#if KAITAI_STRUCT_VERSION &lt; 9000L</span>
 <span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required&quot;</span>
@@ -337,74 +337,74 @@ and build them along with your project.</p>
 
 <span class="cm">/**</span>
 <span class="cm"> * Firmware image found with MediaTek MT76xx wifi chipsets.</span>
-<span class="cm"> */</span><span class="w"></span>
+<span class="cm"> */</span>
 
-<span class="k">class</span> <span class="nc">andes_firmware_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="k">class</span><span class="w"> </span><span class="nc">andes_firmware_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
 
-<span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="k">class</span> <span class="nc">image_header_t</span><span class="p">;</span><span class="w"></span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">image_header_t</span><span class="p">;</span>
 
-<span class="w">    </span><span class="n">andes_firmware_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">andes_firmware_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="n">andes_firmware_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">andes_firmware_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
 
-<span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span><span class="w"></span>
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
 
-<span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="o">~</span><span class="n">andes_firmware_t</span><span class="p">();</span><span class="w"></span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="o">~</span><span class="n">andes_firmware_t</span><span class="p">();</span>
 
-<span class="w">    </span><span class="k">class</span> <span class="nc">image_header_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">image_header_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
 
-<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
 
-<span class="w">        </span><span class="n">image_header_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">andes_firmware_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">andes_firmware_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="n">image_header_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">andes_firmware_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">andes_firmware_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
 
-<span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
-<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span><span class="w"></span>
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
 
-<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="o">~</span><span class="n">image_header_t</span><span class="p">();</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="o">~</span><span class="n">image_header_t</span><span class="p">();</span>
 
-<span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_ilm_len</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_dlm_len</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_fw_ver</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_build_ver</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_extra</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_build_time</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">andes_firmware_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">andes_firmware_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_ilm_len</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_dlm_len</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_fw_ver</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_build_ver</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_extra</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_build_time</span><span class="p">;</span>
+<span class="w">        </span><span class="n">andes_firmware_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">        </span><span class="n">andes_firmware_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
 
-<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">ilm_len</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_ilm_len</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">dlm_len</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_dlm_len</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">fw_ver</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_fw_ver</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">build_ver</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_build_ver</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">extra</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_extra</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">build_time</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_build_time</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="n">andes_firmware_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="n">andes_firmware_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="p">};</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">ilm_len</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_ilm_len</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">dlm_len</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_dlm_len</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">fw_ver</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_fw_ver</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">build_ver</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_build_ver</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">extra</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_extra</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">build_time</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_build_time</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">andes_firmware_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">andes_firmware_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
 
-<span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="n">image_header_t</span><span class="o">*</span><span class="w"> </span><span class="n">m_image_header</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_ilm</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_dlm</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">andes_firmware_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m__raw_image_header</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">m__io__raw_image_header</span><span class="p">;</span><span class="w"></span>
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="n">image_header_t</span><span class="o">*</span><span class="w"> </span><span class="n">m_image_header</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_ilm</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_dlm</span><span class="p">;</span>
+<span class="w">    </span><span class="n">andes_firmware_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m__raw_image_header</span><span class="p">;</span>
+<span class="w">    </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">m__io__raw_image_header</span><span class="p">;</span>
 
-<span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="n">image_header_t</span><span class="o">*</span><span class="w"> </span><span class="n">image_header</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_image_header</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">ilm</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_ilm</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">dlm</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_dlm</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="n">andes_firmware_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">_raw_image_header</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__raw_image_header</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">_io__raw_image_header</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__io__raw_image_header</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="p">};</span><span class="w"></span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">image_header_t</span><span class="o">*</span><span class="w"> </span><span class="n">image_header</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_image_header</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">ilm</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_ilm</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">dlm</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_dlm</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">andes_firmware_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">_raw_image_header</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__raw_image_header</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">_io__raw_image_header</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__io__raw_image_header</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">};</span>
 
 <span class="cp">#endif  </span><span class="c1">// ANDES_FIRMWARE_H_</span>
 </pre></div>
@@ -425,70 +425,70 @@ and build them along with your project.</p>
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;andes_firmware.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;andes_firmware.h&quot;</span>
 
-<span class="n">andes_firmware_t</span><span class="o">::</span><span class="n">andes_firmware_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">andes_firmware_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_image_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__io__raw_image_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
+<span class="n">andes_firmware_t</span><span class="o">::</span><span class="n">andes_firmware_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">andes_firmware_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_image_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__io__raw_image_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
 
-<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="p">(...)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">_clean_up</span><span class="p">();</span><span class="w"></span>
-<span class="w">        </span><span class="k">throw</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="p">(...)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="w">        </span><span class="k">throw</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 
-<span class="kt">void</span><span class="w"> </span><span class="n">andes_firmware_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__raw_image_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__io__raw_image_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_image_header</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_image_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">image_header_t</span><span class="p">(</span><span class="n">m__io__raw_image_header</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_ilm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">image_header</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">ilm_len</span><span class="p">());</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_dlm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">image_header</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">dlm_len</span><span class="p">());</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">void</span><span class="w"> </span><span class="n">andes_firmware_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__raw_image_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">);</span>
+<span class="w">    </span><span class="n">m__io__raw_image_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_image_header</span><span class="p">);</span>
+<span class="w">    </span><span class="n">m_image_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">image_header_t</span><span class="p">(</span><span class="n">m__io__raw_image_header</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">);</span>
+<span class="w">    </span><span class="n">m_ilm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">image_header</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">ilm_len</span><span class="p">());</span>
+<span class="w">    </span><span class="n">m_dlm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">image_header</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">dlm_len</span><span class="p">());</span>
+<span class="p">}</span>
 
-<span class="n">andes_firmware_t</span><span class="o">::~</span><span class="n">andes_firmware_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="n">andes_firmware_t</span><span class="o">::~</span><span class="n">andes_firmware_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
 
-<span class="kt">void</span><span class="w"> </span><span class="n">andes_firmware_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m__io__raw_image_header</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="k">delete</span><span class="w"> </span><span class="n">m__io__raw_image_header</span><span class="p">;</span><span class="w"> </span><span class="n">m__io__raw_image_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_image_header</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="k">delete</span><span class="w"> </span><span class="n">m_image_header</span><span class="p">;</span><span class="w"> </span><span class="n">m_image_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">void</span><span class="w"> </span><span class="n">andes_firmware_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m__io__raw_image_header</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">delete</span><span class="w"> </span><span class="n">m__io__raw_image_header</span><span class="p">;</span><span class="w"> </span><span class="n">m__io__raw_image_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_image_header</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">delete</span><span class="w"> </span><span class="n">m_image_header</span><span class="p">;</span><span class="w"> </span><span class="n">m_image_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 
-<span class="n">andes_firmware_t</span><span class="o">::</span><span class="n">image_header_t</span><span class="o">::</span><span class="n">image_header_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">andes_firmware_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">andes_firmware_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span><span class="w"></span>
+<span class="n">andes_firmware_t</span><span class="o">::</span><span class="n">image_header_t</span><span class="o">::</span><span class="n">image_header_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">andes_firmware_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">andes_firmware_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
 
-<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="p">(...)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">_clean_up</span><span class="p">();</span><span class="w"></span>
-<span class="w">        </span><span class="k">throw</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="p">(...)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="w">        </span><span class="k">throw</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 
-<span class="kt">void</span><span class="w"> </span><span class="n">andes_firmware_t</span><span class="o">::</span><span class="n">image_header_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_ilm_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_dlm_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_fw_ver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_build_ver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_extra</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_build_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">),</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">void</span><span class="w"> </span><span class="n">andes_firmware_t</span><span class="o">::</span><span class="n">image_header_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_ilm_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_dlm_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_fw_ver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_build_ver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_extra</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_build_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">),</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+<span class="p">}</span>
 
-<span class="n">andes_firmware_t</span><span class="o">::</span><span class="n">image_header_t</span><span class="o">::~</span><span class="n">image_header_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="n">andes_firmware_t</span><span class="o">::</span><span class="n">image_header_t</span><span class="o">::~</span><span class="n">image_header_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
 
-<span class="kt">void</span><span class="w"> </span><span class="n">andes_firmware_t</span><span class="o">::</span><span class="n">image_header_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">void</span><span class="w"> </span><span class="n">andes_firmware_t</span><span class="o">::</span><span class="n">image_header_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
 </pre></div>
 
         </div>

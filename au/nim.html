@@ -278,158 +278,158 @@ section#format-index .row {
         </div>
 
         <div class="row">
-            <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">kaitai_struct_nim_runtime</span>
-<span class="kn">import</span> <span class="n">options</span>
+            <div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="n">kaitai_struct_nim_runtime</span>
+<span class="kn">import</span><span class="w"> </span><span class="n">options</span>
 
 <span class="k">type</span>
-  <span class="n">Au</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">ofsData</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">header</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Au_Header</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">rawHeader</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">lenDataInst</span><span class="p">`:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">lenDataInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
-  <span class="n">Au_Encodings</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
-    <span class="n">mulaw_8</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">linear_8</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="n">linear_16</span> <span class="o">=</span> <span class="mi">3</span>
-    <span class="n">linear_24</span> <span class="o">=</span> <span class="mi">4</span>
-    <span class="n">linear_32</span> <span class="o">=</span> <span class="mi">5</span>
-    <span class="kt">float</span> <span class="o">=</span> <span class="mi">6</span>
-    <span class="n">double</span> <span class="o">=</span> <span class="mi">7</span>
-    <span class="n">fragmented</span> <span class="o">=</span> <span class="mi">8</span>
-    <span class="n">nested</span> <span class="o">=</span> <span class="mi">9</span>
-    <span class="n">dsp_core</span> <span class="o">=</span> <span class="mi">10</span>
-    <span class="n">fixed_point_8</span> <span class="o">=</span> <span class="mi">11</span>
-    <span class="n">fixed_point_16</span> <span class="o">=</span> <span class="mi">12</span>
-    <span class="n">fixed_point_24</span> <span class="o">=</span> <span class="mi">13</span>
-    <span class="n">fixed_point_32</span> <span class="o">=</span> <span class="mi">14</span>
-    <span class="n">display</span> <span class="o">=</span> <span class="mi">16</span>
-    <span class="n">mulaw_squelch</span> <span class="o">=</span> <span class="mi">17</span>
-    <span class="n">emphasized</span> <span class="o">=</span> <span class="mi">18</span>
-    <span class="n">compressed</span> <span class="o">=</span> <span class="mi">19</span>
-    <span class="n">compressed_emphasized</span> <span class="o">=</span> <span class="mi">20</span>
-    <span class="n">dsp_commands</span> <span class="o">=</span> <span class="mi">21</span>
-    <span class="n">dsp_commands_samples</span> <span class="o">=</span> <span class="mi">22</span>
-    <span class="n">adpcm_g721</span> <span class="o">=</span> <span class="mi">23</span>
-    <span class="n">adpcm_g722</span> <span class="o">=</span> <span class="mi">24</span>
-    <span class="n">adpcm_g723_3</span> <span class="o">=</span> <span class="mi">25</span>
-    <span class="n">adpcm_g723_5</span> <span class="o">=</span> <span class="mi">26</span>
-    <span class="n">alaw_8</span> <span class="o">=</span> <span class="mi">27</span>
-    <span class="n">aes</span> <span class="o">=</span> <span class="mi">28</span>
-    <span class="n">delta_mulaw_8</span> <span class="o">=</span> <span class="mi">29</span>
-  <span class="n">Au_Header</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">dataSize</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">encoding</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Au_Encodings</span>
-    <span class="p">`</span><span class="n">sampleRate</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">numChannels</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">comment</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Au</span>
+<span class="w">  </span><span class="n">Au</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">ofsData</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">header</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Au_Header</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">rawHeader</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lenDataInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">int</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lenDataInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">  </span><span class="n">Au_Encodings</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">enum</span>
+<span class="w">    </span><span class="n">mulaw_8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="n">linear_8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">    </span><span class="n">linear_16</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">    </span><span class="n">linear_24</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">    </span><span class="n">linear_32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
+<span class="w">    </span><span class="nb">float</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span>
+<span class="w">    </span><span class="n">double</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span>
+<span class="w">    </span><span class="n">fragmented</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span>
+<span class="w">    </span><span class="n">nested</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">9</span>
+<span class="w">    </span><span class="n">dsp_core</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span>
+<span class="w">    </span><span class="n">fixed_point_8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">11</span>
+<span class="w">    </span><span class="n">fixed_point_16</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span>
+<span class="w">    </span><span class="n">fixed_point_24</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">13</span>
+<span class="w">    </span><span class="n">fixed_point_32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">14</span>
+<span class="w">    </span><span class="n">display</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">16</span>
+<span class="w">    </span><span class="n">mulaw_squelch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">17</span>
+<span class="w">    </span><span class="n">emphasized</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">18</span>
+<span class="w">    </span><span class="n">compressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">19</span>
+<span class="w">    </span><span class="n">compressed_emphasized</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span>
+<span class="w">    </span><span class="n">dsp_commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">21</span>
+<span class="w">    </span><span class="n">dsp_commands_samples</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">22</span>
+<span class="w">    </span><span class="n">adpcm_g721</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">23</span>
+<span class="w">    </span><span class="n">adpcm_g722</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">24</span>
+<span class="w">    </span><span class="n">adpcm_g723_3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">25</span>
+<span class="w">    </span><span class="n">adpcm_g723_5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">26</span>
+<span class="w">    </span><span class="n">alaw_8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">27</span>
+<span class="w">    </span><span class="n">aes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">28</span>
+<span class="w">    </span><span class="n">delta_mulaw_8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">29</span>
+<span class="w">  </span><span class="n">Au_Header</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">dataSize</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">encoding</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Au_Encodings</span>
+<span class="w">    </span><span class="p">`</span><span class="n">sampleRate</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">numChannels</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">comment</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">string</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Au</span>
 
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Au], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Au</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Au_Header], io: KaitaiStream, root: KaitaiStruct, parent: Au): Au_Header</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Au], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Au</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Au_Header], io: KaitaiStream, root: KaitaiStruct, parent: Au): Au_Header</span>
 
-<span class="k">proc </span><span class="nf">lenData</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Au</span><span class="p">):</span> <span class="kt">int</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">lenData</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Au</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span>
 
 
 <span class="sd">##[</span>
-<span class="n">The</span> <span class="n">NeXT</span><span class="o">/</span><span class="n">Sun</span> <span class="n">audio</span> <span class="n">file</span> <span class="n">format</span><span class="p">.</span>
+<span class="sd">The NeXT/Sun audio file format.</span>
 
-<span class="n">Sample</span> <span class="n">files</span><span class="p">:</span>
+<span class="sd">Sample files:</span>
 
-<span class="o">*</span> <span class="o">&lt;</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="n">cpython</span><span class="o">/</span><span class="n">tree</span><span class="o">/</span><span class="n">b8a7daf077da</span><span class="o">/</span><span class="n">Lib</span><span class="o">/</span><span class="n">test</span><span class="o">/</span><span class="n">sndhdrdata</span><span class="o">&gt;</span>
-<span class="o">*</span> <span class="o">&lt;</span><span class="n">ftp</span><span class="p">:</span><span class="o">//</span><span class="n">ftp</span><span class="o">-</span><span class="n">ccrma</span><span class="p">.</span><span class="n">stanford</span><span class="p">.</span><span class="n">edu</span><span class="o">/</span><span class="n">pub</span><span class="o">/</span><span class="n">Lisp</span><span class="o">/</span><span class="n">sf</span><span class="p">.</span><span class="n">tar</span><span class="p">.</span><span class="n">gz</span><span class="o">&gt;</span>
-<span class="o">*</span> <span class="o">&lt;</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="p">.</span><span class="n">mmsp</span><span class="p">.</span><span class="n">ece</span><span class="p">.</span><span class="n">mcgill</span><span class="p">.</span><span class="n">ca</span><span class="o">/</span><span class="n">Documents</span><span class="o">/</span><span class="n">AudioFormats</span><span class="o">/</span><span class="n">AU</span><span class="o">/</span><span class="n">Samples</span><span class="p">.</span><span class="n">html</span><span class="o">&gt;</span>
+<span class="sd">* &lt;https://github.com/python/cpython/tree/b8a7daf077da/Lib/test/sndhdrdata&gt;</span>
+<span class="sd">* &lt;ftp://ftp-ccrma.stanford.edu/pub/Lisp/sf.tar.gz&gt;</span>
+<span class="sd">* &lt;https://www.mmsp.ece.mcgill.ca/Documents/AudioFormats/AU/Samples.html&gt;</span>
 
-<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://www.mmsp.ece.mcgill.ca/Documents/AudioFormats/AU/AU.html&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
-<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;http://soundfile.sapp.org/doc/NextFormat/&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
-<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;http://soundfile.sapp.org/doc/NextFormat/soundstruct.h&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
-<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://github.com/andreiw/polaris/blob/deb47cb/usr/src/head/audio/au.h#L87-L112&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
-<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://github.com/libsndfile/libsndfile/blob/86c9f9eb/src/au.c#L39-L74&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
-<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://github.com/chirlu/sox/blob/dd8b63bd/src/au.c#L34-L49&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
-<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://github.com/mpruett/audiofile/blob/b62c902/libaudiofile/NeXT.cpp#L65-L96&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
-<span class="o">]</span><span class="sd">##</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Au], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Au =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Au</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Au</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Au</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="sd">@see &lt;a href=&quot;https://www.mmsp.ece.mcgill.ca/Documents/AudioFormats/AU/AU.html&quot;&gt;Source&lt;/a&gt;</span>
+<span class="sd">@see &lt;a href=&quot;http://soundfile.sapp.org/doc/NextFormat/&quot;&gt;Source&lt;/a&gt;</span>
+<span class="sd">@see &lt;a href=&quot;http://soundfile.sapp.org/doc/NextFormat/soundstruct.h&quot;&gt;Source&lt;/a&gt;</span>
+<span class="sd">@see &lt;a href=&quot;https://github.com/andreiw/polaris/blob/deb47cb/usr/src/head/audio/au.h#L87-L112&quot;&gt;Source&lt;/a&gt;</span>
+<span class="sd">@see &lt;a href=&quot;https://github.com/libsndfile/libsndfile/blob/86c9f9eb/src/au.c#L39-L74&quot;&gt;Source&lt;/a&gt;</span>
+<span class="sd">@see &lt;a href=&quot;https://github.com/chirlu/sox/blob/dd8b63bd/src/au.c#L34-L49&quot;&gt;Source&lt;/a&gt;</span>
+<span class="sd">@see &lt;a href=&quot;https://github.com/mpruett/audiofile/blob/b62c902/libaudiofile/NeXT.cpp#L65-L96&quot;&gt;Source&lt;/a&gt;</span>
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Au], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Au =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Au</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Au</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Au</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
-  <span class="k">let</span> <span class="n">magicExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">magicExpr</span>
-  <span class="k">let</span> <span class="n">ofsDataExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">ofsData</span> <span class="o">=</span> <span class="n">ofsDataExpr</span>
-  <span class="k">let</span> <span class="n">rawHeaderExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">ofsData</span> <span class="o">-</span> <span class="mi">4</span><span class="p">)</span> <span class="o">-</span> <span class="mi">4</span><span class="p">)))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">rawHeader</span> <span class="o">=</span> <span class="n">rawHeaderExpr</span>
-  <span class="k">let</span> <span class="n">rawHeaderIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawHeaderExpr</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">headerExpr</span> <span class="o">=</span> <span class="n">Au_Header</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawHeaderIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">headerExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">magicExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">magicExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">ofsDataExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">ofsData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ofsDataExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawHeaderExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">ofsData</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">)))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">rawHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawHeaderExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawHeaderIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawHeaderExpr</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">headerExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Au_Header</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawHeaderIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">headerExpr</span>
 
-<span class="k">proc </span><span class="nf">lenData</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Au</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenDataInstFlag</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenDataInst</span>
-  <span class="k">let</span> <span class="n">lenDataInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">dataSize</span> <span class="o">==</span> <span class="mi">4294967295</span><span class="il">&#39;i64</span><span class="p">:</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">size</span> <span class="o">-</span> <span class="n">this</span><span class="p">.</span><span class="n">ofsData</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">dataSize</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">lenDataInst</span> <span class="o">=</span> <span class="n">lenDataInstExpr</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">lenDataInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
-  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenDataInst</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">lenData</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Au</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lenDataInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lenDataInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenDataInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">((</span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">dataSize</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">4294967295</span><span class="il">&#39;i64</span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">ofsData</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">dataSize</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenDataInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenDataInstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenDataInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lenDataInst</span>
 
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Au], filename: string): Au =</span>
-  <span class="n">Au</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Au], filename: string): Au =</span>
+<span class="w">  </span><span class="n">Au</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Au_Header], io: KaitaiStream, root: KaitaiStruct, parent: Au): Au_Header =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Au_Header</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Au</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Au</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Au_Header], io: KaitaiStream, root: KaitaiStruct, parent: Au): Au_Header =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Au_Header</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Au</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Au</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
 
-  <span class="sd">##[</span>
-  <span class="n">don</span><span class="sc">&#39;t read this field, access `_root.len_data` instead</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  don&#39;t read this field, access `_root.len_data` instead</span>
 
-<span class="n">value</span> <span class="p">`</span><span class="mh">0xffff_ffff</span><span class="p">`</span> <span class="n">means</span> <span class="n">unspecified</span> <span class="n">size</span>
+<span class="sd">value `0xffff_ffff` means unspecified size</span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">dataSizeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">dataSize</span> <span class="o">=</span> <span class="n">dataSizeExpr</span>
-  <span class="k">let</span> <span class="n">encodingExpr</span> <span class="o">=</span> <span class="n">Au_Encodings</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">())</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="n">encodingExpr</span>
-  <span class="k">let</span> <span class="n">sampleRateExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">sampleRate</span> <span class="o">=</span> <span class="n">sampleRateExpr</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">dataSizeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">dataSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dataSizeExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">encodingExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Au_Encodings</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">())</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">encoding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">encodingExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">sampleRateExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">sampleRate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sampleRateExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">number</span> <span class="k">of</span> <span class="n">interleaved</span> <span class="n">channels</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">numChannelsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">numChannels</span> <span class="o">=</span> <span class="n">numChannelsExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  number of interleaved channels</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">numChannelsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">numChannels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">numChannelsExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Most</span> <span class="n">resources</span> <span class="n">claim</span> <span class="n">that</span> <span class="n">this</span> <span class="n">field</span> <span class="n">must</span> <span class="n">be</span> <span class="n">at</span> <span class="n">least</span> <span class="mi">4</span> <span class="n">bytes</span> <span class="n">long</span><span class="p">.</span>
-<span class="n">However</span><span class="p">,</span> <span class="n">most</span> <span class="n">programs</span> <span class="n">don</span><span class="sc">&#39;t enforce it, and [Audacity](</span>
-<span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="p">.</span><span class="n">audacityteam</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="p">)</span> <span class="n">even</span> <span class="n">generates</span> <span class="p">.</span><span class="n">au</span> <span class="n">files</span> <span class="n">with</span> <span class="n">this</span> <span class="n">field</span>
-<span class="n">being</span> <span class="mi">0</span><span class="o">-</span><span class="n">byte</span> <span class="n">long</span><span class="p">.</span> <span class="n">According</span> <span class="n">to</span> <span class="o">&lt;</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">nixdoc</span><span class="p">.</span><span class="n">net</span><span class="o">/</span><span class="n">man</span><span class="o">-</span><span class="n">pages</span><span class="o">/</span><span class="n">IRIX</span><span class="o">/</span><span class="n">man4</span><span class="o">/</span><span class="n">dmedia</span><span class="o">/</span><span class="n">next</span><span class="p">.</span><span class="mf">4.</span><span class="n">html</span><span class="o">&gt;</span><span class="p">,</span>
-<span class="s">&quot;NeXT files require that this chunk be at least 4 bytes (chars) long,</span>
-<span class="n">whereas</span> <span class="n">this</span> <span class="n">chunk</span> <span class="n">may</span> <span class="n">be</span> <span class="n">zerolength</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">Sun</span> <span class="p">.</span><span class="n">au</span> <span class="n">file</span><span class="p">.</span><span class="s">&quot;</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Most resources claim that this field must be at least 4 bytes long.</span>
+<span class="sd">However, most programs don&#39;t enforce it, and [Audacity](</span>
+<span class="sd">https://www.audacityteam.org/) even generates .au files with this field</span>
+<span class="sd">being 0-byte long. According to &lt;https://nixdoc.net/man-pages/IRIX/man4/dmedia/next.4.html&gt;,</span>
+<span class="sd">&quot;NeXT files require that this chunk be at least 4 bytes (chars) long,</span>
+<span class="sd">whereas this chunk may be zerolength in a Sun .au file.&quot;</span>
 
-<span class="n">By</span> <span class="n">convention</span><span class="p">,</span> <span class="n">size</span> <span class="n">should</span> <span class="n">be</span> <span class="n">a</span> <span class="n">multiple</span> <span class="k">of</span> <span class="mi">4</span> <span class="o">-</span>
-<span class="n">see</span> <span class="o">&lt;</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">chirlu</span><span class="o">/</span><span class="n">sox</span><span class="o">/</span><span class="n">blob</span><span class="o">/</span><span class="n">dd8b63bd</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">au</span><span class="p">.</span><span class="n">c</span><span class="c">#L132-L133&gt;.</span>
-<span class="n">Page</span> <span class="o">&lt;</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">soundfile</span><span class="p">.</span><span class="n">sapp</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">NextFormat</span><span class="o">/&gt;</span> <span class="n">also</span> <span class="n">mentions</span> <span class="n">that</span> <span class="k">for</span> <span class="n">some</span>
-<span class="n">sound</span> <span class="n">playing</span> <span class="n">programs</span><span class="p">,</span> <span class="n">this</span> <span class="n">field</span> <span class="n">must</span> <span class="n">have</span> <span class="n">an</span> <span class="n">even</span> <span class="n">byte</span> <span class="n">size</span><span class="p">.</span> <span class="n">So</span> <span class="n">a</span> <span class="n">multiple</span>
-<span class="k">of</span> <span class="mi">4</span> <span class="ow">is</span> <span class="n">probably</span> <span class="n">best</span> <span class="k">for</span> <span class="n">compatibility</span><span class="p">.</span>
+<span class="sd">By convention, size should be a multiple of 4 -</span>
+<span class="sd">see &lt;https://github.com/chirlu/sox/blob/dd8b63bd/src/au.c#L132-L133&gt;.</span>
+<span class="sd">Page &lt;http://soundfile.sapp.org/doc/NextFormat/&gt; also mentions that for some</span>
+<span class="sd">sound playing programs, this field must have an even byte size. So a multiple</span>
+<span class="sd">of 4 is probably best for compatibility.</span>
 
-<span class="n">Must</span> <span class="n">be</span> <span class="n">null</span><span class="o">-</span><span class="n">terminated</span><span class="p">.</span> <span class="n">It</span> <span class="ow">is</span> <span class="n">usually</span> <span class="n">an</span> <span class="n">ASCII</span> <span class="n">text</span> <span class="kt">string</span><span class="p">,</span> <span class="n">but</span> <span class="n">this</span> <span class="n">space</span>
-<span class="n">might</span> <span class="n">be</span> <span class="n">also</span> <span class="n">used</span> <span class="n">to</span> <span class="n">store</span> <span class="n">application</span><span class="o">-</span><span class="n">specific</span> <span class="n">binary</span> <span class="p">(</span><span class="n">i</span><span class="p">.</span><span class="n">e</span><span class="p">.</span> <span class="n">non</span><span class="o">-</span><span class="n">ASCII</span><span class="p">)</span> <span class="n">data</span><span class="p">.</span>
+<span class="sd">Must be null-terminated. It is usually an ASCII text string, but this space</span>
+<span class="sd">might be also used to store application-specific binary (i.e. non-ASCII) data.</span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">commentExpr</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesFull</span><span class="p">().</span><span class="n">bytesTerminate</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">),</span> <span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">comment</span> <span class="o">=</span> <span class="n">commentExpr</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">commentExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesFull</span><span class="p">().</span><span class="n">bytesTerminate</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kp">false</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">comment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">commentExpr</span>
 
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Au_Header], filename: string): Au_Header =</span>
-  <span class="n">Au_Header</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Au_Header], filename: string): Au_Header =</span>
+<span class="w">  </span><span class="n">Au_Header</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 </pre></div>
 
         </div>

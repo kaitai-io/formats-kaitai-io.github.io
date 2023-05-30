@@ -283,19 +283,19 @@ can also be found there.</p>
 
 
 
-<div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="n">GoogleProtobuf</span><span class="p">.</span><span class="n">FromFile</span><span class="p">(</span><span class="s">&quot;path/to/local/file.google_protobuf&quot;</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><span class="kt">var</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GoogleProtobuf</span><span class="p">.</span><span class="n">FromFile</span><span class="p">(</span><span class="s">&quot;path/to/local/file.google_protobuf&quot;</span><span class="p">);</span>
 </pre></div>
 
 <p>Or parse structure from a byte array:</p>
 
-<div class="highlight"><pre><span></span><span class="kt">byte</span><span class="p">[]</span> <span class="n">someArray</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
-<span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">GoogleProtobuf</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">someArray</span><span class="p">));</span>
+<div class="highlight"><pre><span></span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">someArray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">};</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">GoogleProtobuf</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">someArray</span><span class="p">));</span>
 </pre></div>
 
 <p>After that, one can get various attributes from the structure by accessing properties like:</p>
 
 
-<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">Pairs</span> <span class="c1">// =&gt; Key-value pairs which constitute a message</span>
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">Pairs</span><span class="w"> </span><span class="c1">// =&gt; Key-value pairs which constitute a message</span>
 </pre></div>
 
     </div>
@@ -325,220 +325,220 @@ can also be found there.</p>
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">System.Collections.Generic</span><span class="p">;</span>
 
-<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">Kaitai</span>
 <span class="p">{</span>
 
-    <span class="c1">/// &lt;summary&gt;</span>
-    <span class="c1">/// Google Protocol Buffers (AKA protobuf) is a popular data</span>
-    <span class="c1">/// serialization scheme used for communication protocols, data storage,</span>
-    <span class="c1">/// etc. There are implementations are available for almost every</span>
-    <span class="c1">/// popular language. The focus points of this scheme are brevity (data</span>
-    <span class="c1">/// is encoded in a very size-efficient manner) and extensibility (one</span>
-    <span class="c1">/// can add keys to the structure, while keeping it readable in previous</span>
-    <span class="c1">/// version of software).</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// Protobuf uses semi-self-describing encoding scheme for its</span>
-    <span class="c1">/// messages. It means that it is possible to parse overall structure of</span>
-    <span class="c1">/// the message (skipping over fields one can&#39;t understand), but to</span>
-    <span class="c1">/// fully understand the message, one needs a protocol definition file</span>
-    <span class="c1">/// (`.proto`). To be specific:</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// * &amp;quot;Keys&amp;quot; in key-value pairs provided in the message are identified</span>
-    <span class="c1">///   only with an integer &amp;quot;field tag&amp;quot;. `.proto` file provides info on</span>
-    <span class="c1">///   which symbolic field names these field tags map to.</span>
-    <span class="c1">/// * &amp;quot;Keys&amp;quot; also provide something called &amp;quot;wire type&amp;quot;. It&#39;s not a data</span>
-    <span class="c1">///   type in its common sense (i.e. you can&#39;t, for example, distinguish</span>
-    <span class="c1">///   `sint32` vs `uint32` vs some enum, or `string` from `bytes`), but</span>
-    <span class="c1">///   it&#39;s enough information to determine how many bytes to</span>
-    <span class="c1">///   parse. Interpretation of the value should be done according to the</span>
-    <span class="c1">///   type specified in `.proto` file.</span>
-    <span class="c1">/// * There&#39;s no direct information on which fields are optional /</span>
-    <span class="c1">///   required, which fields may be repeated or constitute a map, what</span>
-    <span class="c1">///   restrictions are placed on fields usage in a single message, what</span>
-    <span class="c1">///   are the fields&#39; default values, etc, etc.</span>
-    <span class="c1">/// &lt;/summary&gt;</span>
-    <span class="c1">/// &lt;remarks&gt;</span>
-    <span class="c1">/// Reference: &lt;a href=&quot;https://protobuf.dev/programming-guides/encoding/&quot;&gt;Source&lt;/a&gt;</span>
-    <span class="c1">/// &lt;/remarks&gt;</span>
-    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">GoogleProtobuf</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">{</span>
-        <span class="k">public</span> <span class="k">static</span> <span class="n">GoogleProtobuf</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">return</span> <span class="k">new</span> <span class="nf">GoogleProtobuf</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-        <span class="p">}</span>
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Google Protocol Buffers (AKA protobuf) is a popular data</span>
+<span class="w">    </span><span class="c1">/// serialization scheme used for communication protocols, data storage,</span>
+<span class="w">    </span><span class="c1">/// etc. There are implementations are available for almost every</span>
+<span class="w">    </span><span class="c1">/// popular language. The focus points of this scheme are brevity (data</span>
+<span class="w">    </span><span class="c1">/// is encoded in a very size-efficient manner) and extensibility (one</span>
+<span class="w">    </span><span class="c1">/// can add keys to the structure, while keeping it readable in previous</span>
+<span class="w">    </span><span class="c1">/// version of software).</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// Protobuf uses semi-self-describing encoding scheme for its</span>
+<span class="w">    </span><span class="c1">/// messages. It means that it is possible to parse overall structure of</span>
+<span class="w">    </span><span class="c1">/// the message (skipping over fields one can&#39;t understand), but to</span>
+<span class="w">    </span><span class="c1">/// fully understand the message, one needs a protocol definition file</span>
+<span class="w">    </span><span class="c1">/// (`.proto`). To be specific:</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// * &amp;quot;Keys&amp;quot; in key-value pairs provided in the message are identified</span>
+<span class="w">    </span><span class="c1">///   only with an integer &amp;quot;field tag&amp;quot;. `.proto` file provides info on</span>
+<span class="w">    </span><span class="c1">///   which symbolic field names these field tags map to.</span>
+<span class="w">    </span><span class="c1">/// * &amp;quot;Keys&amp;quot; also provide something called &amp;quot;wire type&amp;quot;. It&#39;s not a data</span>
+<span class="w">    </span><span class="c1">///   type in its common sense (i.e. you can&#39;t, for example, distinguish</span>
+<span class="w">    </span><span class="c1">///   `sint32` vs `uint32` vs some enum, or `string` from `bytes`), but</span>
+<span class="w">    </span><span class="c1">///   it&#39;s enough information to determine how many bytes to</span>
+<span class="w">    </span><span class="c1">///   parse. Interpretation of the value should be done according to the</span>
+<span class="w">    </span><span class="c1">///   type specified in `.proto` file.</span>
+<span class="w">    </span><span class="c1">/// * There&#39;s no direct information on which fields are optional /</span>
+<span class="w">    </span><span class="c1">///   required, which fields may be repeated or constitute a map, what</span>
+<span class="w">    </span><span class="c1">///   restrictions are placed on fields usage in a single message, what</span>
+<span class="w">    </span><span class="c1">///   are the fields&#39; default values, etc, etc.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;https://protobuf.dev/programming-guides/encoding/&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">GoogleProtobuf</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">GoogleProtobuf</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">GoogleProtobuf</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
 
-        <span class="k">public</span> <span class="nf">GoogleProtobuf</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">GoogleProtobuf</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
-            <span class="n">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-        <span class="p">{</span>
-            <span class="n">_pairs</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Pair</span><span class="p">&gt;();</span>
-            <span class="p">{</span>
-                <span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
-                <span class="k">while</span> <span class="p">(!</span><span class="n">m_io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="n">_pairs</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Pair</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
-                    <span class="n">i</span><span class="p">++;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="nf">GoogleProtobuf</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">GoogleProtobuf</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">            </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">            </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">_pairs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Pair</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="kt">var</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span>
+<span class="w">                </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">m_io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">_pairs</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Pair</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">));</span>
+<span class="w">                    </span><span class="n">i</span><span class="o">++</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
 
-        <span class="c1">/// &lt;summary&gt;</span>
-        <span class="c1">/// Key-value pair</span>
-        <span class="c1">/// &lt;/summary&gt;</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Pair</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">Pair</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">Pair</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">        </span><span class="c1">/// Key-value pair</span>
+<span class="w">        </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Pair</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">Pair</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">Pair</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
 
-            <span class="k">public</span> <span class="k">enum</span> <span class="n">WireTypes</span>
-            <span class="p">{</span>
-                <span class="n">Varint</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
-                <span class="n">Bit64</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
-                <span class="n">LenDelimited</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
-                <span class="n">GroupStart</span> <span class="p">=</span> <span class="m">3</span><span class="p">,</span>
-                <span class="n">GroupEnd</span> <span class="p">=</span> <span class="m">4</span><span class="p">,</span>
-                <span class="n">Bit32</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span>
-            <span class="p">}</span>
-            <span class="k">public</span> <span class="nf">Pair</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">GoogleProtobuf</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">GoogleProtobuf</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">f_wireType</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_fieldTag</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_key</span> <span class="p">=</span> <span class="k">new</span> <span class="n">VlqBase128Le</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="n">WireType</span><span class="p">)</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">WireTypes</span><span class="p">.</span><span class="n">Varint</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_value</span> <span class="p">=</span> <span class="k">new</span> <span class="n">VlqBase128Le</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">WireTypes</span><span class="p">.</span><span class="n">LenDelimited</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_value</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DelimitedBytes</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">WireTypes</span><span class="p">.</span><span class="n">Bit64</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">WireTypes</span><span class="p">.</span><span class="n">Bit32</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_wireType</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">WireTypes</span> <span class="n">_wireType</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="n">WireTypes</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">Varint</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span>
+<span class="w">                </span><span class="n">Bit64</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">,</span>
+<span class="w">                </span><span class="n">LenDelimited</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">,</span>
+<span class="w">                </span><span class="n">GroupStart</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span><span class="p">,</span>
+<span class="w">                </span><span class="n">GroupEnd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">,</span>
+<span class="w">                </span><span class="n">Bit32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span><span class="p">,</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">Pair</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">GoogleProtobuf</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">GoogleProtobuf</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_wireType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_fieldTag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">VlqBase128Le</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
+<span class="w">                </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">WireType</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">case</span><span class="w"> </span><span class="n">WireTypes</span><span class="p">.</span><span class="n">Varint</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">VlqBase128Le</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
+<span class="w">                    </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">case</span><span class="w"> </span><span class="n">WireTypes</span><span class="p">.</span><span class="n">LenDelimited</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DelimitedBytes</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                    </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">case</span><span class="w"> </span><span class="n">WireTypes</span><span class="p">.</span><span class="n">Bit64</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+<span class="w">                    </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">case</span><span class="w"> </span><span class="n">WireTypes</span><span class="p">.</span><span class="n">Bit32</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+<span class="w">                    </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_wireType</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">WireTypes</span><span class="w"> </span><span class="n">_wireType</span><span class="p">;</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// &amp;quot;Wire type&amp;quot; is a part of the &amp;quot;key&amp;quot; that carries enough</span>
-            <span class="c1">/// information to parse value from the wire, i.e. read correct</span>
-            <span class="c1">/// amount of bytes, but there&#39;s not enough informaton to</span>
-            <span class="c1">/// interprete in unambiguously. For example, one can&#39;t clearly</span>
-            <span class="c1">/// distinguish 64-bit fixed-sized integers from 64-bit floats,</span>
-            <span class="c1">/// signed zigzag-encoded varints from regular unsigned varints,</span>
-            <span class="c1">/// arbitrary bytes from UTF-8 encoded strings, etc.</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="n">WireTypes</span> <span class="n">WireType</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_wireType</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_wireType</span><span class="p">;</span>
-                    <span class="n">_wireType</span> <span class="p">=</span> <span class="p">(</span><span class="n">WireTypes</span><span class="p">)</span> <span class="p">(((</span><span class="n">WireTypes</span><span class="p">)</span> <span class="p">(</span><span class="n">Key</span><span class="p">.</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">7</span><span class="p">)));</span>
-                    <span class="n">f_wireType</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_wireType</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_fieldTag</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">int</span> <span class="n">_fieldTag</span><span class="p">;</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// &amp;quot;Wire type&amp;quot; is a part of the &amp;quot;key&amp;quot; that carries enough</span>
+<span class="w">            </span><span class="c1">/// information to parse value from the wire, i.e. read correct</span>
+<span class="w">            </span><span class="c1">/// amount of bytes, but there&#39;s not enough informaton to</span>
+<span class="w">            </span><span class="c1">/// interprete in unambiguously. For example, one can&#39;t clearly</span>
+<span class="w">            </span><span class="c1">/// distinguish 64-bit fixed-sized integers from 64-bit floats,</span>
+<span class="w">            </span><span class="c1">/// signed zigzag-encoded varints from regular unsigned varints,</span>
+<span class="w">            </span><span class="c1">/// arbitrary bytes from UTF-8 encoded strings, etc.</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">WireTypes</span><span class="w"> </span><span class="n">WireType</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_wireType</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_wireType</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_wireType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">WireTypes</span><span class="p">)</span><span class="w"> </span><span class="p">(((</span><span class="n">WireTypes</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">Key</span><span class="p">.</span><span class="n">Value</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="m">7</span><span class="p">)));</span>
+<span class="w">                    </span><span class="n">f_wireType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_wireType</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_fieldTag</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">_fieldTag</span><span class="p">;</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Identifies a field of protocol. One can look up symbolic</span>
-            <span class="c1">/// field name in a `.proto` file by this field tag.</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">int</span> <span class="n">FieldTag</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_fieldTag</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_fieldTag</span><span class="p">;</span>
-                    <span class="n">_fieldTag</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">Key</span><span class="p">.</span><span class="n">Value</span> <span class="p">&gt;&gt;</span> <span class="m">3</span><span class="p">));</span>
-                    <span class="n">f_fieldTag</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_fieldTag</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="n">VlqBase128Le</span> <span class="n">_key</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">object</span> <span class="n">_value</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">GoogleProtobuf</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">GoogleProtobuf</span> <span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// Identifies a field of protocol. One can look up symbolic</span>
+<span class="w">            </span><span class="c1">/// field name in a `.proto` file by this field tag.</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">FieldTag</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_fieldTag</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_fieldTag</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_fieldTag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">Key</span><span class="p">.</span><span class="n">Value</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="m">3</span><span class="p">));</span>
+<span class="w">                    </span><span class="n">f_fieldTag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_fieldTag</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">VlqBase128Le</span><span class="w"> </span><span class="n">_key</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">object</span><span class="w"> </span><span class="n">_value</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">GoogleProtobuf</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">GoogleProtobuf</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Key is a bit-mapped variable-length integer: lower 3 bits</span>
-            <span class="c1">/// are used for &amp;quot;wire type&amp;quot;, and everything higher designates</span>
-            <span class="c1">/// an integer &amp;quot;field tag&amp;quot;.</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="n">VlqBase128Le</span> <span class="n">Key</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_key</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// Key is a bit-mapped variable-length integer: lower 3 bits</span>
+<span class="w">            </span><span class="c1">/// are used for &amp;quot;wire type&amp;quot;, and everything higher designates</span>
+<span class="w">            </span><span class="c1">/// an integer &amp;quot;field tag&amp;quot;.</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">VlqBase128Le</span><span class="w"> </span><span class="n">Key</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_key</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Value that corresponds to field identified by</span>
-            <span class="c1">/// `field_tag`. Type is determined approximately: there is</span>
-            <span class="c1">/// enough information to parse it unambiguously from a stream,</span>
-            <span class="c1">/// but further infromation from `.proto` file is required to</span>
-            <span class="c1">/// interprete it properly.</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">object</span> <span class="n">Value</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_value</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">GoogleProtobuf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">GoogleProtobuf</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">DelimitedBytes</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">DelimitedBytes</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">DelimitedBytes</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// Value that corresponds to field identified by</span>
+<span class="w">            </span><span class="c1">/// `field_tag`. Type is determined approximately: there is</span>
+<span class="w">            </span><span class="c1">/// enough information to parse it unambiguously from a stream,</span>
+<span class="w">            </span><span class="c1">/// but further infromation from `.proto` file is required to</span>
+<span class="w">            </span><span class="c1">/// interprete it properly.</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">object</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_value</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">GoogleProtobuf</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">GoogleProtobuf</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">DelimitedBytes</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">DelimitedBytes</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">DelimitedBytes</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">DelimitedBytes</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">GoogleProtobuf</span><span class="p">.</span><span class="n">Pair</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">GoogleProtobuf</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_len</span> <span class="p">=</span> <span class="k">new</span> <span class="n">VlqBase128Le</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
-                <span class="n">_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">.</span><span class="n">Value</span><span class="p">);</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="n">VlqBase128Le</span> <span class="n">_len</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_body</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">GoogleProtobuf</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">GoogleProtobuf</span><span class="p">.</span><span class="n">Pair</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">public</span> <span class="n">VlqBase128Le</span> <span class="n">Len</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_len</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Body</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_body</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">GoogleProtobuf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">GoogleProtobuf</span><span class="p">.</span><span class="n">Pair</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Pair</span><span class="p">&gt;</span> <span class="n">_pairs</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">GoogleProtobuf</span> <span class="n">m_root</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">DelimitedBytes</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">GoogleProtobuf</span><span class="p">.</span><span class="n">Pair</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">GoogleProtobuf</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">VlqBase128Le</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
+<span class="w">                </span><span class="n">_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">.</span><span class="n">Value</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">VlqBase128Le</span><span class="w"> </span><span class="n">_len</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_body</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">GoogleProtobuf</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">GoogleProtobuf</span><span class="p">.</span><span class="n">Pair</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">VlqBase128Le</span><span class="w"> </span><span class="n">Len</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_len</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Body</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_body</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">GoogleProtobuf</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">GoogleProtobuf</span><span class="p">.</span><span class="n">Pair</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Pair</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_pairs</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">GoogleProtobuf</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
 
-        <span class="c1">/// &lt;summary&gt;</span>
-        <span class="c1">/// Key-value pairs which constitute a message</span>
-        <span class="c1">/// &lt;/summary&gt;</span>
-        <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Pair</span><span class="p">&gt;</span> <span class="n">Pairs</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_pairs</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">GoogleProtobuf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-    <span class="p">}</span>
+<span class="w">        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">        </span><span class="c1">/// Key-value pairs which constitute a message</span>
+<span class="w">        </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Pair</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Pairs</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_pairs</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">GoogleProtobuf</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 

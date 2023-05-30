@@ -267,165 +267,165 @@ in-file dumps adopted the same format for encapsulation purposes.</p>
         </div>
 
         <div class="row">
-            <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">kaitai_struct_nim_runtime</span>
-<span class="kn">import</span> <span class="n">options</span>
-<span class="kn">import</span> <span class="o">/</span><span class="n">network</span><span class="o">/</span><span class="n">ipv4_packet</span>
-<span class="kn">import</span> <span class="o">/</span><span class="n">network</span><span class="o">/</span><span class="n">ipv6_packet</span>
+            <div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="n">kaitai_struct_nim_runtime</span>
+<span class="kn">import</span><span class="w"> </span><span class="n">options</span>
+<span class="kn">import</span><span class="w"> </span><span class="o">/</span><span class="n">network</span><span class="o">/</span><span class="n">ipv4_packet</span>
+<span class="kn">import</span><span class="w"> </span><span class="o">/</span><span class="n">network</span><span class="o">/</span><span class="n">ipv6_packet</span>
 
-<span class="kn">import</span> <span class="s">&quot;ipv4_packet&quot;</span>
-<span class="kn">import</span> <span class="s">&quot;ipv6_packet&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="s">&quot;ipv4_packet&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="s">&quot;ipv6_packet&quot;</span>
 <span class="k">type</span>
-  <span class="n">EthernetFrame</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">dstMac</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">srcMac</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">etherType1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">EthernetFrame_EtherTypeEnum</span>
-    <span class="p">`</span><span class="n">tci</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">EthernetFrame_TagControlInfo</span>
-    <span class="p">`</span><span class="n">etherType2</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">EthernetFrame_EtherTypeEnum</span>
-    <span class="p">`</span><span class="n">body</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">rawBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">etherTypeInst</span><span class="p">`:</span> <span class="n">EthernetFrame_EtherTypeEnum</span>
-    <span class="p">`</span><span class="n">etherTypeInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
-  <span class="n">EthernetFrame_EtherTypeEnum</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
-    <span class="n">ipv4</span> <span class="o">=</span> <span class="mi">2048</span>
-    <span class="n">x_75_internet</span> <span class="o">=</span> <span class="mi">2049</span>
-    <span class="n">nbs_internet</span> <span class="o">=</span> <span class="mi">2050</span>
-    <span class="n">ecma_internet</span> <span class="o">=</span> <span class="mi">2051</span>
-    <span class="n">chaosnet</span> <span class="o">=</span> <span class="mi">2052</span>
-    <span class="n">x_25_level_3</span> <span class="o">=</span> <span class="mi">2053</span>
-    <span class="n">arp</span> <span class="o">=</span> <span class="mi">2054</span>
-    <span class="n">ieee_802_1q_tpid</span> <span class="o">=</span> <span class="mi">33024</span>
-    <span class="n">ipv6</span> <span class="o">=</span> <span class="mi">34525</span>
-  <span class="n">EthernetFrame_TagControlInfo</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">priority</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
-    <span class="p">`</span><span class="n">dropEligible</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">vlanId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">EthernetFrame</span>
+<span class="w">  </span><span class="n">EthernetFrame</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">dstMac</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">srcMac</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">etherType1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">EthernetFrame_EtherTypeEnum</span>
+<span class="w">    </span><span class="p">`</span><span class="n">tci</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">EthernetFrame_TagControlInfo</span>
+<span class="w">    </span><span class="p">`</span><span class="n">etherType2</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">EthernetFrame_EtherTypeEnum</span>
+<span class="w">    </span><span class="p">`</span><span class="n">body</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">rawBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">etherTypeInst</span><span class="p">`:</span><span class="w"> </span><span class="n">EthernetFrame_EtherTypeEnum</span>
+<span class="w">    </span><span class="p">`</span><span class="n">etherTypeInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">  </span><span class="n">EthernetFrame_EtherTypeEnum</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">enum</span>
+<span class="w">    </span><span class="n">ipv4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2048</span>
+<span class="w">    </span><span class="n">x_75_internet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2049</span>
+<span class="w">    </span><span class="n">nbs_internet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2050</span>
+<span class="w">    </span><span class="n">ecma_internet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2051</span>
+<span class="w">    </span><span class="n">chaosnet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2052</span>
+<span class="w">    </span><span class="n">x_25_level_3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2053</span>
+<span class="w">    </span><span class="n">arp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2054</span>
+<span class="w">    </span><span class="n">ieee_802_1q_tpid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">33024</span>
+<span class="w">    </span><span class="n">ipv6</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">34525</span>
+<span class="w">  </span><span class="n">EthernetFrame_TagControlInfo</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">priority</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint64</span>
+<span class="w">    </span><span class="p">`</span><span class="n">dropEligible</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">vlanId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint64</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">EthernetFrame</span>
 
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[EthernetFrame], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): EthernetFrame</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[EthernetFrame_TagControlInfo], io: KaitaiStream, root: KaitaiStruct, parent: EthernetFrame): EthernetFrame_TagControlInfo</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[EthernetFrame], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): EthernetFrame</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[EthernetFrame_TagControlInfo], io: KaitaiStream, root: KaitaiStruct, parent: EthernetFrame): EthernetFrame_TagControlInfo</span>
 
-<span class="k">proc </span><span class="nf">etherType</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">EthernetFrame</span><span class="p">):</span> <span class="n">EthernetFrame_EtherTypeEnum</span>
-
-
-<span class="sd">##[</span>
-<span class="n">Ethernet</span> <span class="n">frame</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">OSI</span> <span class="n">data</span> <span class="n">link</span> <span class="n">layer</span> <span class="p">(</span><span class="n">layer</span> <span class="mi">2</span><span class="p">)</span> <span class="n">protocol</span> <span class="n">data</span> <span class="n">unit</span>
-<span class="k">for</span> <span class="n">Ethernet</span> <span class="n">networks</span><span class="p">.</span> <span class="ow">In</span> <span class="n">practice</span><span class="p">,</span> <span class="n">many</span> <span class="n">other</span> <span class="n">networks</span> <span class="ow">and</span><span class="o">/</span><span class="ow">or</span>
-<span class="ow">in</span><span class="o">-</span><span class="n">file</span> <span class="n">dumps</span> <span class="n">adopted</span> <span class="n">the</span> <span class="n">same</span> <span class="n">format</span> <span class="k">for</span> <span class="n">encapsulation</span> <span class="n">purposes</span><span class="p">.</span>
-
-<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://ieeexplore.ieee.org/document/7428776&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
-<span class="o">]</span><span class="sd">##</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[EthernetFrame], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): EthernetFrame =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">EthernetFrame</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">EthernetFrame</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">EthernetFrame</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
-
-
-  <span class="sd">##[</span>
-  <span class="n">Destination</span> <span class="n">MAC</span> <span class="n">address</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">dstMacExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">dstMac</span> <span class="o">=</span> <span class="n">dstMacExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="n">Source</span> <span class="n">MAC</span> <span class="n">address</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">srcMacExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">srcMac</span> <span class="o">=</span> <span class="n">srcMacExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="n">Either</span> <span class="n">ether</span> <span class="k">type</span> <span class="ow">or</span> <span class="n">TPID</span> <span class="k">if</span> <span class="n">it</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">IEEE</span> <span class="mf">802.1</span><span class="err">Q frame</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">etherType1Expr</span> <span class="o">=</span> <span class="n">EthernetFrame_EtherTypeEnum</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">())</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">etherType1</span> <span class="o">=</span> <span class="n">etherType1Expr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">etherType1</span> <span class="o">==</span> <span class="n">ethernet_frame</span><span class="p">.</span><span class="n">ieee_802_1q_tpid</span><span class="p">:</span>
-    <span class="k">let</span> <span class="n">tciExpr</span> <span class="o">=</span> <span class="n">EthernetFrame_TagControlInfo</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-    <span class="n">this</span><span class="p">.</span><span class="n">tci</span> <span class="o">=</span> <span class="n">tciExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">etherType1</span> <span class="o">==</span> <span class="n">ethernet_frame</span><span class="p">.</span><span class="n">ieee_802_1q_tpid</span><span class="p">:</span>
-    <span class="k">let</span> <span class="n">etherType2Expr</span> <span class="o">=</span> <span class="n">EthernetFrame_EtherTypeEnum</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">())</span>
-    <span class="n">this</span><span class="p">.</span><span class="n">etherType2</span> <span class="o">=</span> <span class="n">etherType2Expr</span>
-  <span class="k">block</span><span class="p">:</span>
-    <span class="k">let</span> <span class="n">on</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">etherType</span>
-    <span class="k">if</span> <span class="n">on</span> <span class="o">==</span> <span class="n">ethernet_frame</span><span class="p">.</span><span class="n">ipv4</span><span class="p">:</span>
-      <span class="k">let</span> <span class="n">rawBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesFull</span><span class="p">()</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">rawBody</span> <span class="o">=</span> <span class="n">rawBodyExpr</span>
-      <span class="k">let</span> <span class="n">rawBodyIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
-      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">Ipv4Packet</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
-    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">ethernet_frame</span><span class="p">.</span><span class="n">ipv6</span><span class="p">:</span>
-      <span class="k">let</span> <span class="n">rawBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesFull</span><span class="p">()</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">rawBody</span> <span class="o">=</span> <span class="n">rawBodyExpr</span>
-      <span class="k">let</span> <span class="n">rawBodyIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
-      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">Ipv6Packet</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
-    <span class="k">else</span><span class="p">:</span>
-      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesFull</span><span class="p">()</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
-
-<span class="k">proc </span><span class="nf">etherType</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">EthernetFrame</span><span class="p">):</span> <span class="n">EthernetFrame_EtherTypeEnum</span> <span class="o">=</span> 
-
-  <span class="sd">##[</span>
-  <span class="n">Ether</span> <span class="k">type</span> <span class="n">can</span> <span class="n">be</span> <span class="n">specied</span> <span class="ow">in</span> <span class="n">several</span> <span class="n">places</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">frame</span><span class="p">.</span> <span class="k">If</span>
-<span class="n">first</span> <span class="n">location</span> <span class="n">bears</span> <span class="n">special</span> <span class="n">marker</span> <span class="p">(</span><span class="mh">0x8100</span><span class="p">),</span> <span class="n">then</span> <span class="n">it</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">the</span>
-<span class="n">real</span> <span class="n">ether</span> <span class="n">frame</span> <span class="n">yet</span><span class="p">,</span> <span class="n">an</span> <span class="n">additional</span> <span class="n">payload</span> <span class="p">(`</span><span class="n">tci</span><span class="p">`)</span> <span class="ow">is</span> <span class="n">expected</span>
-<span class="ow">and</span> <span class="n">real</span> <span class="n">ether</span> <span class="k">type</span> <span class="ow">is</span> <span class="n">upcoming</span> <span class="n">next</span><span class="p">.</span>
-
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">etherTypeInstFlag</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">etherTypeInst</span>
-  <span class="k">let</span> <span class="n">etherTypeInstExpr</span> <span class="o">=</span> <span class="n">EthernetFrame_EtherTypeEnum</span><span class="p">((</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">etherType1</span> <span class="o">==</span> <span class="n">ethernet_frame</span><span class="p">.</span><span class="n">ieee_802_1q_tpid</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">etherType2</span> <span class="k">else</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">etherType1</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">etherTypeInst</span> <span class="o">=</span> <span class="n">etherTypeInstExpr</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">etherTypeInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
-  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">etherTypeInst</span>
-
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[EthernetFrame], filename: string): EthernetFrame =</span>
-  <span class="n">EthernetFrame</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">etherType</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">EthernetFrame</span><span class="p">):</span><span class="w"> </span><span class="n">EthernetFrame_EtherTypeEnum</span>
 
 
 <span class="sd">##[</span>
-<span class="n">Tag</span> <span class="n">Control</span> <span class="n">Information</span> <span class="p">(</span><span class="n">TCI</span><span class="p">)</span> <span class="ow">is</span> <span class="n">an</span> <span class="n">extension</span> <span class="k">of</span> <span class="n">IEEE</span> <span class="mf">802.1</span><span class="err">Q to</span>
-<span class="n">support</span> <span class="n">VLANs</span> <span class="n">on</span> <span class="n">normal</span> <span class="n">IEEE</span> <span class="mf">802.3</span> <span class="n">Ethernet</span> <span class="n">network</span><span class="p">.</span>
+<span class="sd">Ethernet frame is a OSI data link layer (layer 2) protocol data unit</span>
+<span class="sd">for Ethernet networks. In practice, many other networks and/or</span>
+<span class="sd">in-file dumps adopted the same format for encapsulation purposes.</span>
 
-<span class="o">]</span><span class="sd">##</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[EthernetFrame_TagControlInfo], io: KaitaiStream, root: KaitaiStruct, parent: EthernetFrame): EthernetFrame_TagControlInfo =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">EthernetFrame_TagControlInfo</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">EthernetFrame</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">EthernetFrame</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="sd">@see &lt;a href=&quot;https://ieeexplore.ieee.org/document/7428776&quot;&gt;Source&lt;/a&gt;</span>
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[EthernetFrame], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): EthernetFrame =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">EthernetFrame</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">EthernetFrame</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">EthernetFrame</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
 
-  <span class="sd">##[</span>
-  <span class="n">Priority</span> <span class="n">Code</span> <span class="n">Point</span> <span class="p">(</span><span class="n">PCP</span><span class="p">)</span> <span class="ow">is</span> <span class="n">used</span> <span class="n">to</span> <span class="n">specify</span> <span class="n">priority</span> <span class="k">for</span>
-<span class="n">different</span> <span class="n">kinds</span> <span class="k">of</span> <span class="n">traffic</span><span class="p">.</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Destination MAC address</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">dstMacExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">dstMac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dstMacExpr</span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">priorityExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">priority</span> <span class="o">=</span> <span class="n">priorityExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Source MAC address</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">srcMacExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">srcMac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">srcMacExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Drop</span> <span class="n">Eligible</span> <span class="n">Indicator</span> <span class="p">(</span><span class="n">DEI</span><span class="p">)</span> <span class="n">specifies</span> <span class="k">if</span> <span class="n">frame</span> <span class="ow">is</span> <span class="n">eligible</span>
-<span class="n">to</span> <span class="n">dropping</span> <span class="k">while</span> <span class="n">congestion</span> <span class="ow">is</span> <span class="n">detected</span> <span class="k">for</span> <span class="n">certain</span> <span class="n">classes</span>
-<span class="k">of</span> <span class="n">traffic</span><span class="p">.</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Either ether type or TPID if it is a IEEE 802.1Q frame</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">etherType1Expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EthernetFrame_EtherTypeEnum</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">())</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">etherType1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">etherType1Expr</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">etherType1</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">ethernet_frame</span><span class="p">.</span><span class="n">ieee_802_1q_tpid</span><span class="p">:</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">tciExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EthernetFrame_TagControlInfo</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">tci</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tciExpr</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">etherType1</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">ethernet_frame</span><span class="p">.</span><span class="n">ieee_802_1q_tpid</span><span class="p">:</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">etherType2Expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EthernetFrame_EtherTypeEnum</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">())</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">etherType2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">etherType2Expr</span>
+<span class="w">  </span><span class="k">block</span><span class="p">:</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">etherType</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">ethernet_frame</span><span class="p">.</span><span class="n">ipv4</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">rawBodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesFull</span><span class="p">()</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">rawBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawBodyExpr</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">rawBodyIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">bodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Ipv4Packet</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bodyExpr</span>
+<span class="w">    </span><span class="k">elif</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">ethernet_frame</span><span class="p">.</span><span class="n">ipv6</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">rawBodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesFull</span><span class="p">()</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">rawBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawBodyExpr</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">rawBodyIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">bodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Ipv6Packet</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bodyExpr</span>
+<span class="w">    </span><span class="k">else</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">bodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesFull</span><span class="p">()</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bodyExpr</span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">dropEligibleExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">dropEligible</span> <span class="o">=</span> <span class="n">dropEligibleExpr</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">etherType</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">EthernetFrame</span><span class="p">):</span><span class="w"> </span><span class="n">EthernetFrame_EtherTypeEnum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
 
-  <span class="sd">##[</span>
-  <span class="n">VLAN</span> <span class="n">Identifier</span> <span class="p">(</span><span class="n">VID</span><span class="p">)</span> <span class="n">specifies</span> <span class="n">which</span> <span class="n">VLAN</span> <span class="n">this</span> <span class="n">frame</span>
-<span class="n">belongs</span> <span class="n">to</span><span class="p">.</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Ether type can be specied in several places in the frame. If</span>
+<span class="sd">first location bears special marker (0x8100), then it is not the</span>
+<span class="sd">real ether frame yet, an additional payload (`tci`) is expected</span>
+<span class="sd">and real ether type is upcoming next.</span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">vlanIdExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">vlanId</span> <span class="o">=</span> <span class="n">vlanIdExpr</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">etherTypeInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">etherTypeInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">etherTypeInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EthernetFrame_EtherTypeEnum</span><span class="p">((</span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">etherType1</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">ethernet_frame</span><span class="p">.</span><span class="n">ieee_802_1q_tpid</span><span class="p">:</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">etherType2</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">etherType1</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">etherTypeInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">etherTypeInstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">etherTypeInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">etherTypeInst</span>
 
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[EthernetFrame_TagControlInfo], filename: string): EthernetFrame_TagControlInfo =</span>
-  <span class="n">EthernetFrame_TagControlInfo</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[EthernetFrame], filename: string): EthernetFrame =</span>
+<span class="w">  </span><span class="n">EthernetFrame</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="sd">Tag Control Information (TCI) is an extension of IEEE 802.1Q to</span>
+<span class="sd">support VLANs on normal IEEE 802.3 Ethernet network.</span>
+
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[EthernetFrame_TagControlInfo], io: KaitaiStream, root: KaitaiStruct, parent: EthernetFrame): EthernetFrame_TagControlInfo =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">EthernetFrame_TagControlInfo</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">EthernetFrame</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">EthernetFrame</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
+
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Priority Code Point (PCP) is used to specify priority for</span>
+<span class="sd">different kinds of traffic.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">priorityExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">priority</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">priorityExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Drop Eligible Indicator (DEI) specifies if frame is eligible</span>
+<span class="sd">to dropping while congestion is detected for certain classes</span>
+<span class="sd">of traffic.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">dropEligibleExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">dropEligible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dropEligibleExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  VLAN Identifier (VID) specifies which VLAN this frame</span>
+<span class="sd">belongs to.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">vlanIdExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">vlanId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vlanIdExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[EthernetFrame_TagControlInfo], filename: string): EthernetFrame_TagControlInfo =</span>
+<span class="w">  </span><span class="n">EthernetFrame_TagControlInfo</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 </pre></div>
 
         </div>

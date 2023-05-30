@@ -254,23 +254,23 @@ and build them along with your project.</p>
         </ul>
         <div class="tab-content" style="margin-top: 6px">
             <div role="tabpanel" class="tab-pane active" id="example-local-file">
-<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;fstream&gt;</span><span class="cp"></span>
+<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;fstream&gt;</span>
 
-<span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="w"> </span><span class="nf">is</span><span class="p">(</span><span class="s">&quot;path/to/local/file.some_ip&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="o">::</span><span class="n">binary</span><span class="p">);</span><span class="w"></span>
+<span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="w"> </span><span class="n">is</span><span class="p">(</span><span class="s">&quot;path/to/local/file.some_ip&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="o">::</span><span class="n">binary</span><span class="p">);</span>
 </pre></div>
             </div>
             <div role="tabpanel" class="tab-pane" id="example-std-string">
-<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sstream&gt;</span><span class="cp"></span>
+<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sstream&gt;</span>
 
-<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span><span class="w"> </span><span class="nf">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span><span class="w"></span>
+<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span><span class="w"> </span><span class="nf">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
 </pre></div>
             </div>
             <div role="tabpanel" class="tab-pane" id="example-char-ptr">
-<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sstream&gt;</span><span class="cp"></span>
+<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sstream&gt;</span>
 
-<span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">buf</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">};</span><span class="w"></span>
-<span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">str</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="w"> </span><span class="n">buf</span><span class="p">);</span><span class="w"></span>
-<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span><span class="w"> </span><span class="nf">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span><span class="w"></span>
+<span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">buf</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">};</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">str</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="w"> </span><span class="n">buf</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span><span class="w"> </span><span class="nf">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
 </pre></div>
             </div>
         </div>
@@ -279,14 +279,14 @@ and build them along with your project.</p>
 
     <li>We need to wrap our input stream into Kaitai stream:
 
-<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/kaitaistream.h&quot;</span><span class="cp"></span>
+<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/kaitaistream.h&quot;</span>
 
-<span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="w"> </span><span class="nf">ks</span><span class="p">(</span><span class="o">&amp;</span><span class="n">is</span><span class="p">);</span><span class="w"></span>
+<span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="w"> </span><span class="nf">ks</span><span class="p">(</span><span class="o">&amp;</span><span class="n">is</span><span class="p">);</span>
 </pre></div>
     </li>
 
     <li>And finally, we can invoke the parsing:
-<div class="highlight"><pre><span></span><span class="n">some_ip_t</span><span class="w"> </span><span class="nf">data</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ks</span><span class="p">);</span><span class="w"></span>
+<div class="highlight"><pre><span></span><span class="n">some_ip_t</span><span class="w"> </span><span class="nf">data</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ks</span><span class="p">);</span>
 </pre></div>
     </li>
 </ol>
@@ -327,77 +327,77 @@ and build them along with your project.</p>
 
 <span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span><span class="cp"></span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;some_ip_sd.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdint.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;some_ip_sd.h&quot;</span>
 
 <span class="cp">#if KAITAI_STRUCT_VERSION &lt; 9000L</span>
 <span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required&quot;</span>
 <span class="cp">#endif</span>
-<span class="k">class</span> <span class="nc">some_ip_sd_t</span><span class="p">;</span><span class="w"></span>
+<span class="k">class</span><span class="w"> </span><span class="nc">some_ip_sd_t</span><span class="p">;</span>
 
 <span class="cm">/**</span>
 <span class="cm"> * SOME/IP (Scalable service-Oriented MiddlewarE over IP) is an automotive/embedded</span>
 <span class="cm"> * communication protocol which supports remoteprocedure calls, event notifications</span>
 <span class="cm"> * and the underlying serialization/wire format.</span>
 <span class="cm"> * \sa https://www.autosar.org/fileadmin/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPProtocol.pdf Source</span>
-<span class="cm"> */</span><span class="w"></span>
+<span class="cm"> */</span>
 
-<span class="k">class</span> <span class="nc">some_ip_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="k">class</span><span class="w"> </span><span class="nc">some_ip_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
 
-<span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="k">class</span> <span class="nc">header_t</span><span class="p">;</span><span class="w"></span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">header_t</span><span class="p">;</span>
 
-<span class="w">    </span><span class="n">some_ip_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="n">some_ip_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
 
-<span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span><span class="w"></span>
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
 
-<span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="o">~</span><span class="n">some_ip_t</span><span class="p">();</span><span class="w"></span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="o">~</span><span class="n">some_ip_t</span><span class="p">();</span>
 
-<span class="w">    </span><span class="k">class</span> <span class="nc">header_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">header_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
 
-<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="k">class</span> <span class="nc">message_id_t</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="k">class</span> <span class="nc">request_id_t</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="k">class</span><span class="w"> </span><span class="nc">message_id_t</span><span class="p">;</span>
+<span class="w">        </span><span class="k">class</span><span class="w"> </span><span class="nc">request_id_t</span><span class="p">;</span>
 
-<span class="w">        </span><span class="k">enum</span> <span class="nc">message_type_enum_t</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">            </span><span class="n">MESSAGE_TYPE_ENUM_REQUEST</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="n">MESSAGE_TYPE_ENUM_REQUEST_NO_RETURN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="n">MESSAGE_TYPE_ENUM_NOTIFICATION</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="n">MESSAGE_TYPE_ENUM_REQUEST_ACK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">64</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="n">MESSAGE_TYPE_ENUM_REQUEST_NO_RETURN_ACK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">65</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="n">MESSAGE_TYPE_ENUM_NOTIFICATION_ACK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">66</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="n">MESSAGE_TYPE_ENUM_RESPONSE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">128</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="n">MESSAGE_TYPE_ENUM_ERROR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">129</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="n">MESSAGE_TYPE_ENUM_RESPONSE_ACK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">192</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="n">MESSAGE_TYPE_ENUM_ERROR_ACK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">193</span><span class="w"></span>
-<span class="w">        </span><span class="p">};</span><span class="w"></span>
+<span class="w">        </span><span class="k">enum</span><span class="w"> </span><span class="nc">message_type_enum_t</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">MESSAGE_TYPE_ENUM_REQUEST</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">            </span><span class="n">MESSAGE_TYPE_ENUM_REQUEST_NO_RETURN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">            </span><span class="n">MESSAGE_TYPE_ENUM_NOTIFICATION</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">            </span><span class="n">MESSAGE_TYPE_ENUM_REQUEST_ACK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">64</span><span class="p">,</span>
+<span class="w">            </span><span class="n">MESSAGE_TYPE_ENUM_REQUEST_NO_RETURN_ACK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">65</span><span class="p">,</span>
+<span class="w">            </span><span class="n">MESSAGE_TYPE_ENUM_NOTIFICATION_ACK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">66</span><span class="p">,</span>
+<span class="w">            </span><span class="n">MESSAGE_TYPE_ENUM_RESPONSE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">128</span><span class="p">,</span>
+<span class="w">            </span><span class="n">MESSAGE_TYPE_ENUM_ERROR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">129</span><span class="p">,</span>
+<span class="w">            </span><span class="n">MESSAGE_TYPE_ENUM_RESPONSE_ACK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">192</span><span class="p">,</span>
+<span class="w">            </span><span class="n">MESSAGE_TYPE_ENUM_ERROR_ACK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">193</span>
+<span class="w">        </span><span class="p">};</span>
 
-<span class="w">        </span><span class="k">enum</span> <span class="nc">return_code_enum_t</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">            </span><span class="n">RETURN_CODE_ENUM_OK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="n">RETURN_CODE_ENUM_NOT_OK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="n">RETURN_CODE_ENUM_UNKNOWN_SERVICE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="n">RETURN_CODE_ENUM_UNKNOWN_METHOD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="n">RETURN_CODE_ENUM_NOT_READY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="n">RETURN_CODE_ENUM_NOT_REACHABLE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="n">RETURN_CODE_ENUM_TIME_OUT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="n">RETURN_CODE_ENUM_WRONG_PROTOCOL_VERSION</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="n">RETURN_CODE_ENUM_WRONG_INTERFACE_VERSION</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="n">RETURN_CODE_ENUM_MALFORMED_MESSAGE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span><span class="w"></span>
-<span class="w">            </span><span class="n">RETURN_CODE_ENUM_WRONG_MESSAGE_TYPE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="w"></span>
-<span class="w">        </span><span class="p">};</span><span class="w"></span>
+<span class="w">        </span><span class="k">enum</span><span class="w"> </span><span class="nc">return_code_enum_t</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">RETURN_CODE_ENUM_OK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">            </span><span class="n">RETURN_CODE_ENUM_NOT_OK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">            </span><span class="n">RETURN_CODE_ENUM_UNKNOWN_SERVICE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">            </span><span class="n">RETURN_CODE_ENUM_UNKNOWN_METHOD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">            </span><span class="n">RETURN_CODE_ENUM_NOT_READY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
+<span class="w">            </span><span class="n">RETURN_CODE_ENUM_NOT_REACHABLE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">            </span><span class="n">RETURN_CODE_ENUM_TIME_OUT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span>
+<span class="w">            </span><span class="n">RETURN_CODE_ENUM_WRONG_PROTOCOL_VERSION</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span>
+<span class="w">            </span><span class="n">RETURN_CODE_ENUM_WRONG_INTERFACE_VERSION</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span>
+<span class="w">            </span><span class="n">RETURN_CODE_ENUM_MALFORMED_MESSAGE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span>
+<span class="w">            </span><span class="n">RETURN_CODE_ENUM_WRONG_MESSAGE_TYPE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span>
+<span class="w">        </span><span class="p">};</span>
 
-<span class="w">        </span><span class="n">header_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="n">header_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
 
-<span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
-<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span><span class="w"></span>
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
 
-<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="o">~</span><span class="n">header_t</span><span class="p">();</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="o">~</span><span class="n">header_t</span><span class="p">();</span>
 
 <span class="w">        </span><span class="cm">/**</span>
 <span class="cm">         * [PRS_SOMEIP_00035] The assignment of the Message ID shall be up to</span>
@@ -407,224 +407,224 @@ and build them along with your project.</p>
 <span class="cm">         * [PRS_SOMEIP_00038] Message IDs of method calls shall be structured in</span>
 <span class="cm">         * the ID with 2^16 services with 2^15 methods.</span>
 <span class="cm">         * \sa AUTOSAR_PRS_SOMEIPProtocol.pdf 4.1.1.1  Message ID</span>
-<span class="cm">         */</span><span class="w"></span>
+<span class="cm">         */</span>
 
-<span class="w">        </span><span class="k">class</span> <span class="nc">message_id_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="k">class</span><span class="w"> </span><span class="nc">message_id_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
 
-<span class="w">        </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">        </span><span class="k">public</span><span class="o">:</span>
 
-<span class="w">            </span><span class="n">message_id_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w"></span>
+<span class="w">            </span><span class="n">message_id_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
 
-<span class="w">        </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">            </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
-<span class="w">            </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span><span class="w"></span>
+<span class="w">        </span><span class="k">private</span><span class="o">:</span>
+<span class="w">            </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
 
-<span class="w">        </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">            </span><span class="o">~</span><span class="n">message_id_t</span><span class="p">();</span><span class="w"></span>
+<span class="w">        </span><span class="k">public</span><span class="o">:</span>
+<span class="w">            </span><span class="o">~</span><span class="n">message_id_t</span><span class="p">();</span>
 
-<span class="w">        </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">            </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_value</span><span class="p">;</span><span class="w"></span>
-<span class="w">            </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_value</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="k">private</span><span class="o">:</span>
+<span class="w">            </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_value</span><span class="p">;</span>
+<span class="w">            </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_value</span><span class="p">;</span>
 
-<span class="w">        </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">        </span><span class="k">public</span><span class="o">:</span>
 
 <span class="w">            </span><span class="cm">/**</span>
 <span class="cm">             * The value provides the undissected Message ID</span>
-<span class="cm">             */</span><span class="w"></span>
-<span class="w">            </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">value</span><span class="p">();</span><span class="w"></span>
+<span class="cm">             */</span>
+<span class="w">            </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">value</span><span class="p">();</span>
 
-<span class="w">        </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">            </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_service_id</span><span class="p">;</span><span class="w"></span>
-<span class="w">            </span><span class="kt">bool</span><span class="w"> </span><span class="n">m_sub_id</span><span class="p">;</span><span class="w"></span>
-<span class="w">            </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">m_method_id</span><span class="p">;</span><span class="w"></span>
-<span class="w">            </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_method_id</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="k">private</span><span class="o">:</span>
+<span class="w">            </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_service_id</span><span class="p">;</span>
+<span class="w">            </span><span class="kt">bool</span><span class="w"> </span><span class="n">m_sub_id</span><span class="p">;</span>
+<span class="w">            </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">m_method_id</span><span class="p">;</span>
+<span class="w">            </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_method_id</span><span class="p">;</span>
 
-<span class="w">        </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">            </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_method_id</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">method_id</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_method_id</span><span class="p">;</span><span class="w"> </span><span class="p">};</span><span class="w"></span>
+<span class="w">        </span><span class="k">public</span><span class="o">:</span>
+<span class="w">            </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_method_id</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">method_id</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_method_id</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
 
-<span class="w">        </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">            </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">m_event_id</span><span class="p">;</span><span class="w"></span>
-<span class="w">            </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_event_id</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="k">private</span><span class="o">:</span>
+<span class="w">            </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">m_event_id</span><span class="p">;</span>
+<span class="w">            </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_event_id</span><span class="p">;</span>
 
-<span class="w">        </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">            </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_event_id</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">event_id</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_event_id</span><span class="p">;</span><span class="w"> </span><span class="p">};</span><span class="w"></span>
+<span class="w">        </span><span class="k">public</span><span class="o">:</span>
+<span class="w">            </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_event_id</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">event_id</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_event_id</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
 
-<span class="w">        </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">            </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"></span>
-<span class="w">            </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="k">private</span><span class="o">:</span>
+<span class="w">            </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">            </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
 
-<span class="w">        </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">        </span><span class="k">public</span><span class="o">:</span>
 
 <span class="w">            </span><span class="cm">/**</span>
 <span class="cm">             * Service ID</span>
-<span class="cm">             */</span><span class="w"></span>
-<span class="w">            </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">service_id</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_service_id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="cm">             */</span>
+<span class="w">            </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">service_id</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_service_id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
 <span class="w">            </span><span class="cm">/**</span>
 <span class="cm">             * Single bit to flag, if there is a Method or a Event ID</span>
-<span class="cm">             */</span><span class="w"></span>
-<span class="w">            </span><span class="kt">bool</span><span class="w"> </span><span class="n">sub_id</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_sub_id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="cm">             */</span>
+<span class="w">            </span><span class="kt">bool</span><span class="w"> </span><span class="n">sub_id</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_sub_id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
 <span class="w">            </span><span class="cm">/**</span>
 <span class="cm">             * Method ID</span>
 <span class="cm">             * \sa AUTOSAR_PRS_SOMEIPProtocol.pdf - Table 4.1.</span>
-<span class="cm">             */</span><span class="w"></span>
-<span class="w">            </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">method_id</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_method_id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="cm">             */</span>
+<span class="w">            </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">method_id</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_method_id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
 <span class="w">            </span><span class="cm">/**</span>
 <span class="cm">             * Event ID</span>
 <span class="cm">             * \sa AUTOSAR_PRS_SOMEIPProtocol.pdf - Table 4.6</span>
-<span class="cm">             */</span><span class="w"></span>
-<span class="w">            </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">event_id</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_event_id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">            </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">            </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="p">};</span><span class="w"></span>
+<span class="cm">             */</span>
+<span class="w">            </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">event_id</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_event_id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">};</span>
 
 <span class="w">        </span><span class="cm">/**</span>
 <span class="cm">         * The Request ID allows a provider and subscriber to differentiate</span>
 <span class="cm">         * multiple parallel usesof the same method, event, getter or setter.</span>
 <span class="cm">         * \sa AUTOSAR_PRS_SOMEIPProtocol.pdf - section 4.1.1.3  Request ID</span>
-<span class="cm">         */</span><span class="w"></span>
+<span class="cm">         */</span>
 
-<span class="w">        </span><span class="k">class</span> <span class="nc">request_id_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="k">class</span><span class="w"> </span><span class="nc">request_id_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
 
-<span class="w">        </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">        </span><span class="k">public</span><span class="o">:</span>
 
-<span class="w">            </span><span class="n">request_id_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w"></span>
+<span class="w">            </span><span class="n">request_id_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
 
-<span class="w">        </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">            </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
-<span class="w">            </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span><span class="w"></span>
+<span class="w">        </span><span class="k">private</span><span class="o">:</span>
+<span class="w">            </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
 
-<span class="w">        </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">            </span><span class="o">~</span><span class="n">request_id_t</span><span class="p">();</span><span class="w"></span>
+<span class="w">        </span><span class="k">public</span><span class="o">:</span>
+<span class="w">            </span><span class="o">~</span><span class="n">request_id_t</span><span class="p">();</span>
 
-<span class="w">        </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">            </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_value</span><span class="p">;</span><span class="w"></span>
-<span class="w">            </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_value</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="k">private</span><span class="o">:</span>
+<span class="w">            </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_value</span><span class="p">;</span>
+<span class="w">            </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_value</span><span class="p">;</span>
 
-<span class="w">        </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">        </span><span class="k">public</span><span class="o">:</span>
 
 <span class="w">            </span><span class="cm">/**</span>
 <span class="cm">             * The value provides the undissected Request ID</span>
-<span class="cm">             */</span><span class="w"></span>
-<span class="w">            </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">value</span><span class="p">();</span><span class="w"></span>
+<span class="cm">             */</span>
+<span class="w">            </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">value</span><span class="p">();</span>
 
-<span class="w">        </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">            </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_client_id</span><span class="p">;</span><span class="w"></span>
-<span class="w">            </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_session_id</span><span class="p">;</span><span class="w"></span>
-<span class="w">            </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"></span>
-<span class="w">            </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="k">private</span><span class="o">:</span>
+<span class="w">            </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_client_id</span><span class="p">;</span>
+<span class="w">            </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_session_id</span><span class="p">;</span>
+<span class="w">            </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">            </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
 
-<span class="w">        </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">            </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">client_id</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_client_id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">            </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">session_id</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_session_id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">            </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">            </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="p">};</span><span class="w"></span>
+<span class="w">        </span><span class="k">public</span><span class="o">:</span>
+<span class="w">            </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">client_id</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_client_id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">session_id</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_session_id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">};</span>
 
-<span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_is_valid_service_discovery</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">m_is_valid_service_discovery</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_is_valid_service_discovery</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">m_is_valid_service_discovery</span><span class="p">;</span>
 
-<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
 
 <span class="w">        </span><span class="cm">/**</span>
 <span class="cm">         * auxillary value</span>
 <span class="cm">         * \sa AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf - section 4.1.2.1 General Requirements</span>
-<span class="cm">         */</span><span class="w"></span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">is_valid_service_discovery</span><span class="p">();</span><span class="w"></span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">is_valid_service_discovery</span><span class="p">();</span>
 
-<span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="n">message_id_t</span><span class="o">*</span><span class="w"> </span><span class="n">m_message_id</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_length</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">request_id_t</span><span class="o">*</span><span class="w"> </span><span class="n">m_request_id</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_protocol_version</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_interface_version</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">message_type_enum_t</span><span class="w"> </span><span class="n">m_message_type</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">return_code_enum_t</span><span class="w"> </span><span class="n">m_return_code</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m__raw_message_id</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">m__io__raw_message_id</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m__raw_request_id</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">m__io__raw_request_id</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="n">message_id_t</span><span class="o">*</span><span class="w"> </span><span class="n">m_message_id</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_length</span><span class="p">;</span>
+<span class="w">        </span><span class="n">request_id_t</span><span class="o">*</span><span class="w"> </span><span class="n">m_request_id</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_protocol_version</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_interface_version</span><span class="p">;</span>
+<span class="w">        </span><span class="n">message_type_enum_t</span><span class="w"> </span><span class="n">m_message_type</span><span class="p">;</span>
+<span class="w">        </span><span class="n">return_code_enum_t</span><span class="w"> </span><span class="n">m_return_code</span><span class="p">;</span>
+<span class="w">        </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">        </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m__raw_message_id</span><span class="p">;</span>
+<span class="w">        </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">m__io__raw_message_id</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m__raw_request_id</span><span class="p">;</span>
+<span class="w">        </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">m__io__raw_request_id</span><span class="p">;</span>
 
-<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
 
 <span class="w">        </span><span class="cm">/**</span>
 <span class="cm">         * The Message ID shall be a 32 Bit identifier that is used to identify</span>
 <span class="cm">         * the RPC call to a method of an application or to identify an event.</span>
-<span class="cm">         */</span><span class="w"></span>
-<span class="w">        </span><span class="n">message_id_t</span><span class="o">*</span><span class="w"> </span><span class="n">message_id</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_message_id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="n">message_id_t</span><span class="o">*</span><span class="w"> </span><span class="n">message_id</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_message_id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
 <span class="w">        </span><span class="cm">/**</span>
 <span class="cm">         * [PRS_SOMEIP_00042] Length field shall contain the length in Byte</span>
 <span class="cm">         * starting from Request ID/Client ID until the end of the SOME/IP message.</span>
-<span class="cm">         */</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">length</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_length</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">length</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_length</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
 <span class="w">        </span><span class="cm">/**</span>
 <span class="cm">         * The Request ID allows a provider and subscriber to differentiate</span>
 <span class="cm">         * multiple parallel uses of the same method, event, getter or setter.</span>
-<span class="cm">         */</span><span class="w"></span>
-<span class="w">        </span><span class="n">request_id_t</span><span class="o">*</span><span class="w"> </span><span class="n">request_id</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_request_id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="n">request_id_t</span><span class="o">*</span><span class="w"> </span><span class="n">request_id</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_request_id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
 <span class="w">        </span><span class="cm">/**</span>
 <span class="cm">         * The Protocol Version identifies the used SOME/IP Header format</span>
 <span class="cm">         * (not including the Payload format).</span>
-<span class="cm">         */</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">protocol_version</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_protocol_version</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">protocol_version</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_protocol_version</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
 <span class="w">        </span><span class="cm">/**</span>
 <span class="cm">         * Interface Version shall be an 8 Bit field that contains the</span>
 <span class="cm">         * MajorVersion of the Service Interface.</span>
-<span class="cm">         */</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">interface_version</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_interface_version</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">interface_version</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_interface_version</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
 <span class="w">        </span><span class="cm">/**</span>
 <span class="cm">         * The Message Type field is used to differentiate different types of</span>
 <span class="cm">         * messages.</span>
 <span class="cm">         * \sa AUTOSAR_PRS_SOMEIPProtocol.pdf - Table 4.4</span>
-<span class="cm">         */</span><span class="w"></span>
-<span class="w">        </span><span class="n">message_type_enum_t</span><span class="w"> </span><span class="n">message_type</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_message_type</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="n">message_type_enum_t</span><span class="w"> </span><span class="n">message_type</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_message_type</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
 <span class="w">        </span><span class="cm">/**</span>
 <span class="cm">         * The Return Code shall be used to signal whether a request was</span>
 <span class="cm">         * successfully processed.</span>
 <span class="cm">         * \sa AUTOSAR_PRS_SOMEIPProtocol.pdf - Table 4.5</span>
-<span class="cm">         */</span><span class="w"></span>
-<span class="w">        </span><span class="n">return_code_enum_t</span><span class="w"> </span><span class="n">return_code</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_return_code</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">_raw_message_id</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__raw_message_id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">_io__raw_message_id</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__io__raw_message_id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">_raw_request_id</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__raw_request_id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">_io__raw_request_id</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__io__raw_request_id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="p">};</span><span class="w"></span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="n">return_code_enum_t</span><span class="w"> </span><span class="n">return_code</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_return_code</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">_raw_message_id</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__raw_message_id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">_io__raw_message_id</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__io__raw_message_id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">_raw_request_id</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__raw_request_id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">_io__raw_request_id</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__io__raw_request_id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
 
-<span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="n">header_t</span><span class="o">*</span><span class="w"> </span><span class="n">m_header</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">some_ip_sd_t</span><span class="o">*</span><span class="w"> </span><span class="n">m_payload</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_payload</span><span class="p">;</span><span class="w"></span>
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="n">header_t</span><span class="o">*</span><span class="w"> </span><span class="n">m_header</span><span class="p">;</span>
+<span class="w">    </span><span class="n">some_ip_sd_t</span><span class="o">*</span><span class="w"> </span><span class="n">m_payload</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_payload</span><span class="p">;</span>
 
-<span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_payload</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">payload</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_payload</span><span class="p">;</span><span class="w"> </span><span class="p">};</span><span class="w"></span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_payload</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">payload</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_payload</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
 
-<span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m__raw_payload</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">m__io__raw_payload</span><span class="p">;</span><span class="w"></span>
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m__raw_payload</span><span class="p">;</span>
+<span class="w">    </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">m__io__raw_payload</span><span class="p">;</span>
 
-<span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="n">header_t</span><span class="o">*</span><span class="w"> </span><span class="n">header</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_header</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="n">some_ip_sd_t</span><span class="o">*</span><span class="w"> </span><span class="n">payload</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_payload</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">_raw_payload</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__raw_payload</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">_io__raw_payload</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__io__raw_payload</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="p">};</span><span class="w"></span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">header_t</span><span class="o">*</span><span class="w"> </span><span class="n">header</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_header</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">some_ip_sd_t</span><span class="o">*</span><span class="w"> </span><span class="n">payload</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_payload</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">_raw_payload</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__raw_payload</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">_io__raw_payload</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__io__raw_payload</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">};</span>
 
 <span class="cp">#endif  </span><span class="c1">// SOME_IP_H_</span>
 </pre></div>
@@ -645,205 +645,205 @@ and build them along with your project.</p>
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;some_ip.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;some_ip.h&quot;</span>
 
-<span class="n">some_ip_t</span><span class="o">::</span><span class="n">some_ip_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__io__raw_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
+<span class="n">some_ip_t</span><span class="o">::</span><span class="n">some_ip_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__io__raw_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
 
-<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="p">(...)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">_clean_up</span><span class="p">();</span><span class="w"></span>
-<span class="w">        </span><span class="k">throw</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="p">(...)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="w">        </span><span class="k">throw</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 
-<span class="kt">void</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">header_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">n_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">message_id</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="mi">4294934784UL</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">n_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">m__raw_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">8</span><span class="p">));</span><span class="w"></span>
-<span class="w">        </span><span class="n">m__io__raw_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_payload</span><span class="p">);</span><span class="w"></span>
-<span class="w">        </span><span class="n">m_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">some_ip_sd_t</span><span class="p">(</span><span class="n">m__io__raw_payload</span><span class="p">);</span><span class="w"></span>
-<span class="w">        </span><span class="k">break</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="k">default</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">m__raw_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">8</span><span class="p">));</span><span class="w"></span>
-<span class="w">        </span><span class="k">break</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">void</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">header_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">);</span>
+<span class="w">    </span><span class="n">n_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">message_id</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="mi">4294934784UL</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">n_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m__raw_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">8</span><span class="p">));</span>
+<span class="w">        </span><span class="n">m__io__raw_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_payload</span><span class="p">);</span>
+<span class="w">        </span><span class="n">m_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">some_ip_sd_t</span><span class="p">(</span><span class="n">m__io__raw_payload</span><span class="p">);</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">default</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">m__raw_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">8</span><span class="p">));</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 
-<span class="n">some_ip_t</span><span class="o">::~</span><span class="n">some_ip_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="n">some_ip_t</span><span class="o">::~</span><span class="n">some_ip_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
 
-<span class="kt">void</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_header</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="k">delete</span><span class="w"> </span><span class="n">m_header</span><span class="p">;</span><span class="w"> </span><span class="n">m_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">n_payload</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m__io__raw_payload</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">            </span><span class="k">delete</span><span class="w"> </span><span class="n">m__io__raw_payload</span><span class="p">;</span><span class="w"> </span><span class="n">m__io__raw_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_payload</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">            </span><span class="k">delete</span><span class="w"> </span><span class="n">m_payload</span><span class="p">;</span><span class="w"> </span><span class="n">m_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">void</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_header</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">delete</span><span class="w"> </span><span class="n">m_header</span><span class="p">;</span><span class="w"> </span><span class="n">m_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">n_payload</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m__io__raw_payload</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">delete</span><span class="w"> </span><span class="n">m__io__raw_payload</span><span class="p">;</span><span class="w"> </span><span class="n">m__io__raw_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_payload</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">delete</span><span class="w"> </span><span class="n">m_payload</span><span class="p">;</span><span class="w"> </span><span class="n">m_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 
-<span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">header_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_message_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__io__raw_message_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_request_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__io__raw_request_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">f_is_valid_service_discovery</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"></span>
+<span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">header_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_message_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__io__raw_message_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_request_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__io__raw_request_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_is_valid_service_discovery</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
 
-<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="p">(...)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">_clean_up</span><span class="p">();</span><span class="w"></span>
-<span class="w">        </span><span class="k">throw</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="p">(...)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="w">        </span><span class="k">throw</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 
-<span class="kt">void</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__raw_message_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__io__raw_message_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_message_id</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_message_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">message_id_t</span><span class="p">(</span><span class="n">m__io__raw_message_id</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__raw_request_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__io__raw_request_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_request_id</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_request_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">request_id_t</span><span class="p">(</span><span class="n">m__io__raw_request_id</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_protocol_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_interface_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_message_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">message_type_enum_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_return_code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">return_code_enum_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">void</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__raw_message_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="w">    </span><span class="n">m__io__raw_message_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_message_id</span><span class="p">);</span>
+<span class="w">    </span><span class="n">m_message_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">message_id_t</span><span class="p">(</span><span class="n">m__io__raw_message_id</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">);</span>
+<span class="w">    </span><span class="n">m_length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m__raw_request_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="w">    </span><span class="n">m__io__raw_request_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_request_id</span><span class="p">);</span>
+<span class="w">    </span><span class="n">m_request_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">request_id_t</span><span class="p">(</span><span class="n">m__io__raw_request_id</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">);</span>
+<span class="w">    </span><span class="n">m_protocol_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_interface_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_message_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">message_type_enum_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
+<span class="w">    </span><span class="n">m_return_code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">return_code_enum_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
+<span class="p">}</span>
 
-<span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::~</span><span class="n">header_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::~</span><span class="n">header_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
 
-<span class="kt">void</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m__io__raw_message_id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="k">delete</span><span class="w"> </span><span class="n">m__io__raw_message_id</span><span class="p">;</span><span class="w"> </span><span class="n">m__io__raw_message_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_message_id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="k">delete</span><span class="w"> </span><span class="n">m_message_id</span><span class="p">;</span><span class="w"> </span><span class="n">m_message_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m__io__raw_request_id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="k">delete</span><span class="w"> </span><span class="n">m__io__raw_request_id</span><span class="p">;</span><span class="w"> </span><span class="n">m__io__raw_request_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_request_id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="k">delete</span><span class="w"> </span><span class="n">m_request_id</span><span class="p">;</span><span class="w"> </span><span class="n">m_request_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">void</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m__io__raw_message_id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">delete</span><span class="w"> </span><span class="n">m__io__raw_message_id</span><span class="p">;</span><span class="w"> </span><span class="n">m__io__raw_message_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_message_id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">delete</span><span class="w"> </span><span class="n">m_message_id</span><span class="p">;</span><span class="w"> </span><span class="n">m_message_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m__io__raw_request_id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">delete</span><span class="w"> </span><span class="n">m__io__raw_request_id</span><span class="p">;</span><span class="w"> </span><span class="n">m__io__raw_request_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_request_id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">delete</span><span class="w"> </span><span class="n">m_request_id</span><span class="p">;</span><span class="w"> </span><span class="n">m_request_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 
-<span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">message_id_t</span><span class="o">::</span><span class="n">message_id_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">f_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"></span>
+<span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">message_id_t</span><span class="o">::</span><span class="n">message_id_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
 
-<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="p">(...)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">_clean_up</span><span class="p">();</span><span class="w"></span>
-<span class="w">        </span><span class="k">throw</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="p">(...)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="w">        </span><span class="k">throw</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 
-<span class="kt">void</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">message_id_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_service_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_sub_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">n_method_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">sub_id</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nb">false</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">n_method_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">m_method_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">15</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="n">n_event_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">sub_id</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nb">true</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">n_event_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">m_event_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">15</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">void</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">message_id_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_service_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_sub_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">    </span><span class="n">n_method_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">sub_id</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nb">false</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">n_method_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m_method_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">15</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">n_event_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">sub_id</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nb">true</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">n_event_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m_event_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">15</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 
-<span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">message_id_t</span><span class="o">::~</span><span class="n">message_id_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">message_id_t</span><span class="o">::~</span><span class="n">message_id_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
 
-<span class="kt">void</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">message_id_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">n_method_id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">n_event_id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">void</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">message_id_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">n_method_id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">n_event_id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 
-<span class="kt">uint32_t</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">message_id_t</span><span class="o">::</span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_value</span><span class="p">)</span><span class="w"></span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_value</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">streampos</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">f_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_value</span><span class="p">;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">uint32_t</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">message_id_t</span><span class="o">::</span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_value</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_value</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">streampos</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="n">m_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+<span class="w">    </span><span class="n">f_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_value</span><span class="p">;</span>
+<span class="p">}</span>
 
-<span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">request_id_t</span><span class="o">::</span><span class="n">request_id_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">f_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"></span>
+<span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">request_id_t</span><span class="o">::</span><span class="n">request_id_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
 
-<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="p">(...)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">_clean_up</span><span class="p">();</span><span class="w"></span>
-<span class="w">        </span><span class="k">throw</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="p">(...)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="w">        </span><span class="k">throw</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 
-<span class="kt">void</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">request_id_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_client_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_session_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">void</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">request_id_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_client_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_session_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+<span class="p">}</span>
 
-<span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">request_id_t</span><span class="o">::~</span><span class="n">request_id_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">request_id_t</span><span class="o">::~</span><span class="n">request_id_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
 
-<span class="kt">void</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">request_id_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">void</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">request_id_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 
-<span class="kt">uint32_t</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">request_id_t</span><span class="o">::</span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_value</span><span class="p">)</span><span class="w"></span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_value</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">streampos</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">f_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_value</span><span class="p">;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">uint32_t</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">request_id_t</span><span class="o">::</span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_value</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_value</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">streampos</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="n">m_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+<span class="w">    </span><span class="n">f_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_value</span><span class="p">;</span>
+<span class="p">}</span>
 
-<span class="kt">bool</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">is_valid_service_discovery</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_is_valid_service_discovery</span><span class="p">)</span><span class="w"></span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_is_valid_service_discovery</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_is_valid_service_discovery</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="p">((</span><span class="n">message_id</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">4294934784UL</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">protocol_version</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">interface_version</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">message_type</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">MESSAGE_TYPE_ENUM_NOTIFICATION</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">return_code</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">RETURN_CODE_ENUM_OK</span><span class="p">))</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">f_is_valid_service_discovery</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_is_valid_service_discovery</span><span class="p">;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">bool</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">is_valid_service_discovery</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_is_valid_service_discovery</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_is_valid_service_discovery</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_is_valid_service_discovery</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="p">((</span><span class="n">message_id</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">4294934784UL</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">protocol_version</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">interface_version</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">message_type</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">MESSAGE_TYPE_ENUM_NOTIFICATION</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">return_code</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">some_ip_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">RETURN_CODE_ENUM_OK</span><span class="p">))</span><span class="w"> </span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_is_valid_service_discovery</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_is_valid_service_discovery</span><span class="p">;</span>
+<span class="p">}</span>
 </pre></div>
 
         </div>

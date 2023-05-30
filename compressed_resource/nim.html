@@ -258,366 +258,366 @@ along with some parameters for the decompressor.</p>
         </div>
 
         <div class="row">
-            <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">kaitai_struct_nim_runtime</span>
-<span class="kn">import</span> <span class="n">options</span>
-<span class="kn">import</span> <span class="o">/</span><span class="n">common</span><span class="o">/</span><span class="n">bytes_with_io</span>
+            <div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="n">kaitai_struct_nim_runtime</span>
+<span class="kn">import</span><span class="w"> </span><span class="n">options</span>
+<span class="kn">import</span><span class="w"> </span><span class="o">/</span><span class="n">common</span><span class="o">/</span><span class="n">bytes_with_io</span>
 
-<span class="kn">import</span> <span class="s">&quot;bytes_with_io&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="s">&quot;bytes_with_io&quot;</span>
 <span class="k">type</span>
-  <span class="n">CompressedResource</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">header</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">CompressedResource_Header</span>
-    <span class="p">`</span><span class="n">compressedData</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-  <span class="n">CompressedResource_Header</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">commonPart</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">CompressedResource_Header_CommonPart</span>
-    <span class="p">`</span><span class="n">typeSpecificPartRawWithIo</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BytesWithIo</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">CompressedResource</span>
-    <span class="p">`</span><span class="n">rawTypeSpecificPartRawWithIo</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">typeSpecificPartRawInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">typeSpecificPartRawInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">typeSpecificPartInst</span><span class="p">`:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">typeSpecificPartInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
-  <span class="n">CompressedResource_Header_CommonPart</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">lenHeader</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
-    <span class="p">`</span><span class="n">headerType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
-    <span class="p">`</span><span class="n">unknown</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
-    <span class="p">`</span><span class="n">lenDecompressed</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">CompressedResource_Header</span>
-  <span class="n">CompressedResource_Header_TypeSpecificPartType8</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">workingBufferFractionalSize</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
-    <span class="p">`</span><span class="n">expansionBufferSize</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
-    <span class="p">`</span><span class="n">decompressorId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int16</span>
-    <span class="p">`</span><span class="n">reserved</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">CompressedResource_Header</span>
-  <span class="n">CompressedResource_Header_TypeSpecificPartType9</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">decompressorId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int16</span>
-    <span class="p">`</span><span class="n">decompressorSpecificParametersWithIo</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BytesWithIo</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">CompressedResource_Header</span>
-    <span class="p">`</span><span class="n">rawDecompressorSpecificParametersWithIo</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">decompressorSpecificParametersInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">decompressorSpecificParametersInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+<span class="w">  </span><span class="n">CompressedResource</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">header</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">CompressedResource_Header</span>
+<span class="w">    </span><span class="p">`</span><span class="n">compressedData</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">  </span><span class="n">CompressedResource_Header</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">commonPart</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">CompressedResource_Header_CommonPart</span>
+<span class="w">    </span><span class="p">`</span><span class="n">typeSpecificPartRawWithIo</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">BytesWithIo</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">CompressedResource</span>
+<span class="w">    </span><span class="p">`</span><span class="n">rawTypeSpecificPartRawWithIo</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">typeSpecificPartRawInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">typeSpecificPartRawInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">typeSpecificPartInst</span><span class="p">`:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">typeSpecificPartInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">  </span><span class="n">CompressedResource_Header_CommonPart</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lenHeader</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">headerType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">unknown</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lenDecompressed</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">CompressedResource_Header</span>
+<span class="w">  </span><span class="n">CompressedResource_Header_TypeSpecificPartType8</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">workingBufferFractionalSize</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">expansionBufferSize</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">decompressorId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">int16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">reserved</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">CompressedResource_Header</span>
+<span class="w">  </span><span class="n">CompressedResource_Header_TypeSpecificPartType9</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">decompressorId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">int16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">decompressorSpecificParametersWithIo</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">BytesWithIo</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">CompressedResource_Header</span>
+<span class="w">    </span><span class="p">`</span><span class="n">rawDecompressorSpecificParametersWithIo</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">decompressorSpecificParametersInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">decompressorSpecificParametersInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
 
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): CompressedResource</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource_Header], io: KaitaiStream, root: KaitaiStruct, parent: CompressedResource): CompressedResource_Header</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource_Header_CommonPart], io: KaitaiStream, root: KaitaiStruct, parent: CompressedResource_Header): CompressedResource_Header_CommonPart</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource_Header_TypeSpecificPartType8], io: KaitaiStream, root: KaitaiStruct, parent: CompressedResource_Header): CompressedResource_Header_TypeSpecificPartType8</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource_Header_TypeSpecificPartType9], io: KaitaiStream, root: KaitaiStruct, parent: CompressedResource_Header): CompressedResource_Header_TypeSpecificPartType9</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): CompressedResource</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource_Header], io: KaitaiStream, root: KaitaiStruct, parent: CompressedResource): CompressedResource_Header</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource_Header_CommonPart], io: KaitaiStream, root: KaitaiStruct, parent: CompressedResource_Header): CompressedResource_Header_CommonPart</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource_Header_TypeSpecificPartType8], io: KaitaiStream, root: KaitaiStruct, parent: CompressedResource_Header): CompressedResource_Header_TypeSpecificPartType8</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource_Header_TypeSpecificPartType9], io: KaitaiStream, root: KaitaiStruct, parent: CompressedResource_Header): CompressedResource_Header_TypeSpecificPartType9</span>
 
-<span class="k">proc </span><span class="nf">typeSpecificPartRaw</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">CompressedResource_Header</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-<span class="k">proc </span><span class="nf">typeSpecificPart</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">CompressedResource_Header</span><span class="p">):</span> <span class="n">KaitaiStruct</span>
-<span class="k">proc </span><span class="nf">decompressorSpecificParameters</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">CompressedResource_Header_TypeSpecificPartType9</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-
-
-<span class="sd">##[</span>
-<span class="n">Compressed</span> <span class="n">Macintosh</span> <span class="n">resource</span> <span class="n">data</span><span class="p">,</span>
-<span class="k">as</span> <span class="n">stored</span> <span class="ow">in</span> <span class="n">resources</span> <span class="n">with</span> <span class="n">the</span> <span class="s">&quot;compressed&quot;</span> <span class="n">attribute</span><span class="p">.</span>
-
-<span class="n">Resource</span> <span class="n">decompression</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">documented</span> <span class="n">by</span> <span class="n">Apple</span><span class="p">.</span>
-<span class="n">It</span> <span class="ow">is</span> <span class="n">mostly</span> <span class="n">used</span> <span class="n">internally</span> <span class="ow">in</span> <span class="n">System</span> <span class="mi">7</span><span class="p">,</span>
-<span class="n">some</span> <span class="k">of</span> <span class="n">Apple</span><span class="sc">&#39;s own applications (such as ResEdit),</span>
-<span class="ow">and</span> <span class="n">also</span> <span class="n">by</span> <span class="n">some</span> <span class="n">third</span><span class="o">-</span><span class="n">party</span> <span class="n">applications</span><span class="p">.</span>
-<span class="n">Later</span> <span class="n">versions</span> <span class="k">of</span> <span class="n">Classic</span> <span class="n">Mac</span> <span class="n">OS</span> <span class="n">make</span> <span class="n">less</span> <span class="n">use</span> <span class="k">of</span> <span class="n">resource</span> <span class="n">compression</span><span class="p">,</span>
-<span class="n">but</span> <span class="n">still</span> <span class="n">support</span> <span class="n">it</span> <span class="n">fully</span> <span class="k">for</span> <span class="n">backwards</span> <span class="n">compatibility</span><span class="p">.</span>
-<span class="n">Carbon</span> <span class="ow">in</span> <span class="n">Mac</span> <span class="n">OS</span> <span class="n">X</span> <span class="n">no</span> <span class="n">longer</span> <span class="n">supports</span> <span class="n">resource</span> <span class="n">compression</span> <span class="ow">in</span> <span class="n">any</span> <span class="n">way</span><span class="p">.</span>
-
-<span class="n">The</span> <span class="n">data</span> <span class="k">of</span> <span class="n">all</span> <span class="n">compressed</span> <span class="n">resources</span> <span class="n">starts</span> <span class="n">with</span> <span class="n">a</span> <span class="n">common</span> <span class="n">header</span><span class="p">,</span>
-<span class="n">followed</span> <span class="n">by</span> <span class="n">the</span> <span class="n">compressed</span> <span class="n">data</span><span class="p">.</span>
-<span class="n">The</span> <span class="n">data</span> <span class="ow">is</span> <span class="n">decompressed</span> <span class="k">using</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">a</span> <span class="p">`</span><span class="sc">&#39;dcmp&#39;</span><span class="p">`</span> <span class="n">resource</span><span class="p">.</span>
-<span class="n">Some</span> <span class="n">decompressors</span> <span class="n">used</span> <span class="n">by</span> <span class="n">Apple</span> <span class="n">are</span> <span class="n">included</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">System</span> <span class="n">file</span><span class="p">,</span>
-<span class="n">but</span> <span class="n">applications</span> <span class="n">can</span> <span class="n">also</span> <span class="kn">include</span> <span class="n">custom</span> <span class="n">decompressors</span><span class="p">.</span>
-<span class="n">The</span> <span class="n">header</span> <span class="k">of</span> <span class="n">the</span> <span class="n">compressed</span> <span class="n">data</span> <span class="n">indicates</span> <span class="n">the</span> <span class="n">ID</span> <span class="k">of</span> <span class="n">the</span> <span class="p">`</span><span class="sc">&#39;dcmp&#39;</span><span class="p">`</span> <span class="n">resource</span> <span class="n">used</span> <span class="n">to</span> <span class="n">decompress</span> <span class="n">the</span> <span class="n">data</span><span class="p">,</span>
-<span class="n">along</span> <span class="n">with</span> <span class="n">some</span> <span class="n">parameters</span> <span class="k">for</span> <span class="n">the</span> <span class="n">decompressor</span><span class="p">.</span>
-
-<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;http://www.alysis.us/arctechnology.htm&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
-<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;http://preserve.mactech.com/articles/mactech/Vol.09/09.01/ResCompression/index.html&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
-<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://github.com/dgelessus/python-rsrcfork/tree/f891a6e/src/rsrcfork/compress&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
-<span class="o">]</span><span class="sd">##</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): CompressedResource =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">CompressedResource</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">CompressedResource</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">CompressedResource</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
-
-
-  <span class="sd">##[</span>
-  <span class="n">The</span> <span class="n">header</span> <span class="k">of</span> <span class="n">the</span> <span class="n">compressed</span> <span class="n">data</span><span class="p">.</span>
-
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">headerExpr</span> <span class="o">=</span> <span class="n">CompressedResource_Header</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">headerExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="n">The</span> <span class="n">compressed</span> <span class="n">resource</span> <span class="n">data</span><span class="p">.</span>
-
-<span class="n">The</span> <span class="n">format</span> <span class="k">of</span> <span class="n">this</span> <span class="n">data</span> <span class="ow">is</span> <span class="n">completely</span> <span class="n">dependent</span> <span class="n">on</span> <span class="n">the</span> <span class="n">decompressor</span> <span class="ow">and</span> <span class="n">its</span> <span class="n">parameters</span><span class="p">,</span>
-<span class="k">as</span> <span class="n">specified</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">header</span><span class="p">.</span>
-<span class="k">For</span> <span class="n">details</span> <span class="n">about</span> <span class="n">the</span> <span class="n">compressed</span> <span class="n">data</span> <span class="n">formats</span> <span class="n">implemented</span> <span class="n">by</span> <span class="n">Apple</span><span class="sc">&#39;s decompressors,</span>
-<span class="n">see</span> <span class="n">the</span> <span class="n">specs</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">resource_compression</span> <span class="n">subdirectory</span><span class="p">.</span>
-
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">compressedDataExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesFull</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">compressedData</span> <span class="o">=</span> <span class="n">compressedDataExpr</span>
-
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource], filename: string): CompressedResource =</span>
-  <span class="n">CompressedResource</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">typeSpecificPartRaw</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">CompressedResource_Header</span><span class="p">):</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">typeSpecificPart</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">CompressedResource_Header</span><span class="p">):</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">decompressorSpecificParameters</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">CompressedResource_Header_TypeSpecificPartType9</span><span class="p">):</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
 
 
 <span class="sd">##[</span>
-<span class="n">Compressed</span> <span class="n">resource</span> <span class="n">data</span> <span class="n">header</span><span class="p">,</span>
-<span class="k">as</span> <span class="n">stored</span> <span class="n">at</span> <span class="n">the</span> <span class="n">start</span> <span class="k">of</span> <span class="n">all</span> <span class="n">compressed</span> <span class="n">resources</span><span class="p">.</span>
+<span class="sd">Compressed Macintosh resource data,</span>
+<span class="sd">as stored in resources with the &quot;compressed&quot; attribute.</span>
 
-<span class="o">]</span><span class="sd">##</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource_Header], io: KaitaiStream, root: KaitaiStruct, parent: CompressedResource): CompressedResource_Header =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">CompressedResource_Header</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">CompressedResource</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">CompressedResource</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="sd">Resource decompression is not documented by Apple.</span>
+<span class="sd">It is mostly used internally in System 7,</span>
+<span class="sd">some of Apple&#39;s own applications (such as ResEdit),</span>
+<span class="sd">and also by some third-party applications.</span>
+<span class="sd">Later versions of Classic Mac OS make less use of resource compression,</span>
+<span class="sd">but still support it fully for backwards compatibility.</span>
+<span class="sd">Carbon in Mac OS X no longer supports resource compression in any way.</span>
+
+<span class="sd">The data of all compressed resources starts with a common header,</span>
+<span class="sd">followed by the compressed data.</span>
+<span class="sd">The data is decompressed using code in a `&#39;dcmp&#39;` resource.</span>
+<span class="sd">Some decompressors used by Apple are included in the System file,</span>
+<span class="sd">but applications can also include custom decompressors.</span>
+<span class="sd">The header of the compressed data indicates the ID of the `&#39;dcmp&#39;` resource used to decompress the data,</span>
+<span class="sd">along with some parameters for the decompressor.</span>
+
+<span class="sd">@see &lt;a href=&quot;http://www.alysis.us/arctechnology.htm&quot;&gt;Source&lt;/a&gt;</span>
+<span class="sd">@see &lt;a href=&quot;http://preserve.mactech.com/articles/mactech/Vol.09/09.01/ResCompression/index.html&quot;&gt;Source&lt;/a&gt;</span>
+<span class="sd">@see &lt;a href=&quot;https://github.com/dgelessus/python-rsrcfork/tree/f891a6e/src/rsrcfork/compress&quot;&gt;Source&lt;/a&gt;</span>
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): CompressedResource =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">CompressedResource</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">CompressedResource</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">CompressedResource</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
 
-  <span class="sd">##[</span>
-  <span class="n">The</span> <span class="n">common</span> <span class="n">part</span> <span class="k">of</span> <span class="n">the</span> <span class="n">header</span><span class="p">.</span>
-<span class="n">Among</span> <span class="n">other</span> <span class="n">things</span><span class="p">,</span>
-<span class="n">this</span> <span class="n">part</span> <span class="n">contains</span> <span class="n">the</span> <span class="n">header</span> <span class="k">type</span><span class="p">,</span>
-<span class="n">which</span> <span class="n">determines</span> <span class="n">the</span> <span class="n">format</span> <span class="k">of</span> <span class="n">the</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">the</span> <span class="k">type</span><span class="o">-</span><span class="n">specific</span> <span class="n">part</span> <span class="k">of</span> <span class="n">the</span> <span class="n">header</span><span class="p">.</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The header of the compressed data.</span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">commonPartExpr</span> <span class="o">=</span> <span class="n">CompressedResource_Header_CommonPart</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">commonPart</span> <span class="o">=</span> <span class="n">commonPartExpr</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">headerExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CompressedResource_Header</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">headerExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Use</span> <span class="p">`</span><span class="n">type_specific_part_raw</span><span class="p">`</span> <span class="n">instead</span><span class="p">,</span>
-<span class="n">unless</span> <span class="n">you</span> <span class="n">need</span> <span class="n">access</span> <span class="n">to</span> <span class="n">this</span> <span class="n">field</span><span class="sc">&#39;s `_io`.</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The compressed resource data.</span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">rawTypeSpecificPartRawWithIoExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">commonPart</span><span class="p">.</span><span class="n">lenHeader</span> <span class="o">-</span> <span class="mi">12</span><span class="p">)))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">rawTypeSpecificPartRawWithIo</span> <span class="o">=</span> <span class="n">rawTypeSpecificPartRawWithIoExpr</span>
-  <span class="k">let</span> <span class="n">rawTypeSpecificPartRawWithIoIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawTypeSpecificPartRawWithIoExpr</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">typeSpecificPartRawWithIoExpr</span> <span class="o">=</span> <span class="n">BytesWithIo</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawTypeSpecificPartRawWithIoIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartRawWithIo</span> <span class="o">=</span> <span class="n">typeSpecificPartRawWithIoExpr</span>
+<span class="sd">The format of this data is completely dependent on the decompressor and its parameters,</span>
+<span class="sd">as specified in the header.</span>
+<span class="sd">For details about the compressed data formats implemented by Apple&#39;s decompressors,</span>
+<span class="sd">see the specs in the resource_compression subdirectory.</span>
 
-<span class="k">proc </span><span class="nf">typeSpecificPartRaw</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">CompressedResource_Header</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span> <span class="o">=</span> 
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">compressedDataExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesFull</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">compressedData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">compressedDataExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">The</span> <span class="k">type</span><span class="o">-</span><span class="n">specific</span> <span class="n">part</span> <span class="k">of</span> <span class="n">the</span> <span class="n">header</span><span class="p">,</span>
-<span class="k">as</span> <span class="n">a</span> <span class="n">raw</span> <span class="n">byte</span> <span class="kt">array</span><span class="p">.</span>
-
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartRawInstFlag</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartRawInst</span>
-  <span class="k">let</span> <span class="n">typeSpecificPartRawInstExpr</span> <span class="o">=</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartRawWithIo</span><span class="p">.</span><span class="n">data</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartRawInst</span> <span class="o">=</span> <span class="n">typeSpecificPartRawInstExpr</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartRawInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
-  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartRawInst</span>
-
-<span class="k">proc </span><span class="nf">typeSpecificPart</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">CompressedResource_Header</span><span class="p">):</span> <span class="n">KaitaiStruct</span> <span class="o">=</span> 
-
-  <span class="sd">##[</span>
-  <span class="n">The</span> <span class="k">type</span><span class="o">-</span><span class="n">specific</span> <span class="n">part</span> <span class="k">of</span> <span class="n">the</span> <span class="n">header</span><span class="p">,</span>
-<span class="n">parsed</span> <span class="n">according</span> <span class="n">to</span> <span class="n">the</span> <span class="k">type</span> <span class="kn">from</span> <span class="n">the</span> <span class="n">common</span> <span class="n">part</span><span class="p">.</span>
-
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartInstFlag</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartInst</span>
-  <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartRawWithIo</span><span class="p">.</span><span class="n">io</span>
-  <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
-  <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
-  <span class="k">block</span><span class="p">:</span>
-    <span class="k">let</span> <span class="n">on</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">commonPart</span><span class="p">.</span><span class="n">headerType</span>
-    <span class="k">if</span> <span class="n">on</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span>
-      <span class="k">let</span> <span class="n">typeSpecificPartInstExpr</span> <span class="o">=</span> <span class="n">CompressedResource_Header_TypeSpecificPartType8</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartInst</span> <span class="o">=</span> <span class="n">typeSpecificPartInstExpr</span>
-    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="mi">9</span><span class="p">:</span>
-      <span class="k">let</span> <span class="n">typeSpecificPartInstExpr</span> <span class="o">=</span> <span class="n">CompressedResource_Header_TypeSpecificPartType9</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartInst</span> <span class="o">=</span> <span class="n">typeSpecificPartInstExpr</span>
-  <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
-  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartInst</span>
-
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource_Header], filename: string): CompressedResource_Header =</span>
-  <span class="n">CompressedResource_Header</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource], filename: string): CompressedResource =</span>
+<span class="w">  </span><span class="n">CompressedResource</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
 
 <span class="sd">##[</span>
-<span class="n">The</span> <span class="n">common</span> <span class="n">part</span> <span class="k">of</span> <span class="n">a</span> <span class="n">compressed</span> <span class="n">resource</span> <span class="n">data</span> <span class="n">header</span><span class="p">.</span>
-<span class="n">The</span> <span class="n">format</span> <span class="k">of</span> <span class="n">this</span> <span class="n">part</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">same</span> <span class="k">for</span> <span class="n">all</span> <span class="n">compressed</span> <span class="n">resources</span><span class="p">.</span>
+<span class="sd">Compressed resource data header,</span>
+<span class="sd">as stored at the start of all compressed resources.</span>
 
-<span class="o">]</span><span class="sd">##</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource_Header_CommonPart], io: KaitaiStream, root: KaitaiStruct, parent: CompressedResource_Header): CompressedResource_Header_CommonPart =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">CompressedResource_Header_CommonPart</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">CompressedResource</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">CompressedResource</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
-
-
-  <span class="sd">##[</span>
-  <span class="n">The</span> <span class="n">signature</span> <span class="k">of</span> <span class="n">all</span> <span class="n">compressed</span> <span class="n">resource</span> <span class="n">data</span><span class="p">.</span>
-
-<span class="k">When</span> <span class="n">interpreted</span> <span class="k">as</span> <span class="n">MacRoman</span><span class="p">,</span> <span class="n">this</span> <span class="n">byte</span> <span class="n">sequence</span> <span class="n">decodes</span> <span class="n">to</span> <span class="p">`</span><span class="err">®üer`.</span>
-
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">magicExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">magicExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="n">The</span> <span class="n">byte</span> <span class="n">length</span> <span class="k">of</span> <span class="n">the</span> <span class="n">entire</span> <span class="n">header</span> <span class="p">(</span><span class="n">common</span> <span class="ow">and</span> <span class="k">type</span><span class="o">-</span><span class="n">specific</span> <span class="n">parts</span><span class="p">).</span>
-
-<span class="n">The</span> <span class="n">meaning</span> <span class="k">of</span> <span class="n">this</span> <span class="n">field</span> <span class="ow">is</span> <span class="n">mostly</span> <span class="n">a</span> <span class="n">guess</span><span class="p">,</span>
-<span class="k">as</span> <span class="n">all</span> <span class="n">known</span> <span class="n">header</span> <span class="n">types</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">total</span> <span class="n">length</span> <span class="k">of</span> <span class="p">`</span><span class="mh">0x12</span><span class="p">`.</span>
-
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">lenHeaderExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">lenHeader</span> <span class="o">=</span> <span class="n">lenHeaderExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="k">Type</span> <span class="k">of</span> <span class="n">the</span> <span class="n">header</span><span class="p">.</span>
-<span class="n">This</span> <span class="n">determines</span> <span class="n">the</span> <span class="n">format</span> <span class="k">of</span> <span class="n">the</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">the</span> <span class="k">type</span><span class="o">-</span><span class="n">specific</span> <span class="n">part</span> <span class="k">of</span> <span class="n">the</span> <span class="n">header</span><span class="p">.</span>
-
-<span class="n">The</span> <span class="n">only</span> <span class="n">known</span> <span class="n">header</span> <span class="k">type</span> <span class="n">values</span> <span class="n">are</span> <span class="p">`</span><span class="mi">8</span><span class="p">`</span> <span class="ow">and</span> <span class="p">`</span><span class="mi">9</span><span class="p">`.</span>
-
-<span class="n">Every</span> <span class="n">known</span> <span class="n">decompressor</span> <span class="ow">is</span> <span class="n">only</span> <span class="n">compatible</span> <span class="n">with</span> <span class="n">one</span> <span class="k">of</span> <span class="n">the</span> <span class="n">header</span> <span class="n">types</span>
-<span class="p">(</span><span class="n">but</span> <span class="n">every</span> <span class="n">header</span> <span class="k">type</span> <span class="ow">is</span> <span class="n">used</span> <span class="n">by</span> <span class="n">more</span> <span class="n">than</span> <span class="n">one</span> <span class="n">decompressor</span><span class="p">).</span>
-<span class="n">Apple</span><span class="sc">&#39;s decompressors with IDs 0 and 1 use header type 8,</span>
-<span class="ow">and</span> <span class="n">those</span> <span class="n">with</span> <span class="n">IDs</span> <span class="mi">2</span> <span class="ow">and</span> <span class="mi">3</span> <span class="n">use</span> <span class="n">header</span> <span class="k">type</span> <span class="mf">9.</span>
-
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">headerTypeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">headerType</span> <span class="o">=</span> <span class="n">headerTypeExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="n">The</span> <span class="n">meaning</span> <span class="k">of</span> <span class="n">this</span> <span class="n">field</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">known</span><span class="p">.</span>
-<span class="n">It</span> <span class="n">has</span> <span class="n">the</span> <span class="n">value</span> <span class="p">`</span><span class="mh">0x01</span><span class="p">`</span> <span class="ow">in</span> <span class="n">all</span> <span class="n">known</span> <span class="n">compressed</span> <span class="n">resources</span><span class="p">.</span>
-
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">unknownExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">unknown</span> <span class="o">=</span> <span class="n">unknownExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="n">The</span> <span class="n">byte</span> <span class="n">length</span> <span class="k">of</span> <span class="n">the</span> <span class="n">data</span> <span class="n">after</span> <span class="n">decompression</span><span class="p">.</span>
-
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">lenDecompressedExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">lenDecompressed</span> <span class="o">=</span> <span class="n">lenDecompressedExpr</span>
-
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource_Header_CommonPart], filename: string): CompressedResource_Header_CommonPart =</span>
-  <span class="n">CompressedResource_Header_CommonPart</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource_Header], io: KaitaiStream, root: KaitaiStruct, parent: CompressedResource): CompressedResource_Header =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">CompressedResource_Header</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">CompressedResource</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">CompressedResource</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
 
-<span class="sd">##[</span>
-<span class="n">The</span> <span class="k">type</span><span class="o">-</span><span class="n">specific</span> <span class="n">part</span> <span class="k">of</span> <span class="n">a</span> <span class="n">compressed</span> <span class="n">resource</span> <span class="n">header</span> <span class="n">with</span> <span class="n">header</span> <span class="k">type</span> <span class="p">`</span><span class="mi">8</span><span class="p">`.</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The common part of the header.</span>
+<span class="sd">Among other things,</span>
+<span class="sd">this part contains the header type,</span>
+<span class="sd">which determines the format of the data in the type-specific part of the header.</span>
 
-<span class="o">]</span><span class="sd">##</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource_Header_TypeSpecificPartType8], io: KaitaiStream, root: KaitaiStruct, parent: CompressedResource_Header): CompressedResource_Header_TypeSpecificPartType8 =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">CompressedResource_Header_TypeSpecificPartType8</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">CompressedResource</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">CompressedResource</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">commonPartExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CompressedResource_Header_CommonPart</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">commonPart</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">commonPartExpr</span>
 
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Use `type_specific_part_raw` instead,</span>
+<span class="sd">unless you need access to this field&#39;s `_io`.</span>
 
-  <span class="sd">##[</span>
-  <span class="n">The</span> <span class="n">ratio</span> <span class="k">of</span> <span class="n">the</span> <span class="n">compressed</span> <span class="n">data</span> <span class="n">size</span> <span class="n">to</span> <span class="n">the</span> <span class="n">uncompressed</span> <span class="n">data</span> <span class="n">size</span><span class="p">,</span>
-<span class="n">times</span> <span class="mf">256.</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawTypeSpecificPartRawWithIoExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">commonPart</span><span class="p">.</span><span class="n">lenHeader</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">12</span><span class="p">)))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">rawTypeSpecificPartRawWithIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawTypeSpecificPartRawWithIoExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawTypeSpecificPartRawWithIoIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawTypeSpecificPartRawWithIoExpr</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">typeSpecificPartRawWithIoExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BytesWithIo</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawTypeSpecificPartRawWithIoIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartRawWithIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">typeSpecificPartRawWithIoExpr</span>
 
-<span class="n">This</span> <span class="n">parameter</span> <span class="n">affects</span> <span class="n">the</span> <span class="n">amount</span> <span class="k">of</span> <span class="n">memory</span> <span class="n">allocated</span> <span class="n">by</span> <span class="n">the</span> <span class="n">Resource</span> <span class="n">Manager</span> <span class="n">during</span> <span class="n">decompression</span><span class="p">,</span>
-<span class="n">but</span> <span class="n">does</span> <span class="ow">not</span> <span class="n">have</span> <span class="n">a</span> <span class="n">direct</span> <span class="n">effect</span> <span class="n">on</span> <span class="n">the</span> <span class="n">decompressor</span>
-<span class="p">(</span><span class="k">except</span> <span class="n">that</span> <span class="n">it</span> <span class="n">will</span> <span class="n">misbehave</span> <span class="k">if</span> <span class="n">insufficient</span> <span class="n">memory</span> <span class="ow">is</span> <span class="n">provided</span><span class="p">).</span>
-<span class="n">Alternative</span> <span class="n">decompressors</span> <span class="n">that</span> <span class="n">decompress</span> <span class="n">resources</span> <span class="n">into</span> <span class="n">a</span> <span class="n">separate</span> <span class="n">buffer</span> <span class="n">rather</span> <span class="n">than</span> <span class="ow">in</span><span class="o">-</span><span class="n">place</span> <span class="n">can</span> <span class="n">generally</span> <span class="n">ignore</span> <span class="n">this</span> <span class="n">parameter</span><span class="p">.</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">typeSpecificPartRaw</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">CompressedResource_Header</span><span class="p">):</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">workingBufferFractionalSizeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">workingBufferFractionalSize</span> <span class="o">=</span> <span class="n">workingBufferFractionalSizeExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The type-specific part of the header,</span>
+<span class="sd">as a raw byte array.</span>
 
-  <span class="sd">##[</span>
-  <span class="n">The</span> <span class="n">maximum</span> <span class="n">number</span> <span class="k">of</span> <span class="n">bytes</span> <span class="n">that</span> <span class="n">the</span> <span class="n">compressed</span> <span class="n">data</span> <span class="n">might</span> <span class="s">&quot;grow&quot;</span> <span class="n">during</span> <span class="n">decompression</span><span class="p">.</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartRawInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartRawInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">typeSpecificPartRawInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartRawWithIo</span><span class="p">.</span><span class="n">data</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartRawInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">typeSpecificPartRawInstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartRawInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartRawInst</span>
 
-<span class="n">This</span> <span class="n">parameter</span> <span class="n">affects</span> <span class="n">the</span> <span class="n">amount</span> <span class="k">of</span> <span class="n">memory</span> <span class="n">allocated</span> <span class="n">by</span> <span class="n">the</span> <span class="n">Resource</span> <span class="n">Manager</span> <span class="n">during</span> <span class="n">decompression</span><span class="p">,</span>
-<span class="n">but</span> <span class="n">does</span> <span class="ow">not</span> <span class="n">have</span> <span class="n">a</span> <span class="n">direct</span> <span class="n">effect</span> <span class="n">on</span> <span class="n">the</span> <span class="n">decompressor</span>
-<span class="p">(</span><span class="k">except</span> <span class="n">that</span> <span class="n">it</span> <span class="n">will</span> <span class="n">misbehave</span> <span class="k">if</span> <span class="n">insufficient</span> <span class="n">memory</span> <span class="ow">is</span> <span class="n">provided</span><span class="p">).</span>
-<span class="n">Alternative</span> <span class="n">decompressors</span> <span class="n">that</span> <span class="n">decompress</span> <span class="n">resources</span> <span class="n">into</span> <span class="n">a</span> <span class="n">separate</span> <span class="n">buffer</span> <span class="n">rather</span> <span class="n">than</span> <span class="ow">in</span><span class="o">-</span><span class="n">place</span> <span class="n">can</span> <span class="n">generally</span> <span class="n">ignore</span> <span class="n">this</span> <span class="n">parameter</span><span class="p">.</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">typeSpecificPart</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">CompressedResource_Header</span><span class="p">):</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">expansionBufferSizeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">expansionBufferSize</span> <span class="o">=</span> <span class="n">expansionBufferSizeExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The type-specific part of the header,</span>
+<span class="sd">parsed according to the type from the common part.</span>
 
-  <span class="sd">##[</span>
-  <span class="n">The</span> <span class="n">ID</span> <span class="k">of</span> <span class="n">the</span> <span class="p">`</span><span class="sc">&#39;dcmp&#39;</span><span class="p">`</span> <span class="n">resource</span> <span class="n">that</span> <span class="n">should</span> <span class="n">be</span> <span class="n">used</span> <span class="n">to</span> <span class="n">decompress</span> <span class="n">this</span> <span class="n">resource</span><span class="p">.</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartRawWithIo</span><span class="p">.</span><span class="n">io</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
+<span class="w">  </span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="w">  </span><span class="k">block</span><span class="p">:</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">commonPart</span><span class="p">.</span><span class="n">headerType</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">8</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">typeSpecificPartInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CompressedResource_Header_TypeSpecificPartType8</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">typeSpecificPartInstExpr</span>
+<span class="w">    </span><span class="k">elif</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">9</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">typeSpecificPartInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CompressedResource_Header_TypeSpecificPartType9</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">typeSpecificPartInstExpr</span>
+<span class="w">  </span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">typeSpecificPartInst</span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">decompressorIdExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readS2be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">decompressorId</span> <span class="o">=</span> <span class="n">decompressorIdExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="n">The</span> <span class="n">meaning</span> <span class="k">of</span> <span class="n">this</span> <span class="n">field</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">known</span><span class="p">.</span>
-<span class="n">It</span> <span class="n">has</span> <span class="n">the</span> <span class="n">value</span> <span class="p">`</span><span class="mi">0</span><span class="p">`</span> <span class="ow">in</span> <span class="n">all</span> <span class="n">known</span> <span class="n">compressed</span> <span class="n">resources</span><span class="p">,</span>
-<span class="n">so</span> <span class="n">it</span> <span class="ow">is</span> <span class="n">most</span> <span class="n">likely</span> <span class="n">reserved</span><span class="p">.</span>
-
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">reservedExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">reserved</span> <span class="o">=</span> <span class="n">reservedExpr</span>
-
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource_Header_TypeSpecificPartType8], filename: string): CompressedResource_Header_TypeSpecificPartType8 =</span>
-  <span class="n">CompressedResource_Header_TypeSpecificPartType8</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource_Header], filename: string): CompressedResource_Header =</span>
+<span class="w">  </span><span class="n">CompressedResource_Header</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
 
 <span class="sd">##[</span>
-<span class="n">The</span> <span class="k">type</span><span class="o">-</span><span class="n">specific</span> <span class="n">part</span> <span class="k">of</span> <span class="n">a</span> <span class="n">compressed</span> <span class="n">resource</span> <span class="n">header</span> <span class="n">with</span> <span class="n">header</span> <span class="k">type</span> <span class="p">`</span><span class="mi">9</span><span class="p">`.</span>
+<span class="sd">The common part of a compressed resource data header.</span>
+<span class="sd">The format of this part is the same for all compressed resources.</span>
 
-<span class="o">]</span><span class="sd">##</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource_Header_TypeSpecificPartType9], io: KaitaiStream, root: KaitaiStruct, parent: CompressedResource_Header): CompressedResource_Header_TypeSpecificPartType9 =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">CompressedResource_Header_TypeSpecificPartType9</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">CompressedResource</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">CompressedResource</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource_Header_CommonPart], io: KaitaiStream, root: KaitaiStruct, parent: CompressedResource_Header): CompressedResource_Header_CommonPart =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">CompressedResource_Header_CommonPart</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">CompressedResource</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">CompressedResource</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
 
-  <span class="sd">##[</span>
-  <span class="n">The</span> <span class="n">ID</span> <span class="k">of</span> <span class="n">the</span> <span class="p">`</span><span class="sc">&#39;dcmp&#39;</span><span class="p">`</span> <span class="n">resource</span> <span class="n">that</span> <span class="n">should</span> <span class="n">be</span> <span class="n">used</span> <span class="n">to</span> <span class="n">decompress</span> <span class="n">this</span> <span class="n">resource</span><span class="p">.</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The signature of all compressed resource data.</span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">decompressorIdExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readS2be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">decompressorId</span> <span class="o">=</span> <span class="n">decompressorIdExpr</span>
+<span class="sd">When interpreted as MacRoman, this byte sequence decodes to `®üer`.</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Use</span> <span class="p">`</span><span class="n">decompressor_specific_parameters</span><span class="p">`</span> <span class="n">instead</span><span class="p">,</span>
-<span class="n">unless</span> <span class="n">you</span> <span class="n">need</span> <span class="n">access</span> <span class="n">to</span> <span class="n">this</span> <span class="n">field</span><span class="sc">&#39;s `_io`.</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">magicExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">magicExpr</span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">rawDecompressorSpecificParametersWithIoExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">rawDecompressorSpecificParametersWithIo</span> <span class="o">=</span> <span class="n">rawDecompressorSpecificParametersWithIoExpr</span>
-  <span class="k">let</span> <span class="n">rawDecompressorSpecificParametersWithIoIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawDecompressorSpecificParametersWithIoExpr</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">decompressorSpecificParametersWithIoExpr</span> <span class="o">=</span> <span class="n">BytesWithIo</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawDecompressorSpecificParametersWithIoIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">decompressorSpecificParametersWithIo</span> <span class="o">=</span> <span class="n">decompressorSpecificParametersWithIoExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The byte length of the entire header (common and type-specific parts).</span>
 
-<span class="k">proc </span><span class="nf">decompressorSpecificParameters</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">CompressedResource_Header_TypeSpecificPartType9</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span> <span class="o">=</span> 
+<span class="sd">The meaning of this field is mostly a guess,</span>
+<span class="sd">as all known header types result in a total length of `0x12`.</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Decompressor</span><span class="o">-</span><span class="n">specific</span> <span class="n">parameters</span><span class="p">.</span>
-<span class="n">The</span> <span class="n">exact</span> <span class="n">structure</span> <span class="ow">and</span> <span class="n">meaning</span> <span class="k">of</span> <span class="n">this</span> <span class="n">field</span> <span class="ow">is</span> <span class="n">different</span> <span class="k">for</span> <span class="n">each</span> <span class="n">decompressor</span><span class="p">.</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenHeaderExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenHeaderExpr</span>
 
-<span class="n">This</span> <span class="n">field</span> <span class="n">always</span> <span class="n">has</span> <span class="n">the</span> <span class="n">same</span> <span class="n">length</span><span class="p">,</span>
-<span class="n">but</span> <span class="n">decompressors</span> <span class="n">don</span><span class="sc">&#39;t always use the entirety of the field,</span>
-<span class="n">so</span> <span class="n">depending</span> <span class="n">on</span> <span class="n">the</span> <span class="n">decompressor</span> <span class="n">some</span> <span class="n">parts</span> <span class="k">of</span> <span class="n">this</span> <span class="n">field</span> <span class="n">may</span> <span class="n">be</span> <span class="n">meaningless</span><span class="p">.</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Type of the header.</span>
+<span class="sd">This determines the format of the data in the type-specific part of the header.</span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">decompressorSpecificParametersInstFlag</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">decompressorSpecificParametersInst</span>
-  <span class="k">let</span> <span class="n">decompressorSpecificParametersInstExpr</span> <span class="o">=</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">decompressorSpecificParametersWithIo</span><span class="p">.</span><span class="n">data</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">decompressorSpecificParametersInst</span> <span class="o">=</span> <span class="n">decompressorSpecificParametersInstExpr</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">decompressorSpecificParametersInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
-  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">decompressorSpecificParametersInst</span>
+<span class="sd">The only known header type values are `8` and `9`.</span>
 
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource_Header_TypeSpecificPartType9], filename: string): CompressedResource_Header_TypeSpecificPartType9 =</span>
-  <span class="n">CompressedResource_Header_TypeSpecificPartType9</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="sd">Every known decompressor is only compatible with one of the header types</span>
+<span class="sd">(but every header type is used by more than one decompressor).</span>
+<span class="sd">Apple&#39;s decompressors with IDs 0 and 1 use header type 8,</span>
+<span class="sd">and those with IDs 2 and 3 use header type 9.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">headerTypeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">headerType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">headerTypeExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The meaning of this field is not known.</span>
+<span class="sd">It has the value `0x01` in all known compressed resources.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">unknownExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">unknown</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">unknownExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The byte length of the data after decompression.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenDecompressedExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenDecompressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenDecompressedExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource_Header_CommonPart], filename: string): CompressedResource_Header_CommonPart =</span>
+<span class="w">  </span><span class="n">CompressedResource_Header_CommonPart</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="sd">The type-specific part of a compressed resource header with header type `8`.</span>
+
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource_Header_TypeSpecificPartType8], io: KaitaiStream, root: KaitaiStruct, parent: CompressedResource_Header): CompressedResource_Header_TypeSpecificPartType8 =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">CompressedResource_Header_TypeSpecificPartType8</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">CompressedResource</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">CompressedResource</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
+
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The ratio of the compressed data size to the uncompressed data size,</span>
+<span class="sd">times 256.</span>
+
+<span class="sd">This parameter affects the amount of memory allocated by the Resource Manager during decompression,</span>
+<span class="sd">but does not have a direct effect on the decompressor</span>
+<span class="sd">(except that it will misbehave if insufficient memory is provided).</span>
+<span class="sd">Alternative decompressors that decompress resources into a separate buffer rather than in-place can generally ignore this parameter.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">workingBufferFractionalSizeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">workingBufferFractionalSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">workingBufferFractionalSizeExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The maximum number of bytes that the compressed data might &quot;grow&quot; during decompression.</span>
+
+<span class="sd">This parameter affects the amount of memory allocated by the Resource Manager during decompression,</span>
+<span class="sd">but does not have a direct effect on the decompressor</span>
+<span class="sd">(except that it will misbehave if insufficient memory is provided).</span>
+<span class="sd">Alternative decompressors that decompress resources into a separate buffer rather than in-place can generally ignore this parameter.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">expansionBufferSizeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">expansionBufferSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">expansionBufferSizeExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The ID of the `&#39;dcmp&#39;` resource that should be used to decompress this resource.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">decompressorIdExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readS2be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">decompressorId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">decompressorIdExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The meaning of this field is not known.</span>
+<span class="sd">It has the value `0` in all known compressed resources,</span>
+<span class="sd">so it is most likely reserved.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">reservedExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">reserved</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">reservedExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource_Header_TypeSpecificPartType8], filename: string): CompressedResource_Header_TypeSpecificPartType8 =</span>
+<span class="w">  </span><span class="n">CompressedResource_Header_TypeSpecificPartType8</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="sd">The type-specific part of a compressed resource header with header type `9`.</span>
+
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource_Header_TypeSpecificPartType9], io: KaitaiStream, root: KaitaiStruct, parent: CompressedResource_Header): CompressedResource_Header_TypeSpecificPartType9 =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">CompressedResource_Header_TypeSpecificPartType9</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">CompressedResource</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">CompressedResource</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
+
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The ID of the `&#39;dcmp&#39;` resource that should be used to decompress this resource.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">decompressorIdExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readS2be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">decompressorId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">decompressorIdExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Use `decompressor_specific_parameters` instead,</span>
+<span class="sd">unless you need access to this field&#39;s `_io`.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawDecompressorSpecificParametersWithIoExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">rawDecompressorSpecificParametersWithIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawDecompressorSpecificParametersWithIoExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawDecompressorSpecificParametersWithIoIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawDecompressorSpecificParametersWithIoExpr</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">decompressorSpecificParametersWithIoExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BytesWithIo</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawDecompressorSpecificParametersWithIoIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">decompressorSpecificParametersWithIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">decompressorSpecificParametersWithIoExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">decompressorSpecificParameters</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">CompressedResource_Header_TypeSpecificPartType9</span><span class="p">):</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Decompressor-specific parameters.</span>
+<span class="sd">The exact structure and meaning of this field is different for each decompressor.</span>
+
+<span class="sd">This field always has the same length,</span>
+<span class="sd">but decompressors don&#39;t always use the entirety of the field,</span>
+<span class="sd">so depending on the decompressor some parts of this field may be meaningless.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">decompressorSpecificParametersInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">decompressorSpecificParametersInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">decompressorSpecificParametersInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">decompressorSpecificParametersWithIo</span><span class="p">.</span><span class="n">data</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">decompressorSpecificParametersInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">decompressorSpecificParametersInstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">decompressorSpecificParametersInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">decompressorSpecificParametersInst</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[CompressedResource_Header_TypeSpecificPartType9], filename: string): CompressedResource_Header_TypeSpecificPartType9 =</span>
+<span class="w">  </span><span class="n">CompressedResource_Header_TypeSpecificPartType9</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 </pre></div>
 
         </div>

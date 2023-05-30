@@ -234,363 +234,363 @@ used for that purpose in Windows and Google Chrome projects.</p>
         <h2>Format specification in Kaitai Struct YAML</h2>
 
         <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
-  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">windows_minidump</span>
-  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Windows MiniDump</span>
-  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
-  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
-<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-  <span class="no">Windows MiniDump (MDMP) file provides a concise way to store process</span>
-  <span class="no">core dumps, which is useful for debugging. Given its small size,</span>
-  <span class="no">modularity, some cross-platform features and native support in some</span>
-  <span class="no">debuggers, it is particularly useful for crash reporting, and is</span>
-  <span class="no">used for that purpose in Windows and Google Chrome projects.</span>
+<span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">windows_minidump</span>
+<span class="w">  </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Windows MiniDump</span>
+<span class="w">  </span><span class="nt">license</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+<span class="w">  </span><span class="nt">endian</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">le</span>
+<span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">  </span><span class="no">Windows MiniDump (MDMP) file provides a concise way to store process</span>
+<span class="w">  </span><span class="no">core dumps, which is useful for debugging. Given its small size,</span>
+<span class="w">  </span><span class="no">modularity, some cross-platform features and native support in some</span>
+<span class="w">  </span><span class="no">debuggers, it is particularly useful for crash reporting, and is</span>
+<span class="w">  </span><span class="no">used for that purpose in Windows and Google Chrome projects.</span>
 
-  <span class="no">The file itself is a container, which contains a number of typed</span>
-  <span class="no">&quot;streams&quot;, which contain some data according to its type attribute.</span>
-<span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_header</span>
+<span class="w">  </span><span class="no">The file itself is a container, which contains a number of typed</span>
+<span class="w">  </span><span class="no">&quot;streams&quot;, which contain some data according to its type attribute.</span>
+<span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_header</span>
 <span class="c1"># https://github.com/libyal/libmdmp/blob/main/documentation/Minidump%20(MDMP)%20format.asciidoc</span>
 <span class="nt">seq</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic1</span>
-    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Signature</span>
-    <span class="nt">contents</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MDMP</span>
-  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic2</span>
-    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Version</span>
-    <span class="nt">contents</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">0x93</span><span class="p p-Indicator">,</span> <span class="nv">0xa7</span><span class="p p-Indicator">]</span>
-  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version</span>
-    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Version</span>
-    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
-  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_streams</span>
-    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">NumberOfStreams</span>
-    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_streams</span>
-    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">StreamDirectoryRva</span>
-    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">checksum</span>
-    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CheckSum</span>
-    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">timestamp</span>
-    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">TimeDateStamp</span>
-    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags</span>
-    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">magic1</span>
+<span class="w">    </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Signature</span>
+<span class="w">    </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MDMP</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">magic2</span>
+<span class="w">    </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Version</span>
+<span class="w">    </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0x93</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0xa7</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">version</span>
+<span class="w">    </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Version</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u2</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num_streams</span>
+<span class="w">    </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NumberOfStreams</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ofs_streams</span>
+<span class="w">    </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">StreamDirectoryRva</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">checksum</span>
+<span class="w">    </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CheckSum</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">timestamp</span>
+<span class="w">    </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TimeDateStamp</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">flags</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u8</span>
 <span class="nt">instances</span><span class="p">:</span>
-  <span class="nt">streams</span><span class="p">:</span>
-    <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_streams</span>
-    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dir</span>
-    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
-    <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_streams</span>
+<span class="w">  </span><span class="nt">streams</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">pos</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ofs_streams</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dir</span>
+<span class="w">    </span><span class="nt">repeat</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">expr</span>
+<span class="w">    </span><span class="nt">repeat-expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num_streams</span>
 <span class="nt">types</span><span class="p">:</span>
-  <span class="nt">dir</span><span class="p">:</span>
-    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MINIDUMP_DIRECTORY</span>
-    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_directory</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stream_type</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">StreamType</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stream_types</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_data</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">DataSize</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-        <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_data</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Rva</span>
-    <span class="nt">instances</span><span class="p">:</span>
-      <span class="nt">data</span><span class="p">:</span>
-        <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_data</span>
-        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_data</span>
-        <span class="nt">type</span><span class="p">:</span>
-          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stream_type</span>
-          <span class="nt">cases</span><span class="p">:</span>
-            <span class="s">&#39;stream_types::system_info&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">system_info</span>
-            <span class="s">&#39;stream_types::misc_info&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">misc_info</span>
-            <span class="s">&#39;stream_types::thread_list&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">thread_list</span>
-            <span class="s">&#39;stream_types::memory_list&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">memory_list</span>
-            <span class="s">&#39;stream_types::exception&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">exception_stream</span>
-            <span class="c1"># TODO: support more stream types</span>
-  <span class="nt">system_info</span><span class="p">:</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-      <span class="no">&quot;System info&quot; stream provides basic information about the</span>
-      <span class="no">hardware and operating system which produces this dump.</span>
-    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_system_info</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cpu_arch</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ProcessorArchitecture</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
-        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cpu_archs</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cpu_level</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ProcessorLevel</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cpu_revision</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ProcessorRevision</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_cpus</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">NumberOfProcessors</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">os_type</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ProductType</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">os_ver_major</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MajorVersion</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">os_ver_minor</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MinorVersion</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">os_build</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">BuildNumber</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">os_platform</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">PlatformId</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_service_pack</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CSDVersionRva</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">os_suite_mask</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved2</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
-      <span class="c1"># TODO: the rest of CPU information</span>
-    <span class="nt">instances</span><span class="p">:</span>
-      <span class="nt">service_pack</span><span class="p">:</span>
-        <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root._io</span>
-        <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_service_pack</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">minidump_string</span>
-        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_service_pack &gt; 0</span>
-    <span class="nt">enums</span><span class="p">:</span>
-      <span class="nt">cpu_archs</span><span class="p">:</span>
-        <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">intel</span>
-        <span class="nt">5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">arm</span>
-        <span class="nt">6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ia64</span>
-        <span class="nt">9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">amd64</span>
-        <span class="nt">0xffff</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unknown</span>
-  <span class="nt">misc_info</span><span class="p">:</span>
-    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_misc_info</span>
-    <span class="c1"># https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_misc_info_2</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_info</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">SizeOfInfo</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags1</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Flags1</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">process_id</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ProcessId</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">process_create_time</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ProcessCreateTime</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">process_user_time</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ProcessUserTime</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">process_kernel_time</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ProcessKernelTime</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cpu_max_mhz</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ProcessorMaxMhz</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cpu_cur_mhz</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ProcessorCurrentMhz</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cpu_limit_mhz</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ProcessorMhzLimit</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cpu_max_idle_state</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ProcessorMaxIdleState</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cpu_cur_idle_state</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ProcessorCurrentIdleState</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-  <span class="nt">thread_list</span><span class="p">:</span>
-    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MINIDUMP_THREAD_LIST</span>
-    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread_list</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_threads</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">NumberOfThreads</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">threads</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Threads</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">thread</span>
-        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
-        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_threads</span>
-  <span class="nt">thread</span><span class="p">:</span>
-    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MINIDUMP_THREAD</span>
-    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">thread_id</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ThreadId</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">suspend_count</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">SuspendCount</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">priority_class</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">PriorityClass</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">priority</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Priority</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">teb</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Teb</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Thread Environment Block</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stack</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Stack</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">memory_descriptor</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">thread_context</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ThreadContext</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">location_descriptor</span>
-  <span class="nt">memory_list</span><span class="p">:</span>
-    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MINIDUMP_MEMORY_LIST</span>
-    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_mem_ranges</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mem_ranges</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">memory_descriptor</span>
-        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
-        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_mem_ranges</span>
-  <span class="nt">exception_stream</span><span class="p">:</span>
-    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MINIDUMP_EXCEPTION_STREAM</span>
-    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception_stream</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">thread_id</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ThreadId</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">__alignment</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">exception_rec</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ExceptionRecord</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">exception_record</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">thread_context</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ThreadContext</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">location_descriptor</span>
-  <span class="nt">exception_record</span><span class="p">:</span>
-    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MINIDUMP_EXCEPTION</span>
-    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">code</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ExceptionCode</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ExceptionFlags</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">inner_exception</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ExceptionRecord</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">addr</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ExceptionAddress</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Memory address where exception has occurred</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_params</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">NumberParameters</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">__unusedAlignment</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">params</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ExceptionInformation</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
-        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
-        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">15</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-          <span class="no">Additional parameters passed along with exception raise</span>
-          <span class="no">function (for WinAPI, that is `RaiseException`). Meaning is</span>
-          <span class="no">exception-specific. Given that this type is originally</span>
-          <span class="no">defined by a C structure, it is described there as array of</span>
-          <span class="no">fixed number of elements (`EXCEPTION_MAXIMUM_PARAMETERS` =</span>
-          <span class="no">15), but in reality only first `num_params` would be used.</span>
-  <span class="nt">memory_descriptor</span><span class="p">:</span>
-    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MINIDUMP_MEMORY_DESCRIPTOR</span>
-    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">addr_memory_range</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">StartOfMemoryRange</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">memory</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">location_descriptor</span>
-  <span class="nt">location_descriptor</span><span class="p">:</span>
-    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MINIDUMP_LOCATION_DESCRIPTOR</span>
-    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_data</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">DataSize</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_data</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Rva</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-    <span class="nt">instances</span><span class="p">:</span>
-      <span class="nt">data</span><span class="p">:</span>
-        <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root._io</span>
-        <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_data</span>
-        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_data</span>
-  <span class="nt">minidump_string</span><span class="p">:</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-      <span class="no">Specific string serialization scheme used in MiniDump format is</span>
-      <span class="no">actually a simple 32-bit length-prefixed UTF-16 string.</span>
-    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_string</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_str</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Length</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Buffer</span>
-        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_str</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
-        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UTF-16LE</span>
+<span class="w">  </span><span class="nt">dir</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MINIDUMP_DIRECTORY</span>
+<span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_directory</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stream_type</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">StreamType</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">        </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stream_types</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len_data</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DataSize</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">        </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ofs_data</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Rva</span>
+<span class="w">    </span><span class="nt">instances</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">data</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">pos</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ofs_data</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len_data</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">switch-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stream_type</span>
+<span class="w">          </span><span class="nt">cases</span><span class="p">:</span>
+<span class="w">            </span><span class="s">&#39;stream_types::system_info&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">system_info</span>
+<span class="w">            </span><span class="s">&#39;stream_types::misc_info&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">misc_info</span>
+<span class="w">            </span><span class="s">&#39;stream_types::thread_list&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">thread_list</span>
+<span class="w">            </span><span class="s">&#39;stream_types::memory_list&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">memory_list</span>
+<span class="w">            </span><span class="s">&#39;stream_types::exception&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">exception_stream</span>
+<span class="w">            </span><span class="c1"># TODO: support more stream types</span>
+<span class="w">  </span><span class="nt">system_info</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">&quot;System info&quot; stream provides basic information about the</span>
+<span class="w">      </span><span class="no">hardware and operating system which produces this dump.</span>
+<span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_system_info</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cpu_arch</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ProcessorArchitecture</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u2</span>
+<span class="w">        </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cpu_archs</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cpu_level</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ProcessorLevel</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u2</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cpu_revision</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ProcessorRevision</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u2</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num_cpus</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NumberOfProcessors</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">os_type</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ProductType</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">os_ver_major</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MajorVersion</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">os_ver_minor</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MinorVersion</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">os_build</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BuildNumber</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">os_platform</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PlatformId</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ofs_service_pack</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CSDVersionRva</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">os_suite_mask</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u2</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reserved2</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u2</span>
+<span class="w">      </span><span class="c1"># TODO: the rest of CPU information</span>
+<span class="w">    </span><span class="nt">instances</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">service_pack</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">io</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">_root._io</span>
+<span class="w">        </span><span class="nt">pos</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ofs_service_pack</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">minidump_string</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ofs_service_pack &gt; 0</span>
+<span class="w">    </span><span class="nt">enums</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">cpu_archs</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">0</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">intel</span>
+<span class="w">        </span><span class="nt">5</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">arm</span>
+<span class="w">        </span><span class="nt">6</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ia64</span>
+<span class="w">        </span><span class="nt">9</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">amd64</span>
+<span class="w">        </span><span class="nt">0xffff</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unknown</span>
+<span class="w">  </span><span class="nt">misc_info</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_misc_info</span>
+<span class="w">    </span><span class="c1"># https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_misc_info_2</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len_info</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SizeOfInfo</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">flags1</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Flags1</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">process_id</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ProcessId</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">process_create_time</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ProcessCreateTime</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">process_user_time</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ProcessUserTime</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">process_kernel_time</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ProcessKernelTime</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cpu_max_mhz</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ProcessorMaxMhz</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cpu_cur_mhz</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ProcessorCurrentMhz</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cpu_limit_mhz</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ProcessorMhzLimit</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cpu_max_idle_state</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ProcessorMaxIdleState</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cpu_cur_idle_state</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ProcessorCurrentIdleState</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">  </span><span class="nt">thread_list</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MINIDUMP_THREAD_LIST</span>
+<span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread_list</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num_threads</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NumberOfThreads</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">threads</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Threads</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">thread</span>
+<span class="w">        </span><span class="nt">repeat</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">expr</span>
+<span class="w">        </span><span class="nt">repeat-expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num_threads</span>
+<span class="w">  </span><span class="nt">thread</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MINIDUMP_THREAD</span>
+<span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">thread_id</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ThreadId</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">suspend_count</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SuspendCount</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">priority_class</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PriorityClass</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">priority</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Priority</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">teb</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Teb</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u8</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Thread Environment Block</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stack</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Stack</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">memory_descriptor</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">thread_context</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ThreadContext</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">location_descriptor</span>
+<span class="w">  </span><span class="nt">memory_list</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MINIDUMP_MEMORY_LIST</span>
+<span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num_mem_ranges</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mem_ranges</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">memory_descriptor</span>
+<span class="w">        </span><span class="nt">repeat</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">expr</span>
+<span class="w">        </span><span class="nt">repeat-expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num_mem_ranges</span>
+<span class="w">  </span><span class="nt">exception_stream</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MINIDUMP_EXCEPTION_STREAM</span>
+<span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception_stream</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">thread_id</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ThreadId</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reserved</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">__alignment</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">exception_rec</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ExceptionRecord</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">exception_record</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">thread_context</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ThreadContext</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">location_descriptor</span>
+<span class="w">  </span><span class="nt">exception_record</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MINIDUMP_EXCEPTION</span>
+<span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">code</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ExceptionCode</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">flags</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ExceptionFlags</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inner_exception</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ExceptionRecord</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u8</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">addr</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ExceptionAddress</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u8</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Memory address where exception has occurred</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num_params</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NumberParameters</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reserved</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">__unusedAlignment</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">params</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ExceptionInformation</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u8</span>
+<span class="w">        </span><span class="nt">repeat</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">expr</span>
+<span class="w">        </span><span class="nt">repeat-expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Additional parameters passed along with exception raise</span>
+<span class="w">          </span><span class="no">function (for WinAPI, that is `RaiseException`). Meaning is</span>
+<span class="w">          </span><span class="no">exception-specific. Given that this type is originally</span>
+<span class="w">          </span><span class="no">defined by a C structure, it is described there as array of</span>
+<span class="w">          </span><span class="no">fixed number of elements (`EXCEPTION_MAXIMUM_PARAMETERS` =</span>
+<span class="w">          </span><span class="no">15), but in reality only first `num_params` would be used.</span>
+<span class="w">  </span><span class="nt">memory_descriptor</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MINIDUMP_MEMORY_DESCRIPTOR</span>
+<span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">addr_memory_range</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">StartOfMemoryRange</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u8</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">memory</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">location_descriptor</span>
+<span class="w">  </span><span class="nt">location_descriptor</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MINIDUMP_LOCATION_DESCRIPTOR</span>
+<span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len_data</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DataSize</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ofs_data</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Rva</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">    </span><span class="nt">instances</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">data</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">io</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">_root._io</span>
+<span class="w">        </span><span class="nt">pos</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ofs_data</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len_data</span>
+<span class="w">  </span><span class="nt">minidump_string</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">Specific string serialization scheme used in MiniDump format is</span>
+<span class="w">      </span><span class="no">actually a simple 32-bit length-prefixed UTF-16 string.</span>
+<span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_string</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len_str</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Length</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Buffer</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len_str</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UTF-16LE</span>
 <span class="nt">enums</span><span class="p">:</span>
-  <span class="nt">stream_types</span><span class="p">:</span>
-    <span class="c1"># https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ne-minidumpapiset-minidump_stream_type</span>
-    <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unused</span>
-    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_0</span>
-    <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_1</span>
-    <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">thread_list</span>
-    <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">module_list</span>
-    <span class="nt">5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">memory_list</span>
-    <span class="nt">6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">exception</span>
-    <span class="nt">7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">system_info</span>
-    <span class="nt">8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">thread_ex_list</span>
-    <span class="nt">9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">memory_64_list</span>
-    <span class="nt">10</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">comment_a</span>
-    <span class="nt">11</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">comment_w</span>
-    <span class="nt">12</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">handle_data</span>
-    <span class="nt">13</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">function_table</span>
-    <span class="nt">14</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unloaded_module_list</span>
-    <span class="nt">15</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">misc_info</span>
-    <span class="nt">16</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">memory_info_list</span>
-    <span class="nt">17</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">thread_info_list</span>
-    <span class="nt">18</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">handle_operation_list</span>
-    <span class="nt">19</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">token</span>
-    <span class="nt">20</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">java_script_data</span>
-    <span class="nt">21</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">system_memory_info</span>
-    <span class="nt">22</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">process_vm_counters</span>
-    <span class="nt">23</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ipt_trace</span>
-    <span class="nt">24</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">thread_names</span>
-    <span class="nt">0x8000</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ce_null</span>
-    <span class="nt">0x8001</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ce_system_info</span>
-    <span class="nt">0x8002</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ce_exception</span>
-    <span class="nt">0x8003</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ce_module_list</span>
-    <span class="nt">0x8004</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ce_process_list</span>
-    <span class="nt">0x8005</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ce_thread_list</span>
-    <span class="nt">0x8006</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ce_thread_context_list</span>
-    <span class="nt">0x8007</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ce_thread_call_stack_list</span>
-    <span class="nt">0x8008</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ce_memory_virtual_list</span>
-    <span class="nt">0x8009</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ce_memory_physical_list</span>
-    <span class="nt">0x800A</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ce_bucket_parameters</span>
-    <span class="nt">0x800B</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ce_process_module_map</span>
-    <span class="nt">0x800C</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ce_diagnosis_list</span>
-    <span class="c1"># Breakpad extensions; see Breakpad&#39;s src/google_breakpad/common/minidump_format.h</span>
-    <span class="nt">0x47670001</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">md_raw_breakpad_info</span>
-    <span class="nt">0x47670002</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">md_raw_assertion_info</span>
-    <span class="nt">0x47670003</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">md_linux_cpu_info</span>      <span class="c1"># /proc/cpuinfo</span>
-    <span class="nt">0x47670004</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">md_linux_proc_status</span>   <span class="c1"># /proc/$x/status</span>
-    <span class="nt">0x47670005</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">md_linux_lsb_release</span>   <span class="c1"># /etc/lsb-release</span>
-    <span class="nt">0x47670006</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">md_linux_cmd_line</span>      <span class="c1"># /proc/$x/cmdline</span>
-    <span class="nt">0x47670007</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">md_linux_environ</span>       <span class="c1"># /proc/$x/environ</span>
-    <span class="nt">0x47670008</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">md_linux_auxv</span>          <span class="c1"># /proc/$x/auxv</span>
-    <span class="nt">0x47670009</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">md_linux_maps</span>          <span class="c1"># /proc/$x/maps</span>
-    <span class="nt">0x4767000a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">md_linux_dso_debug</span>
-    <span class="c1"># Crashpad extension; See Crashpad&#39;s minidump/minidump_extensions.h</span>
-    <span class="nt">0x43500001</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">md_crashpad_info_stream</span>
+<span class="w">  </span><span class="nt">stream_types</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ne-minidumpapiset-minidump_stream_type</span>
+<span class="w">    </span><span class="nt">0</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unused</span>
+<span class="w">    </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reserved_0</span>
+<span class="w">    </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reserved_1</span>
+<span class="w">    </span><span class="nt">3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">thread_list</span>
+<span class="w">    </span><span class="nt">4</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">module_list</span>
+<span class="w">    </span><span class="nt">5</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">memory_list</span>
+<span class="w">    </span><span class="nt">6</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">exception</span>
+<span class="w">    </span><span class="nt">7</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">system_info</span>
+<span class="w">    </span><span class="nt">8</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">thread_ex_list</span>
+<span class="w">    </span><span class="nt">9</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">memory_64_list</span>
+<span class="w">    </span><span class="nt">10</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">comment_a</span>
+<span class="w">    </span><span class="nt">11</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">comment_w</span>
+<span class="w">    </span><span class="nt">12</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">handle_data</span>
+<span class="w">    </span><span class="nt">13</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">function_table</span>
+<span class="w">    </span><span class="nt">14</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unloaded_module_list</span>
+<span class="w">    </span><span class="nt">15</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">misc_info</span>
+<span class="w">    </span><span class="nt">16</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">memory_info_list</span>
+<span class="w">    </span><span class="nt">17</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">thread_info_list</span>
+<span class="w">    </span><span class="nt">18</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">handle_operation_list</span>
+<span class="w">    </span><span class="nt">19</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">token</span>
+<span class="w">    </span><span class="nt">20</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">java_script_data</span>
+<span class="w">    </span><span class="nt">21</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">system_memory_info</span>
+<span class="w">    </span><span class="nt">22</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">process_vm_counters</span>
+<span class="w">    </span><span class="nt">23</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ipt_trace</span>
+<span class="w">    </span><span class="nt">24</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">thread_names</span>
+<span class="w">    </span><span class="nt">0x8000</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ce_null</span>
+<span class="w">    </span><span class="nt">0x8001</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ce_system_info</span>
+<span class="w">    </span><span class="nt">0x8002</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ce_exception</span>
+<span class="w">    </span><span class="nt">0x8003</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ce_module_list</span>
+<span class="w">    </span><span class="nt">0x8004</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ce_process_list</span>
+<span class="w">    </span><span class="nt">0x8005</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ce_thread_list</span>
+<span class="w">    </span><span class="nt">0x8006</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ce_thread_context_list</span>
+<span class="w">    </span><span class="nt">0x8007</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ce_thread_call_stack_list</span>
+<span class="w">    </span><span class="nt">0x8008</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ce_memory_virtual_list</span>
+<span class="w">    </span><span class="nt">0x8009</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ce_memory_physical_list</span>
+<span class="w">    </span><span class="nt">0x800A</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ce_bucket_parameters</span>
+<span class="w">    </span><span class="nt">0x800B</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ce_process_module_map</span>
+<span class="w">    </span><span class="nt">0x800C</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ce_diagnosis_list</span>
+<span class="w">    </span><span class="c1"># Breakpad extensions; see Breakpad&#39;s src/google_breakpad/common/minidump_format.h</span>
+<span class="w">    </span><span class="nt">0x47670001</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">md_raw_breakpad_info</span>
+<span class="w">    </span><span class="nt">0x47670002</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">md_raw_assertion_info</span>
+<span class="w">    </span><span class="nt">0x47670003</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">md_linux_cpu_info</span><span class="w">      </span><span class="c1"># /proc/cpuinfo</span>
+<span class="w">    </span><span class="nt">0x47670004</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">md_linux_proc_status</span><span class="w">   </span><span class="c1"># /proc/$x/status</span>
+<span class="w">    </span><span class="nt">0x47670005</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">md_linux_lsb_release</span><span class="w">   </span><span class="c1"># /etc/lsb-release</span>
+<span class="w">    </span><span class="nt">0x47670006</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">md_linux_cmd_line</span><span class="w">      </span><span class="c1"># /proc/$x/cmdline</span>
+<span class="w">    </span><span class="nt">0x47670007</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">md_linux_environ</span><span class="w">       </span><span class="c1"># /proc/$x/environ</span>
+<span class="w">    </span><span class="nt">0x47670008</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">md_linux_auxv</span><span class="w">          </span><span class="c1"># /proc/$x/auxv</span>
+<span class="w">    </span><span class="nt">0x47670009</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">md_linux_maps</span><span class="w">          </span><span class="c1"># /proc/$x/maps</span>
+<span class="w">    </span><span class="nt">0x4767000a</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">md_linux_dso_debug</span>
+<span class="w">    </span><span class="c1"># Crashpad extension; See Crashpad&#39;s minidump/minidump_extensions.h</span>
+<span class="w">    </span><span class="nt">0x43500001</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">md_crashpad_info_stream</span>
 </pre></div>
     </div>
 </section>

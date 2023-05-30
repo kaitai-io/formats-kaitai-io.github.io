@@ -246,19 +246,19 @@ can also be found there.</p>
 
 
 
-<div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="n">SshPublicKey</span><span class="p">.</span><span class="n">FromFile</span><span class="p">(</span><span class="s">&quot;path/to/local/file.ssh_public_key&quot;</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><span class="kt">var</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="p">.</span><span class="n">FromFile</span><span class="p">(</span><span class="s">&quot;path/to/local/file.ssh_public_key&quot;</span><span class="p">);</span>
 </pre></div>
 
 <p>Or parse structure from a byte array:</p>
 
-<div class="highlight"><pre><span></span><span class="kt">byte</span><span class="p">[]</span> <span class="n">someArray</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
-<span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SshPublicKey</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">someArray</span><span class="p">));</span>
+<div class="highlight"><pre><span></span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">someArray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">};</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">someArray</span><span class="p">));</span>
 </pre></div>
 
 <p>After that, one can get various attributes from the structure by accessing properties like:</p>
 
 
-<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">KeyName</span> <span class="c1">// =&gt; get key name</span>
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">KeyName</span><span class="w"> </span><span class="c1">// =&gt; get key name</span>
 </pre></div>
 
     </div>
@@ -290,361 +290,361 @@ can also be found there.</p>
 
 
 
-<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">Kaitai</span>
 <span class="p">{</span>
 
-    <span class="c1">/// &lt;summary&gt;</span>
-    <span class="c1">/// SSH public keys are encoded in a special binary format, typically represented</span>
-    <span class="c1">/// to end users as either one-liner OpenSSH format or multi-line PEM format</span>
-    <span class="c1">/// (commerical SSH). Text wrapper carries extra information about user who</span>
-    <span class="c1">/// created the key, comment, etc, but the inner binary is always base64-encoded</span>
-    <span class="c1">/// and follows the same internal format.</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// This format spec deals with this internal binary format (called &amp;quot;blob&amp;quot; in</span>
-    <span class="c1">/// openssh sources) only. Buffer is expected to be raw binary and not base64-d.</span>
-    <span class="c1">/// Implementation closely follows code in OpenSSH.</span>
-    <span class="c1">/// &lt;/summary&gt;</span>
-    <span class="c1">/// &lt;remarks&gt;</span>
-    <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L1970&quot;&gt;Source&lt;/a&gt;</span>
-    <span class="c1">/// &lt;/remarks&gt;</span>
-    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">SshPublicKey</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">{</span>
-        <span class="k">public</span> <span class="k">static</span> <span class="n">SshPublicKey</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">return</span> <span class="k">new</span> <span class="nf">SshPublicKey</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-        <span class="p">}</span>
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// SSH public keys are encoded in a special binary format, typically represented</span>
+<span class="w">    </span><span class="c1">/// to end users as either one-liner OpenSSH format or multi-line PEM format</span>
+<span class="w">    </span><span class="c1">/// (commerical SSH). Text wrapper carries extra information about user who</span>
+<span class="w">    </span><span class="c1">/// created the key, comment, etc, but the inner binary is always base64-encoded</span>
+<span class="w">    </span><span class="c1">/// and follows the same internal format.</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// This format spec deals with this internal binary format (called &amp;quot;blob&amp;quot; in</span>
+<span class="w">    </span><span class="c1">/// openssh sources) only. Buffer is expected to be raw binary and not base64-d.</span>
+<span class="w">    </span><span class="c1">/// Implementation closely follows code in OpenSSH.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L1970&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">SshPublicKey</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">SshPublicKey</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
 
-        <span class="k">public</span> <span class="nf">SshPublicKey</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">SshPublicKey</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
-            <span class="n">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-        <span class="p">{</span>
-            <span class="n">_keyName</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Cstring</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-            <span class="k">switch</span> <span class="p">(</span><span class="n">KeyName</span><span class="p">.</span><span class="n">Value</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">case</span> <span class="s">&quot;ssh-rsa&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KeyRsa</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="s">&quot;ecdsa-sha2-nistp256&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KeyEcdsa</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="s">&quot;ssh-ed25519&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KeyEd25519</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="s">&quot;ssh-dss&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KeyDsa</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="nf">SshPublicKey</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">            </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">            </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">_keyName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Cstring</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">            </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">KeyName</span><span class="p">.</span><span class="n">Value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="s">&quot;ssh-rsa&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">KeyRsa</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="s">&quot;ecdsa-sha2-nistp256&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">KeyEcdsa</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="s">&quot;ssh-ed25519&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">KeyEd25519</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="s">&quot;ssh-dss&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">KeyDsa</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
 
-        <span class="c1">/// &lt;remarks&gt;</span>
-        <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2011-L2028&quot;&gt;Source&lt;/a&gt;</span>
-        <span class="c1">/// &lt;/remarks&gt;</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">KeyRsa</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">KeyRsa</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">KeyRsa</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">        </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">        </span><span class="c1">/// Reference: &lt;a href=&quot;https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2011-L2028&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">        </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">KeyRsa</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">KeyRsa</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">KeyRsa</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">KeyRsa</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">SshPublicKey</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">SshPublicKey</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">f_keyLength</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_rsaE</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Bignum2</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                <span class="n">_rsaN</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Bignum2</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_keyLength</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">int</span> <span class="n">_keyLength</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">KeyRsa</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_keyLength</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_rsaE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Bignum2</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                </span><span class="n">_rsaN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Bignum2</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_keyLength</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">_keyLength</span><span class="p">;</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Key length in bits</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">int</span> <span class="n">KeyLength</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_keyLength</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_keyLength</span><span class="p">;</span>
-                    <span class="n">_keyLength</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">RsaN</span><span class="p">.</span><span class="n">LengthInBits</span><span class="p">);</span>
-                    <span class="n">f_keyLength</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_keyLength</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="n">Bignum2</span> <span class="n">_rsaE</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">Bignum2</span> <span class="n">_rsaN</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">SshPublicKey</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">SshPublicKey</span> <span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// Key length in bits</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">KeyLength</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_keyLength</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_keyLength</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_keyLength</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">RsaN</span><span class="p">.</span><span class="n">LengthInBits</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">f_keyLength</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_keyLength</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">Bignum2</span><span class="w"> </span><span class="n">_rsaE</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">Bignum2</span><span class="w"> </span><span class="n">_rsaN</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Public key exponent, designated `e` in RSA documentation.</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="n">Bignum2</span> <span class="n">RsaE</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_rsaE</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// Public key exponent, designated `e` in RSA documentation.</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">Bignum2</span><span class="w"> </span><span class="n">RsaE</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_rsaE</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Modulus of both public and private keys, designated `n` in RSA</span>
-            <span class="c1">/// documentation. Its length in bits is designated as &amp;quot;key length&amp;quot;.</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="n">Bignum2</span> <span class="n">RsaN</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_rsaN</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">SshPublicKey</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">SshPublicKey</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// Modulus of both public and private keys, designated `n` in RSA</span>
+<span class="w">            </span><span class="c1">/// documentation. Its length in bits is designated as &amp;quot;key length&amp;quot;.</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">Bignum2</span><span class="w"> </span><span class="n">RsaN</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_rsaN</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
 
-        <span class="c1">/// &lt;remarks&gt;</span>
-        <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2111-L2124&quot;&gt;Source&lt;/a&gt;</span>
-        <span class="c1">/// &lt;/remarks&gt;</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">KeyEd25519</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">KeyEd25519</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">KeyEd25519</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">        </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">        </span><span class="c1">/// Reference: &lt;a href=&quot;https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2111-L2124&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">        </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">KeyEd25519</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">KeyEd25519</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">KeyEd25519</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">KeyEd25519</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">SshPublicKey</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">SshPublicKey</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_lenPk</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
-                <span class="n">_pk</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenPk</span><span class="p">);</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_lenPk</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_pk</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">SshPublicKey</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">SshPublicKey</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">uint</span> <span class="n">LenPk</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenPk</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Pk</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_pk</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">SshPublicKey</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">SshPublicKey</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">KeyEd25519</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_lenPk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_pk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenPk</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">_lenPk</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_pk</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">LenPk</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_lenPk</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Pk</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_pk</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
 
-        <span class="c1">/// &lt;remarks&gt;</span>
-        <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2060-L2103&quot;&gt;Source&lt;/a&gt;</span>
-        <span class="c1">/// &lt;/remarks&gt;</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">KeyEcdsa</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">KeyEcdsa</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">KeyEcdsa</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">        </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">        </span><span class="c1">/// Reference: &lt;a href=&quot;https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2060-L2103&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">        </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">KeyEcdsa</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">KeyEcdsa</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">KeyEcdsa</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">KeyEcdsa</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">SshPublicKey</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">SshPublicKey</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_curveName</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Cstring</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                <span class="n">_ec</span> <span class="p">=</span> <span class="k">new</span> <span class="n">EllipticCurve</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="n">Cstring</span> <span class="n">_curveName</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">EllipticCurve</span> <span class="n">_ec</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">SshPublicKey</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">SshPublicKey</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">public</span> <span class="n">Cstring</span> <span class="n">CurveName</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_curveName</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">EllipticCurve</span> <span class="n">Ec</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ec</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">SshPublicKey</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">SshPublicKey</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">KeyEcdsa</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_curveName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Cstring</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                </span><span class="n">_ec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">EllipticCurve</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">Cstring</span><span class="w"> </span><span class="n">_curveName</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">EllipticCurve</span><span class="w"> </span><span class="n">_ec</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">Cstring</span><span class="w"> </span><span class="n">CurveName</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_curveName</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">EllipticCurve</span><span class="w"> </span><span class="n">Ec</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_ec</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
 
-        <span class="c1">/// &lt;summary&gt;</span>
-        <span class="c1">/// A integer-prefixed string designed to be read using `sshbuf_get_cstring`</span>
-        <span class="c1">/// and written by `sshbuf_put_cstring` routines in ssh sources. Name is an</span>
-        <span class="c1">/// obscure misnomer, as typically &amp;quot;C string&amp;quot; means a null-terminated string.</span>
-        <span class="c1">/// &lt;/summary&gt;</span>
-        <span class="c1">/// &lt;remarks&gt;</span>
-        <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-basic.c#L181&quot;&gt;Source&lt;/a&gt;</span>
-        <span class="c1">/// &lt;/remarks&gt;</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Cstring</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">Cstring</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">Cstring</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">        </span><span class="c1">/// A integer-prefixed string designed to be read using `sshbuf_get_cstring`</span>
+<span class="w">        </span><span class="c1">/// and written by `sshbuf_put_cstring` routines in ssh sources. Name is an</span>
+<span class="w">        </span><span class="c1">/// obscure misnomer, as typically &amp;quot;C string&amp;quot; means a null-terminated string.</span>
+<span class="w">        </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">        </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">        </span><span class="c1">/// Reference: &lt;a href=&quot;https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-basic.c#L181&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">        </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Cstring</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">Cstring</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">Cstring</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">Cstring</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">SshPublicKey</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_len</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
-                <span class="n">_value</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">));</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_len</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">string</span> <span class="n">_value</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">SshPublicKey</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">uint</span> <span class="n">Len</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_len</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">string</span> <span class="n">Value</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_value</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">SshPublicKey</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">Cstring</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">_len</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">_value</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">Len</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_len</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_value</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
 
-        <span class="c1">/// &lt;remarks&gt;</span>
-        <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2036-L2051&quot;&gt;Source&lt;/a&gt;</span>
-        <span class="c1">/// &lt;/remarks&gt;</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">KeyDsa</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">KeyDsa</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">KeyDsa</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">        </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">        </span><span class="c1">/// Reference: &lt;a href=&quot;https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2036-L2051&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">        </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">KeyDsa</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">KeyDsa</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">KeyDsa</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">KeyDsa</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">SshPublicKey</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">SshPublicKey</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_dsaP</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Bignum2</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                <span class="n">_dsaQ</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Bignum2</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                <span class="n">_dsaG</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Bignum2</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                <span class="n">_dsaPubKey</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Bignum2</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="n">Bignum2</span> <span class="n">_dsaP</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">Bignum2</span> <span class="n">_dsaQ</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">Bignum2</span> <span class="n">_dsaG</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">Bignum2</span> <span class="n">_dsaPubKey</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">SshPublicKey</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">SshPublicKey</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">public</span> <span class="n">Bignum2</span> <span class="n">DsaP</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_dsaP</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">Bignum2</span> <span class="n">DsaQ</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_dsaQ</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">Bignum2</span> <span class="n">DsaG</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_dsaG</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">Bignum2</span> <span class="n">DsaPubKey</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_dsaPubKey</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">SshPublicKey</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">SshPublicKey</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">KeyDsa</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_dsaP</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Bignum2</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                </span><span class="n">_dsaQ</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Bignum2</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                </span><span class="n">_dsaG</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Bignum2</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                </span><span class="n">_dsaPubKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Bignum2</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">Bignum2</span><span class="w"> </span><span class="n">_dsaP</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">Bignum2</span><span class="w"> </span><span class="n">_dsaQ</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">Bignum2</span><span class="w"> </span><span class="n">_dsaG</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">Bignum2</span><span class="w"> </span><span class="n">_dsaPubKey</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">Bignum2</span><span class="w"> </span><span class="n">DsaP</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_dsaP</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">Bignum2</span><span class="w"> </span><span class="n">DsaQ</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_dsaQ</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">Bignum2</span><span class="w"> </span><span class="n">DsaG</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_dsaG</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">Bignum2</span><span class="w"> </span><span class="n">DsaPubKey</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_dsaPubKey</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
 
-        <span class="c1">/// &lt;summary&gt;</span>
-        <span class="c1">/// Elliptic curve dump format used by ssh. In OpenSSH code, the following</span>
-        <span class="c1">/// routines are used to read/write it:</span>
-        <span class="c1">/// </span>
-        <span class="c1">/// * sshbuf_get_ec</span>
-        <span class="c1">/// * get_ec</span>
-        <span class="c1">/// &lt;/summary&gt;</span>
-        <span class="c1">/// &lt;remarks&gt;</span>
-        <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L90</span>
-        <span class="c1">/// https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L76</span>
-        <span class="c1">/// &quot;&gt;Source&lt;/a&gt;</span>
-        <span class="c1">/// &lt;/remarks&gt;</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">EllipticCurve</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">EllipticCurve</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">EllipticCurve</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">        </span><span class="c1">/// Elliptic curve dump format used by ssh. In OpenSSH code, the following</span>
+<span class="w">        </span><span class="c1">/// routines are used to read/write it:</span>
+<span class="w">        </span><span class="c1">/// </span>
+<span class="w">        </span><span class="c1">/// * sshbuf_get_ec</span>
+<span class="w">        </span><span class="c1">/// * get_ec</span>
+<span class="w">        </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">        </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">        </span><span class="c1">/// Reference: &lt;a href=&quot;https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L90</span>
+<span class="w">        </span><span class="c1">/// https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L76</span>
+<span class="w">        </span><span class="c1">/// &quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">        </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">EllipticCurve</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">EllipticCurve</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">EllipticCurve</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">EllipticCurve</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">SshPublicKey</span><span class="p">.</span><span class="n">KeyEcdsa</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">SshPublicKey</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_len</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
-                <span class="n">_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">);</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_len</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_body</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">SshPublicKey</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">SshPublicKey</span><span class="p">.</span><span class="n">KeyEcdsa</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">uint</span> <span class="n">Len</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_len</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Body</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_body</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">SshPublicKey</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">SshPublicKey</span><span class="p">.</span><span class="n">KeyEcdsa</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">EllipticCurve</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="p">.</span><span class="n">KeyEcdsa</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">_len</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_body</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="p">.</span><span class="n">KeyEcdsa</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">Len</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_len</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Body</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_body</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="p">.</span><span class="n">KeyEcdsa</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
 
-        <span class="c1">/// &lt;summary&gt;</span>
-        <span class="c1">/// Big integers serialization format used by ssh, v2. In the code, the following</span>
-        <span class="c1">/// routines are used to read/write it:</span>
-        <span class="c1">/// </span>
-        <span class="c1">/// * sshbuf_get_bignum2</span>
-        <span class="c1">/// * sshbuf_get_bignum2_bytes_direct</span>
-        <span class="c1">/// * sshbuf_put_bignum2</span>
-        <span class="c1">/// * sshbuf_get_bignum2_bytes_direct</span>
-        <span class="c1">/// &lt;/summary&gt;</span>
-        <span class="c1">/// &lt;remarks&gt;</span>
-        <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L35</span>
-        <span class="c1">/// https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-basic.c#L431</span>
-        <span class="c1">/// &quot;&gt;Source&lt;/a&gt;</span>
-        <span class="c1">/// &lt;/remarks&gt;</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Bignum2</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">Bignum2</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">Bignum2</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">        </span><span class="c1">/// Big integers serialization format used by ssh, v2. In the code, the following</span>
+<span class="w">        </span><span class="c1">/// routines are used to read/write it:</span>
+<span class="w">        </span><span class="c1">/// </span>
+<span class="w">        </span><span class="c1">/// * sshbuf_get_bignum2</span>
+<span class="w">        </span><span class="c1">/// * sshbuf_get_bignum2_bytes_direct</span>
+<span class="w">        </span><span class="c1">/// * sshbuf_put_bignum2</span>
+<span class="w">        </span><span class="c1">/// * sshbuf_get_bignum2_bytes_direct</span>
+<span class="w">        </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">        </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">        </span><span class="c1">/// Reference: &lt;a href=&quot;https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L35</span>
+<span class="w">        </span><span class="c1">/// https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-basic.c#L431</span>
+<span class="w">        </span><span class="c1">/// &quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">        </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Bignum2</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">Bignum2</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">Bignum2</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">Bignum2</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">SshPublicKey</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">f_lengthInBits</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_len</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
-                <span class="n">_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">);</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_lengthInBits</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">int</span> <span class="n">_lengthInBits</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">Bignum2</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_lengthInBits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_lengthInBits</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">_lengthInBits</span><span class="p">;</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Length of big integer in bits. In OpenSSH sources, this corresponds to</span>
-            <span class="c1">/// `BN_num_bits` function.</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">int</span> <span class="n">LengthInBits</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_lengthInBits</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_lengthInBits</span><span class="p">;</span>
-                    <span class="n">_lengthInBits</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(((</span><span class="n">Len</span> <span class="p">-</span> <span class="m">1</span><span class="p">)</span> <span class="p">*</span> <span class="m">8</span><span class="p">));</span>
-                    <span class="n">f_lengthInBits</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_lengthInBits</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_len</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_body</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">SshPublicKey</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">uint</span> <span class="n">Len</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_len</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Body</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_body</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">SshPublicKey</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="n">Cstring</span> <span class="n">_keyName</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">_body</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">SshPublicKey</span> <span class="n">m_root</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
-        <span class="k">public</span> <span class="n">Cstring</span> <span class="n">KeyName</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_keyName</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">Body</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_body</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">SshPublicKey</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-    <span class="p">}</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// Length of big integer in bits. In OpenSSH sources, this corresponds to</span>
+<span class="w">            </span><span class="c1">/// `BN_num_bits` function.</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">LengthInBits</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_lengthInBits</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_lengthInBits</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_lengthInBits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">(((</span><span class="n">Len</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">8</span><span class="p">));</span>
+<span class="w">                    </span><span class="n">f_lengthInBits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_lengthInBits</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">_len</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_body</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">Len</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_len</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Body</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_body</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">Cstring</span><span class="w"> </span><span class="n">_keyName</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">_body</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">Cstring</span><span class="w"> </span><span class="n">KeyName</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_keyName</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">Body</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_body</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">SshPublicKey</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 

@@ -268,286 +268,286 @@ section#format-index .row {
         </div>
 
         <div class="row">
-            <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">kaitai_struct_nim_runtime</span>
-<span class="kn">import</span> <span class="n">options</span>
+            <div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="n">kaitai_struct_nim_runtime</span>
+<span class="kn">import</span><span class="w"> </span><span class="n">options</span>
 
 <span class="k">type</span>
-  <span class="n">Tga</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">imageIdLen</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
-    <span class="p">`</span><span class="n">colorMapType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Tga_ColorMapEnum</span>
-    <span class="p">`</span><span class="n">imageType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Tga_ImageTypeEnum</span>
-    <span class="p">`</span><span class="n">colorMapOfs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
-    <span class="p">`</span><span class="n">numColorMap</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
-    <span class="p">`</span><span class="n">colorMapDepth</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
-    <span class="p">`</span><span class="n">xOffset</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
-    <span class="p">`</span><span class="n">yOffset</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
-    <span class="p">`</span><span class="n">width</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
-    <span class="p">`</span><span class="n">height</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
-    <span class="p">`</span><span class="n">imageDepth</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
-    <span class="p">`</span><span class="n">imgDescriptor</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
-    <span class="p">`</span><span class="n">imageId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">colorMap</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]]</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">footerInst</span><span class="p">`:</span> <span class="n">Tga_TgaFooter</span>
-    <span class="p">`</span><span class="n">footerInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
-  <span class="n">Tga_ColorMapEnum</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
-    <span class="n">no_color_map</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">has_color_map</span> <span class="o">=</span> <span class="mi">1</span>
-  <span class="n">Tga_ImageTypeEnum</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
-    <span class="n">no_image_data</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">uncomp_color_mapped</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">uncomp_true_color</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="n">uncomp_bw</span> <span class="o">=</span> <span class="mi">3</span>
-    <span class="n">rle_color_mapped</span> <span class="o">=</span> <span class="mi">9</span>
-    <span class="n">rle_true_color</span> <span class="o">=</span> <span class="mi">10</span>
-    <span class="n">rle_bw</span> <span class="o">=</span> <span class="mi">11</span>
-  <span class="n">Tga_TgaFooter</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">extAreaOfs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">devDirOfs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">versionMagic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Tga</span>
-    <span class="p">`</span><span class="n">isValidInst</span><span class="p">`:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">isValidInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">extAreaInst</span><span class="p">`:</span> <span class="n">Tga_TgaExtArea</span>
-    <span class="p">`</span><span class="n">extAreaInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
-  <span class="n">Tga_TgaExtArea</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">extAreaSize</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
-    <span class="p">`</span><span class="n">authorName</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
-    <span class="p">`</span><span class="n">comments</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="kt">string</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">timestamp</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">jobId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
-    <span class="p">`</span><span class="n">jobTime</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
-    <span class="p">`</span><span class="n">softwareId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
-    <span class="p">`</span><span class="n">softwareVersion</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">keyColor</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">pixelAspectRatio</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">gammaValue</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">colorCorrOfs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">postageStampOfs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">scanLineOfs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">attributes</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Tga_TgaFooter</span>
+<span class="w">  </span><span class="n">Tga</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">imageIdLen</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">colorMapType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Tga_ColorMapEnum</span>
+<span class="w">    </span><span class="p">`</span><span class="n">imageType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Tga_ImageTypeEnum</span>
+<span class="w">    </span><span class="p">`</span><span class="n">colorMapOfs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">numColorMap</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">colorMapDepth</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">xOffset</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">yOffset</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">width</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">height</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">imageDepth</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">imgDescriptor</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">imageId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">colorMap</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">footerInst</span><span class="p">`:</span><span class="w"> </span><span class="n">Tga_TgaFooter</span>
+<span class="w">    </span><span class="p">`</span><span class="n">footerInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">  </span><span class="n">Tga_ColorMapEnum</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">enum</span>
+<span class="w">    </span><span class="n">no_color_map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="n">has_color_map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">  </span><span class="n">Tga_ImageTypeEnum</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">enum</span>
+<span class="w">    </span><span class="n">no_image_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="n">uncomp_color_mapped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="n">uncomp_true_color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">    </span><span class="n">uncomp_bw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">    </span><span class="n">rle_color_mapped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">9</span>
+<span class="w">    </span><span class="n">rle_true_color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span>
+<span class="w">    </span><span class="n">rle_bw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">11</span>
+<span class="w">  </span><span class="n">Tga_TgaFooter</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">extAreaOfs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">devDirOfs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">versionMagic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Tga</span>
+<span class="w">    </span><span class="p">`</span><span class="n">isValidInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">isValidInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">extAreaInst</span><span class="p">`:</span><span class="w"> </span><span class="n">Tga_TgaExtArea</span>
+<span class="w">    </span><span class="p">`</span><span class="n">extAreaInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">  </span><span class="n">Tga_TgaExtArea</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">extAreaSize</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">authorName</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">string</span>
+<span class="w">    </span><span class="p">`</span><span class="n">comments</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="nb">string</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">timestamp</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">jobId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">string</span>
+<span class="w">    </span><span class="p">`</span><span class="n">jobTime</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">string</span>
+<span class="w">    </span><span class="p">`</span><span class="n">softwareId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">string</span>
+<span class="w">    </span><span class="p">`</span><span class="n">softwareVersion</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">keyColor</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">pixelAspectRatio</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">gammaValue</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">colorCorrOfs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">postageStampOfs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">scanLineOfs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">attributes</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Tga_TgaFooter</span>
 
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Tga], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Tga</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Tga_TgaFooter], io: KaitaiStream, root: KaitaiStruct, parent: Tga): Tga_TgaFooter</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Tga_TgaExtArea], io: KaitaiStream, root: KaitaiStruct, parent: Tga_TgaFooter): Tga_TgaExtArea</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Tga], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Tga</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Tga_TgaFooter], io: KaitaiStream, root: KaitaiStruct, parent: Tga): Tga_TgaFooter</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Tga_TgaExtArea], io: KaitaiStream, root: KaitaiStruct, parent: Tga_TgaFooter): Tga_TgaExtArea</span>
 
-<span class="k">proc </span><span class="nf">footer</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Tga</span><span class="p">):</span> <span class="n">Tga_TgaFooter</span>
-<span class="k">proc </span><span class="nf">isValid</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Tga_TgaFooter</span><span class="p">):</span> <span class="kt">bool</span>
-<span class="k">proc </span><span class="nf">extArea</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Tga_TgaFooter</span><span class="p">):</span> <span class="n">Tga_TgaExtArea</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">footer</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Tga</span><span class="p">):</span><span class="w"> </span><span class="n">Tga_TgaFooter</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">isValid</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Tga_TgaFooter</span><span class="p">):</span><span class="w"> </span><span class="nb">bool</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">extArea</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Tga_TgaFooter</span><span class="p">):</span><span class="w"> </span><span class="n">Tga_TgaExtArea</span>
 
 
 <span class="sd">##[</span>
-<span class="n">TGA</span> <span class="p">(</span><span class="n">AKA</span> <span class="n">Truevision</span> <span class="n">TGA</span><span class="p">,</span> <span class="n">AKA</span> <span class="n">TARGA</span><span class="p">),</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">raster</span> <span class="n">image</span> <span class="n">file</span> <span class="n">format</span> <span class="n">created</span> <span class="n">by</span> <span class="n">Truevision</span><span class="p">.</span> <span class="n">It</span> <span class="n">supports</span> <span class="n">up</span> <span class="n">to</span> <span class="mi">32</span> <span class="n">bits</span> <span class="n">per</span> <span class="n">pixel</span> <span class="p">(</span><span class="n">three</span> <span class="mi">8</span><span class="o">-</span><span class="n">bit</span> <span class="n">RGB</span> <span class="n">channels</span> <span class="o">+</span> <span class="mi">8</span><span class="o">-</span><span class="n">bit</span> <span class="n">alpha</span> <span class="n">channel</span><span class="p">),</span> <span class="n">color</span> <span class="n">mapping</span> <span class="ow">and</span> <span class="n">optional</span> <span class="n">lossless</span> <span class="n">RLE</span> <span class="n">compression</span><span class="p">.</span>
-<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://www.dca.fee.unicamp.br/~martino/disciplinas/ea978/tgaffs.pdf&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
-<span class="o">]</span><span class="sd">##</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Tga], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Tga =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Tga</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Tga</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Tga</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="sd">TGA (AKA Truevision TGA, AKA TARGA), is a raster image file format created by Truevision. It supports up to 32 bits per pixel (three 8-bit RGB channels + 8-bit alpha channel), color mapping and optional lossless RLE compression.</span>
+<span class="sd">@see &lt;a href=&quot;https://www.dca.fee.unicamp.br/~martino/disciplinas/ea978/tgaffs.pdf&quot;&gt;Source&lt;/a&gt;</span>
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Tga], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Tga =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Tga</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Tga</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Tga</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
-  <span class="k">let</span> <span class="n">imageIdLenExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">imageIdLen</span> <span class="o">=</span> <span class="n">imageIdLenExpr</span>
-  <span class="k">let</span> <span class="n">colorMapTypeExpr</span> <span class="o">=</span> <span class="n">Tga_ColorMapEnum</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">colorMapType</span> <span class="o">=</span> <span class="n">colorMapTypeExpr</span>
-  <span class="k">let</span> <span class="n">imageTypeExpr</span> <span class="o">=</span> <span class="n">Tga_ImageTypeEnum</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">imageType</span> <span class="o">=</span> <span class="n">imageTypeExpr</span>
-  <span class="k">let</span> <span class="n">colorMapOfsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">colorMapOfs</span> <span class="o">=</span> <span class="n">colorMapOfsExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">imageIdLenExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">imageIdLen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">imageIdLenExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">colorMapTypeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Tga_ColorMapEnum</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">colorMapType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">colorMapTypeExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">imageTypeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Tga_ImageTypeEnum</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">imageType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">imageTypeExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">colorMapOfsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">colorMapOfs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">colorMapOfsExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Number</span> <span class="k">of</span> <span class="n">entries</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">color</span> <span class="n">map</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">numColorMapExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">numColorMap</span> <span class="o">=</span> <span class="n">numColorMapExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Number of entries in a color map</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">numColorMapExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">numColorMap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">numColorMapExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Number</span> <span class="k">of</span> <span class="n">bits</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">each</span> <span class="n">color</span> <span class="n">maps</span> <span class="n">entry</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">colorMapDepthExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">colorMapDepth</span> <span class="o">=</span> <span class="n">colorMapDepthExpr</span>
-  <span class="k">let</span> <span class="n">xOffsetExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">xOffset</span> <span class="o">=</span> <span class="n">xOffsetExpr</span>
-  <span class="k">let</span> <span class="n">yOffsetExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">yOffset</span> <span class="o">=</span> <span class="n">yOffsetExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Number of bits in a each color maps entry</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">colorMapDepthExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">colorMapDepth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">colorMapDepthExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">xOffsetExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">xOffset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xOffsetExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">yOffsetExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">yOffset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">yOffsetExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Width</span> <span class="k">of</span> <span class="n">the</span> <span class="n">image</span><span class="p">,</span> <span class="ow">in</span> <span class="n">pixels</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">widthExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">widthExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Width of the image, in pixels</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">widthExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">widthExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Height</span> <span class="k">of</span> <span class="n">the</span> <span class="n">image</span><span class="p">,</span> <span class="ow">in</span> <span class="n">pixels</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">heightExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">heightExpr</span>
-  <span class="k">let</span> <span class="n">imageDepthExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">imageDepth</span> <span class="o">=</span> <span class="n">imageDepthExpr</span>
-  <span class="k">let</span> <span class="n">imgDescriptorExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">imgDescriptor</span> <span class="o">=</span> <span class="n">imgDescriptorExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Height of the image, in pixels</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">heightExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">heightExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">imageDepthExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">imageDepth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">imageDepthExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">imgDescriptorExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">imgDescriptor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">imgDescriptorExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Arbitrary</span> <span class="n">application</span><span class="o">-</span><span class="n">specific</span> <span class="n">information</span> <span class="n">that</span> <span class="ow">is</span> <span class="n">used</span> <span class="n">to</span>
-<span class="n">identify</span> <span class="n">image</span><span class="p">.</span> <span class="n">May</span> <span class="n">contain</span> <span class="n">text</span> <span class="ow">or</span> <span class="n">some</span> <span class="n">binary</span> <span class="n">data</span><span class="p">.</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Arbitrary application-specific information that is used to</span>
+<span class="sd">identify image. May contain text or some binary data.</span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">imageIdExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">imageIdLen</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">imageId</span> <span class="o">=</span> <span class="n">imageIdExpr</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">imageIdExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">imageIdLen</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">imageId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">imageIdExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Color</span> <span class="n">map</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">colorMapType</span> <span class="o">==</span> <span class="n">tga</span><span class="p">.</span><span class="n">has_color_map</span><span class="p">:</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">numColorMap</span><span class="p">):</span>
-      <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">colorMapDepth</span> <span class="o">+</span> <span class="mi">7</span><span class="p">)</span> <span class="ow">div</span> <span class="mi">8</span><span class="p">)))</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">colorMap</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Color map</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">colorMapType</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">tga</span><span class="p">.</span><span class="n">has_color_map</span><span class="p">:</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">..</span><span class="o">&lt;</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">numColorMap</span><span class="p">):</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">colorMapDepth</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">7</span><span class="p">)</span><span class="w"> </span><span class="ow">div</span><span class="w"> </span><span class="mi">8</span><span class="p">)))</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">colorMap</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
 
-<span class="k">proc </span><span class="nf">footer</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Tga</span><span class="p">):</span> <span class="n">Tga_TgaFooter</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">footerInstFlag</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">footerInst</span>
-  <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">26</span><span class="p">)))</span>
-  <span class="k">let</span> <span class="n">footerInstExpr</span> <span class="o">=</span> <span class="n">Tga_TgaFooter</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">footerInst</span> <span class="o">=</span> <span class="n">footerInstExpr</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">footerInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
-  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">footerInst</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">footer</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Tga</span><span class="p">):</span><span class="w"> </span><span class="n">Tga_TgaFooter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">footerInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">footerInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">26</span><span class="p">)))</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">footerInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Tga_TgaFooter</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">footerInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">footerInstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">footerInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">footerInst</span>
 
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Tga], filename: string): Tga =</span>
-  <span class="n">Tga</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Tga], filename: string): Tga =</span>
+<span class="w">  </span><span class="n">Tga</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Tga_TgaFooter], io: KaitaiStream, root: KaitaiStruct, parent: Tga): Tga_TgaFooter =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Tga_TgaFooter</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Tga</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Tga</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
-
-
-  <span class="sd">##[</span>
-  <span class="n">Offset</span> <span class="n">to</span> <span class="n">extension</span> <span class="n">area</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">extAreaOfsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">extAreaOfs</span> <span class="o">=</span> <span class="n">extAreaOfsExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="n">Offset</span> <span class="n">to</span> <span class="n">developer</span> <span class="n">directory</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">devDirOfsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">devDirOfs</span> <span class="o">=</span> <span class="n">devDirOfsExpr</span>
-  <span class="k">let</span> <span class="n">versionMagicExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">18</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">versionMagic</span> <span class="o">=</span> <span class="n">versionMagicExpr</span>
-
-<span class="k">proc </span><span class="nf">isValid</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Tga_TgaFooter</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isValidInstFlag</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isValidInst</span>
-  <span class="k">let</span> <span class="n">isValidInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">versionMagic</span> <span class="o">==</span> <span class="o">@[</span><span class="mi">84</span><span class="sc">&#39;u8, 82&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">85</span><span class="sc">&#39;u8, 69&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">86</span><span class="sc">&#39;u8, 73&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">83</span><span class="sc">&#39;u8, 73&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">79</span><span class="sc">&#39;u8, 78&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">45</span><span class="sc">&#39;u8, 88&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">70</span><span class="sc">&#39;u8, 73&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">76</span><span class="sc">&#39;u8, 69&#39;</span><span class="n">u8</span><span class="p">,</span> <span class="mi">46</span><span class="sc">&#39;u8, 0&#39;</span><span class="n">u8</span><span class="o">]</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">isValidInst</span> <span class="o">=</span> <span class="n">isValidInstExpr</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">isValidInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
-  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isValidInst</span>
-
-<span class="k">proc </span><span class="nf">extArea</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Tga_TgaFooter</span><span class="p">):</span> <span class="n">Tga_TgaExtArea</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">extAreaInstFlag</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">extAreaInst</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isValid</span><span class="p">:</span>
-    <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
-    <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">extAreaOfs</span><span class="p">))</span>
-    <span class="k">let</span> <span class="n">extAreaInstExpr</span> <span class="o">=</span> <span class="n">Tga_TgaExtArea</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-    <span class="n">this</span><span class="p">.</span><span class="n">extAreaInst</span> <span class="o">=</span> <span class="n">extAreaInstExpr</span>
-    <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">extAreaInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
-  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">extAreaInst</span>
-
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Tga_TgaFooter], filename: string): Tga_TgaFooter =</span>
-  <span class="n">Tga_TgaFooter</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
-
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Tga_TgaExtArea], io: KaitaiStream, root: KaitaiStruct, parent: Tga_TgaFooter): Tga_TgaExtArea =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Tga_TgaExtArea</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Tga</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Tga</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Tga_TgaFooter], io: KaitaiStream, root: KaitaiStruct, parent: Tga): Tga_TgaFooter =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Tga_TgaFooter</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Tga</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Tga</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
 
-  <span class="sd">##[</span>
-  <span class="n">Extension</span> <span class="n">area</span> <span class="n">size</span> <span class="ow">in</span> <span class="n">bytes</span> <span class="p">(</span><span class="n">always</span> <span class="mi">495</span><span class="p">)</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">extAreaSizeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">extAreaSize</span> <span class="o">=</span> <span class="n">extAreaSizeExpr</span>
-  <span class="k">let</span> <span class="n">authorNameExpr</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">41</span><span class="p">)),</span> <span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">authorName</span> <span class="o">=</span> <span class="n">authorNameExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Offset to extension area</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">extAreaOfsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">extAreaOfs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">extAreaOfsExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Comments</span><span class="p">,</span> <span class="n">organized</span> <span class="k">as</span> <span class="n">four</span> <span class="n">lines</span><span class="p">,</span> <span class="n">each</span> <span class="n">consisting</span> <span class="k">of</span> <span class="mi">80</span> <span class="n">characters</span> <span class="n">plus</span> <span class="n">a</span> <span class="n">NULL</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
-    <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">81</span><span class="p">)),</span> <span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
-    <span class="n">this</span><span class="p">.</span><span class="n">comments</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Offset to developer directory</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">devDirOfsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">devDirOfs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">devDirOfsExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">versionMagicExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">18</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">versionMagic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">versionMagicExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Image</span> <span class="n">creation</span> <span class="n">date</span> <span class="o">/</span> <span class="n">time</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">timestampExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">12</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">timestampExpr</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">isValid</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Tga_TgaFooter</span><span class="p">):</span><span class="w"> </span><span class="nb">bool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">isValidInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">isValidInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">isValidInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">versionMagic</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">@[</span><span class="mi">84</span><span class="sc">&#39;u8, 82&#39;</span><span class="n">u8</span><span class="p">,</span><span class="w"> </span><span class="mi">85</span><span class="sc">&#39;u8, 69&#39;</span><span class="n">u8</span><span class="p">,</span><span class="w"> </span><span class="mi">86</span><span class="sc">&#39;u8, 73&#39;</span><span class="n">u8</span><span class="p">,</span><span class="w"> </span><span class="mi">83</span><span class="sc">&#39;u8, 73&#39;</span><span class="n">u8</span><span class="p">,</span><span class="w"> </span><span class="mi">79</span><span class="sc">&#39;u8, 78&#39;</span><span class="n">u8</span><span class="p">,</span><span class="w"> </span><span class="mi">45</span><span class="sc">&#39;u8, 88&#39;</span><span class="n">u8</span><span class="p">,</span><span class="w"> </span><span class="mi">70</span><span class="sc">&#39;u8, 73&#39;</span><span class="n">u8</span><span class="p">,</span><span class="w"> </span><span class="mi">76</span><span class="sc">&#39;u8, 69&#39;</span><span class="n">u8</span><span class="p">,</span><span class="w"> </span><span class="mi">46</span><span class="sc">&#39;u8, 0&#39;</span><span class="n">u8</span><span class="o">]</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">isValidInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">isValidInstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">isValidInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">isValidInst</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Internal</span> <span class="n">job</span> <span class="n">ID</span><span class="p">,</span> <span class="n">to</span> <span class="n">be</span> <span class="n">used</span> <span class="ow">in</span> <span class="n">image</span> <span class="n">workflow</span> <span class="n">systems</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">jobIdExpr</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">41</span><span class="p">)),</span> <span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">jobId</span> <span class="o">=</span> <span class="n">jobIdExpr</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">extArea</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Tga_TgaFooter</span><span class="p">):</span><span class="w"> </span><span class="n">Tga_TgaExtArea</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">extAreaInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">extAreaInst</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">isValid</span><span class="p">:</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">extAreaOfs</span><span class="p">))</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">extAreaInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Tga_TgaExtArea</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">extAreaInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">extAreaInstExpr</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">extAreaInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">extAreaInst</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Hours</span><span class="p">,</span> <span class="n">minutes</span> <span class="ow">and</span> <span class="n">seconds</span> <span class="n">spent</span> <span class="n">creating</span> <span class="n">the</span> <span class="n">file</span> <span class="p">(</span><span class="k">for</span> <span class="n">billing</span><span class="p">,</span> <span class="n">etc</span><span class="p">.)</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">jobTimeExpr</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">6</span><span class="p">)),</span> <span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">jobTime</span> <span class="o">=</span> <span class="n">jobTimeExpr</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Tga_TgaFooter], filename: string): Tga_TgaFooter =</span>
+<span class="w">  </span><span class="n">Tga_TgaFooter</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
-  <span class="sd">##[</span>
-  <span class="n">The</span> <span class="n">application</span> <span class="n">that</span> <span class="n">created</span> <span class="n">the</span> <span class="n">file</span><span class="p">.</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">softwareIdExpr</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">41</span><span class="p">)),</span> <span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">softwareId</span> <span class="o">=</span> <span class="n">softwareIdExpr</span>
-  <span class="k">let</span> <span class="n">softwareVersionExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">softwareVersion</span> <span class="o">=</span> <span class="n">softwareVersionExpr</span>
-  <span class="k">let</span> <span class="n">keyColorExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">keyColor</span> <span class="o">=</span> <span class="n">keyColorExpr</span>
-  <span class="k">let</span> <span class="n">pixelAspectRatioExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">pixelAspectRatio</span> <span class="o">=</span> <span class="n">pixelAspectRatioExpr</span>
-  <span class="k">let</span> <span class="n">gammaValueExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">gammaValue</span> <span class="o">=</span> <span class="n">gammaValueExpr</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Tga_TgaExtArea], io: KaitaiStream, root: KaitaiStruct, parent: Tga_TgaFooter): Tga_TgaExtArea =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Tga_TgaExtArea</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Tga</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Tga</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Number</span> <span class="k">of</span> <span class="n">bytes</span> <span class="kn">from</span> <span class="n">the</span> <span class="n">beginning</span> <span class="k">of</span> <span class="n">the</span> <span class="n">file</span> <span class="n">to</span> <span class="n">the</span> <span class="n">color</span> <span class="n">correction</span> <span class="n">table</span> <span class="k">if</span> <span class="n">present</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">colorCorrOfsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">colorCorrOfs</span> <span class="o">=</span> <span class="n">colorCorrOfsExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Number</span> <span class="k">of</span> <span class="n">bytes</span> <span class="kn">from</span> <span class="n">the</span> <span class="n">beginning</span> <span class="k">of</span> <span class="n">the</span> <span class="n">file</span> <span class="n">to</span> <span class="n">the</span> <span class="n">postage</span> <span class="n">stamp</span> <span class="n">image</span> <span class="k">if</span> <span class="n">present</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">postageStampOfsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">postageStampOfs</span> <span class="o">=</span> <span class="n">postageStampOfsExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Extension area size in bytes (always 495)</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">extAreaSizeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">extAreaSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">extAreaSizeExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">authorNameExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">41</span><span class="p">)),</span><span class="w"> </span><span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">authorName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">authorNameExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Number</span> <span class="k">of</span> <span class="n">bytes</span> <span class="kn">from</span> <span class="n">the</span> <span class="n">beginning</span> <span class="k">of</span> <span class="n">the</span> <span class="n">file</span> <span class="n">to</span> <span class="n">the</span> <span class="n">scan</span> <span class="n">lines</span> <span class="n">table</span> <span class="k">if</span> <span class="n">present</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">scanLineOfsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">scanLineOfs</span> <span class="o">=</span> <span class="n">scanLineOfsExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Comments, organized as four lines, each consisting of 80 characters plus a NULL</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">..</span><span class="o">&lt;</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">81</span><span class="p">)),</span><span class="w"> </span><span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">comments</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Specifies</span> <span class="n">the</span> <span class="n">alpha</span> <span class="n">channel</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">attributesExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">attributes</span> <span class="o">=</span> <span class="n">attributesExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Image creation date / time</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">timestampExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">12</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">timestamp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">timestampExpr</span>
 
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Tga_TgaExtArea], filename: string): Tga_TgaExtArea =</span>
-  <span class="n">Tga_TgaExtArea</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Internal job ID, to be used in image workflow systems</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">jobIdExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">41</span><span class="p">)),</span><span class="w"> </span><span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">jobId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">jobIdExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Hours, minutes and seconds spent creating the file (for billing, etc.)</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">jobTimeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">6</span><span class="p">)),</span><span class="w"> </span><span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">jobTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">jobTimeExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The application that created the file.</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">softwareIdExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">41</span><span class="p">)),</span><span class="w"> </span><span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">softwareId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">softwareIdExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">softwareVersionExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">softwareVersion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">softwareVersionExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">keyColorExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">keyColor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">keyColorExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">pixelAspectRatioExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">pixelAspectRatio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pixelAspectRatioExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">gammaValueExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">gammaValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gammaValueExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Number of bytes from the beginning of the file to the color correction table if present</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">colorCorrOfsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">colorCorrOfs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">colorCorrOfsExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Number of bytes from the beginning of the file to the postage stamp image if present</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">postageStampOfsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">postageStampOfs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">postageStampOfsExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Number of bytes from the beginning of the file to the scan lines table if present</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">scanLineOfsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">scanLineOfs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">scanLineOfsExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Specifies the alpha channel</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">attributesExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">attributes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">attributesExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Tga_TgaExtArea], filename: string): Tga_TgaExtArea =</span>
+<span class="w">  </span><span class="n">Tga_TgaExtArea</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 </pre></div>
 
         </div>

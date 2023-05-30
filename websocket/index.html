@@ -254,102 +254,102 @@ frames with the <code>fin</code> bit set.</p>
         <h2>Format specification in Kaitai Struct YAML</h2>
 
         <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
-  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">websocket</span>
-  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">WebSocket</span>
-  <span class="nt">xref</span><span class="p">:</span>
-    <span class="nt">rfc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">6455</span>
-    <span class="nt">wikidata</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Q859938</span>
-  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
-  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">be</span>
-<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-  <span class="no">The WebSocket protocol establishes a two-way communication channel via TCP.</span>
-  <span class="no">Messages are made up of one or more dataframes, and are delineated by</span>
-  <span class="no">frames with the `fin` bit set.</span>
+<span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">websocket</span>
+<span class="w">  </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WebSocket</span>
+<span class="w">  </span><span class="nt">xref</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">rfc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6455</span>
+<span class="w">    </span><span class="nt">wikidata</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Q859938</span>
+<span class="w">  </span><span class="nt">license</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+<span class="w">  </span><span class="nt">endian</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">be</span>
+<span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">  </span><span class="no">The WebSocket protocol establishes a two-way communication channel via TCP.</span>
+<span class="w">  </span><span class="no">Messages are made up of one or more dataframes, and are delineated by</span>
+<span class="w">  </span><span class="no">frames with the `fin` bit set.</span>
 <span class="nt">seq</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">initial_frame</span>
-    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">initial_frame</span>
-  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trailing_frames</span>
-    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dataframe</span>
-    <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">initial_frame.header.finished != true</span>
-    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">until</span>
-    <span class="nt">repeat-until</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_.header.finished</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">initial_frame</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">initial_frame</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trailing_frames</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dataframe</span>
+<span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">initial_frame.header.finished != true</span>
+<span class="w">    </span><span class="nt">repeat</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">until</span>
+<span class="w">    </span><span class="nt">repeat-until</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">_.header.finished</span>
 
 <span class="nt">types</span><span class="p">:</span>
-  <span class="nt">frame_header</span><span class="p">:</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">finished</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fin</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
-        <span class="nt">-orig-id</span><span class="p">:</span> <span class="s">&#39;rsv1,</span><span class="nv"> </span><span class="s">rsv2,</span><span class="nv"> </span><span class="s">rsv3&#39;</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b3</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">opcode</span>
-        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">opcode</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">is_masked</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_payload_primary</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b7</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_payload_extended_1</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
-        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_payload_primary == 126</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_payload_extended_2</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_payload_primary == 127</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mask_key</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">is_masked</span>
-    <span class="nt">instances</span><span class="p">:</span>
-      <span class="nt">len_payload</span><span class="p">:</span>
-        <span class="nt">value</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-          <span class="no">len_payload_primary &lt;= 125 ? len_payload_primary : (</span>
-            <span class="no">len_payload_primary == 126 ? len_payload_extended_1 : len_payload_extended_2</span>
-          <span class="no">)</span>
+<span class="w">  </span><span class="nt">frame_header</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">finished</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fin</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b1</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reserved</span>
+<span class="w">        </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;rsv1,</span><span class="nv"> </span><span class="s">rsv2,</span><span class="nv"> </span><span class="s">rsv3&#39;</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b3</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">opcode</span>
+<span class="w">        </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">opcode</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">is_masked</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b1</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len_payload_primary</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b7</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len_payload_extended_1</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u2</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len_payload_primary == 126</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len_payload_extended_2</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len_payload_primary == 127</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mask_key</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">is_masked</span>
+<span class="w">    </span><span class="nt">instances</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">len_payload</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">len_payload_primary &lt;= 125 ? len_payload_primary : (</span>
+<span class="w">            </span><span class="no">len_payload_primary == 126 ? len_payload_extended_1 : len_payload_extended_2</span>
+<span class="w">          </span><span class="no">)</span>
 
-  <span class="nt">initial_frame</span><span class="p">:</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">frame_header</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">payload_bytes</span>
-        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.len_payload</span>
-        <span class="nt">if</span><span class="p">:</span> <span class="s">&#39;header.opcode</span><span class="nv"> </span><span class="s">!=</span><span class="nv"> </span><span class="s">opcode::text&#39;</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">payload_text</span>
-        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.len_payload</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
-        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
-        <span class="nt">if</span><span class="p">:</span> <span class="s">&#39;header.opcode</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">opcode::text&#39;</span>
+<span class="w">  </span><span class="nt">initial_frame</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">header</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frame_header</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payload_bytes</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">header.len_payload</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;header.opcode</span><span class="nv"> </span><span class="s">!=</span><span class="nv"> </span><span class="s">opcode::text&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payload_text</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">header.len_payload</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;header.opcode</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">opcode::text&#39;</span>
 
-  <span class="nt">dataframe</span><span class="p">:</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">frame_header</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">payload_bytes</span>
-        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.len_payload</span>
-        <span class="nt">if</span><span class="p">:</span> <span class="s">&#39;_root.initial_frame.header.opcode</span><span class="nv"> </span><span class="s">!=</span><span class="nv"> </span><span class="s">opcode::text&#39;</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">payload_text</span>
-        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.len_payload</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
-        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
-        <span class="nt">if</span><span class="p">:</span> <span class="s">&#39;_root.initial_frame.header.opcode</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">opcode::text&#39;</span>
+<span class="w">  </span><span class="nt">dataframe</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">header</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frame_header</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payload_bytes</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">header.len_payload</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;_root.initial_frame.header.opcode</span><span class="nv"> </span><span class="s">!=</span><span class="nv"> </span><span class="s">opcode::text&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payload_text</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">header.len_payload</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
+<span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;_root.initial_frame.header.opcode</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">opcode::text&#39;</span>
 
 <span class="nt">enums</span><span class="p">:</span>
-  <span class="nt">opcode</span><span class="p">:</span>
-    <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">continuation</span>
-    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">text</span>
-    <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">binary</span>
-    <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_3</span>
-    <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_4</span>
-    <span class="nt">5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_5</span>
-    <span class="nt">6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_6</span>
-    <span class="nt">7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_7</span>
-    <span class="nt">8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">close</span>
-    <span class="nt">9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ping</span>
-    <span class="nt">0xA</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pong</span>
-    <span class="nt">0xB</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_control_b</span>
-    <span class="nt">0xC</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_control_c</span>
-    <span class="nt">0xD</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_control_d</span>
-    <span class="nt">0xE</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_control_e</span>
-    <span class="nt">0xF</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_control_f</span>
+<span class="w">  </span><span class="nt">opcode</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">0</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">continuation</span>
+<span class="w">    </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">text</span>
+<span class="w">    </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">binary</span>
+<span class="w">    </span><span class="nt">3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reserved_3</span>
+<span class="w">    </span><span class="nt">4</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reserved_4</span>
+<span class="w">    </span><span class="nt">5</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reserved_5</span>
+<span class="w">    </span><span class="nt">6</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reserved_6</span>
+<span class="w">    </span><span class="nt">7</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reserved_7</span>
+<span class="w">    </span><span class="nt">8</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">close</span>
+<span class="w">    </span><span class="nt">9</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ping</span>
+<span class="w">    </span><span class="nt">0xA</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pong</span>
+<span class="w">    </span><span class="nt">0xB</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reserved_control_b</span>
+<span class="w">    </span><span class="nt">0xC</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reserved_control_c</span>
+<span class="w">    </span><span class="nt">0xD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reserved_control_d</span>
+<span class="w">    </span><span class="nt">0xE</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reserved_control_e</span>
+<span class="w">    </span><span class="nt">0xF</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reserved_control_f</span>
 </pre></div>
     </div>
 </section>

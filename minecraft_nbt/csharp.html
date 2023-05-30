@@ -324,19 +324,19 @@ can also be found there.</p>
 
 
 
-<div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">FromFile</span><span class="p">(</span><span class="s">&quot;path/to/local/file.[&quot;</span><span class="n">nbt</span><span class="s">&quot;, &quot;</span><span class="n">dat</span><span class="s">&quot;, &quot;</span><span class="n">schematic</span><span class="s">&quot;, &quot;</span><span class="n">schem</span><span class="s">&quot;]&quot;</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><span class="kt">var</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">FromFile</span><span class="p">(</span><span class="s">&quot;path/to/local/file.[&quot;</span><span class="n">nbt</span><span class="s">&quot;, &quot;</span><span class="n">dat</span><span class="s">&quot;, &quot;</span><span class="n">schematic</span><span class="s">&quot;, &quot;</span><span class="n">schem</span><span class="s">&quot;]&quot;</span><span class="p">);</span>
 </pre></div>
 
 <p>Or parse structure from a byte array:</p>
 
-<div class="highlight"><pre><span></span><span class="kt">byte</span><span class="p">[]</span> <span class="n">someArray</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
-<span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">MinecraftNbt</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">someArray</span><span class="p">));</span>
+<div class="highlight"><pre><span></span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">someArray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">};</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">someArray</span><span class="p">));</span>
 </pre></div>
 
 <p>After that, one can get various attributes from the structure by accessing properties like:</p>
 
 
-<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">RootCheck</span> <span class="c1">// =&gt; get root check</span>
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">RootCheck</span><span class="w"> </span><span class="c1">// =&gt; get root check</span>
 </pre></div>
 
     </div>
@@ -366,532 +366,532 @@ can also be found there.</p>
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">System.Collections.Generic</span><span class="p">;</span>
 
-<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">Kaitai</span>
 <span class="p">{</span>
 
-    <span class="c1">/// &lt;summary&gt;</span>
-    <span class="c1">/// A structured binary format native to Minecraft for saving game data and transferring</span>
-    <span class="c1">/// it over the network (in multiplayer), such as player data</span>
-    <span class="c1">/// ([`&amp;lt;player&amp;gt;.dat`](https://minecraft.fandom.com/wiki/Player.dat_format); contains</span>
-    <span class="c1">/// e.g. player&#39;s inventory and location), saved worlds</span>
-    <span class="c1">/// ([`level.dat`](</span>
-    <span class="c1">///   https://minecraft.fandom.com/wiki/Java_Edition_level_format#level.dat_format</span>
-    <span class="c1">/// ) and [Chunk format](https://minecraft.fandom.com/wiki/Chunk_format#NBT_structure)),</span>
-    <span class="c1">/// list of saved multiplayer servers</span>
-    <span class="c1">/// ([`servers.dat`](https://minecraft.fandom.com/wiki/Servers.dat_format)) and so on -</span>
-    <span class="c1">/// see &amp;lt;https://minecraft.fandom.com/wiki/NBT_format#Uses&amp;gt;.</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// The entire file should be _gzip_-compressed (in accordance with the original</span>
-    <span class="c1">/// specification [NBT.txt](</span>
-    <span class="c1">///   https://web.archive.org/web/20110723210920/https://www.minecraft.net/docs/NBT.txt</span>
-    <span class="c1">/// ) by Notch), but can also be compressed with _zlib_ or uncompressed.</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// This spec can only handle uncompressed NBT data, so be sure to first detect</span>
-    <span class="c1">/// what type of data you are dealing with. You can use the Unix `file` command</span>
-    <span class="c1">/// to do this (`file-5.20` or later is required; older versions do not recognize</span>
-    <span class="c1">/// _zlib_-compressed data and return `application/octet-stream` instead):</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// ```shell</span>
-    <span class="c1">/// file --brief --mime-type input-unknown.nbt</span>
-    <span class="c1">/// ```</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// If it says:</span>
-    <span class="c1">/// </span>
-    <span class="c1">///   * `application/x-gzip` or `application/gzip` (since `file-5.37`), you can decompress it by</span>
-    <span class="c1">///     * `gunzip -c input-gzip.nbt &amp;gt; output.nbt` or</span>
-    <span class="c1">///     * `python3 -c &amp;quot;import sys, gzip; sys.stdout.buffer.write(</span>
-    <span class="c1">///       gzip.decompress(sys.stdin.buffer.read()) )&amp;quot; &amp;lt; input-gzip.nbt &amp;gt; output.nbt`</span>
-    <span class="c1">///   * `application/zlib`, you can use</span>
-    <span class="c1">///     * `openssl zlib -d -in input-zlib.nbt -out output.nbt` (does not work on most systems)</span>
-    <span class="c1">///     * `python3 -c &amp;quot;import sys, zlib; sys.stdout.buffer.write(</span>
-    <span class="c1">///       zlib.decompress(sys.stdin.buffer.read()) )&amp;quot; &amp;lt; input-zlib.nbt &amp;gt; output.nbt`</span>
-    <span class="c1">///   * something else (especially `image/x-pcx` and `application/octet-stream`),</span>
-    <span class="c1">///     it is most likely already uncompressed.</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// The file `output.nbt` generated by one of the above commands can already be</span>
-    <span class="c1">/// processed with this Kaitai Struct specification.</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// This spec **only** implements the Java edition format. There is also</span>
-    <span class="c1">/// a [Bedrock edition](https://wiki.vg/NBT#Bedrock_edition) NBT format,</span>
-    <span class="c1">/// which uses little-endian encoding and has a few other differences, but it isn&#39;t</span>
-    <span class="c1">/// as popular as the Java edition format.</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// **Implementation note:** strings in `TAG_String` are incorrectly decoded with</span>
-    <span class="c1">/// standard UTF-8, while they are encoded in [**Modified UTF-8**](</span>
-    <span class="c1">///   https://docs.oracle.com/javase/8/docs/api/java/io/DataInput.html#modified-utf-8</span>
-    <span class="c1">/// ) (MUTF-8). That&#39;s because MUTF-8 is not supported natively by most target</span>
-    <span class="c1">/// languages, and thus one must use external libraries to achieve a fully-compliant</span>
-    <span class="c1">/// decoder. But decoding in standard UTF-8 is still better than nothing, and</span>
-    <span class="c1">/// it usually works fine.</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// All Unicode code points with incompatible representations in MUTF-8 and UTF-8 are</span>
-    <span class="c1">/// U+0000 (_NUL_), U+D800-U+DFFF (_High_ and _Low Surrogates_) and U+10000-U+10FFFF</span>
-    <span class="c1">/// (all _Supplementary_ Planes; includes e.g. emoticons, pictograms).</span>
-    <span class="c1">/// A _MUTF-8_-encoded string containing these code points cannot be successfully</span>
-    <span class="c1">/// decoded as UTF-8. The behavior in this case depends on the target language -</span>
-    <span class="c1">/// usually an exception is thrown, or the bytes that are not valid UTF-8</span>
-    <span class="c1">/// are replaced or ignored.</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// **Sample files:**</span>
-    <span class="c1">/// </span>
-    <span class="c1">///   * &amp;lt;https://wiki.vg/NBT#Download&amp;gt;</span>
-    <span class="c1">///   * &amp;lt;https://github.com/twoolie/NBT/blob/f9e892e/tests/world_test/data/scoreboard.dat&amp;gt;</span>
-    <span class="c1">///   * &amp;lt;https://github.com/chmod222/cNBT/tree/3f74b69/testdata&amp;gt;</span>
-    <span class="c1">///   * &amp;lt;https://github.com/PistonDevelopers/hematite_nbt/tree/0b85f89/tests&amp;gt;</span>
-    <span class="c1">/// &lt;/summary&gt;</span>
-    <span class="c1">/// &lt;remarks&gt;</span>
-    <span class="c1">/// Reference: &lt;a href=&quot;https://wiki.vg/NBT&quot;&gt;Source&lt;/a&gt;</span>
-    <span class="c1">/// &lt;/remarks&gt;</span>
-    <span class="c1">/// &lt;remarks&gt;</span>
-    <span class="c1">/// Reference: &lt;a href=&quot;https://web.archive.org/web/20110723210920/https://www.minecraft.net/docs/NBT.txt&quot;&gt;Source&lt;/a&gt;</span>
-    <span class="c1">/// &lt;/remarks&gt;</span>
-    <span class="c1">/// &lt;remarks&gt;</span>
-    <span class="c1">/// Reference: &lt;a href=&quot;https://minecraft.fandom.com/wiki/NBT_format&quot;&gt;Source&lt;/a&gt;</span>
-    <span class="c1">/// &lt;/remarks&gt;</span>
-    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">MinecraftNbt</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">{</span>
-        <span class="k">public</span> <span class="k">static</span> <span class="n">MinecraftNbt</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">return</span> <span class="k">new</span> <span class="nf">MinecraftNbt</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-        <span class="p">}</span>
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// A structured binary format native to Minecraft for saving game data and transferring</span>
+<span class="w">    </span><span class="c1">/// it over the network (in multiplayer), such as player data</span>
+<span class="w">    </span><span class="c1">/// ([`&amp;lt;player&amp;gt;.dat`](https://minecraft.fandom.com/wiki/Player.dat_format); contains</span>
+<span class="w">    </span><span class="c1">/// e.g. player&#39;s inventory and location), saved worlds</span>
+<span class="w">    </span><span class="c1">/// ([`level.dat`](</span>
+<span class="w">    </span><span class="c1">///   https://minecraft.fandom.com/wiki/Java_Edition_level_format#level.dat_format</span>
+<span class="w">    </span><span class="c1">/// ) and [Chunk format](https://minecraft.fandom.com/wiki/Chunk_format#NBT_structure)),</span>
+<span class="w">    </span><span class="c1">/// list of saved multiplayer servers</span>
+<span class="w">    </span><span class="c1">/// ([`servers.dat`](https://minecraft.fandom.com/wiki/Servers.dat_format)) and so on -</span>
+<span class="w">    </span><span class="c1">/// see &amp;lt;https://minecraft.fandom.com/wiki/NBT_format#Uses&amp;gt;.</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// The entire file should be _gzip_-compressed (in accordance with the original</span>
+<span class="w">    </span><span class="c1">/// specification [NBT.txt](</span>
+<span class="w">    </span><span class="c1">///   https://web.archive.org/web/20110723210920/https://www.minecraft.net/docs/NBT.txt</span>
+<span class="w">    </span><span class="c1">/// ) by Notch), but can also be compressed with _zlib_ or uncompressed.</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// This spec can only handle uncompressed NBT data, so be sure to first detect</span>
+<span class="w">    </span><span class="c1">/// what type of data you are dealing with. You can use the Unix `file` command</span>
+<span class="w">    </span><span class="c1">/// to do this (`file-5.20` or later is required; older versions do not recognize</span>
+<span class="w">    </span><span class="c1">/// _zlib_-compressed data and return `application/octet-stream` instead):</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// ```shell</span>
+<span class="w">    </span><span class="c1">/// file --brief --mime-type input-unknown.nbt</span>
+<span class="w">    </span><span class="c1">/// ```</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// If it says:</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">///   * `application/x-gzip` or `application/gzip` (since `file-5.37`), you can decompress it by</span>
+<span class="w">    </span><span class="c1">///     * `gunzip -c input-gzip.nbt &amp;gt; output.nbt` or</span>
+<span class="w">    </span><span class="c1">///     * `python3 -c &amp;quot;import sys, gzip; sys.stdout.buffer.write(</span>
+<span class="w">    </span><span class="c1">///       gzip.decompress(sys.stdin.buffer.read()) )&amp;quot; &amp;lt; input-gzip.nbt &amp;gt; output.nbt`</span>
+<span class="w">    </span><span class="c1">///   * `application/zlib`, you can use</span>
+<span class="w">    </span><span class="c1">///     * `openssl zlib -d -in input-zlib.nbt -out output.nbt` (does not work on most systems)</span>
+<span class="w">    </span><span class="c1">///     * `python3 -c &amp;quot;import sys, zlib; sys.stdout.buffer.write(</span>
+<span class="w">    </span><span class="c1">///       zlib.decompress(sys.stdin.buffer.read()) )&amp;quot; &amp;lt; input-zlib.nbt &amp;gt; output.nbt`</span>
+<span class="w">    </span><span class="c1">///   * something else (especially `image/x-pcx` and `application/octet-stream`),</span>
+<span class="w">    </span><span class="c1">///     it is most likely already uncompressed.</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// The file `output.nbt` generated by one of the above commands can already be</span>
+<span class="w">    </span><span class="c1">/// processed with this Kaitai Struct specification.</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// This spec **only** implements the Java edition format. There is also</span>
+<span class="w">    </span><span class="c1">/// a [Bedrock edition](https://wiki.vg/NBT#Bedrock_edition) NBT format,</span>
+<span class="w">    </span><span class="c1">/// which uses little-endian encoding and has a few other differences, but it isn&#39;t</span>
+<span class="w">    </span><span class="c1">/// as popular as the Java edition format.</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// **Implementation note:** strings in `TAG_String` are incorrectly decoded with</span>
+<span class="w">    </span><span class="c1">/// standard UTF-8, while they are encoded in [**Modified UTF-8**](</span>
+<span class="w">    </span><span class="c1">///   https://docs.oracle.com/javase/8/docs/api/java/io/DataInput.html#modified-utf-8</span>
+<span class="w">    </span><span class="c1">/// ) (MUTF-8). That&#39;s because MUTF-8 is not supported natively by most target</span>
+<span class="w">    </span><span class="c1">/// languages, and thus one must use external libraries to achieve a fully-compliant</span>
+<span class="w">    </span><span class="c1">/// decoder. But decoding in standard UTF-8 is still better than nothing, and</span>
+<span class="w">    </span><span class="c1">/// it usually works fine.</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// All Unicode code points with incompatible representations in MUTF-8 and UTF-8 are</span>
+<span class="w">    </span><span class="c1">/// U+0000 (_NUL_), U+D800-U+DFFF (_High_ and _Low Surrogates_) and U+10000-U+10FFFF</span>
+<span class="w">    </span><span class="c1">/// (all _Supplementary_ Planes; includes e.g. emoticons, pictograms).</span>
+<span class="w">    </span><span class="c1">/// A _MUTF-8_-encoded string containing these code points cannot be successfully</span>
+<span class="w">    </span><span class="c1">/// decoded as UTF-8. The behavior in this case depends on the target language -</span>
+<span class="w">    </span><span class="c1">/// usually an exception is thrown, or the bytes that are not valid UTF-8</span>
+<span class="w">    </span><span class="c1">/// are replaced or ignored.</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// **Sample files:**</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">///   * &amp;lt;https://wiki.vg/NBT#Download&amp;gt;</span>
+<span class="w">    </span><span class="c1">///   * &amp;lt;https://github.com/twoolie/NBT/blob/f9e892e/tests/world_test/data/scoreboard.dat&amp;gt;</span>
+<span class="w">    </span><span class="c1">///   * &amp;lt;https://github.com/chmod222/cNBT/tree/3f74b69/testdata&amp;gt;</span>
+<span class="w">    </span><span class="c1">///   * &amp;lt;https://github.com/PistonDevelopers/hematite_nbt/tree/0b85f89/tests&amp;gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;https://wiki.vg/NBT&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;https://web.archive.org/web/20110723210920/https://www.minecraft.net/docs/NBT.txt&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;https://minecraft.fandom.com/wiki/NBT_format&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">MinecraftNbt</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">MinecraftNbt</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
 
 
-        <span class="k">public</span> <span class="k">enum</span> <span class="n">Tag</span>
-        <span class="p">{</span>
-            <span class="n">End</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
-            <span class="n">Byte</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
-            <span class="n">Short</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
-            <span class="n">Int</span> <span class="p">=</span> <span class="m">3</span><span class="p">,</span>
-            <span class="n">Long</span> <span class="p">=</span> <span class="m">4</span><span class="p">,</span>
-            <span class="n">Float</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span>
-            <span class="n">Double</span> <span class="p">=</span> <span class="m">6</span><span class="p">,</span>
-            <span class="n">ByteArray</span> <span class="p">=</span> <span class="m">7</span><span class="p">,</span>
-            <span class="n">String</span> <span class="p">=</span> <span class="m">8</span><span class="p">,</span>
-            <span class="n">List</span> <span class="p">=</span> <span class="m">9</span><span class="p">,</span>
-            <span class="n">Compound</span> <span class="p">=</span> <span class="m">10</span><span class="p">,</span>
-            <span class="n">IntArray</span> <span class="p">=</span> <span class="m">11</span><span class="p">,</span>
-            <span class="n">LongArray</span> <span class="p">=</span> <span class="m">12</span><span class="p">,</span>
-        <span class="p">}</span>
-        <span class="k">public</span> <span class="nf">MinecraftNbt</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">MinecraftNbt</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
-            <span class="n">f_rootType</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-            <span class="n">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-        <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="n">RootType</span> <span class="p">==</span> <span class="n">Tag</span><span class="p">.</span><span class="n">End</span><span class="p">)</span> <span class="p">&amp;&amp;</span> <span class="p">(</span><span class="k">false</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
-                <span class="n">_rootCheck</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">0</span><span class="p">);</span>
-            <span class="p">}</span>
-            <span class="n">_root</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NamedTag</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">TagLongArray</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">TagLongArray</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">TagLongArray</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="n">Tag</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">End</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Byte</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Short</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Long</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Float</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Double</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">6</span><span class="p">,</span>
+<span class="w">            </span><span class="n">ByteArray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">7</span><span class="p">,</span>
+<span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">8</span><span class="p">,</span>
+<span class="w">            </span><span class="n">List</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">9</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Compound</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span>
+<span class="w">            </span><span class="n">IntArray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">11</span><span class="p">,</span>
+<span class="w">            </span><span class="n">LongArray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">12</span><span class="p">,</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="nf">MinecraftNbt</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">            </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">            </span><span class="n">f_rootType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">            </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="n">RootType</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">Tag</span><span class="p">.</span><span class="n">End</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="k">false</span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_rootCheck</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">0</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">NamedTag</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">TagLongArray</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">TagLongArray</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">TagLongArray</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">TagLongArray</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">MinecraftNbt</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">f_tagsType</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_numTags</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">();</span>
-                <span class="n">_tags</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">long</span><span class="p">&gt;();</span>
-                <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumTags</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
-                <span class="p">{</span>
-                    <span class="n">_tags</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadS8be</span><span class="p">());</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_tagsType</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">Tag</span> <span class="n">_tagsType</span><span class="p">;</span>
-            <span class="k">public</span> <span class="n">Tag</span> <span class="n">TagsType</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_tagsType</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_tagsType</span><span class="p">;</span>
-                    <span class="n">_tagsType</span> <span class="p">=</span> <span class="p">(</span><span class="n">Tag</span><span class="p">)</span> <span class="p">(</span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Long</span><span class="p">);</span>
-                    <span class="n">f_tagsType</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_tagsType</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">int</span> <span class="n">_numTags</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">long</span><span class="p">&gt;</span> <span class="n">_tags</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">MinecraftNbt</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">int</span> <span class="n">NumTags</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numTags</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">long</span><span class="p">&gt;</span> <span class="n">Tags</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_tags</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">MinecraftNbt</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">TagByteArray</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">TagByteArray</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">TagByteArray</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">TagLongArray</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_tagsType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_numTags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">long</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">NumTags</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">_tags</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadS8be</span><span class="p">());</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_tagsType</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">Tag</span><span class="w"> </span><span class="n">_tagsType</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">Tag</span><span class="w"> </span><span class="n">TagsType</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_tagsType</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_tagsType</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_tagsType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">Tag</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Long</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">f_tagsType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_tagsType</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">_numTags</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">long</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_tags</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">NumTags</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_numTags</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">long</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Tags</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_tags</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">TagByteArray</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">TagByteArray</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">TagByteArray</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">TagByteArray</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">MinecraftNbt</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_lenData</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">();</span>
-                <span class="n">_data</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenData</span><span class="p">);</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">int</span> <span class="n">_lenData</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_data</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">MinecraftNbt</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">int</span> <span class="n">LenData</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenData</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Data</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_data</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">MinecraftNbt</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">TagIntArray</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">TagIntArray</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">TagIntArray</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">TagByteArray</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_lenData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenData</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">_lenData</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_data</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">LenData</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_lenData</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Data</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_data</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">TagIntArray</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">TagIntArray</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">TagIntArray</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">TagIntArray</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">MinecraftNbt</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">f_tagsType</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_numTags</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">();</span>
-                <span class="n">_tags</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;();</span>
-                <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumTags</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
-                <span class="p">{</span>
-                    <span class="n">_tags</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">());</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_tagsType</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">Tag</span> <span class="n">_tagsType</span><span class="p">;</span>
-            <span class="k">public</span> <span class="n">Tag</span> <span class="n">TagsType</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_tagsType</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_tagsType</span><span class="p">;</span>
-                    <span class="n">_tagsType</span> <span class="p">=</span> <span class="p">(</span><span class="n">Tag</span><span class="p">)</span> <span class="p">(</span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Int</span><span class="p">);</span>
-                    <span class="n">f_tagsType</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_tagsType</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">int</span> <span class="n">_numTags</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">_tags</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">MinecraftNbt</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">int</span> <span class="n">NumTags</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numTags</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">Tags</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_tags</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">MinecraftNbt</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">TagList</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">TagList</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">TagList</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">TagIntArray</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_tagsType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_numTags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">NumTags</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">_tags</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">());</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_tagsType</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">Tag</span><span class="w"> </span><span class="n">_tagsType</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">Tag</span><span class="w"> </span><span class="n">TagsType</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_tagsType</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_tagsType</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_tagsType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">Tag</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Int</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">f_tagsType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_tagsType</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">_numTags</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_tags</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">NumTags</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_numTags</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Tags</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_tags</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">TagList</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">TagList</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">TagList</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">TagList</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">MinecraftNbt</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_tagsType</span> <span class="p">=</span> <span class="p">((</span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
-                <span class="n">_numTags</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">();</span>
-                <span class="n">_tags</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">object</span><span class="p">&gt;();</span>
-                <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumTags</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
-                <span class="p">{</span>
-                    <span class="k">switch</span> <span class="p">(</span><span class="n">TagsType</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="k">case</span> <span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">LongArray</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_tags</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">TagLongArray</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Compound</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_tags</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">TagCompound</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Double</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_tags</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadF8be</span><span class="p">());</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">List</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_tags</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">TagList</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Float</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_tags</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4be</span><span class="p">());</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Short</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_tags</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadS2be</span><span class="p">());</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Int</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_tags</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">());</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">ByteArray</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_tags</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">TagByteArray</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Byte</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_tags</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadS1</span><span class="p">());</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">IntArray</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_tags</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">TagIntArray</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">String</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_tags</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">TagString</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Long</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_tags</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadS8be</span><span class="p">());</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="p">}</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="n">Tag</span> <span class="n">_tagsType</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">int</span> <span class="n">_numTags</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">object</span><span class="p">&gt;</span> <span class="n">_tags</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">MinecraftNbt</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">public</span> <span class="n">Tag</span> <span class="n">TagsType</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_tagsType</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">int</span> <span class="n">NumTags</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numTags</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">object</span><span class="p">&gt;</span> <span class="n">Tags</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_tags</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">MinecraftNbt</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">TagString</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">TagString</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">TagString</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">TagList</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_tagsType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">)</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
+<span class="w">                </span><span class="n">_numTags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">object</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">NumTags</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">TagsType</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">case</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">LongArray</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">_tags</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">TagLongArray</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">));</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">case</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Compound</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">_tags</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">TagCompound</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">));</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">case</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Double</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">_tags</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadF8be</span><span class="p">());</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">case</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">List</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">_tags</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">TagList</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">));</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">case</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Float</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">_tags</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4be</span><span class="p">());</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">case</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Short</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">_tags</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadS2be</span><span class="p">());</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">case</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Int</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">_tags</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">());</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">case</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">ByteArray</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">_tags</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">TagByteArray</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">));</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">case</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Byte</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">_tags</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadS1</span><span class="p">());</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">case</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">IntArray</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">_tags</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">TagIntArray</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">));</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">case</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">String</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">_tags</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">TagString</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">));</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">case</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Long</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">_tags</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadS8be</span><span class="p">());</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">Tag</span><span class="w"> </span><span class="n">_tagsType</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">_numTags</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_tags</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">Tag</span><span class="w"> </span><span class="n">TagsType</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_tagsType</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">NumTags</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_numTags</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Tags</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_tags</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">TagString</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">TagString</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">TagString</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">TagString</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">MinecraftNbt</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_lenData</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
-                <span class="n">_data</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenData</span><span class="p">));</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_lenData</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">string</span> <span class="n">_data</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">MinecraftNbt</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">TagString</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_lenData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenData</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">_lenData</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">_data</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// unsigned according to &amp;lt;https://wiki.vg/NBT#Specification&amp;gt;</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">LenData</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenData</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">string</span> <span class="n">Data</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_data</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">MinecraftNbt</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">TagCompound</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">TagCompound</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">TagCompound</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// unsigned according to &amp;lt;https://wiki.vg/NBT#Specification&amp;gt;</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">LenData</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_lenData</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Data</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_data</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">TagCompound</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">TagCompound</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">TagCompound</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">TagCompound</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">MinecraftNbt</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">f_dumpNumTags</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_tags</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">NamedTag</span><span class="p">&gt;();</span>
-                <span class="p">{</span>
-                    <span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
-                    <span class="n">NamedTag</span> <span class="n">M_</span><span class="p">;</span>
-                    <span class="k">do</span> <span class="p">{</span>
-                        <span class="n">M_</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NamedTag</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                        <span class="n">_tags</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">M_</span><span class="p">);</span>
-                        <span class="n">i</span><span class="p">++;</span>
-                    <span class="p">}</span> <span class="k">while</span> <span class="p">(!(</span><span class="n">M_</span><span class="p">.</span><span class="n">IsTagEnd</span><span class="p">));</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_dumpNumTags</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">int</span> <span class="n">_dumpNumTags</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">int</span> <span class="n">DumpNumTags</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_dumpNumTags</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_dumpNumTags</span><span class="p">;</span>
-                    <span class="n">_dumpNumTags</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">Tags</span><span class="p">.</span><span class="n">Count</span> <span class="p">-</span> <span class="p">(</span> <span class="p">((</span><span class="n">Tags</span><span class="p">.</span><span class="n">Count</span> <span class="p">&gt;=</span> <span class="m">1</span><span class="p">)</span> <span class="p">&amp;&amp;</span> <span class="p">(</span><span class="n">Tags</span><span class="p">[</span><span class="n">Tags</span><span class="p">.</span><span class="n">Count</span> <span class="p">-</span> <span class="m">1</span><span class="p">].</span><span class="n">IsTagEnd</span><span class="p">))</span>  <span class="p">?</span> <span class="m">1</span> <span class="p">:</span> <span class="m">0</span><span class="p">)));</span>
-                    <span class="n">f_dumpNumTags</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_dumpNumTags</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">NamedTag</span><span class="p">&gt;</span> <span class="n">_tags</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">MinecraftNbt</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">NamedTag</span><span class="p">&gt;</span> <span class="n">Tags</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_tags</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">MinecraftNbt</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">NamedTag</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">NamedTag</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">NamedTag</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">TagCompound</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_dumpNumTags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">NamedTag</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="kt">var</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">NamedTag</span><span class="w"> </span><span class="n">M_</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">do</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">M_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">NamedTag</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                        </span><span class="n">_tags</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">M_</span><span class="p">);</span>
+<span class="w">                        </span><span class="n">i</span><span class="o">++</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">M_</span><span class="p">.</span><span class="n">IsTagEnd</span><span class="p">));</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_dumpNumTags</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">_dumpNumTags</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">DumpNumTags</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_dumpNumTags</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_dumpNumTags</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_dumpNumTags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">Tags</span><span class="p">.</span><span class="n">Count</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="n">Tags</span><span class="p">.</span><span class="n">Count</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">Tags</span><span class="p">[</span><span class="n">Tags</span><span class="p">.</span><span class="n">Count</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">1</span><span class="p">].</span><span class="n">IsTagEnd</span><span class="p">))</span><span class="w">  </span><span class="o">?</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="m">0</span><span class="p">)));</span>
+<span class="w">                    </span><span class="n">f_dumpNumTags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_dumpNumTags</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">NamedTag</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_tags</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">NamedTag</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Tags</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_tags</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">NamedTag</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">NamedTag</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">NamedTag</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">NamedTag</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">MinecraftNbt</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">f_isTagEnd</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_type</span> <span class="p">=</span> <span class="p">((</span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
-                <span class="k">if</span> <span class="p">(!(</span><span class="n">IsTagEnd</span><span class="p">))</span> <span class="p">{</span>
-                    <span class="n">_name</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TagString</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                <span class="p">}</span>
-                <span class="k">if</span> <span class="p">(!(</span><span class="n">IsTagEnd</span><span class="p">))</span> <span class="p">{</span>
-                    <span class="k">switch</span> <span class="p">(</span><span class="n">Type</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="k">case</span> <span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">LongArray</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TagLongArray</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Compound</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TagCompound</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Double</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_payload</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF8be</span><span class="p">();</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">List</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TagList</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Float</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_payload</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4be</span><span class="p">();</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Short</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_payload</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS2be</span><span class="p">();</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Int</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_payload</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">();</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">ByteArray</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TagByteArray</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Byte</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_payload</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS1</span><span class="p">();</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">IntArray</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TagIntArray</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">String</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TagString</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Long</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_payload</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS8be</span><span class="p">();</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="p">}</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isTagEnd</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isTagEnd</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsTagEnd</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_isTagEnd</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_isTagEnd</span><span class="p">;</span>
-                    <span class="n">_isTagEnd</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span><span class="n">Type</span> <span class="p">==</span> <span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">End</span><span class="p">);</span>
-                    <span class="n">f_isTagEnd</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_isTagEnd</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="n">Tag</span> <span class="n">_type</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">TagString</span> <span class="n">_name</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">object</span> <span class="n">_payload</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">MinecraftNbt</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">public</span> <span class="n">Tag</span> <span class="n">Type</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_type</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">TagString</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_name</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">object</span> <span class="n">Payload</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_payload</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">MinecraftNbt</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_rootType</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">Tag</span> <span class="n">_rootType</span><span class="p">;</span>
-        <span class="k">public</span> <span class="n">Tag</span> <span class="n">RootType</span>
-        <span class="p">{</span>
-            <span class="k">get</span>
-            <span class="p">{</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">f_rootType</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="n">_rootType</span><span class="p">;</span>
-                <span class="kt">long</span> <span class="n">_pos</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
-                <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="m">0</span><span class="p">);</span>
-                <span class="n">_rootType</span> <span class="p">=</span> <span class="p">((</span><span class="n">Tag</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
-                <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
-                <span class="n">f_rootType</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                <span class="k">if</span> <span class="p">(!(</span><span class="n">RootType</span> <span class="p">==</span> <span class="n">Tag</span><span class="p">.</span><span class="n">Compound</span><span class="p">))</span>
-                <span class="p">{</span>
-                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="n">Tag</span><span class="p">.</span><span class="n">Compound</span><span class="p">,</span> <span class="n">RootType</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/instances/root_type&quot;</span><span class="p">);</span>
-                <span class="p">}</span>
-                <span class="k">return</span> <span class="n">_rootType</span><span class="p">;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_rootCheck</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">NamedTag</span> <span class="n">_root</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">MinecraftNbt</span> <span class="n">m_root</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
-        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">RootCheck</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_rootCheck</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">NamedTag</span> <span class="n">Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">MinecraftNbt</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-    <span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">NamedTag</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_isTagEnd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">)</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">IsTagEnd</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">TagString</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">IsTagEnd</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">Type</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">case</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">LongArray</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">TagLongArray</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">case</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Compound</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">TagCompound</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">case</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Double</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadF8be</span><span class="p">();</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">case</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">List</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">TagList</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">case</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Float</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4be</span><span class="p">();</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">case</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Short</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadS2be</span><span class="p">();</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">case</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Int</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">();</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">case</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">ByteArray</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">TagByteArray</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">case</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Byte</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadS1</span><span class="p">();</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">case</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">IntArray</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">TagIntArray</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">case</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">String</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">TagString</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">case</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Long</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadS8be</span><span class="p">();</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_isTagEnd</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">_isTagEnd</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">IsTagEnd</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_isTagEnd</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_isTagEnd</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_isTagEnd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">bool</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">Type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">End</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">f_isTagEnd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_isTagEnd</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">Tag</span><span class="w"> </span><span class="n">_type</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">TagString</span><span class="w"> </span><span class="n">_name</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">object</span><span class="w"> </span><span class="n">_payload</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">Tag</span><span class="w"> </span><span class="n">Type</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_type</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">TagString</span><span class="w"> </span><span class="n">Name</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_name</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">object</span><span class="w"> </span><span class="n">Payload</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_payload</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_rootType</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">Tag</span><span class="w"> </span><span class="n">_rootType</span><span class="p">;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">Tag</span><span class="w"> </span><span class="n">RootType</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">get</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_rootType</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_rootType</span><span class="p">;</span>
+<span class="w">                </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="m">0</span><span class="p">);</span>
+<span class="w">                </span><span class="n">_rootType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">Tag</span><span class="p">)</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
+<span class="w">                </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+<span class="w">                </span><span class="n">f_rootType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">RootType</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">Tag</span><span class="p">.</span><span class="n">Compound</span><span class="p">))</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="n">Tag</span><span class="p">.</span><span class="n">Compound</span><span class="p">,</span><span class="w"> </span><span class="n">RootType</span><span class="p">,</span><span class="w"> </span><span class="n">M_Io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/instances/root_type&quot;</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">_rootType</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_rootCheck</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">NamedTag</span><span class="w"> </span><span class="n">_root</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">RootCheck</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_rootCheck</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">NamedTag</span><span class="w"> </span><span class="n">Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">MinecraftNbt</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 

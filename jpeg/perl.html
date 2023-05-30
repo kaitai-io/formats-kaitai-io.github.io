@@ -287,615 +287,615 @@ dictates order and mandatory apperance of segments:</p>
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-<span class="k">use</span> <span class="nn">strict</span><span class="p">;</span>
-<span class="k">use</span> <span class="nn">warnings</span><span class="p">;</span>
-<span class="k">use</span> <span class="nn">IO::KaitaiStruct</span> <span class="mf">0.009_000</span><span class="p">;</span>
-<span class="k">use</span> <span class="nn">Encode</span><span class="p">;</span>
-<span class="k">use</span> <span class="nn">Exif</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="nn">strict</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="nn">warnings</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="nn">IO::KaitaiStruct</span><span class="w"> </span><span class="mf">0.009_000</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="nn">Encode</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="nn">Exif</span><span class="p">;</span>
 
 <span class="c1">########################################################################</span>
-<span class="k">package</span> <span class="nn">Jpeg</span><span class="p">;</span>
+<span class="k">package</span><span class="w"> </span><span class="nn">Jpeg</span><span class="p">;</span>
 
-<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
 
-<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">from_file</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$fd</span><span class="p">;</span>
 
-    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
-    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
-    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="w">    </span><span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;&lt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">undef</span><span class="p">;</span>
+<span class="w">    </span><span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
 <span class="p">}</span>
 
-<span class="k">our</span> <span class="nv">$COMPONENT_ID_Y</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$COMPONENT_ID_CB</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$COMPONENT_ID_CR</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$COMPONENT_ID_I</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$COMPONENT_ID_Q</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$COMPONENT_ID_Y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$COMPONENT_ID_CB</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$COMPONENT_ID_CR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$COMPONENT_ID_I</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$COMPONENT_ID_Q</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
 
-<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">new</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$_io</span><span class="p">,</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">,</span><span class="w"> </span><span class="nv">$_root</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$self</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
 
-    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
+<span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">$self</span><span class="p">;;</span>
 
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
 
-    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">_read</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
 
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">segments</span><span class="p">}</span> <span class="o">=</span> <span class="p">();</span>
-    <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">())</span> <span class="p">{</span>
-        <span class="nb">push</span> <span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">segments</span><span class="p">}},</span> <span class="nn">Jpeg::Segment</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
-    <span class="p">}</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">segments</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">();</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nb">push</span><span class="w"> </span><span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">segments</span><span class="p">}},</span><span class="w"> </span><span class="nn">Jpeg::Segment</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">segments</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">segments</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="c1">########################################################################</span>
-<span class="k">package</span> <span class="nn">Jpeg::Segment</span><span class="p">;</span>
-
-<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
-
-<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
-
-    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
-    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
-    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
-<span class="p">}</span>
-
-<span class="k">our</span> <span class="nv">$MARKER_ENUM_TEM</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$MARKER_ENUM_SOF0</span> <span class="o">=</span> <span class="mi">192</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$MARKER_ENUM_SOF1</span> <span class="o">=</span> <span class="mi">193</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$MARKER_ENUM_SOF2</span> <span class="o">=</span> <span class="mi">194</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$MARKER_ENUM_SOF3</span> <span class="o">=</span> <span class="mi">195</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$MARKER_ENUM_DHT</span> <span class="o">=</span> <span class="mi">196</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$MARKER_ENUM_SOF5</span> <span class="o">=</span> <span class="mi">197</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$MARKER_ENUM_SOF6</span> <span class="o">=</span> <span class="mi">198</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$MARKER_ENUM_SOF7</span> <span class="o">=</span> <span class="mi">199</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$MARKER_ENUM_SOI</span> <span class="o">=</span> <span class="mi">216</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$MARKER_ENUM_EOI</span> <span class="o">=</span> <span class="mi">217</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$MARKER_ENUM_SOS</span> <span class="o">=</span> <span class="mi">218</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$MARKER_ENUM_DQT</span> <span class="o">=</span> <span class="mi">219</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$MARKER_ENUM_DNL</span> <span class="o">=</span> <span class="mi">220</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$MARKER_ENUM_DRI</span> <span class="o">=</span> <span class="mi">221</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$MARKER_ENUM_DHP</span> <span class="o">=</span> <span class="mi">222</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$MARKER_ENUM_APP0</span> <span class="o">=</span> <span class="mi">224</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$MARKER_ENUM_APP1</span> <span class="o">=</span> <span class="mi">225</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$MARKER_ENUM_APP2</span> <span class="o">=</span> <span class="mi">226</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$MARKER_ENUM_APP3</span> <span class="o">=</span> <span class="mi">227</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$MARKER_ENUM_APP4</span> <span class="o">=</span> <span class="mi">228</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$MARKER_ENUM_APP5</span> <span class="o">=</span> <span class="mi">229</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$MARKER_ENUM_APP6</span> <span class="o">=</span> <span class="mi">230</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$MARKER_ENUM_APP7</span> <span class="o">=</span> <span class="mi">231</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$MARKER_ENUM_APP8</span> <span class="o">=</span> <span class="mi">232</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$MARKER_ENUM_APP9</span> <span class="o">=</span> <span class="mi">233</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$MARKER_ENUM_APP10</span> <span class="o">=</span> <span class="mi">234</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$MARKER_ENUM_APP11</span> <span class="o">=</span> <span class="mi">235</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$MARKER_ENUM_APP12</span> <span class="o">=</span> <span class="mi">236</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$MARKER_ENUM_APP13</span> <span class="o">=</span> <span class="mi">237</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$MARKER_ENUM_APP14</span> <span class="o">=</span> <span class="mi">238</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$MARKER_ENUM_APP15</span> <span class="o">=</span> <span class="mi">239</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$MARKER_ENUM_COM</span> <span class="o">=</span> <span class="mi">254</span><span class="p">;</span>
-
-<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
-
-    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
-
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
-
-    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">magic</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">marker</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-    <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">marker</span><span class="p">()</span> <span class="o">!=</span> <span class="nv">$</span><span class="nn">Jpeg::Segment::</span><span class="nv">MARKER_ENUM_SOI</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">marker</span><span class="p">()</span> <span class="o">!=</span> <span class="nv">$</span><span class="nn">Jpeg::Segment::</span><span class="nv">MARKER_ENUM_EOI</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
-        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">length</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
-    <span class="p">}</span>
-    <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">marker</span><span class="p">()</span> <span class="o">!=</span> <span class="nv">$</span><span class="nn">Jpeg::Segment::</span><span class="nv">MARKER_ENUM_SOI</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">marker</span><span class="p">()</span> <span class="o">!=</span> <span class="nv">$</span><span class="nn">Jpeg::Segment::</span><span class="nv">MARKER_ENUM_EOI</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
-        <span class="k">my</span> <span class="nv">$_on</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">marker</span><span class="p">();</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$</span><span class="nn">Jpeg::Segment::</span><span class="nv">MARKER_ENUM_APP1</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_data</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="nb">length</span><span class="p">()</span> <span class="o">-</span> <span class="mi">2</span><span class="p">));</span>
-            <span class="k">my</span> <span class="nv">$io__raw_data</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_data</span><span class="p">});</span>
-            <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">data</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Jpeg::SegmentApp1</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_data</span><span class="p">,</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
-        <span class="p">}</span>
-        <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$</span><span class="nn">Jpeg::Segment::</span><span class="nv">MARKER_ENUM_APP0</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_data</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="nb">length</span><span class="p">()</span> <span class="o">-</span> <span class="mi">2</span><span class="p">));</span>
-            <span class="k">my</span> <span class="nv">$io__raw_data</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_data</span><span class="p">});</span>
-            <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">data</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Jpeg::SegmentApp0</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_data</span><span class="p">,</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
-        <span class="p">}</span>
-        <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$</span><span class="nn">Jpeg::Segment::</span><span class="nv">MARKER_ENUM_SOF0</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_data</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="nb">length</span><span class="p">()</span> <span class="o">-</span> <span class="mi">2</span><span class="p">));</span>
-            <span class="k">my</span> <span class="nv">$io__raw_data</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_data</span><span class="p">});</span>
-            <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">data</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Jpeg::SegmentSof0</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_data</span><span class="p">,</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
-        <span class="p">}</span>
-        <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$</span><span class="nn">Jpeg::Segment::</span><span class="nv">MARKER_ENUM_SOS</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_data</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="nb">length</span><span class="p">()</span> <span class="o">-</span> <span class="mi">2</span><span class="p">));</span>
-            <span class="k">my</span> <span class="nv">$io__raw_data</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_data</span><span class="p">});</span>
-            <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">data</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Jpeg::SegmentSos</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_data</span><span class="p">,</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
-        <span class="p">}</span>
-        <span class="k">else</span> <span class="p">{</span>
-            <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">data</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="nb">length</span><span class="p">()</span> <span class="o">-</span> <span class="mi">2</span><span class="p">));</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">marker</span><span class="p">()</span> <span class="o">==</span> <span class="nv">$</span><span class="nn">Jpeg::Segment::</span><span class="nv">MARKER_ENUM_SOS</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">image_data</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes_full</span><span class="p">();</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">magic</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">magic</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">marker</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">marker</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">length</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">length</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">data</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">data</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">image_data</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">image_data</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">_raw_data</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_data</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">segments</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">segments</span><span class="p">};</span>
 <span class="p">}</span>
 
 <span class="c1">########################################################################</span>
-<span class="k">package</span> <span class="nn">Jpeg::SegmentSos</span><span class="p">;</span>
+<span class="k">package</span><span class="w"> </span><span class="nn">Jpeg::Segment</span><span class="p">;</span>
 
-<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
 
-<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">from_file</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$fd</span><span class="p">;</span>
 
-    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
-    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
-    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="w">    </span><span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;&lt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">undef</span><span class="p">;</span>
+<span class="w">    </span><span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$MARKER_ENUM_TEM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$MARKER_ENUM_SOF0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">192</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$MARKER_ENUM_SOF1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">193</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$MARKER_ENUM_SOF2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">194</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$MARKER_ENUM_SOF3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">195</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$MARKER_ENUM_DHT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">196</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$MARKER_ENUM_SOF5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">197</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$MARKER_ENUM_SOF6</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">198</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$MARKER_ENUM_SOF7</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">199</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$MARKER_ENUM_SOI</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">216</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$MARKER_ENUM_EOI</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">217</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$MARKER_ENUM_SOS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">218</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$MARKER_ENUM_DQT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">219</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$MARKER_ENUM_DNL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">220</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$MARKER_ENUM_DRI</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">221</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$MARKER_ENUM_DHP</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">222</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$MARKER_ENUM_APP0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">224</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$MARKER_ENUM_APP1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">225</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$MARKER_ENUM_APP2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">226</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$MARKER_ENUM_APP3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">227</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$MARKER_ENUM_APP4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">228</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$MARKER_ENUM_APP5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">229</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$MARKER_ENUM_APP6</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">230</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$MARKER_ENUM_APP7</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">231</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$MARKER_ENUM_APP8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">232</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$MARKER_ENUM_APP9</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">233</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$MARKER_ENUM_APP10</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">234</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$MARKER_ENUM_APP11</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">235</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$MARKER_ENUM_APP12</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">236</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$MARKER_ENUM_APP13</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">237</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$MARKER_ENUM_APP14</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">238</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$MARKER_ENUM_APP15</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">239</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$MARKER_ENUM_COM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">254</span><span class="p">;</span>
 
-    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">new</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$_io</span><span class="p">,</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">,</span><span class="w"> </span><span class="nv">$_root</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$self</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
 
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+<span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">$self</span><span class="p">;;</span>
 
-    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">_read</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
 
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">num_components</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">components</span><span class="p">}</span> <span class="o">=</span> <span class="p">();</span>
-    <span class="k">my</span> <span class="nv">$n_components</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">num_components</span><span class="p">();</span>
-    <span class="k">for</span> <span class="p">(</span><span class="k">my</span> <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n_components</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nb">push</span> <span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">components</span><span class="p">}},</span> <span class="nn">Jpeg::SegmentSos::Component</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
-    <span class="p">}</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">start_spectral_selection</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">end_spectral</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">appr_bit_pos</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">magic</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">marker</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">marker</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="nv">$</span><span class="nn">Jpeg::Segment::</span><span class="nv">MARKER_ENUM_SOI</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">marker</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="nv">$</span><span class="nn">Jpeg::Segment::</span><span class="nv">MARKER_ENUM_EOI</span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">length</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">marker</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="nv">$</span><span class="nn">Jpeg::Segment::</span><span class="nv">MARKER_ENUM_SOI</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">marker</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="nv">$</span><span class="nn">Jpeg::Segment::</span><span class="nv">MARKER_ENUM_EOI</span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">my</span><span class="w"> </span><span class="nv">$_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">marker</span><span class="p">();</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nv">$_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">$</span><span class="nn">Jpeg::Segment::</span><span class="nv">MARKER_ENUM_APP1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_data</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="nb">length</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="p">));</span>
+<span class="w">            </span><span class="k">my</span><span class="w"> </span><span class="nv">$io__raw_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_data</span><span class="p">});</span>
+<span class="w">            </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">data</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Jpeg::SegmentApp1</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_data</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">elsif</span><span class="w"> </span><span class="p">(</span><span class="nv">$_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">$</span><span class="nn">Jpeg::Segment::</span><span class="nv">MARKER_ENUM_APP0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_data</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="nb">length</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="p">));</span>
+<span class="w">            </span><span class="k">my</span><span class="w"> </span><span class="nv">$io__raw_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_data</span><span class="p">});</span>
+<span class="w">            </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">data</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Jpeg::SegmentApp0</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_data</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">elsif</span><span class="w"> </span><span class="p">(</span><span class="nv">$_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">$</span><span class="nn">Jpeg::Segment::</span><span class="nv">MARKER_ENUM_SOF0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_data</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="nb">length</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="p">));</span>
+<span class="w">            </span><span class="k">my</span><span class="w"> </span><span class="nv">$io__raw_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_data</span><span class="p">});</span>
+<span class="w">            </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">data</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Jpeg::SegmentSof0</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_data</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">elsif</span><span class="w"> </span><span class="p">(</span><span class="nv">$_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">$</span><span class="nn">Jpeg::Segment::</span><span class="nv">MARKER_ENUM_SOS</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_data</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="nb">length</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="p">));</span>
+<span class="w">            </span><span class="k">my</span><span class="w"> </span><span class="nv">$io__raw_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_data</span><span class="p">});</span>
+<span class="w">            </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">data</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Jpeg::SegmentSos</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_data</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">data</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="nb">length</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">marker</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">$</span><span class="nn">Jpeg::Segment::</span><span class="nv">MARKER_ENUM_SOS</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">image_data</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes_full</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">num_components</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">num_components</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">magic</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">magic</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">components</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">components</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">marker</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">marker</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">start_spectral_selection</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">start_spectral_selection</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">length</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">length</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">end_spectral</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">end_spectral</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">data</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">data</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">appr_bit_pos</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">appr_bit_pos</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">image_data</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">image_data</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="c1">########################################################################</span>
-<span class="k">package</span> <span class="nn">Jpeg::SegmentSos::Component</span><span class="p">;</span>
-
-<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
-
-<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
-
-    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
-    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
-    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
-
-    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
-
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
-
-    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">id</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">huffman_table</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">id</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">id</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">huffman_table</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">huffman_table</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="c1">########################################################################</span>
-<span class="k">package</span> <span class="nn">Jpeg::SegmentApp1</span><span class="p">;</span>
-
-<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
-
-<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
-
-    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
-    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
-    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
-
-    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
-
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
-
-    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">magic</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Encode::</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">));</span>
-    <span class="k">my</span> <span class="nv">$_on</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">magic</span><span class="p">();</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nv">$_on</span> <span class="ow">eq</span> <span class="s">&quot;Exif&quot;</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">body</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Jpeg::ExifInJpeg</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">magic</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">magic</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">body</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">body</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">_raw_data</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_data</span><span class="p">};</span>
 <span class="p">}</span>
 
 <span class="c1">########################################################################</span>
-<span class="k">package</span> <span class="nn">Jpeg::SegmentSof0</span><span class="p">;</span>
+<span class="k">package</span><span class="w"> </span><span class="nn">Jpeg::SegmentSos</span><span class="p">;</span>
 
-<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
 
-<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">from_file</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$fd</span><span class="p">;</span>
 
-    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
-    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
-    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="w">    </span><span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;&lt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">undef</span><span class="p">;</span>
+<span class="w">    </span><span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">new</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$_io</span><span class="p">,</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">,</span><span class="w"> </span><span class="nv">$_root</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$self</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
 
-    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
+<span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">$self</span><span class="p">;;</span>
 
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
 
-    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">_read</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
 
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">bits_per_sample</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">image_height</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">image_width</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">num_components</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">components</span><span class="p">}</span> <span class="o">=</span> <span class="p">();</span>
-    <span class="k">my</span> <span class="nv">$n_components</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">num_components</span><span class="p">();</span>
-    <span class="k">for</span> <span class="p">(</span><span class="k">my</span> <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n_components</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nb">push</span> <span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">components</span><span class="p">}},</span> <span class="nn">Jpeg::SegmentSof0::Component</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
-    <span class="p">}</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">num_components</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">components</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">();</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$n_components</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">num_components</span><span class="p">();</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">my</span><span class="w"> </span><span class="nv">$i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="nv">$i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nv">$n_components</span><span class="p">;</span><span class="w"> </span><span class="nv">$i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nb">push</span><span class="w"> </span><span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">components</span><span class="p">}},</span><span class="w"> </span><span class="nn">Jpeg::SegmentSos::Component</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">start_spectral_selection</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">end_spectral</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">appr_bit_pos</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">bits_per_sample</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">bits_per_sample</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">num_components</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">num_components</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">image_height</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">image_height</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">components</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">components</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">image_width</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">image_width</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">start_spectral_selection</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">start_spectral_selection</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">num_components</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">num_components</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">end_spectral</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">end_spectral</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">components</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">components</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="c1">########################################################################</span>
-<span class="k">package</span> <span class="nn">Jpeg::SegmentSof0::Component</span><span class="p">;</span>
-
-<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
-
-<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
-
-    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
-    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
-    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
-
-    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
-
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
-
-    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">id</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">sampling_factors</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">quantization_table_id</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">sampling_x</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">sampling_x</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">sampling_x</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">sampling_x</span><span class="p">}</span> <span class="o">=</span> <span class="p">((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">sampling_factors</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">240</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">);</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">sampling_x</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">sampling_y</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">sampling_y</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">sampling_y</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">sampling_y</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">sampling_factors</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">15</span><span class="p">);</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">sampling_y</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">id</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">id</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">sampling_factors</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">sampling_factors</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">quantization_table_id</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">quantization_table_id</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">appr_bit_pos</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">appr_bit_pos</span><span class="p">};</span>
 <span class="p">}</span>
 
 <span class="c1">########################################################################</span>
-<span class="k">package</span> <span class="nn">Jpeg::ExifInJpeg</span><span class="p">;</span>
+<span class="k">package</span><span class="w"> </span><span class="nn">Jpeg::SegmentSos::Component</span><span class="p">;</span>
 
-<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
 
-<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">from_file</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$fd</span><span class="p">;</span>
 
-    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
-    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
-    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="w">    </span><span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;&lt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">undef</span><span class="p">;</span>
+<span class="w">    </span><span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">new</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$_io</span><span class="p">,</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">,</span><span class="w"> </span><span class="nv">$_root</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$self</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
 
-    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
+<span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">$self</span><span class="p">;;</span>
 
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
 
-    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">_read</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
 
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">extra_zero</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_data</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes_full</span><span class="p">();</span>
-    <span class="k">my</span> <span class="nv">$io__raw_data</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_data</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">data</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Exif</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_data</span><span class="p">);</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">id</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">huffman_table</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">extra_zero</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">extra_zero</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">id</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">id</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">data</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">data</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">_raw_data</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_data</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">huffman_table</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">huffman_table</span><span class="p">};</span>
 <span class="p">}</span>
 
 <span class="c1">########################################################################</span>
-<span class="k">package</span> <span class="nn">Jpeg::SegmentApp0</span><span class="p">;</span>
+<span class="k">package</span><span class="w"> </span><span class="nn">Jpeg::SegmentApp1</span><span class="p">;</span>
 
-<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
 
-<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">from_file</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$fd</span><span class="p">;</span>
 
-    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
-    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
-    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="w">    </span><span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;&lt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">undef</span><span class="p">;</span>
+<span class="w">    </span><span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
 <span class="p">}</span>
 
-<span class="k">our</span> <span class="nv">$DENSITY_UNIT_NO_UNITS</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$DENSITY_UNIT_PIXELS_PER_INCH</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$DENSITY_UNIT_PIXELS_PER_CM</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">new</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$_io</span><span class="p">,</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">,</span><span class="w"> </span><span class="nv">$_root</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$self</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
 
-<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+<span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">$self</span><span class="p">;;</span>
 
-    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
 
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
-
-    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">_read</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
 
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">magic</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Encode::</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">5</span><span class="p">));</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">version_major</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">version_minor</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">density_units</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">density_x</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">density_y</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">thumbnail_x</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">thumbnail_y</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">thumbnail</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">thumbnail_x</span><span class="p">()</span> <span class="o">*</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">thumbnail_y</span><span class="p">())</span> <span class="o">*</span> <span class="mi">3</span><span class="p">));</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">magic</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Encode::</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">));</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">magic</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nv">$_on</span><span class="w"> </span><span class="ow">eq</span><span class="w"> </span><span class="s">&quot;Exif&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">body</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Jpeg::ExifInJpeg</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">magic</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">magic</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">magic</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">magic</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">version_major</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">version_major</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">body</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">body</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">version_minor</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">version_minor</span><span class="p">};</span>
+<span class="c1">########################################################################</span>
+<span class="k">package</span><span class="w"> </span><span class="nn">Jpeg::SegmentSof0</span><span class="p">;</span>
+
+<span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">from_file</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$fd</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;&lt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">undef</span><span class="p">;</span>
+<span class="w">    </span><span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">density_units</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">density_units</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">new</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$_io</span><span class="p">,</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">,</span><span class="w"> </span><span class="nv">$_root</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$self</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+
+<span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">$self</span><span class="p">;;</span>
+
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">density_x</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">density_x</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">_read</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">bits_per_sample</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">image_height</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">image_width</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">num_components</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">components</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">();</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$n_components</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">num_components</span><span class="p">();</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">my</span><span class="w"> </span><span class="nv">$i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="nv">$i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nv">$n_components</span><span class="p">;</span><span class="w"> </span><span class="nv">$i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nb">push</span><span class="w"> </span><span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">components</span><span class="p">}},</span><span class="w"> </span><span class="nn">Jpeg::SegmentSof0::Component</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">density_y</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">density_y</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">bits_per_sample</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">bits_per_sample</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">thumbnail_x</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">thumbnail_x</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">image_height</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">image_height</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">thumbnail_y</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">thumbnail_y</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">image_width</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">image_width</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">thumbnail</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">thumbnail</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">num_components</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">num_components</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">components</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">components</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">########################################################################</span>
+<span class="k">package</span><span class="w"> </span><span class="nn">Jpeg::SegmentSof0::Component</span><span class="p">;</span>
+
+<span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">from_file</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$fd</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;&lt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">undef</span><span class="p">;</span>
+<span class="w">    </span><span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">new</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$_io</span><span class="p">,</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">,</span><span class="w"> </span><span class="nv">$_root</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$self</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+
+<span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">$self</span><span class="p">;;</span>
+
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">_read</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">id</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">sampling_factors</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">quantization_table_id</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">sampling_x</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">sampling_x</span><span class="p">}</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">sampling_x</span><span class="p">});</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">sampling_x</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">sampling_factors</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">240</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">sampling_x</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">sampling_y</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">sampling_y</span><span class="p">}</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">sampling_y</span><span class="p">});</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">sampling_y</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">sampling_factors</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">15</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">sampling_y</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">id</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">id</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">sampling_factors</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">sampling_factors</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">quantization_table_id</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">quantization_table_id</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">########################################################################</span>
+<span class="k">package</span><span class="w"> </span><span class="nn">Jpeg::ExifInJpeg</span><span class="p">;</span>
+
+<span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">from_file</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$fd</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;&lt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">undef</span><span class="p">;</span>
+<span class="w">    </span><span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">new</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$_io</span><span class="p">,</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">,</span><span class="w"> </span><span class="nv">$_root</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$self</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+
+<span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">$self</span><span class="p">;;</span>
+
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">_read</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">extra_zero</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_data</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes_full</span><span class="p">();</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$io__raw_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_data</span><span class="p">});</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">data</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Exif</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_data</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">extra_zero</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">extra_zero</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">data</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">data</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">_raw_data</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_data</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">########################################################################</span>
+<span class="k">package</span><span class="w"> </span><span class="nn">Jpeg::SegmentApp0</span><span class="p">;</span>
+
+<span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">from_file</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$fd</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;&lt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">undef</span><span class="p">;</span>
+<span class="w">    </span><span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">our</span><span class="w"> </span><span class="nv">$DENSITY_UNIT_NO_UNITS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$DENSITY_UNIT_PIXELS_PER_INCH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$DENSITY_UNIT_PIXELS_PER_CM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">new</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$_io</span><span class="p">,</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">,</span><span class="w"> </span><span class="nv">$_root</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$self</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+
+<span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">$self</span><span class="p">;;</span>
+
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">_read</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">magic</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Encode::</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">5</span><span class="p">));</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">version_major</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">version_minor</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">density_units</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">density_x</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">density_y</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">thumbnail_x</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">thumbnail_y</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">thumbnail</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">thumbnail_x</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">thumbnail_y</span><span class="p">())</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">magic</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">magic</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">version_major</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">version_major</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">version_minor</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">version_minor</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">density_units</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">density_units</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">density_x</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">density_x</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">density_y</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">density_y</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">thumbnail_x</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">thumbnail_x</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">thumbnail_y</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">thumbnail_y</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">thumbnail</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">thumbnail</span><span class="p">};</span>
 <span class="p">}</span>
 
 <span class="mi">1</span><span class="p">;</span>

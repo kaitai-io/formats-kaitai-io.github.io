@@ -275,295 +275,295 @@ filesystem with a running Windows OS.</p>
         <h2>Format specification in Kaitai Struct YAML</h2>
 
         <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
-  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">regf</span>
-  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Windows registry database</span>
-  <span class="nt">application</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Windows NT and later</span>
-  <span class="nt">xref</span><span class="p">:</span>
-    <span class="nt">forensicswiki</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Windows_NT_Registry_File_(REGF)</span>
-    <span class="nt">wikidata</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Q463244</span>
-  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
-  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
-<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-  <span class="no">This spec allows to parse files used by Microsoft Windows family of</span>
-  <span class="no">operating systems to store parts of its &quot;registry&quot;. &quot;Registry&quot; is a</span>
-  <span class="no">hierarchical database that is used to store system settings (global</span>
-  <span class="no">configuration, per-user, per-application configuration, etc).</span>
+<span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">regf</span>
+<span class="w">  </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Windows registry database</span>
+<span class="w">  </span><span class="nt">application</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Windows NT and later</span>
+<span class="w">  </span><span class="nt">xref</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">forensicswiki</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Windows_NT_Registry_File_(REGF)</span>
+<span class="w">    </span><span class="nt">wikidata</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Q463244</span>
+<span class="w">  </span><span class="nt">license</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+<span class="w">  </span><span class="nt">endian</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">le</span>
+<span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">  </span><span class="no">This spec allows to parse files used by Microsoft Windows family of</span>
+<span class="w">  </span><span class="no">operating systems to store parts of its &quot;registry&quot;. &quot;Registry&quot; is a</span>
+<span class="w">  </span><span class="no">hierarchical database that is used to store system settings (global</span>
+<span class="w">  </span><span class="no">configuration, per-user, per-application configuration, etc).</span>
 
-  <span class="no">Typically, registry files are stored in:</span>
+<span class="w">  </span><span class="no">Typically, registry files are stored in:</span>
 
-  <span class="no">* System-wide: several files in `%SystemRoot%\System32\Config\`</span>
-  <span class="no">* User-wide:</span>
-    <span class="no">* `%USERPROFILE%\Ntuser.dat`</span>
-    <span class="no">* `%USERPROFILE%\Local Settings\Application Data\Microsoft\Windows\Usrclass.dat` (localized, Windows 2000, Server 2003 and Windows XP)</span>
-    <span class="no">* `%USERPROFILE%\AppData\Local\Microsoft\Windows\Usrclass.dat` (non-localized, Windows Vista and later)</span>
+<span class="w">  </span><span class="no">* System-wide: several files in `%SystemRoot%\System32\Config\`</span>
+<span class="w">  </span><span class="no">* User-wide:</span>
+<span class="w">    </span><span class="no">* `%USERPROFILE%\Ntuser.dat`</span>
+<span class="w">    </span><span class="no">* `%USERPROFILE%\Local Settings\Application Data\Microsoft\Windows\Usrclass.dat` (localized, Windows 2000, Server 2003 and Windows XP)</span>
+<span class="w">    </span><span class="no">* `%USERPROFILE%\AppData\Local\Microsoft\Windows\Usrclass.dat` (non-localized, Windows Vista and later)</span>
 
-  <span class="no">Note that one typically can&#39;t access files directly on a mounted</span>
-  <span class="no">filesystem with a running Windows OS.</span>
-<span class="nt">doc-ref</span><span class="p">:</span> <span class="s">&#39;https://github.com/libyal/libregf/blob/main/documentation/Windows%20NT%20Registry%20File%20(REGF)%20format.asciidoc&#39;</span>
+<span class="w">  </span><span class="no">Note that one typically can&#39;t access files directly on a mounted</span>
+<span class="w">  </span><span class="no">filesystem with a running Windows OS.</span>
+<span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;https://github.com/libyal/libregf/blob/main/documentation/Windows%20NT%20Registry%20File%20(REGF)%20format.asciidoc&#39;</span>
 <span class="nt">seq</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
-    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_header</span>
-  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hive_bins</span>
-    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hive_bin</span>
-    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4096</span>
-    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">header</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file_header</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hive_bins</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hive_bin</span>
+<span class="w">    </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4096</span>
+<span class="w">    </span><span class="nt">repeat</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eos</span>
 <span class="nt">types</span><span class="p">:</span>
-  <span class="nt">file_header</span><span class="p">:</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">signature</span>
-        <span class="nt">contents</span><span class="p">:</span> <span class="s">&quot;regf&quot;</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">primary_sequence_number</span> <span class="c1"># Matches the secondary sequence number if the hive was properly synchronized</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">secondary_sequence_number</span> <span class="c1"># Matches the primary sequence number if the hive was properly synchronized</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">last_modification_date_and_time</span> <span class="c1"># Contains a FILETIME in UTC</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">filetime</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">major_version</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">minor_version</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_type</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">format</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_format</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">root_key_offset</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hive_bins_data_size</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">clustering_factor</span> <span class="c1"># Logical sector size of the underlying disk in bytes divided by 512</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unknown1</span> <span class="c1"># Sometimes contains the last part of the filename in UTF-16 LE most of the time with an end-of-string character, but not always. Unused bytes are 0.</span>
-        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">64</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unknown2</span> <span class="c1"># Can contain remnant data, Padding used for the checksum?</span>
-        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">396</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">checksum</span> <span class="c1"># XOR-32 of the previous 508 bytes</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
-        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3576</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">boot_type</span> <span class="c1"># This field has no meaning on a disk</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">boot_recover</span> <span class="c1"># This field has no meaning on a disk</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-    <span class="nt">enums</span><span class="p">:</span>
-      <span class="nt">file_type</span><span class="p">:</span>
-        <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">normal</span>
-        <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">transaction_log</span>
-      <span class="nt">file_format</span><span class="p">:</span>
-        <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">direct_memory_load</span>
-  <span class="nt">hive_bin_header</span><span class="p">:</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">signature</span>
-        <span class="nt">contents</span><span class="p">:</span> <span class="s">&quot;hbin&quot;</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">offset</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-          <span class="no">The offset of the hive bin, Value in bytes and relative from</span>
-          <span class="no">the start of the hive bin data</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">size</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Size of the hive bin</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unknown1</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0 most of the time, can contain remnant data</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unknown2</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0 most of the time, can contain remnant data</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">timestamp</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">filetime</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Only the root (first) hive bin seems to contain a valid FILETIME</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unknown4</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Contains number of bytes</span>
-  <span class="nt">hive_bin_cell</span><span class="p">:</span>
-    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{identifier}&quot;</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cell_size_raw</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">identifier</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
-        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
-        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ascii</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>
-        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cell_size - 2 - 4</span>
-        <span class="nt">type</span><span class="p">:</span>
-          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">identifier</span>
-          <span class="nt">cases</span><span class="p">:</span>
-            <span class="s">&quot;&#39;nk&#39;&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">named_key</span>
-            <span class="s">&quot;&#39;lh&#39;&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">sub_key_list_lh_lf</span>
-            <span class="s">&quot;&#39;lf&#39;&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">sub_key_list_lh_lf</span>
-            <span class="s">&quot;&#39;li&#39;&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">sub_key_list_li</span>
-            <span class="s">&quot;&#39;ri&#39;&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">sub_key_list_ri</span>
-            <span class="s">&quot;&#39;vk&#39;&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">sub_key_list_vk</span>
-            <span class="s">&quot;&#39;sk&#39;&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">sub_key_list_sk</span>
-    <span class="nt">instances</span><span class="p">:</span>
-      <span class="nt">cell_size</span><span class="p">:</span>
-        <span class="nt">value</span><span class="p">:</span> <span class="s">&quot;(cell_size_raw</span><span class="nv"> </span><span class="s">&lt;</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">-1</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">+1)</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">cell_size_raw&quot;</span>
-        <span class="nt">-webide-parse-mode</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eager</span>
-      <span class="nt">is_allocated</span><span class="p">:</span>
-        <span class="nt">value</span><span class="p">:</span> <span class="s">&quot;cell_size_raw</span><span class="nv"> </span><span class="s">&lt;</span><span class="nv"> </span><span class="s">0&quot;</span>
-        <span class="nt">-webide-parse-mode</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eager</span>
-    <span class="nt">types</span><span class="p">:</span>
-      <span class="nt">named_key</span><span class="p">:</span>
-        <span class="nt">seq</span><span class="p">:</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
-            <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nk_flags</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">last_key_written_date_and_time</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">filetime</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unknown1</span> <span class="c1"># empty value</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">parent_key_offset</span> <span class="c1"># The offset value is in bytes and relative from the start of the hive bin data</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">number_of_sub_keys</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">number_of_volatile_sub_keys</span> <span class="c1"># The offset value is in bytes and relative from the start of the hive bin data / Refers to a sub keys list or contains -1 (0xffffffff) if empty.</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sub_keys_list_offset</span> <span class="c1"># The offset value is in bytes and relative from the start of the hive bin data / Refers to a sub keys list or contains -1 (0xffffffff) if empty.</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">number_of_values</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">values_list_offset</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">security_key_offset</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">class_name_offset</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">largest_sub_key_name_size</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">largest_sub_key_class_name_size</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">largest_value_name_size</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">largest_value_data_size</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unknown2</span> <span class="c1"># Some run-time caching index or hash?</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">key_name_size</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">class_name_size</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unknown_string_size</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unknown_string</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
-            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unknown_string_size</span>
-            <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ascii</span>
-        <span class="nt">enums</span><span class="p">:</span>
-          <span class="nt">nk_flags</span><span class="p">:</span>
-            <span class="nt">0x0001</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">key_is_volatile</span>   <span class="c1"># Is volatile key</span>
-            <span class="nt">0x0002</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">key_hive_exit</span>     <span class="c1"># Is mount point (of another Registry hive)</span>
-            <span class="nt">0x0004</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">key_hive_entry</span>    <span class="c1"># Is root key (of current Registry hive)</span>
-            <span class="nt">0x0008</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">key_no_delete</span>     <span class="c1"># Cannot be deleted</span>
-            <span class="nt">0x0010</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">key_sym_link</span>      <span class="c1"># Is symbolic link key</span>
-            <span class="nt">0x0020</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">key_comp_name</span>     <span class="c1"># Name is an ASCII string / Otherwise the name is a Unicode (UTF-16 little-endian) string</span>
-            <span class="nt">0x0040</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">key_prefef_handle</span> <span class="c1"># Is predefined handle</span>
-            <span class="nt">0x0080</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">key_virt_mirrored</span> <span class="c1"># Unknown</span>
-            <span class="nt">0x0100</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">key_virt_target</span>   <span class="c1"># Unknown</span>
-            <span class="nt">0x0200</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">key_virtual_store</span> <span class="c1"># Unknown</span>
-            <span class="nt">0x1000</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unknown1</span>
-            <span class="nt">0x4000</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unknown2</span>
-      <span class="nt">sub_key_list_lh_lf</span><span class="p">:</span>
-        <span class="nt">seq</span><span class="p">:</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">count</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">items</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">item</span>
-            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
-            <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">count</span>
-        <span class="nt">types</span><span class="p">:</span>
-          <span class="nt">item</span><span class="p">:</span>
-            <span class="nt">seq</span><span class="p">:</span>
-              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">named_key_offset</span> <span class="c1"># The offset value is in bytes and relative from the start of the hive bin data</span>
-                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hash_value</span> <span class="c1"># A different hash function is used for different sub key list types</span>
-                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="nt">sub_key_list_li</span><span class="p">:</span>
-        <span class="nt">seq</span><span class="p">:</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">count</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">items</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">item</span>
-            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
-            <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">count</span>
-        <span class="nt">types</span><span class="p">:</span>
-          <span class="nt">item</span><span class="p">:</span>
-            <span class="nt">seq</span><span class="p">:</span>
-              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">named_key_offset</span> <span class="c1"># The offset value is in bytes and relative from the start of the hive bin data</span>
-                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="nt">sub_key_list_ri</span><span class="p">:</span>
-        <span class="nt">seq</span><span class="p">:</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">count</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">items</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">item</span>
-            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
-            <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">count</span>
-        <span class="nt">types</span><span class="p">:</span>
-          <span class="nt">item</span><span class="p">:</span>
-            <span class="nt">seq</span><span class="p">:</span>
-              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sub_key_list_offset</span> <span class="c1"># The offset value is in bytes and relative from the start of the hive bin data</span>
-                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="nt">sub_key_list_vk</span><span class="p">:</span>
-        <span class="nt">seq</span><span class="p">:</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value_name_size</span> <span class="c1"># If the value name size is 0 the value name is &quot;(default)&quot;</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_size</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_offset</span> <span class="c1"># The offset value is in bytes and relative from the start of the hive bin data.</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_type</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-            <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_type_enum</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
-            <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">vk_flags</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">padding</span> <span class="c1"># unknown</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value_name</span>
-            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value_name_size</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
-            <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ascii</span>
-            <span class="nt">if</span><span class="p">:</span> <span class="s">&quot;flags</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">vk_flags::value_comp_name&quot;</span>
-        <span class="nt">enums</span><span class="p">:</span>
-          <span class="nt">data_type_enum</span><span class="p">:</span>
-            <span class="nt">0x00000000</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reg_none</span> <span class="c1"># Undefined type</span>
-            <span class="nt">0x00000001</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reg_sz</span> <span class="c1"># String / [MSDN] states that this is either in ASCII or Unicode with an end-of-string character / Although the string seems to be always stored as UTF-16 little-endian and sometimes the end-of-string character is not included. / Also see: Corruption scenarios</span>
-            <span class="nt">0x00000002</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reg_expand_sz</span> <span class="c1"># String that contains expandable (environment) variables like %PATH% / Either in ASCII or Unicode with an end-of-string character</span>
-            <span class="nt">0x00000003</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reg_binary</span> <span class="c1"># binary_data</span>
-            <span class="nt">0x00000004</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reg_dword</span> <span class="c1"># REG_DWORD_LITTLE_ENDIAN: 32-bit integer (double word) little-endian</span>
-            <span class="nt">0x00000005</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reg_dword_big_endian</span> <span class="c1"># Integer 32-bit signed big-endian (double word)</span>
-            <span class="nt">0x00000006</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reg_link</span> <span class="c1"># String that contains a symbolic link / Either in ASCII or Unicode with an end-of-string character</span>
-            <span class="nt">0x00000007</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reg_multi_sz</span> <span class="c1"># Array of strings / Either in ASCII or Unicode with an end-of-string character</span>
-            <span class="nt">0x00000008</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reg_resource_list</span> <span class="c1"># Resource list</span>
-            <span class="nt">0x00000009</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reg_full_resource_descriptor</span> <span class="c1"># Full resource descriptor</span>
-            <span class="nt">0x0000000a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reg_resource_requirements_list</span> <span class="c1"># Resource requirements list</span>
-            <span class="nt">0x0000000b</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reg_qword</span> <span class="c1"># REG_QWORD_LITTLE_ENDIAN: Integer 64-bit signed little-endian (quad word)</span>
-          <span class="nt">vk_flags</span><span class="p">:</span>
-            <span class="nt">0x0001</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value_comp_name</span> <span class="c1"># Name is an ASCII string / Otherwise the name is an Unicode (UTF-16 little-endian) string</span>
-      <span class="nt">sub_key_list_sk</span><span class="p">:</span>
-        <span class="nt">seq</span><span class="p">:</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unknown1</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">previous_security_key_offset</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">next_security_key_offset</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reference_count</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-  <span class="nt">hive_bin</span><span class="p">:</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hive_bin_header</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cells</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hive_bin_cell</span>
-        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
-  <span class="nt">filetime</span><span class="p">:</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
-    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{value}&quot;</span>
+<span class="w">  </span><span class="nt">file_header</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">signature</span>
+<span class="w">        </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;regf&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">primary_sequence_number</span><span class="w"> </span><span class="c1"># Matches the secondary sequence number if the hive was properly synchronized</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">secondary_sequence_number</span><span class="w"> </span><span class="c1"># Matches the primary sequence number if the hive was properly synchronized</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">last_modification_date_and_time</span><span class="w"> </span><span class="c1"># Contains a FILETIME in UTC</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">filetime</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">major_version</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">minor_version</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">type</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">        </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file_type</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">format</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">        </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file_format</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">root_key_offset</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hive_bins_data_size</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clustering_factor</span><span class="w"> </span><span class="c1"># Logical sector size of the underlying disk in bytes divided by 512</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unknown1</span><span class="w"> </span><span class="c1"># Sometimes contains the last part of the filename in UTF-16 LE most of the time with an end-of-string character, but not always. Unused bytes are 0.</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">64</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unknown2</span><span class="w"> </span><span class="c1"># Can contain remnant data, Padding used for the checksum?</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">396</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">checksum</span><span class="w"> </span><span class="c1"># XOR-32 of the previous 508 bytes</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reserved</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3576</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">boot_type</span><span class="w"> </span><span class="c1"># This field has no meaning on a disk</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">boot_recover</span><span class="w"> </span><span class="c1"># This field has no meaning on a disk</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">    </span><span class="nt">enums</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">file_type</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">0</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">normal</span>
+<span class="w">        </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">transaction_log</span>
+<span class="w">      </span><span class="nt">file_format</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">direct_memory_load</span>
+<span class="w">  </span><span class="nt">hive_bin_header</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">signature</span>
+<span class="w">        </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hbin&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">offset</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">The offset of the hive bin, Value in bytes and relative from</span>
+<span class="w">          </span><span class="no">the start of the hive bin data</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">size</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Size of the hive bin</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unknown1</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0 most of the time, can contain remnant data</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unknown2</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0 most of the time, can contain remnant data</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">timestamp</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">filetime</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Only the root (first) hive bin seems to contain a valid FILETIME</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unknown4</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Contains number of bytes</span>
+<span class="w">  </span><span class="nt">hive_bin_cell</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">-webide-representation</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{identifier}&quot;</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cell_size_raw</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">identifier</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ascii</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cell_size - 2 - 4</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">switch-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">identifier</span>
+<span class="w">          </span><span class="nt">cases</span><span class="p">:</span>
+<span class="w">            </span><span class="s">&quot;&#39;nk&#39;&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">named_key</span>
+<span class="w">            </span><span class="s">&quot;&#39;lh&#39;&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sub_key_list_lh_lf</span>
+<span class="w">            </span><span class="s">&quot;&#39;lf&#39;&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sub_key_list_lh_lf</span>
+<span class="w">            </span><span class="s">&quot;&#39;li&#39;&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sub_key_list_li</span>
+<span class="w">            </span><span class="s">&quot;&#39;ri&#39;&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sub_key_list_ri</span>
+<span class="w">            </span><span class="s">&quot;&#39;vk&#39;&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sub_key_list_vk</span>
+<span class="w">            </span><span class="s">&quot;&#39;sk&#39;&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sub_key_list_sk</span>
+<span class="w">    </span><span class="nt">instances</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">cell_size</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;(cell_size_raw</span><span class="nv"> </span><span class="s">&lt;</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">-1</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">+1)</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">cell_size_raw&quot;</span>
+<span class="w">        </span><span class="nt">-webide-parse-mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eager</span>
+<span class="w">      </span><span class="nt">is_allocated</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cell_size_raw</span><span class="nv"> </span><span class="s">&lt;</span><span class="nv"> </span><span class="s">0&quot;</span>
+<span class="w">        </span><span class="nt">-webide-parse-mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eager</span>
+<span class="w">    </span><span class="nt">types</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">named_key</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">flags</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u2</span>
+<span class="w">            </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nk_flags</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">last_key_written_date_and_time</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">filetime</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unknown1</span><span class="w"> </span><span class="c1"># empty value</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">parent_key_offset</span><span class="w"> </span><span class="c1"># The offset value is in bytes and relative from the start of the hive bin data</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">number_of_sub_keys</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">number_of_volatile_sub_keys</span><span class="w"> </span><span class="c1"># The offset value is in bytes and relative from the start of the hive bin data / Refers to a sub keys list or contains -1 (0xffffffff) if empty.</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sub_keys_list_offset</span><span class="w"> </span><span class="c1"># The offset value is in bytes and relative from the start of the hive bin data / Refers to a sub keys list or contains -1 (0xffffffff) if empty.</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">number_of_values</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">values_list_offset</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">security_key_offset</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">class_name_offset</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">largest_sub_key_name_size</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">largest_sub_key_class_name_size</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">largest_value_name_size</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">largest_value_data_size</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unknown2</span><span class="w"> </span><span class="c1"># Some run-time caching index or hash?</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">key_name_size</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u2</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">class_name_size</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u2</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unknown_string_size</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unknown_string</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unknown_string_size</span>
+<span class="w">            </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ascii</span>
+<span class="w">        </span><span class="nt">enums</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">nk_flags</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">0x0001</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">key_is_volatile</span><span class="w">   </span><span class="c1"># Is volatile key</span>
+<span class="w">            </span><span class="nt">0x0002</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">key_hive_exit</span><span class="w">     </span><span class="c1"># Is mount point (of another Registry hive)</span>
+<span class="w">            </span><span class="nt">0x0004</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">key_hive_entry</span><span class="w">    </span><span class="c1"># Is root key (of current Registry hive)</span>
+<span class="w">            </span><span class="nt">0x0008</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">key_no_delete</span><span class="w">     </span><span class="c1"># Cannot be deleted</span>
+<span class="w">            </span><span class="nt">0x0010</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">key_sym_link</span><span class="w">      </span><span class="c1"># Is symbolic link key</span>
+<span class="w">            </span><span class="nt">0x0020</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">key_comp_name</span><span class="w">     </span><span class="c1"># Name is an ASCII string / Otherwise the name is a Unicode (UTF-16 little-endian) string</span>
+<span class="w">            </span><span class="nt">0x0040</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">key_prefef_handle</span><span class="w"> </span><span class="c1"># Is predefined handle</span>
+<span class="w">            </span><span class="nt">0x0080</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">key_virt_mirrored</span><span class="w"> </span><span class="c1"># Unknown</span>
+<span class="w">            </span><span class="nt">0x0100</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">key_virt_target</span><span class="w">   </span><span class="c1"># Unknown</span>
+<span class="w">            </span><span class="nt">0x0200</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">key_virtual_store</span><span class="w"> </span><span class="c1"># Unknown</span>
+<span class="w">            </span><span class="nt">0x1000</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unknown1</span>
+<span class="w">            </span><span class="nt">0x4000</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unknown2</span>
+<span class="w">      </span><span class="nt">sub_key_list_lh_lf</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">count</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u2</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">items</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">item</span>
+<span class="w">            </span><span class="nt">repeat</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">expr</span>
+<span class="w">            </span><span class="nt">repeat-expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">count</span>
+<span class="w">        </span><span class="nt">types</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">item</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">named_key_offset</span><span class="w"> </span><span class="c1"># The offset value is in bytes and relative from the start of the hive bin data</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hash_value</span><span class="w"> </span><span class="c1"># A different hash function is used for different sub key list types</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="nt">sub_key_list_li</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">count</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u2</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">items</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">item</span>
+<span class="w">            </span><span class="nt">repeat</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">expr</span>
+<span class="w">            </span><span class="nt">repeat-expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">count</span>
+<span class="w">        </span><span class="nt">types</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">item</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">named_key_offset</span><span class="w"> </span><span class="c1"># The offset value is in bytes and relative from the start of the hive bin data</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="nt">sub_key_list_ri</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">count</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u2</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">items</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">item</span>
+<span class="w">            </span><span class="nt">repeat</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">expr</span>
+<span class="w">            </span><span class="nt">repeat-expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">count</span>
+<span class="w">        </span><span class="nt">types</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">item</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sub_key_list_offset</span><span class="w"> </span><span class="c1"># The offset value is in bytes and relative from the start of the hive bin data</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="nt">sub_key_list_vk</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value_name_size</span><span class="w"> </span><span class="c1"># If the value name size is 0 the value name is &quot;(default)&quot;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u2</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data_size</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data_offset</span><span class="w"> </span><span class="c1"># The offset value is in bytes and relative from the start of the hive bin data.</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data_type</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">            </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data_type_enum</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">flags</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u2</span>
+<span class="w">            </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vk_flags</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">padding</span><span class="w"> </span><span class="c1"># unknown</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u2</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value_name</span>
+<span class="w">            </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value_name_size</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">            </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ascii</span>
+<span class="w">            </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;flags</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">vk_flags::value_comp_name&quot;</span>
+<span class="w">        </span><span class="nt">enums</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">data_type_enum</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">0x00000000</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reg_none</span><span class="w"> </span><span class="c1"># Undefined type</span>
+<span class="w">            </span><span class="nt">0x00000001</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reg_sz</span><span class="w"> </span><span class="c1"># String / [MSDN] states that this is either in ASCII or Unicode with an end-of-string character / Although the string seems to be always stored as UTF-16 little-endian and sometimes the end-of-string character is not included. / Also see: Corruption scenarios</span>
+<span class="w">            </span><span class="nt">0x00000002</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reg_expand_sz</span><span class="w"> </span><span class="c1"># String that contains expandable (environment) variables like %PATH% / Either in ASCII or Unicode with an end-of-string character</span>
+<span class="w">            </span><span class="nt">0x00000003</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reg_binary</span><span class="w"> </span><span class="c1"># binary_data</span>
+<span class="w">            </span><span class="nt">0x00000004</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reg_dword</span><span class="w"> </span><span class="c1"># REG_DWORD_LITTLE_ENDIAN: 32-bit integer (double word) little-endian</span>
+<span class="w">            </span><span class="nt">0x00000005</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reg_dword_big_endian</span><span class="w"> </span><span class="c1"># Integer 32-bit signed big-endian (double word)</span>
+<span class="w">            </span><span class="nt">0x00000006</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reg_link</span><span class="w"> </span><span class="c1"># String that contains a symbolic link / Either in ASCII or Unicode with an end-of-string character</span>
+<span class="w">            </span><span class="nt">0x00000007</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reg_multi_sz</span><span class="w"> </span><span class="c1"># Array of strings / Either in ASCII or Unicode with an end-of-string character</span>
+<span class="w">            </span><span class="nt">0x00000008</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reg_resource_list</span><span class="w"> </span><span class="c1"># Resource list</span>
+<span class="w">            </span><span class="nt">0x00000009</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reg_full_resource_descriptor</span><span class="w"> </span><span class="c1"># Full resource descriptor</span>
+<span class="w">            </span><span class="nt">0x0000000a</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reg_resource_requirements_list</span><span class="w"> </span><span class="c1"># Resource requirements list</span>
+<span class="w">            </span><span class="nt">0x0000000b</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reg_qword</span><span class="w"> </span><span class="c1"># REG_QWORD_LITTLE_ENDIAN: Integer 64-bit signed little-endian (quad word)</span>
+<span class="w">          </span><span class="nt">vk_flags</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">0x0001</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value_comp_name</span><span class="w"> </span><span class="c1"># Name is an ASCII string / Otherwise the name is an Unicode (UTF-16 little-endian) string</span>
+<span class="w">      </span><span class="nt">sub_key_list_sk</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unknown1</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u2</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">previous_security_key_offset</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">next_security_key_offset</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reference_count</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">  </span><span class="nt">hive_bin</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">header</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hive_bin_header</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cells</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hive_bin_cell</span>
+<span class="w">        </span><span class="nt">repeat</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eos</span>
+<span class="w">  </span><span class="nt">filetime</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u8</span>
+<span class="w">    </span><span class="nt">-webide-representation</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{value}&quot;</span>
 </pre></div>
     </div>
 </section>

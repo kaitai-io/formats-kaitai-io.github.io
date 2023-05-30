@@ -251,19 +251,19 @@ can also be found there.</p>
 
 
 
-<div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="n">BroadcomTrx</span><span class="p">.</span><span class="n">FromFile</span><span class="p">(</span><span class="s">&quot;path/to/local/file.trx&quot;</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><span class="kt">var</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="p">.</span><span class="n">FromFile</span><span class="p">(</span><span class="s">&quot;path/to/local/file.trx&quot;</span><span class="p">);</span>
 </pre></div>
 
 <p>Or parse structure from a byte array:</p>
 
-<div class="highlight"><pre><span></span><span class="kt">byte</span><span class="p">[]</span> <span class="n">someArray</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
-<span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BroadcomTrx</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">someArray</span><span class="p">));</span>
+<div class="highlight"><pre><span></span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">someArray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">};</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">someArray</span><span class="p">));</span>
 </pre></div>
 
 <p>After that, one can get various attributes from the structure by accessing properties like:</p>
 
 
-<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">Header</span> <span class="c1">// =&gt; get header</span>
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">Header</span><span class="w"> </span><span class="c1">// =&gt; get header</span>
 </pre></div>
 
     </div>
@@ -293,402 +293,402 @@ can also be found there.</p>
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">System.Collections.Generic</span><span class="p">;</span>
 
-<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">Kaitai</span>
 <span class="p">{</span>
 
-    <span class="c1">/// &lt;summary&gt;</span>
-    <span class="c1">/// .trx file format is widely used for distribution of firmware</span>
-    <span class="c1">/// updates for Broadcom devices. The most well-known are ASUS routers.</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// Fundamentally, it includes a footer which acts as a safeguard</span>
-    <span class="c1">/// against installing a firmware package on a wrong hardware model or</span>
-    <span class="c1">/// version, and a header which list numerous partitions packaged inside</span>
-    <span class="c1">/// a single .trx file.</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// trx files not necessarily contain all these headers.</span>
-    <span class="c1">/// &lt;/summary&gt;</span>
-    <span class="c1">/// &lt;remarks&gt;</span>
-    <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/openwrt/firmware-utils/blob/a2c80c5/src/trx.c&quot;&gt;Source&lt;/a&gt;</span>
-    <span class="c1">/// &lt;/remarks&gt;</span>
-    <span class="c1">/// &lt;remarks&gt;</span>
-    <span class="c1">/// Reference: &lt;a href=&quot;https://web.archive.org/web/20190127154419/https://openwrt.org/docs/techref/header&quot;&gt;Source&lt;/a&gt;</span>
-    <span class="c1">/// &lt;/remarks&gt;</span>
-    <span class="c1">/// &lt;remarks&gt;</span>
-    <span class="c1">/// Reference: &lt;a href=&quot;https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/mtd/partitions/brcm,trx.txt&quot;&gt;Source&lt;/a&gt;</span>
-    <span class="c1">/// &lt;/remarks&gt;</span>
-    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">BroadcomTrx</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">{</span>
-        <span class="k">public</span> <span class="k">static</span> <span class="n">BroadcomTrx</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">return</span> <span class="k">new</span> <span class="nf">BroadcomTrx</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-        <span class="p">}</span>
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// .trx file format is widely used for distribution of firmware</span>
+<span class="w">    </span><span class="c1">/// updates for Broadcom devices. The most well-known are ASUS routers.</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// Fundamentally, it includes a footer which acts as a safeguard</span>
+<span class="w">    </span><span class="c1">/// against installing a firmware package on a wrong hardware model or</span>
+<span class="w">    </span><span class="c1">/// version, and a header which list numerous partitions packaged inside</span>
+<span class="w">    </span><span class="c1">/// a single .trx file.</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// trx files not necessarily contain all these headers.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;https://github.com/openwrt/firmware-utils/blob/a2c80c5/src/trx.c&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;https://web.archive.org/web/20190127154419/https://openwrt.org/docs/techref/header&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/mtd/partitions/brcm,trx.txt&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">BroadcomTrx</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">BroadcomTrx</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
 
-        <span class="k">public</span> <span class="nf">BroadcomTrx</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">BroadcomTrx</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
-            <span class="n">f_header</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-            <span class="n">f_tail</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-            <span class="n">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-        <span class="p">{</span>
-        <span class="p">}</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Revision</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">Revision</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">Revision</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="nf">BroadcomTrx</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">            </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">            </span><span class="n">f_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">            </span><span class="n">f_tail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">            </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Revision</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">Revision</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">Revision</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">Revision</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">BroadcomTrx</span><span class="p">.</span><span class="n">Tail</span><span class="p">.</span><span class="n">HwCompInfo</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">BroadcomTrx</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_major</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
-                <span class="n">_minor</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_major</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_minor</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">BroadcomTrx</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">BroadcomTrx</span><span class="p">.</span><span class="n">Tail</span><span class="p">.</span><span class="n">HwCompInfo</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Major</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_major</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Minor</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_minor</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">BroadcomTrx</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">BroadcomTrx</span><span class="p">.</span><span class="n">Tail</span><span class="p">.</span><span class="n">HwCompInfo</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Version</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">Version</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">Version</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">Revision</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="p">.</span><span class="n">Tail</span><span class="p">.</span><span class="n">HwCompInfo</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_major</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_minor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">_major</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">_minor</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="p">.</span><span class="n">Tail</span><span class="p">.</span><span class="n">HwCompInfo</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">Major</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_major</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">Minor</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_minor</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="p">.</span><span class="n">Tail</span><span class="p">.</span><span class="n">HwCompInfo</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Version</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">Version</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">Version</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">Version</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">BroadcomTrx</span><span class="p">.</span><span class="n">Tail</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">BroadcomTrx</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_major</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
-                <span class="n">_minor</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
-                <span class="n">_patch</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
-                <span class="n">_tweak</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_major</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_minor</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_patch</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_tweak</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">BroadcomTrx</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">BroadcomTrx</span><span class="p">.</span><span class="n">Tail</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Major</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_major</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Minor</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_minor</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Patch</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_patch</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Tweak</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_tweak</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">BroadcomTrx</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">BroadcomTrx</span><span class="p">.</span><span class="n">Tail</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">Version</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="p">.</span><span class="n">Tail</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_major</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_minor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_patch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_tweak</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">_major</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">_minor</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">_patch</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">_tweak</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="p">.</span><span class="n">Tail</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">Major</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_major</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">Minor</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_minor</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">Patch</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_patch</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">Tweak</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_tweak</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="p">.</span><span class="n">Tail</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
 
-        <span class="c1">/// &lt;summary&gt;</span>
-        <span class="c1">/// A safeguard against installation of firmware to an incompatible device</span>
-        <span class="c1">/// &lt;/summary&gt;</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Tail</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">Tail</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">Tail</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">        </span><span class="c1">/// A safeguard against installation of firmware to an incompatible device</span>
+<span class="w">        </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Tail</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">Tail</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">Tail</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">Tail</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">BroadcomTrx</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">BroadcomTrx</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_version</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Version</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                <span class="n">_productId</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">BytesTerminate</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">12</span><span class="p">),</span> <span class="m">0</span><span class="p">,</span> <span class="k">false</span><span class="p">));</span>
-                <span class="n">_compHw</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">HwCompInfo</span><span class="p">&gt;();</span>
-                <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="m">4</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
-                <span class="p">{</span>
-                    <span class="n">_compHw</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">HwCompInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
-                <span class="p">}</span>
-                <span class="n">_reserved</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">32</span><span class="p">);</span>
-            <span class="p">}</span>
-            <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">HwCompInfo</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-            <span class="p">{</span>
-                <span class="k">public</span> <span class="k">static</span> <span class="n">HwCompInfo</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-                <span class="p">{</span>
-                    <span class="k">return</span> <span class="k">new</span> <span class="nf">HwCompInfo</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-                <span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">Tail</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Version</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                </span><span class="n">_productId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">BytesTerminate</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">12</span><span class="p">),</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="k">false</span><span class="p">));</span>
+<span class="w">                </span><span class="n">_compHw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">HwCompInfo</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">4</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">_compHw</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">HwCompInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">));</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="n">_reserved</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">32</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">HwCompInfo</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">HwCompInfo</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">HwCompInfo</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">                </span><span class="p">}</span>
 
-                <span class="k">public</span> <span class="nf">HwCompInfo</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">BroadcomTrx</span><span class="p">.</span><span class="n">Tail</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">BroadcomTrx</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-                <span class="p">{</span>
-                    <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                    <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                    <span class="n">_read</span><span class="p">();</span>
-                <span class="p">}</span>
-                <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-                <span class="p">{</span>
-                    <span class="n">_min</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Revision</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="n">_max</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Revision</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                <span class="p">}</span>
-                <span class="k">private</span> <span class="n">Revision</span> <span class="n">_min</span><span class="p">;</span>
-                <span class="k">private</span> <span class="n">Revision</span> <span class="n">_max</span><span class="p">;</span>
-                <span class="k">private</span> <span class="n">BroadcomTrx</span> <span class="n">m_root</span><span class="p">;</span>
-                <span class="k">private</span> <span class="n">BroadcomTrx</span><span class="p">.</span><span class="n">Tail</span> <span class="n">m_parent</span><span class="p">;</span>
-                <span class="k">public</span> <span class="n">Revision</span> <span class="n">Min</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_min</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-                <span class="k">public</span> <span class="n">Revision</span> <span class="n">Max</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_max</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-                <span class="k">public</span> <span class="n">BroadcomTrx</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-                <span class="k">public</span> <span class="n">BroadcomTrx</span><span class="p">.</span><span class="n">Tail</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="n">Version</span> <span class="n">_version</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">string</span> <span class="n">_productId</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">HwCompInfo</span><span class="p">&gt;</span> <span class="n">_compHw</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_reserved</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">BroadcomTrx</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">BroadcomTrx</span> <span class="n">m_parent</span><span class="p">;</span>
+<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="nf">HwCompInfo</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="p">.</span><span class="n">Tail</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Revision</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Revision</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="n">Revision</span><span class="w"> </span><span class="n">_min</span><span class="p">;</span>
+<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="n">Revision</span><span class="w"> </span><span class="n">_max</span><span class="p">;</span>
+<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="p">.</span><span class="n">Tail</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="n">Revision</span><span class="w"> </span><span class="n">Min</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_min</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="n">Revision</span><span class="w"> </span><span class="n">Max</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_max</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="p">.</span><span class="n">Tail</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">Version</span><span class="w"> </span><span class="n">_version</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">_productId</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">HwCompInfo</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_compHw</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_reserved</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// 1.9.2.7 by default</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="n">Version</span> <span class="n">Version</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_version</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">string</span> <span class="n">ProductId</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_productId</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// 1.9.2.7 by default</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">Version</span><span class="w"> </span><span class="n">Version</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_version</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">ProductId</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_productId</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// 0.02 - 2.99</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">HwCompInfo</span><span class="p">&gt;</span> <span class="n">CompHw</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_compHw</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Reserved</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_reserved</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">BroadcomTrx</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">BroadcomTrx</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Header</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">Header</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">Header</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// 0.02 - 2.99</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">HwCompInfo</span><span class="o">&gt;</span><span class="w"> </span><span class="n">CompHw</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_compHw</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Reserved</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_reserved</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Header</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">Header</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">Header</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">Header</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">BroadcomTrx</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">BroadcomTrx</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_magic</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
-                <span class="k">if</span> <span class="p">(!((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">Magic</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">72</span><span class="p">,</span> <span class="m">68</span><span class="p">,</span> <span class="m">82</span><span class="p">,</span> <span class="m">48</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">)))</span>
-                <span class="p">{</span>
-                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">72</span><span class="p">,</span> <span class="m">68</span><span class="p">,</span> <span class="m">82</span><span class="p">,</span> <span class="m">48</span> <span class="p">},</span> <span class="n">Magic</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/types/header/seq/0&quot;</span><span class="p">);</span>
-                <span class="p">}</span>
-                <span class="n">_len</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
-                <span class="n">_crc32</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
-                <span class="n">_version</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
-                <span class="n">_flags</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Flags</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                <span class="n">_partitions</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Partition</span><span class="p">&gt;();</span>
-                <span class="p">{</span>
-                    <span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
-                    <span class="n">Partition</span> <span class="n">M_</span><span class="p">;</span>
-                    <span class="k">do</span> <span class="p">{</span>
-                        <span class="n">M_</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Partition</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                        <span class="n">_partitions</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">M_</span><span class="p">);</span>
-                        <span class="n">i</span><span class="p">++;</span>
-                    <span class="p">}</span> <span class="k">while</span> <span class="p">(!(</span> <span class="p">((</span><span class="n">i</span> <span class="p">&gt;=</span> <span class="m">4</span><span class="p">)</span> <span class="p">||</span> <span class="p">(!(</span><span class="n">M_</span><span class="p">.</span><span class="n">IsPresent</span><span class="p">)))</span> <span class="p">));</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Partition</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-            <span class="p">{</span>
-                <span class="k">public</span> <span class="nf">Partition</span><span class="p">(</span><span class="kt">byte</span> <span class="n">p_idx</span><span class="p">,</span> <span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">BroadcomTrx</span><span class="p">.</span><span class="n">Header</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">BroadcomTrx</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-                <span class="p">{</span>
-                    <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                    <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                    <span class="n">_idx</span> <span class="p">=</span> <span class="n">p_idx</span><span class="p">;</span>
-                    <span class="n">f_isPresent</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                    <span class="n">f_isLast</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                    <span class="n">f_lenBody</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                    <span class="n">f_body</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                    <span class="n">_read</span><span class="p">();</span>
-                <span class="p">}</span>
-                <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-                <span class="p">{</span>
-                    <span class="n">_ofsBody</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
-                <span class="p">}</span>
-                <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isPresent</span><span class="p">;</span>
-                <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isPresent</span><span class="p">;</span>
-                <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsPresent</span>
-                <span class="p">{</span>
-                    <span class="k">get</span>
-                    <span class="p">{</span>
-                        <span class="k">if</span> <span class="p">(</span><span class="n">f_isPresent</span><span class="p">)</span>
-                            <span class="k">return</span> <span class="n">_isPresent</span><span class="p">;</span>
-                        <span class="n">_isPresent</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span><span class="n">OfsBody</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                        <span class="n">f_isPresent</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                        <span class="k">return</span> <span class="n">_isPresent</span><span class="p">;</span>
-                    <span class="p">}</span>
-                <span class="p">}</span>
-                <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isLast</span><span class="p">;</span>
-                <span class="k">private</span> <span class="kt">bool?</span> <span class="n">_isLast</span><span class="p">;</span>
-                <span class="k">public</span> <span class="kt">bool?</span> <span class="n">IsLast</span>
-                <span class="p">{</span>
-                    <span class="k">get</span>
-                    <span class="p">{</span>
-                        <span class="k">if</span> <span class="p">(</span><span class="n">f_isLast</span><span class="p">)</span>
-                            <span class="k">return</span> <span class="n">_isLast</span><span class="p">;</span>
-                        <span class="k">if</span> <span class="p">(</span><span class="n">IsPresent</span><span class="p">)</span> <span class="p">{</span>
-                            <span class="n">_isLast</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span> <span class="p">((</span><span class="n">Idx</span> <span class="p">==</span> <span class="p">(</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">Partitions</span><span class="p">.</span><span class="n">Count</span> <span class="p">-</span> <span class="m">1</span><span class="p">))</span> <span class="p">||</span> <span class="p">(!(</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">Partitions</span><span class="p">[(</span><span class="n">Idx</span> <span class="p">+</span> <span class="m">1</span><span class="p">)].</span><span class="n">IsPresent</span><span class="p">)))</span> <span class="p">);</span>
-                        <span class="p">}</span>
-                        <span class="n">f_isLast</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                        <span class="k">return</span> <span class="n">_isLast</span><span class="p">;</span>
-                    <span class="p">}</span>
-                <span class="p">}</span>
-                <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_lenBody</span><span class="p">;</span>
-                <span class="k">private</span> <span class="kt">int?</span> <span class="n">_lenBody</span><span class="p">;</span>
-                <span class="k">public</span> <span class="kt">int?</span> <span class="n">LenBody</span>
-                <span class="p">{</span>
-                    <span class="k">get</span>
-                    <span class="p">{</span>
-                        <span class="k">if</span> <span class="p">(</span><span class="n">f_lenBody</span><span class="p">)</span>
-                            <span class="k">return</span> <span class="n">_lenBody</span><span class="p">;</span>
-                        <span class="k">if</span> <span class="p">(</span><span class="n">IsPresent</span><span class="p">)</span> <span class="p">{</span>
-                            <span class="n">_lenBody</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">IsLast</span> <span class="p">?</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">M_Io</span><span class="p">.</span><span class="n">Size</span> <span class="p">-</span> <span class="n">OfsBody</span><span class="p">)</span> <span class="p">:</span> <span class="n">M_Parent</span><span class="p">.</span><span class="n">Partitions</span><span class="p">[(</span><span class="n">Idx</span> <span class="p">+</span> <span class="m">1</span><span class="p">)].</span><span class="n">OfsBody</span><span class="p">));</span>
-                        <span class="p">}</span>
-                        <span class="n">f_lenBody</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                        <span class="k">return</span> <span class="n">_lenBody</span><span class="p">;</span>
-                    <span class="p">}</span>
-                <span class="p">}</span>
-                <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_body</span><span class="p">;</span>
-                <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_body</span><span class="p">;</span>
-                <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Body</span>
-                <span class="p">{</span>
-                    <span class="k">get</span>
-                    <span class="p">{</span>
-                        <span class="k">if</span> <span class="p">(</span><span class="n">f_body</span><span class="p">)</span>
-                            <span class="k">return</span> <span class="n">_body</span><span class="p">;</span>
-                        <span class="k">if</span> <span class="p">(</span><span class="n">IsPresent</span><span class="p">)</span> <span class="p">{</span>
-                            <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="p">=</span> <span class="n">M_Root</span><span class="p">.</span><span class="n">M_Io</span><span class="p">;</span>
-                            <span class="kt">long</span> <span class="n">_pos</span> <span class="p">=</span> <span class="n">io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
-                            <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsBody</span><span class="p">);</span>
-                            <span class="n">_body</span> <span class="p">=</span> <span class="n">io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenBody</span><span class="p">);</span>
-                            <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
-                            <span class="n">f_body</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                        <span class="p">}</span>
-                        <span class="k">return</span> <span class="n">_body</span><span class="p">;</span>
-                    <span class="p">}</span>
-                <span class="p">}</span>
-                <span class="k">private</span> <span class="kt">uint</span> <span class="n">_ofsBody</span><span class="p">;</span>
-                <span class="k">private</span> <span class="kt">byte</span> <span class="n">_idx</span><span class="p">;</span>
-                <span class="k">private</span> <span class="n">BroadcomTrx</span> <span class="n">m_root</span><span class="p">;</span>
-                <span class="k">private</span> <span class="n">BroadcomTrx</span><span class="p">.</span><span class="n">Header</span> <span class="n">m_parent</span><span class="p">;</span>
-                <span class="k">public</span> <span class="kt">uint</span> <span class="n">OfsBody</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ofsBody</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-                <span class="k">public</span> <span class="kt">byte</span> <span class="n">Idx</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_idx</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-                <span class="k">public</span> <span class="n">BroadcomTrx</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-                <span class="k">public</span> <span class="n">BroadcomTrx</span><span class="p">.</span><span class="n">Header</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Flags</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-            <span class="p">{</span>
-                <span class="k">public</span> <span class="k">static</span> <span class="n">Flags</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-                <span class="p">{</span>
-                    <span class="k">return</span> <span class="k">new</span> <span class="nf">Flags</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-                <span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">Header</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">Magic</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="m">72</span><span class="p">,</span><span class="w"> </span><span class="m">68</span><span class="p">,</span><span class="w"> </span><span class="m">82</span><span class="p">,</span><span class="w"> </span><span class="m">48</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">)))</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="m">72</span><span class="p">,</span><span class="w"> </span><span class="m">68</span><span class="p">,</span><span class="w"> </span><span class="m">82</span><span class="p">,</span><span class="w"> </span><span class="m">48</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="n">Magic</span><span class="p">,</span><span class="w"> </span><span class="n">M_Io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/header/seq/0&quot;</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="n">_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_crc32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Flags</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                </span><span class="n">_partitions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Partition</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="kt">var</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">Partition</span><span class="w"> </span><span class="n">M_</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">do</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">M_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Partition</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                        </span><span class="n">_partitions</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">M_</span><span class="p">);</span>
+<span class="w">                        </span><span class="n">i</span><span class="o">++</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="n">i</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="m">4</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">M_</span><span class="p">.</span><span class="n">IsPresent</span><span class="p">)))</span><span class="w"> </span><span class="p">));</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Partition</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="nf">Partition</span><span class="p">(</span><span class="kt">byte</span><span class="w"> </span><span class="n">p_idx</span><span class="p">,</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="p">.</span><span class="n">Header</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p_idx</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">f_isPresent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">f_isLast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">f_lenBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">f_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">_ofsBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_isPresent</span><span class="p">;</span>
+<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">_isPresent</span><span class="p">;</span>
+<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">IsPresent</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">get</span>
+<span class="w">                    </span><span class="p">{</span>
+<span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_isPresent</span><span class="p">)</span>
+<span class="w">                            </span><span class="k">return</span><span class="w"> </span><span class="n">_isPresent</span><span class="p">;</span>
+<span class="w">                        </span><span class="n">_isPresent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">bool</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">OfsBody</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="m">0</span><span class="p">);</span>
+<span class="w">                        </span><span class="n">f_isPresent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_isPresent</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_isLast</span><span class="p">;</span>
+<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="kt">bool?</span><span class="w"> </span><span class="n">_isLast</span><span class="p">;</span>
+<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="kt">bool?</span><span class="w"> </span><span class="n">IsLast</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">get</span>
+<span class="w">                    </span><span class="p">{</span>
+<span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_isLast</span><span class="p">)</span>
+<span class="w">                            </span><span class="k">return</span><span class="w"> </span><span class="n">_isLast</span><span class="p">;</span>
+<span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">IsPresent</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                            </span><span class="n">_isLast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">bool</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="n">Idx</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p">(</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">Partitions</span><span class="p">.</span><span class="n">Count</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">1</span><span class="p">))</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">Partitions</span><span class="p">[(</span><span class="n">Idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">1</span><span class="p">)].</span><span class="n">IsPresent</span><span class="p">)))</span><span class="w"> </span><span class="p">);</span>
+<span class="w">                        </span><span class="p">}</span>
+<span class="w">                        </span><span class="n">f_isLast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_isLast</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_lenBody</span><span class="p">;</span>
+<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="kt">int?</span><span class="w"> </span><span class="n">_lenBody</span><span class="p">;</span>
+<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="kt">int?</span><span class="w"> </span><span class="n">LenBody</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">get</span>
+<span class="w">                    </span><span class="p">{</span>
+<span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_lenBody</span><span class="p">)</span>
+<span class="w">                            </span><span class="k">return</span><span class="w"> </span><span class="n">_lenBody</span><span class="p">;</span>
+<span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">IsPresent</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                            </span><span class="n">_lenBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">IsLast</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">M_Io</span><span class="p">.</span><span class="n">Size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">OfsBody</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">M_Parent</span><span class="p">.</span><span class="n">Partitions</span><span class="p">[(</span><span class="n">Idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">1</span><span class="p">)].</span><span class="n">OfsBody</span><span class="p">));</span>
+<span class="w">                        </span><span class="p">}</span>
+<span class="w">                        </span><span class="n">f_lenBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_lenBody</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_body</span><span class="p">;</span>
+<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_body</span><span class="p">;</span>
+<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Body</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">get</span>
+<span class="w">                    </span><span class="p">{</span>
+<span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_body</span><span class="p">)</span>
+<span class="w">                            </span><span class="k">return</span><span class="w"> </span><span class="n">_body</span><span class="p">;</span>
+<span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">IsPresent</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                            </span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">M_Root</span><span class="p">.</span><span class="n">M_Io</span><span class="p">;</span>
+<span class="w">                            </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
+<span class="w">                            </span><span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsBody</span><span class="p">);</span>
+<span class="w">                            </span><span class="n">_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenBody</span><span class="p">);</span>
+<span class="w">                            </span><span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+<span class="w">                            </span><span class="n">f_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                        </span><span class="p">}</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_body</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">_ofsBody</span><span class="p">;</span>
+<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">_idx</span><span class="p">;</span>
+<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="p">.</span><span class="n">Header</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">OfsBody</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_ofsBody</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">Idx</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_idx</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="p">.</span><span class="n">Header</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Flags</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">Flags</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">Flags</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">                </span><span class="p">}</span>
 
-                <span class="k">public</span> <span class="nf">Flags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">BroadcomTrx</span><span class="p">.</span><span class="n">Header</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">BroadcomTrx</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-                <span class="p">{</span>
-                    <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                    <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                    <span class="n">_read</span><span class="p">();</span>
-                <span class="p">}</span>
-                <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-                <span class="p">{</span>
-                    <span class="n">_flags</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">bool</span><span class="p">&gt;();</span>
-                    <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="m">16</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
-                    <span class="p">{</span>
-                        <span class="n">_flags</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntLe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="p">}</span>
-                <span class="p">}</span>
-                <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">bool</span><span class="p">&gt;</span> <span class="n">_flags</span><span class="p">;</span>
-                <span class="k">private</span> <span class="n">BroadcomTrx</span> <span class="n">m_root</span><span class="p">;</span>
-                <span class="k">private</span> <span class="n">BroadcomTrx</span><span class="p">.</span><span class="n">Header</span> <span class="n">m_parent</span><span class="p">;</span>
-                <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">bool</span><span class="p">&gt;</span> <span class="n">Flags</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_flags</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-                <span class="k">public</span> <span class="n">BroadcomTrx</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-                <span class="k">public</span> <span class="n">BroadcomTrx</span><span class="p">.</span><span class="n">Header</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_magic</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_len</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_crc32</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_version</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">Flags</span> <span class="n">_flags</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Partition</span><span class="p">&gt;</span> <span class="n">_partitions</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">BroadcomTrx</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">BroadcomTrx</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Magic</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_magic</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="nf">Flags</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="p">.</span><span class="n">Header</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">_flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">                    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">16</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">                    </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">_flags</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntLe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="m">0</span><span class="p">);</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_flags</span><span class="p">;</span>
+<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="p">.</span><span class="n">Header</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Flags</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_flags</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="p">.</span><span class="n">Header</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_magic</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">_len</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">_crc32</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">_version</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">Flags</span><span class="w"> </span><span class="n">_flags</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Partition</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_partitions</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Magic</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_magic</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Length of file including header</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">uint</span> <span class="n">Len</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_len</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// Length of file including header</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">Len</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_len</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// CRC from `version` (??? todo: see the original and disambiguate) to end of file</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">uint</span> <span class="n">Crc32</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_crc32</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Version</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_version</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">Flags</span> <span class="n">Flags</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_flags</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// CRC from `version` (??? todo: see the original and disambiguate) to end of file</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">Crc32</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_crc32</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">Version</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_version</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">Flags</span><span class="w"> </span><span class="n">Flags</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_flags</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Offsets of partitions from start of header</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Partition</span><span class="p">&gt;</span> <span class="n">Partitions</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_partitions</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">BroadcomTrx</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">BroadcomTrx</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_header</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">Header</span> <span class="n">_header</span><span class="p">;</span>
-        <span class="k">public</span> <span class="n">Header</span> <span class="n">Header</span>
-        <span class="p">{</span>
-            <span class="k">get</span>
-            <span class="p">{</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">f_header</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="n">_header</span><span class="p">;</span>
-                <span class="kt">long</span> <span class="n">_pos</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
-                <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="m">0</span><span class="p">);</span>
-                <span class="n">_header</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Header</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
-                <span class="n">f_header</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                <span class="k">return</span> <span class="n">_header</span><span class="p">;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_tail</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">Tail</span> <span class="n">_tail</span><span class="p">;</span>
-        <span class="k">public</span> <span class="n">Tail</span> <span class="n">Tail</span>
-        <span class="p">{</span>
-            <span class="k">get</span>
-            <span class="p">{</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">f_tail</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="n">_tail</span><span class="p">;</span>
-                <span class="kt">long</span> <span class="n">_pos</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
-                <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">((</span><span class="n">M_Io</span><span class="p">.</span><span class="n">Size</span> <span class="p">-</span> <span class="m">64</span><span class="p">));</span>
-                <span class="n">_tail</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Tail</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
-                <span class="n">f_tail</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                <span class="k">return</span> <span class="n">_tail</span><span class="p">;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="n">BroadcomTrx</span> <span class="n">m_root</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
-        <span class="k">public</span> <span class="n">BroadcomTrx</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-    <span class="p">}</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// Offsets of partitions from start of header</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Partition</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Partitions</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_partitions</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_header</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">Header</span><span class="w"> </span><span class="n">_header</span><span class="p">;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">Header</span><span class="w"> </span><span class="n">Header</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">get</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_header</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_header</span><span class="p">;</span>
+<span class="w">                </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="m">0</span><span class="p">);</span>
+<span class="w">                </span><span class="n">_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Header</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+<span class="w">                </span><span class="n">f_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">_header</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_tail</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">Tail</span><span class="w"> </span><span class="n">_tail</span><span class="p">;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">Tail</span><span class="w"> </span><span class="n">Tail</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">get</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_tail</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_tail</span><span class="p">;</span>
+<span class="w">                </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">((</span><span class="n">M_Io</span><span class="p">.</span><span class="n">Size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">64</span><span class="p">));</span>
+<span class="w">                </span><span class="n">_tail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Tail</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+<span class="w">                </span><span class="n">f_tail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">_tail</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">BroadcomTrx</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 

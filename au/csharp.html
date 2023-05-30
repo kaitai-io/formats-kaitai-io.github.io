@@ -280,19 +280,19 @@ can also be found there.</p>
 
 
 
-<div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="n">Au</span><span class="p">.</span><span class="n">FromFile</span><span class="p">(</span><span class="s">&quot;path/to/local/file.[&quot;</span><span class="n">au</span><span class="s">&quot;, &quot;</span><span class="n">snd</span><span class="s">&quot;]&quot;</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><span class="kt">var</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Au</span><span class="p">.</span><span class="n">FromFile</span><span class="p">(</span><span class="s">&quot;path/to/local/file.[&quot;</span><span class="n">au</span><span class="s">&quot;, &quot;</span><span class="n">snd</span><span class="s">&quot;]&quot;</span><span class="p">);</span>
 </pre></div>
 
 <p>Or parse structure from a byte array:</p>
 
-<div class="highlight"><pre><span></span><span class="kt">byte</span><span class="p">[]</span> <span class="n">someArray</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
-<span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Au</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">someArray</span><span class="p">));</span>
+<div class="highlight"><pre><span></span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">someArray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">};</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Au</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">someArray</span><span class="p">));</span>
 </pre></div>
 
 <p>After that, one can get various attributes from the structure by accessing properties like:</p>
 
 
-<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">Magic</span> <span class="c1">// =&gt; get magic</span>
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">Magic</span><span class="w"> </span><span class="c1">// =&gt; get magic</span>
 </pre></div>
 
     </div>
@@ -324,191 +324,191 @@ can also be found there.</p>
 
 
 
-<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">Kaitai</span>
 <span class="p">{</span>
 
-    <span class="c1">/// &lt;summary&gt;</span>
-    <span class="c1">/// The NeXT/Sun audio file format.</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// Sample files:</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// * &amp;lt;https://github.com/python/cpython/tree/b8a7daf077da/Lib/test/sndhdrdata&amp;gt;</span>
-    <span class="c1">/// * &amp;lt;ftp://ftp-ccrma.stanford.edu/pub/Lisp/sf.tar.gz&amp;gt;</span>
-    <span class="c1">/// * &amp;lt;https://www.mmsp.ece.mcgill.ca/Documents/AudioFormats/AU/Samples.html&amp;gt;</span>
-    <span class="c1">/// &lt;/summary&gt;</span>
-    <span class="c1">/// &lt;remarks&gt;</span>
-    <span class="c1">/// Reference: &lt;a href=&quot;https://www.mmsp.ece.mcgill.ca/Documents/AudioFormats/AU/AU.html&quot;&gt;Source&lt;/a&gt;</span>
-    <span class="c1">/// &lt;/remarks&gt;</span>
-    <span class="c1">/// &lt;remarks&gt;</span>
-    <span class="c1">/// Reference: &lt;a href=&quot;http://soundfile.sapp.org/doc/NextFormat/&quot;&gt;Source&lt;/a&gt;</span>
-    <span class="c1">/// &lt;/remarks&gt;</span>
-    <span class="c1">/// &lt;remarks&gt;</span>
-    <span class="c1">/// Reference: &lt;a href=&quot;http://soundfile.sapp.org/doc/NextFormat/soundstruct.h&quot;&gt;Source&lt;/a&gt;</span>
-    <span class="c1">/// &lt;/remarks&gt;</span>
-    <span class="c1">/// &lt;remarks&gt;</span>
-    <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/andreiw/polaris/blob/deb47cb/usr/src/head/audio/au.h#L87-L112&quot;&gt;Source&lt;/a&gt;</span>
-    <span class="c1">/// &lt;/remarks&gt;</span>
-    <span class="c1">/// &lt;remarks&gt;</span>
-    <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/libsndfile/libsndfile/blob/86c9f9eb/src/au.c#L39-L74&quot;&gt;Source&lt;/a&gt;</span>
-    <span class="c1">/// &lt;/remarks&gt;</span>
-    <span class="c1">/// &lt;remarks&gt;</span>
-    <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/chirlu/sox/blob/dd8b63bd/src/au.c#L34-L49&quot;&gt;Source&lt;/a&gt;</span>
-    <span class="c1">/// &lt;/remarks&gt;</span>
-    <span class="c1">/// &lt;remarks&gt;</span>
-    <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/mpruett/audiofile/blob/b62c902/libaudiofile/NeXT.cpp#L65-L96&quot;&gt;Source&lt;/a&gt;</span>
-    <span class="c1">/// &lt;/remarks&gt;</span>
-    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Au</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">{</span>
-        <span class="k">public</span> <span class="k">static</span> <span class="n">Au</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">return</span> <span class="k">new</span> <span class="nf">Au</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-        <span class="p">}</span>
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// The NeXT/Sun audio file format.</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// Sample files:</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// * &amp;lt;https://github.com/python/cpython/tree/b8a7daf077da/Lib/test/sndhdrdata&amp;gt;</span>
+<span class="w">    </span><span class="c1">/// * &amp;lt;ftp://ftp-ccrma.stanford.edu/pub/Lisp/sf.tar.gz&amp;gt;</span>
+<span class="w">    </span><span class="c1">/// * &amp;lt;https://www.mmsp.ece.mcgill.ca/Documents/AudioFormats/AU/Samples.html&amp;gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;https://www.mmsp.ece.mcgill.ca/Documents/AudioFormats/AU/AU.html&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;http://soundfile.sapp.org/doc/NextFormat/&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;http://soundfile.sapp.org/doc/NextFormat/soundstruct.h&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;https://github.com/andreiw/polaris/blob/deb47cb/usr/src/head/audio/au.h#L87-L112&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;https://github.com/libsndfile/libsndfile/blob/86c9f9eb/src/au.c#L39-L74&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;https://github.com/chirlu/sox/blob/dd8b63bd/src/au.c#L34-L49&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;https://github.com/mpruett/audiofile/blob/b62c902/libaudiofile/NeXT.cpp#L65-L96&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Au</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">Au</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">Au</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
 
 
-        <span class="k">public</span> <span class="k">enum</span> <span class="n">Encodings</span>
-        <span class="p">{</span>
-            <span class="n">Mulaw8</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
-            <span class="n">Linear8</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
-            <span class="n">Linear16</span> <span class="p">=</span> <span class="m">3</span><span class="p">,</span>
-            <span class="n">Linear24</span> <span class="p">=</span> <span class="m">4</span><span class="p">,</span>
-            <span class="n">Linear32</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span>
-            <span class="n">Float</span> <span class="p">=</span> <span class="m">6</span><span class="p">,</span>
-            <span class="n">Double</span> <span class="p">=</span> <span class="m">7</span><span class="p">,</span>
-            <span class="n">Fragmented</span> <span class="p">=</span> <span class="m">8</span><span class="p">,</span>
-            <span class="n">Nested</span> <span class="p">=</span> <span class="m">9</span><span class="p">,</span>
-            <span class="n">DspCore</span> <span class="p">=</span> <span class="m">10</span><span class="p">,</span>
-            <span class="n">FixedPoint8</span> <span class="p">=</span> <span class="m">11</span><span class="p">,</span>
-            <span class="n">FixedPoint16</span> <span class="p">=</span> <span class="m">12</span><span class="p">,</span>
-            <span class="n">FixedPoint24</span> <span class="p">=</span> <span class="m">13</span><span class="p">,</span>
-            <span class="n">FixedPoint32</span> <span class="p">=</span> <span class="m">14</span><span class="p">,</span>
-            <span class="n">Display</span> <span class="p">=</span> <span class="m">16</span><span class="p">,</span>
-            <span class="n">MulawSquelch</span> <span class="p">=</span> <span class="m">17</span><span class="p">,</span>
-            <span class="n">Emphasized</span> <span class="p">=</span> <span class="m">18</span><span class="p">,</span>
-            <span class="n">Compressed</span> <span class="p">=</span> <span class="m">19</span><span class="p">,</span>
-            <span class="n">CompressedEmphasized</span> <span class="p">=</span> <span class="m">20</span><span class="p">,</span>
-            <span class="n">DspCommands</span> <span class="p">=</span> <span class="m">21</span><span class="p">,</span>
-            <span class="n">DspCommandsSamples</span> <span class="p">=</span> <span class="m">22</span><span class="p">,</span>
-            <span class="n">AdpcmG721</span> <span class="p">=</span> <span class="m">23</span><span class="p">,</span>
-            <span class="n">AdpcmG722</span> <span class="p">=</span> <span class="m">24</span><span class="p">,</span>
-            <span class="n">AdpcmG7233</span> <span class="p">=</span> <span class="m">25</span><span class="p">,</span>
-            <span class="n">AdpcmG7235</span> <span class="p">=</span> <span class="m">26</span><span class="p">,</span>
-            <span class="n">Alaw8</span> <span class="p">=</span> <span class="m">27</span><span class="p">,</span>
-            <span class="n">Aes</span> <span class="p">=</span> <span class="m">28</span><span class="p">,</span>
-            <span class="n">DeltaMulaw8</span> <span class="p">=</span> <span class="m">29</span><span class="p">,</span>
-        <span class="p">}</span>
-        <span class="k">public</span> <span class="nf">Au</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Au</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
-            <span class="n">f_lenData</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-            <span class="n">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-        <span class="p">{</span>
-            <span class="n">_magic</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
-            <span class="k">if</span> <span class="p">(!((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">Magic</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">46</span><span class="p">,</span> <span class="m">115</span><span class="p">,</span> <span class="m">110</span><span class="p">,</span> <span class="m">100</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">)))</span>
-            <span class="p">{</span>
-                <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">46</span><span class="p">,</span> <span class="m">115</span><span class="p">,</span> <span class="m">110</span><span class="p">,</span> <span class="m">100</span> <span class="p">},</span> <span class="n">Magic</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/seq/0&quot;</span><span class="p">);</span>
-            <span class="p">}</span>
-            <span class="n">_ofsData</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
-            <span class="n">__raw_header</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(((</span><span class="n">OfsData</span> <span class="p">-</span> <span class="m">4</span><span class="p">)</span> <span class="p">-</span> <span class="m">4</span><span class="p">));</span>
-            <span class="kt">var</span> <span class="n">io___raw_header</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_header</span><span class="p">);</span>
-            <span class="n">_header</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Header</span><span class="p">(</span><span class="n">io___raw_header</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Header</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">Header</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">Header</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="n">Encodings</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Mulaw8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Linear8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Linear16</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Linear24</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Linear32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Float</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">6</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Double</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">7</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Fragmented</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">8</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Nested</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">9</span><span class="p">,</span>
+<span class="w">            </span><span class="n">DspCore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span>
+<span class="w">            </span><span class="n">FixedPoint8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">11</span><span class="p">,</span>
+<span class="w">            </span><span class="n">FixedPoint16</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">12</span><span class="p">,</span>
+<span class="w">            </span><span class="n">FixedPoint24</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">13</span><span class="p">,</span>
+<span class="w">            </span><span class="n">FixedPoint32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">14</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Display</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">16</span><span class="p">,</span>
+<span class="w">            </span><span class="n">MulawSquelch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">17</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Emphasized</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">18</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Compressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">19</span><span class="p">,</span>
+<span class="w">            </span><span class="n">CompressedEmphasized</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">20</span><span class="p">,</span>
+<span class="w">            </span><span class="n">DspCommands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">21</span><span class="p">,</span>
+<span class="w">            </span><span class="n">DspCommandsSamples</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">22</span><span class="p">,</span>
+<span class="w">            </span><span class="n">AdpcmG721</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">23</span><span class="p">,</span>
+<span class="w">            </span><span class="n">AdpcmG722</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">24</span><span class="p">,</span>
+<span class="w">            </span><span class="n">AdpcmG7233</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">25</span><span class="p">,</span>
+<span class="w">            </span><span class="n">AdpcmG7235</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">26</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Alaw8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">27</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Aes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">28</span><span class="p">,</span>
+<span class="w">            </span><span class="n">DeltaMulaw8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">29</span><span class="p">,</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="nf">Au</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">Au</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">            </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">            </span><span class="n">f_lenData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">            </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">_magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">Magic</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="m">46</span><span class="p">,</span><span class="w"> </span><span class="m">115</span><span class="p">,</span><span class="w"> </span><span class="m">110</span><span class="p">,</span><span class="w"> </span><span class="m">100</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">)))</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="m">46</span><span class="p">,</span><span class="w"> </span><span class="m">115</span><span class="p">,</span><span class="w"> </span><span class="m">110</span><span class="p">,</span><span class="w"> </span><span class="m">100</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="n">Magic</span><span class="p">,</span><span class="w"> </span><span class="n">M_Io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/seq/0&quot;</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">_ofsData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+<span class="w">            </span><span class="n">__raw_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(((</span><span class="n">OfsData</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">4</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">4</span><span class="p">));</span>
+<span class="w">            </span><span class="kt">var</span><span class="w"> </span><span class="n">io___raw_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_header</span><span class="p">);</span>
+<span class="w">            </span><span class="n">_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Header</span><span class="p">(</span><span class="n">io___raw_header</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Header</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">Header</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">Header</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">Header</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Au</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Au</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_dataSize</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
-                <span class="n">_encoding</span> <span class="p">=</span> <span class="p">((</span><span class="n">Au</span><span class="p">.</span><span class="n">Encodings</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">());</span>
-                <span class="n">_sampleRate</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
-                <span class="n">_numChannels</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
-                <span class="k">if</span> <span class="p">(!(</span><span class="n">NumChannels</span> <span class="p">&gt;=</span> <span class="m">1</span><span class="p">))</span>
-                <span class="p">{</span>
-                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationLessThanError</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="n">NumChannels</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/types/header/seq/3&quot;</span><span class="p">);</span>
-                <span class="p">}</span>
-                <span class="n">_comment</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">BytesTerminate</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesFull</span><span class="p">(),</span> <span class="m">0</span><span class="p">,</span> <span class="k">false</span><span class="p">));</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_dataSize</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">Encodings</span> <span class="n">_encoding</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_sampleRate</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_numChannels</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">string</span> <span class="n">_comment</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">Au</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">Au</span> <span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">Header</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">Au</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">Au</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_dataSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_encoding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">Au</span><span class="p">.</span><span class="n">Encodings</span><span class="p">)</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">());</span>
+<span class="w">                </span><span class="n">_sampleRate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_numChannels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">NumChannels</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="m">1</span><span class="p">))</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">ValidationLessThanError</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="n">NumChannels</span><span class="p">,</span><span class="w"> </span><span class="n">M_Io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/header/seq/3&quot;</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="n">_comment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">BytesTerminate</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesFull</span><span class="p">(),</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="k">false</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">_dataSize</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">Encodings</span><span class="w"> </span><span class="n">_encoding</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">_sampleRate</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">_numChannels</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">_comment</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">Au</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">Au</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// don&#39;t read this field, access `_root.len_data` instead</span>
-            <span class="c1">/// </span>
-            <span class="c1">/// value `0xffff_ffff` means unspecified size</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">uint</span> <span class="n">DataSize</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_dataSize</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">Encodings</span> <span class="n">Encoding</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_encoding</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">uint</span> <span class="n">SampleRate</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_sampleRate</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// don&#39;t read this field, access `_root.len_data` instead</span>
+<span class="w">            </span><span class="c1">/// </span>
+<span class="w">            </span><span class="c1">/// value `0xffff_ffff` means unspecified size</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">DataSize</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_dataSize</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">Encodings</span><span class="w"> </span><span class="n">Encoding</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_encoding</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">SampleRate</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_sampleRate</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// number of interleaved channels</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">uint</span> <span class="n">NumChannels</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numChannels</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// number of interleaved channels</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">NumChannels</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_numChannels</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Most resources claim that this field must be at least 4 bytes long.</span>
-            <span class="c1">/// However, most programs don&#39;t enforce it, and [Audacity](</span>
-            <span class="c1">/// https://www.audacityteam.org/) even generates .au files with this field</span>
-            <span class="c1">/// being 0-byte long. According to &amp;lt;https://nixdoc.net/man-pages/IRIX/man4/dmedia/next.4.html&amp;gt;,</span>
-            <span class="c1">/// &amp;quot;NeXT files require that this chunk be at least 4 bytes (chars) long,</span>
-            <span class="c1">/// whereas this chunk may be zerolength in a Sun .au file.&amp;quot;</span>
-            <span class="c1">/// </span>
-            <span class="c1">/// By convention, size should be a multiple of 4 -</span>
-            <span class="c1">/// see &amp;lt;https://github.com/chirlu/sox/blob/dd8b63bd/src/au.c#L132-L133&amp;gt;.</span>
-            <span class="c1">/// Page &amp;lt;http://soundfile.sapp.org/doc/NextFormat/&amp;gt; also mentions that for some</span>
-            <span class="c1">/// sound playing programs, this field must have an even byte size. So a multiple</span>
-            <span class="c1">/// of 4 is probably best for compatibility.</span>
-            <span class="c1">/// </span>
-            <span class="c1">/// Must be null-terminated. It is usually an ASCII text string, but this space</span>
-            <span class="c1">/// might be also used to store application-specific binary (i.e. non-ASCII) data.</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">string</span> <span class="n">Comment</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_comment</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">Au</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">Au</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_lenData</span><span class="p">;</span>
-        <span class="k">private</span> <span class="kt">int</span> <span class="n">_lenData</span><span class="p">;</span>
-        <span class="k">public</span> <span class="kt">int</span> <span class="n">LenData</span>
-        <span class="p">{</span>
-            <span class="k">get</span>
-            <span class="p">{</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">f_lenData</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="n">_lenData</span><span class="p">;</span>
-                <span class="n">_lenData</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">Header</span><span class="p">.</span><span class="n">DataSize</span> <span class="p">==</span> <span class="m">4294967295</span> <span class="p">?</span> <span class="p">(</span><span class="n">M_Io</span><span class="p">.</span><span class="n">Size</span> <span class="p">-</span> <span class="n">OfsData</span><span class="p">)</span> <span class="p">:</span> <span class="n">Header</span><span class="p">.</span><span class="n">DataSize</span><span class="p">));</span>
-                <span class="n">f_lenData</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                <span class="k">return</span> <span class="n">_lenData</span><span class="p">;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_magic</span><span class="p">;</span>
-        <span class="k">private</span> <span class="kt">uint</span> <span class="n">_ofsData</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">Header</span> <span class="n">_header</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">Au</span> <span class="n">m_root</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
-        <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_header</span><span class="p">;</span>
-        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Magic</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_magic</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="kt">uint</span> <span class="n">OfsData</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ofsData</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">Header</span> <span class="n">Header</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_header</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">Au</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawHeader</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_header</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-    <span class="p">}</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// Most resources claim that this field must be at least 4 bytes long.</span>
+<span class="w">            </span><span class="c1">/// However, most programs don&#39;t enforce it, and [Audacity](</span>
+<span class="w">            </span><span class="c1">/// https://www.audacityteam.org/) even generates .au files with this field</span>
+<span class="w">            </span><span class="c1">/// being 0-byte long. According to &amp;lt;https://nixdoc.net/man-pages/IRIX/man4/dmedia/next.4.html&amp;gt;,</span>
+<span class="w">            </span><span class="c1">/// &amp;quot;NeXT files require that this chunk be at least 4 bytes (chars) long,</span>
+<span class="w">            </span><span class="c1">/// whereas this chunk may be zerolength in a Sun .au file.&amp;quot;</span>
+<span class="w">            </span><span class="c1">/// </span>
+<span class="w">            </span><span class="c1">/// By convention, size should be a multiple of 4 -</span>
+<span class="w">            </span><span class="c1">/// see &amp;lt;https://github.com/chirlu/sox/blob/dd8b63bd/src/au.c#L132-L133&amp;gt;.</span>
+<span class="w">            </span><span class="c1">/// Page &amp;lt;http://soundfile.sapp.org/doc/NextFormat/&amp;gt; also mentions that for some</span>
+<span class="w">            </span><span class="c1">/// sound playing programs, this field must have an even byte size. So a multiple</span>
+<span class="w">            </span><span class="c1">/// of 4 is probably best for compatibility.</span>
+<span class="w">            </span><span class="c1">/// </span>
+<span class="w">            </span><span class="c1">/// Must be null-terminated. It is usually an ASCII text string, but this space</span>
+<span class="w">            </span><span class="c1">/// might be also used to store application-specific binary (i.e. non-ASCII) data.</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Comment</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_comment</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">Au</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">Au</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_lenData</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">_lenData</span><span class="p">;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">LenData</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">get</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_lenData</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_lenData</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_lenData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">Header</span><span class="p">.</span><span class="n">DataSize</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">4294967295</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="n">M_Io</span><span class="p">.</span><span class="n">Size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">OfsData</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Header</span><span class="p">.</span><span class="n">DataSize</span><span class="p">));</span>
+<span class="w">                </span><span class="n">f_lenData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">_lenData</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_magic</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">_ofsData</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">Header</span><span class="w"> </span><span class="n">_header</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">Au</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">__raw_header</span><span class="p">;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Magic</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_magic</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">OfsData</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_ofsData</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">Header</span><span class="w"> </span><span class="n">Header</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_header</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">Au</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">M_RawHeader</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">__raw_header</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 

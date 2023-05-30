@@ -274,300 +274,300 @@ compression algorithms, so it's typically raw DEFLATE stream
         </div>
 
         <div class="row">
-            <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">kaitai_struct_nim_runtime</span>
-<span class="kn">import</span> <span class="n">options</span>
+            <div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="n">kaitai_struct_nim_runtime</span>
+<span class="kn">import</span><span class="w"> </span><span class="n">options</span>
 
 <span class="k">type</span>
-  <span class="n">Gzip</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">compressionMethod</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Gzip_CompressionMethods</span>
-    <span class="p">`</span><span class="n">flags</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Gzip_Flags</span>
-    <span class="p">`</span><span class="n">modTime</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">extraFlags</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Gzip_ExtraFlagsDeflate</span>
-    <span class="p">`</span><span class="n">os</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Gzip_Oses</span>
-    <span class="p">`</span><span class="n">extras</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Gzip_Extras</span>
-    <span class="p">`</span><span class="n">name</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">comment</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">headerCrc16</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
-    <span class="p">`</span><span class="n">body</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">bodyCrc32</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">lenUncompressed</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-  <span class="n">Gzip_CompressionMethods</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
-    <span class="n">deflate</span> <span class="o">=</span> <span class="mi">8</span>
-  <span class="n">Gzip_Oses</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
-    <span class="n">fat</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">amiga</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">vms</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="n">unix</span> <span class="o">=</span> <span class="mi">3</span>
-    <span class="n">vm_cms</span> <span class="o">=</span> <span class="mi">4</span>
-    <span class="n">atari_tos</span> <span class="o">=</span> <span class="mi">5</span>
-    <span class="n">hpfs</span> <span class="o">=</span> <span class="mi">6</span>
-    <span class="n">macintosh</span> <span class="o">=</span> <span class="mi">7</span>
-    <span class="n">z_system</span> <span class="o">=</span> <span class="mi">8</span>
-    <span class="n">cp_m</span> <span class="o">=</span> <span class="mi">9</span>
-    <span class="n">tops_20</span> <span class="o">=</span> <span class="mi">10</span>
-    <span class="n">ntfs</span> <span class="o">=</span> <span class="mi">11</span>
-    <span class="n">qdos</span> <span class="o">=</span> <span class="mi">12</span>
-    <span class="n">acorn_riscos</span> <span class="o">=</span> <span class="mi">13</span>
-    <span class="n">unknown</span> <span class="o">=</span> <span class="mi">255</span>
-  <span class="n">Gzip_Flags</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">reserved1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
-    <span class="p">`</span><span class="n">hasComment</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">hasName</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">hasExtra</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">hasHeaderCrc</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">isText</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Gzip</span>
-  <span class="n">Gzip_ExtraFlagsDeflate</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">compressionStrength</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Gzip_ExtraFlagsDeflate_CompressionStrengths</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Gzip</span>
-  <span class="n">Gzip_ExtraFlagsDeflate_CompressionStrengths</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
-    <span class="n">best</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="n">fast</span> <span class="o">=</span> <span class="mi">4</span>
-  <span class="n">Gzip_Subfields</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">entries</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">Gzip_Subfield</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Gzip_Extras</span>
-  <span class="n">Gzip_Subfield</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">id</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
-    <span class="p">`</span><span class="n">lenData</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
-    <span class="p">`</span><span class="n">data</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Gzip_Subfields</span>
-  <span class="n">Gzip_Extras</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">lenSubfields</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
-    <span class="p">`</span><span class="n">subfields</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Gzip_Subfields</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Gzip</span>
-    <span class="p">`</span><span class="n">rawSubfields</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">  </span><span class="n">Gzip</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">compressionMethod</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Gzip_CompressionMethods</span>
+<span class="w">    </span><span class="p">`</span><span class="n">flags</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Gzip_Flags</span>
+<span class="w">    </span><span class="p">`</span><span class="n">modTime</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">extraFlags</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Gzip_ExtraFlagsDeflate</span>
+<span class="w">    </span><span class="p">`</span><span class="n">os</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Gzip_Oses</span>
+<span class="w">    </span><span class="p">`</span><span class="n">extras</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Gzip_Extras</span>
+<span class="w">    </span><span class="p">`</span><span class="n">name</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">comment</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">headerCrc16</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">body</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">bodyCrc32</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lenUncompressed</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">  </span><span class="n">Gzip_CompressionMethods</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">enum</span>
+<span class="w">    </span><span class="n">deflate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span>
+<span class="w">  </span><span class="n">Gzip_Oses</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">enum</span>
+<span class="w">    </span><span class="n">fat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="n">amiga</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="n">vms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">    </span><span class="n">unix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">    </span><span class="n">vm_cms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">    </span><span class="n">atari_tos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
+<span class="w">    </span><span class="n">hpfs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span>
+<span class="w">    </span><span class="n">macintosh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span>
+<span class="w">    </span><span class="n">z_system</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span>
+<span class="w">    </span><span class="n">cp_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">9</span>
+<span class="w">    </span><span class="n">tops_20</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span>
+<span class="w">    </span><span class="n">ntfs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">11</span>
+<span class="w">    </span><span class="n">qdos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span>
+<span class="w">    </span><span class="n">acorn_riscos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">13</span>
+<span class="w">    </span><span class="n">unknown</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">255</span>
+<span class="w">  </span><span class="n">Gzip_Flags</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">reserved1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint64</span>
+<span class="w">    </span><span class="p">`</span><span class="n">hasComment</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">hasName</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">hasExtra</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">hasHeaderCrc</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">isText</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Gzip</span>
+<span class="w">  </span><span class="n">Gzip_ExtraFlagsDeflate</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">compressionStrength</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Gzip_ExtraFlagsDeflate_CompressionStrengths</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Gzip</span>
+<span class="w">  </span><span class="n">Gzip_ExtraFlagsDeflate_CompressionStrengths</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">enum</span>
+<span class="w">    </span><span class="n">best</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">    </span><span class="n">fast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">  </span><span class="n">Gzip_Subfields</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">entries</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">Gzip_Subfield</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Gzip_Extras</span>
+<span class="w">  </span><span class="n">Gzip_Subfield</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">id</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lenData</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">data</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Gzip_Subfields</span>
+<span class="w">  </span><span class="n">Gzip_Extras</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lenSubfields</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">subfields</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Gzip_Subfields</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Gzip</span>
+<span class="w">    </span><span class="p">`</span><span class="n">rawSubfields</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
 
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Gzip</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip_Flags], io: KaitaiStream, root: KaitaiStruct, parent: Gzip): Gzip_Flags</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip_ExtraFlagsDeflate], io: KaitaiStream, root: KaitaiStruct, parent: Gzip): Gzip_ExtraFlagsDeflate</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip_Subfields], io: KaitaiStream, root: KaitaiStruct, parent: Gzip_Extras): Gzip_Subfields</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip_Subfield], io: KaitaiStream, root: KaitaiStruct, parent: Gzip_Subfields): Gzip_Subfield</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip_Extras], io: KaitaiStream, root: KaitaiStruct, parent: Gzip): Gzip_Extras</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Gzip</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip_Flags], io: KaitaiStream, root: KaitaiStruct, parent: Gzip): Gzip_Flags</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip_ExtraFlagsDeflate], io: KaitaiStream, root: KaitaiStruct, parent: Gzip): Gzip_ExtraFlagsDeflate</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip_Subfields], io: KaitaiStream, root: KaitaiStruct, parent: Gzip_Extras): Gzip_Subfields</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip_Subfield], io: KaitaiStream, root: KaitaiStruct, parent: Gzip_Subfields): Gzip_Subfield</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip_Extras], io: KaitaiStream, root: KaitaiStruct, parent: Gzip): Gzip_Extras</span>
 
-
-
-<span class="sd">##[</span>
-<span class="n">Gzip</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">popular</span> <span class="ow">and</span> <span class="n">standard</span> <span class="n">single</span><span class="o">-</span><span class="n">file</span> <span class="n">archiving</span> <span class="n">format</span><span class="p">.</span> <span class="n">It</span>
-<span class="n">essentially</span> <span class="n">provides</span> <span class="n">a</span> <span class="n">container</span> <span class="n">that</span> <span class="n">stores</span> <span class="n">original</span> <span class="n">file</span> <span class="n">name</span><span class="p">,</span>
-<span class="n">timestamp</span> <span class="ow">and</span> <span class="n">a</span> <span class="n">few</span> <span class="n">other</span> <span class="n">things</span> <span class="p">(</span><span class="n">like</span> <span class="n">optional</span> <span class="n">comment</span><span class="p">),</span> <span class="n">basic</span>
-<span class="n">CRCs</span><span class="p">,</span> <span class="n">etc</span><span class="p">,</span> <span class="ow">and</span> <span class="n">a</span> <span class="n">file</span> <span class="n">compressed</span> <span class="n">by</span> <span class="n">a</span> <span class="n">chosen</span> <span class="n">compression</span> <span class="n">algorithm</span><span class="p">.</span>
-
-<span class="k">As</span> <span class="k">of</span> <span class="mi">2019</span><span class="p">,</span> <span class="n">there</span> <span class="ow">is</span> <span class="n">actually</span> <span class="n">only</span> <span class="n">one</span> <span class="n">working</span> <span class="n">solution</span> <span class="k">for</span>
-<span class="n">compression</span> <span class="n">algorithms</span><span class="p">,</span> <span class="n">so</span> <span class="n">it</span><span class="sc">&#39;s typically raw DEFLATE stream</span>
-<span class="p">(</span><span class="n">without</span> <span class="n">zlib</span> <span class="n">header</span><span class="p">)</span> <span class="ow">in</span> <span class="n">all</span> <span class="n">gzipped</span> <span class="n">files</span><span class="p">.</span>
-
-<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://www.rfc-editor.org/rfc/rfc1952&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
-<span class="o">]</span><span class="sd">##</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Gzip =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Gzip</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Gzip</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Gzip</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
-
-  <span class="k">let</span> <span class="n">magicExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">magicExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="n">Compression</span> <span class="k">method</span> <span class="n">used</span> <span class="n">to</span> <span class="n">compress</span> <span class="n">file</span> <span class="n">body</span><span class="p">.</span> <span class="ow">In</span> <span class="n">practice</span><span class="p">,</span> <span class="n">only</span>
-<span class="n">one</span> <span class="k">method</span> <span class="ow">is</span> <span class="n">widely</span> <span class="n">used</span><span class="p">:</span> <span class="mi">8</span> <span class="o">=</span> <span class="n">deflate</span><span class="p">.</span>
-
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">compressionMethodExpr</span> <span class="o">=</span> <span class="n">Gzip_CompressionMethods</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">compressionMethod</span> <span class="o">=</span> <span class="n">compressionMethodExpr</span>
-  <span class="k">let</span> <span class="n">flagsExpr</span> <span class="o">=</span> <span class="n">Gzip_Flags</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">flags</span> <span class="o">=</span> <span class="n">flagsExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="n">Last</span> <span class="n">modification</span> <span class="n">time</span> <span class="k">of</span> <span class="n">a</span> <span class="n">file</span> <span class="n">archived</span> <span class="ow">in</span> <span class="n">UNIX</span> <span class="n">timestamp</span> <span class="n">format</span><span class="p">.</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">modTimeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">modTime</span> <span class="o">=</span> <span class="n">modTimeExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="n">Extra</span> <span class="n">flags</span><span class="p">,</span> <span class="n">specific</span> <span class="n">to</span> <span class="n">compression</span> <span class="k">method</span> <span class="n">chosen</span><span class="p">.</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">block</span><span class="p">:</span>
-    <span class="k">let</span> <span class="n">on</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">compressionMethod</span>
-    <span class="k">if</span> <span class="n">on</span> <span class="o">==</span> <span class="n">gzip</span><span class="p">.</span><span class="n">deflate</span><span class="p">:</span>
-      <span class="k">let</span> <span class="n">extraFlagsExpr</span> <span class="o">=</span> <span class="n">Gzip_ExtraFlagsDeflate</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">extraFlags</span> <span class="o">=</span> <span class="n">extraFlagsExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="n">OS</span> <span class="n">used</span> <span class="n">to</span> <span class="n">compress</span> <span class="n">this</span> <span class="n">file</span><span class="p">.</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">osExpr</span> <span class="o">=</span> <span class="n">Gzip_Oses</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">os</span> <span class="o">=</span> <span class="n">osExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">flags</span><span class="p">.</span><span class="n">hasExtra</span><span class="p">:</span>
-    <span class="k">let</span> <span class="n">extrasExpr</span> <span class="o">=</span> <span class="n">Gzip_Extras</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-    <span class="n">this</span><span class="p">.</span><span class="n">extras</span> <span class="o">=</span> <span class="n">extrasExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">flags</span><span class="p">.</span><span class="n">hasName</span><span class="p">:</span>
-    <span class="k">let</span> <span class="n">nameExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">)</span>
-    <span class="n">this</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">nameExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">flags</span><span class="p">.</span><span class="n">hasComment</span><span class="p">:</span>
-    <span class="k">let</span> <span class="n">commentExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">)</span>
-    <span class="n">this</span><span class="p">.</span><span class="n">comment</span> <span class="o">=</span> <span class="n">commentExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">flags</span><span class="p">.</span><span class="n">hasHeaderCrc</span><span class="p">:</span>
-    <span class="k">let</span> <span class="n">headerCrc16Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
-    <span class="n">this</span><span class="p">.</span><span class="n">headerCrc16</span> <span class="o">=</span> <span class="n">headerCrc16Expr</span>
-
-  <span class="sd">##[</span>
-  <span class="n">Compressed</span> <span class="n">body</span> <span class="k">of</span> <span class="n">a</span> <span class="n">file</span> <span class="n">archived</span><span class="p">.</span> <span class="n">Note</span> <span class="n">that</span> <span class="n">we</span> <span class="n">don</span><span class="sc">&#39;t make an</span>
-<span class="n">attempt</span> <span class="n">to</span> <span class="n">decompress</span> <span class="n">it</span> <span class="n">here</span><span class="p">.</span>
-
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">size</span> <span class="o">-</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">)</span> <span class="o">-</span> <span class="mi">8</span><span class="p">)))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="n">CRC32</span> <span class="n">checksum</span> <span class="k">of</span> <span class="n">an</span> <span class="n">uncompressed</span> <span class="n">file</span> <span class="n">body</span>
-
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">bodyCrc32Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">bodyCrc32</span> <span class="o">=</span> <span class="n">bodyCrc32Expr</span>
-
-  <span class="sd">##[</span>
-  <span class="n">Size</span> <span class="k">of</span> <span class="n">original</span> <span class="n">uncompressed</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">bytes</span> <span class="p">(</span><span class="n">truncated</span> <span class="n">to</span> <span class="mi">32</span>
-<span class="n">bits</span><span class="p">).</span>
-
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">lenUncompressedExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">lenUncompressed</span> <span class="o">=</span> <span class="n">lenUncompressedExpr</span>
-
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip], filename: string): Gzip =</span>
-  <span class="n">Gzip</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
-
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip_Flags], io: KaitaiStream, root: KaitaiStruct, parent: Gzip): Gzip_Flags =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Gzip_Flags</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Gzip</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Gzip</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
-
-  <span class="k">let</span> <span class="n">reserved1Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">reserved1</span> <span class="o">=</span> <span class="n">reserved1Expr</span>
-  <span class="k">let</span> <span class="n">hasCommentExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">hasComment</span> <span class="o">=</span> <span class="n">hasCommentExpr</span>
-  <span class="k">let</span> <span class="n">hasNameExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">hasName</span> <span class="o">=</span> <span class="n">hasNameExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="k">If</span> <span class="kp">true</span><span class="p">,</span> <span class="n">optional</span> <span class="n">extra</span> <span class="n">fields</span> <span class="n">are</span> <span class="n">present</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">archive</span><span class="p">.</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">hasExtraExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">hasExtra</span> <span class="o">=</span> <span class="n">hasExtraExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="k">If</span> <span class="kp">true</span><span class="p">,</span> <span class="n">this</span> <span class="n">archive</span> <span class="n">includes</span> <span class="n">a</span> <span class="n">CRC16</span> <span class="n">checksum</span> <span class="k">for</span> <span class="n">the</span> <span class="n">header</span><span class="p">.</span>
-
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">hasHeaderCrcExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">hasHeaderCrc</span> <span class="o">=</span> <span class="n">hasHeaderCrcExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="k">If</span> <span class="kp">true</span><span class="p">,</span> <span class="n">file</span> <span class="n">inside</span> <span class="n">this</span> <span class="n">archive</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">text</span> <span class="n">file</span> <span class="kn">from</span>
-<span class="n">compressor</span><span class="sc">&#39;s point of view.</span>
-
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">isTextExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">isText</span> <span class="o">=</span> <span class="n">isTextExpr</span>
-
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip_Flags], filename: string): Gzip_Flags =</span>
-  <span class="n">Gzip_Flags</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
-
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip_ExtraFlagsDeflate], io: KaitaiStream, root: KaitaiStruct, parent: Gzip): Gzip_ExtraFlagsDeflate =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Gzip_ExtraFlagsDeflate</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Gzip</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Gzip</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
-
-  <span class="k">let</span> <span class="n">compressionStrengthExpr</span> <span class="o">=</span> <span class="n">Gzip_ExtraFlagsDeflate_CompressionStrengths</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">compressionStrength</span> <span class="o">=</span> <span class="n">compressionStrengthExpr</span>
-
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip_ExtraFlagsDeflate], filename: string): Gzip_ExtraFlagsDeflate =</span>
-  <span class="n">Gzip_ExtraFlagsDeflate</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
 
 
 <span class="sd">##[</span>
-<span class="n">Container</span> <span class="k">for</span> <span class="n">many</span> <span class="n">subfields</span><span class="p">,</span> <span class="n">constrained</span> <span class="n">by</span> <span class="n">size</span> <span class="k">of</span> <span class="n">stream</span><span class="p">.</span>
+<span class="sd">Gzip is a popular and standard single-file archiving format. It</span>
+<span class="sd">essentially provides a container that stores original file name,</span>
+<span class="sd">timestamp and a few other things (like optional comment), basic</span>
+<span class="sd">CRCs, etc, and a file compressed by a chosen compression algorithm.</span>
 
-<span class="o">]</span><span class="sd">##</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip_Subfields], io: KaitaiStream, root: KaitaiStruct, parent: Gzip_Extras): Gzip_Subfields =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Gzip_Subfields</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Gzip</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Gzip</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="sd">As of 2019, there is actually only one working solution for</span>
+<span class="sd">compression algorithms, so it&#39;s typically raw DEFLATE stream</span>
+<span class="sd">(without zlib header) in all gzipped files.</span>
 
-  <span class="k">block</span><span class="p">:</span>
-    <span class="kd">var</span> <span class="n">i</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="k">while</span> <span class="ow">not</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">:</span>
-      <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">Gzip_Subfield</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">entries</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
-      <span class="n">inc</span> <span class="n">i</span>
+<span class="sd">@see &lt;a href=&quot;https://www.rfc-editor.org/rfc/rfc1952&quot;&gt;Source&lt;/a&gt;</span>
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Gzip =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Gzip</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Gzip</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Gzip</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip_Subfields], filename: string): Gzip_Subfields =</span>
-  <span class="n">Gzip_Subfields</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">magicExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">magicExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Compression method used to compress file body. In practice, only</span>
+<span class="sd">one method is widely used: 8 = deflate.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">compressionMethodExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Gzip_CompressionMethods</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">compressionMethod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">compressionMethodExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">flagsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Gzip_Flags</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">flagsExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Last modification time of a file archived in UNIX timestamp format.</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">modTimeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">modTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">modTimeExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Extra flags, specific to compression method chosen.</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">block</span><span class="p">:</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">compressionMethod</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">gzip</span><span class="p">.</span><span class="n">deflate</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">extraFlagsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Gzip_ExtraFlagsDeflate</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">extraFlags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">extraFlagsExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  OS used to compress this file.</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">osExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Gzip_Oses</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">os</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">osExpr</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">flags</span><span class="p">.</span><span class="n">hasExtra</span><span class="p">:</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">extrasExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Gzip_Extras</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">extras</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">extrasExpr</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">flags</span><span class="p">.</span><span class="n">hasName</span><span class="p">:</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">nameExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kp">false</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">)</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nameExpr</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">flags</span><span class="p">.</span><span class="n">hasComment</span><span class="p">:</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">commentExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kp">false</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">)</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">comment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">commentExpr</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">flags</span><span class="p">.</span><span class="n">hasHeaderCrc</span><span class="p">:</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">headerCrc16Expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">headerCrc16</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">headerCrc16Expr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Compressed body of a file archived. Note that we don&#39;t make an</span>
+<span class="sd">attempt to decompress it here.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">bodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">8</span><span class="p">)))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bodyExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  CRC32 checksum of an uncompressed file body</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">bodyCrc32Expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">bodyCrc32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bodyCrc32Expr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Size of original uncompressed data in bytes (truncated to 32</span>
+<span class="sd">bits).</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenUncompressedExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenUncompressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenUncompressedExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip], filename: string): Gzip =</span>
+<span class="w">  </span><span class="n">Gzip</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip_Flags], io: KaitaiStream, root: KaitaiStruct, parent: Gzip): Gzip_Flags =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Gzip_Flags</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Gzip</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Gzip</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
+
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">reserved1Expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">reserved1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">reserved1Expr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">hasCommentExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">hasComment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">hasCommentExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">hasNameExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">hasName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">hasNameExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  If true, optional extra fields are present in the archive.</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">hasExtraExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">hasExtra</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">hasExtraExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  If true, this archive includes a CRC16 checksum for the header.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">hasHeaderCrcExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">hasHeaderCrc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">hasHeaderCrcExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  If true, file inside this archive is a text file from</span>
+<span class="sd">compressor&#39;s point of view.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">isTextExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">isText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">isTextExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip_Flags], filename: string): Gzip_Flags =</span>
+<span class="w">  </span><span class="n">Gzip_Flags</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip_ExtraFlagsDeflate], io: KaitaiStream, root: KaitaiStruct, parent: Gzip): Gzip_ExtraFlagsDeflate =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Gzip_ExtraFlagsDeflate</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Gzip</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Gzip</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
+
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">compressionStrengthExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Gzip_ExtraFlagsDeflate_CompressionStrengths</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">compressionStrength</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">compressionStrengthExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip_ExtraFlagsDeflate], filename: string): Gzip_ExtraFlagsDeflate =</span>
+<span class="w">  </span><span class="n">Gzip_ExtraFlagsDeflate</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
 
 <span class="sd">##[</span>
-<span class="n">Every</span> <span class="n">subfield</span> <span class="n">follows</span> <span class="n">typical</span> <span class="o">[</span><span class="n">TLV</span> <span class="n">scheme</span><span class="o">]</span><span class="p">(</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">en</span><span class="p">.</span><span class="n">wikipedia</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">wiki</span><span class="o">/</span><span class="k">Type</span><span class="o">-</span><span class="n">length</span><span class="o">-</span><span class="n">value</span><span class="p">):</span>
+<span class="sd">Container for many subfields, constrained by size of stream.</span>
 
-<span class="o">*</span> <span class="p">`</span><span class="n">id</span><span class="p">`</span> <span class="n">serves</span> <span class="n">role</span> <span class="k">of</span> <span class="s">&quot;T&quot;</span><span class="n">ype</span>
-<span class="o">*</span> <span class="p">`</span><span class="n">len_data</span><span class="p">`</span> <span class="n">serves</span> <span class="n">role</span> <span class="k">of</span> <span class="s">&quot;L&quot;</span><span class="n">ength</span>
-<span class="o">*</span> <span class="p">`</span><span class="n">data</span><span class="p">`</span> <span class="n">serves</span> <span class="n">role</span> <span class="k">of</span> <span class="s">&quot;V&quot;</span><span class="n">alue</span>
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip_Subfields], io: KaitaiStream, root: KaitaiStruct, parent: Gzip_Extras): Gzip_Subfields =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Gzip_Subfields</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Gzip</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Gzip</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
-<span class="n">This</span> <span class="n">way</span> <span class="n">it</span><span class="sc">&#39;s possible to for arbitrary parser to skip over</span>
-<span class="n">subfields</span> <span class="n">it</span> <span class="n">does</span> <span class="ow">not</span> <span class="n">support</span><span class="p">.</span>
+<span class="w">  </span><span class="k">block</span><span class="p">:</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="n">i</span><span class="p">:</span><span class="w"> </span><span class="nb">int</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Gzip_Subfield</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">entries</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+<span class="w">      </span><span class="n">inc</span><span class="w"> </span><span class="n">i</span>
 
-<span class="o">]</span><span class="sd">##</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip_Subfield], io: KaitaiStream, root: KaitaiStruct, parent: Gzip_Subfields): Gzip_Subfield =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Gzip_Subfield</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Gzip</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Gzip</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip_Subfields], filename: string): Gzip_Subfields =</span>
+<span class="w">  </span><span class="n">Gzip_Subfields</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
 
-  <span class="sd">##[</span>
-  <span class="n">Subfield</span> <span class="n">ID</span><span class="p">,</span> <span class="n">typically</span> <span class="n">two</span> <span class="n">ASCII</span> <span class="n">letters</span><span class="p">.</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">idExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">idExpr</span>
-  <span class="k">let</span> <span class="n">lenDataExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">lenData</span> <span class="o">=</span> <span class="n">lenDataExpr</span>
-  <span class="k">let</span> <span class="n">dataExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenData</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">dataExpr</span>
+<span class="sd">##[</span>
+<span class="sd">Every subfield follows typical [TLV scheme](https://en.wikipedia.org/wiki/Type-length-value):</span>
 
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip_Subfield], filename: string): Gzip_Subfield =</span>
-  <span class="n">Gzip_Subfield</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="sd">* `id` serves role of &quot;T&quot;ype</span>
+<span class="sd">* `len_data` serves role of &quot;L&quot;ength</span>
+<span class="sd">* `data` serves role of &quot;V&quot;alue</span>
 
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip_Extras], io: KaitaiStream, root: KaitaiStruct, parent: Gzip): Gzip_Extras =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Gzip_Extras</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Gzip</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Gzip</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="sd">This way it&#39;s possible to for arbitrary parser to skip over</span>
+<span class="sd">subfields it does not support.</span>
 
-  <span class="k">let</span> <span class="n">lenSubfieldsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">lenSubfields</span> <span class="o">=</span> <span class="n">lenSubfieldsExpr</span>
-  <span class="k">let</span> <span class="n">rawSubfieldsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenSubfields</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">rawSubfields</span> <span class="o">=</span> <span class="n">rawSubfieldsExpr</span>
-  <span class="k">let</span> <span class="n">rawSubfieldsIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawSubfieldsExpr</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">subfieldsExpr</span> <span class="o">=</span> <span class="n">Gzip_Subfields</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawSubfieldsIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">subfields</span> <span class="o">=</span> <span class="n">subfieldsExpr</span>
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip_Subfield], io: KaitaiStream, root: KaitaiStruct, parent: Gzip_Subfields): Gzip_Subfield =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Gzip_Subfield</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Gzip</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Gzip</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip_Extras], filename: string): Gzip_Extras =</span>
-  <span class="n">Gzip_Extras</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Subfield ID, typically two ASCII letters.</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">idExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">idExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenDataExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenDataExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">dataExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenData</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dataExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip_Subfield], filename: string): Gzip_Subfield =</span>
+<span class="w">  </span><span class="n">Gzip_Subfield</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip_Extras], io: KaitaiStream, root: KaitaiStruct, parent: Gzip): Gzip_Extras =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Gzip_Extras</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Gzip</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Gzip</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
+
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenSubfieldsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenSubfields</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenSubfieldsExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawSubfieldsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenSubfields</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">rawSubfields</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawSubfieldsExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawSubfieldsIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawSubfieldsExpr</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">subfieldsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Gzip_Subfields</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawSubfieldsIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">subfields</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">subfieldsExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gzip_Extras], filename: string): Gzip_Extras =</span>
+<span class="w">  </span><span class="n">Gzip_Extras</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 </pre></div>
 
         </div>

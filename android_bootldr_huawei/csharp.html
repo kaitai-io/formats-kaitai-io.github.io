@@ -252,19 +252,19 @@ can also be found there.</p>
 
 
 
-<div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="n">AndroidBootldrHuawei</span><span class="p">.</span><span class="n">FromFile</span><span class="p">(</span><span class="s">&quot;path/to/local/file.img&quot;</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><span class="kt">var</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AndroidBootldrHuawei</span><span class="p">.</span><span class="n">FromFile</span><span class="p">(</span><span class="s">&quot;path/to/local/file.img&quot;</span><span class="p">);</span>
 </pre></div>
 
 <p>Or parse structure from a byte array:</p>
 
-<div class="highlight"><pre><span></span><span class="kt">byte</span><span class="p">[]</span> <span class="n">someArray</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
-<span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">AndroidBootldrHuawei</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">someArray</span><span class="p">));</span>
+<div class="highlight"><pre><span></span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">someArray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">};</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">AndroidBootldrHuawei</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">someArray</span><span class="p">));</span>
 </pre></div>
 
 <p>After that, one can get various attributes from the structure by accessing properties like:</p>
 
 
-<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">MetaHeader</span> <span class="c1">// =&gt; get meta header</span>
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">MetaHeader</span><span class="w"> </span><span class="c1">// =&gt; get meta header</span>
 </pre></div>
 
     </div>
@@ -294,254 +294,254 @@ can also be found there.</p>
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">System.Collections.Generic</span><span class="p">;</span>
 
-<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">Kaitai</span>
 <span class="p">{</span>
 
-    <span class="c1">/// &lt;summary&gt;</span>
-    <span class="c1">/// Format of `bootloader-*.img` files found in factory images of certain Android devices from Huawei:</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// * Nexus 6P &amp;quot;angler&amp;quot;: [sample][sample-angler] ([other samples][others-angler]),</span>
-    <span class="c1">///   [releasetools.py](https://android.googlesource.com/device/huawei/angler/+/cf92cd8/releasetools.py#29)</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// [sample-angler]: https://androidfilehost.com/?fid=11410963190603870158 &amp;quot;bootloader-angler-angler-03.84.img&amp;quot;</span>
-    <span class="c1">/// [others-angler]: https://androidfilehost.com/?w=search&amp;amp;s=bootloader-angler&amp;amp;type=files</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// All image versions can be found in factory images at</span>
-    <span class="c1">/// &amp;lt;https://developers.google.com/android/images&amp;gt; for the specific device. To</span>
-    <span class="c1">/// avoid having to download an entire ZIP archive when you only need one file</span>
-    <span class="c1">/// from it, install [remotezip](https://github.com/gtsystem/python-remotezip) and</span>
-    <span class="c1">/// use its [command line</span>
-    <span class="c1">/// tool](https://github.com/gtsystem/python-remotezip#command-line-tool) to list</span>
-    <span class="c1">/// members in the archive and then to download only the file you want.</span>
-    <span class="c1">/// &lt;/summary&gt;</span>
-    <span class="c1">/// &lt;remarks&gt;</span>
-    <span class="c1">/// Reference: &lt;a href=&quot;https://android.googlesource.com/device/huawei/angler/+/673cfb9/releasetools.py&quot;&gt;Source&lt;/a&gt;</span>
-    <span class="c1">/// &lt;/remarks&gt;</span>
-    <span class="c1">/// &lt;remarks&gt;</span>
-    <span class="c1">/// Reference: &lt;a href=&quot;https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_format.h?h=LA.UM.6.1.1&amp;amp;id=a68d284aee85&quot;&gt;Source&lt;/a&gt;</span>
-    <span class="c1">/// &lt;/remarks&gt;</span>
-    <span class="c1">/// &lt;remarks&gt;</span>
-    <span class="c1">/// Reference: &lt;a href=&quot;https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;amp;id=a68d284aee85&quot;&gt;Source&lt;/a&gt;</span>
-    <span class="c1">/// &lt;/remarks&gt;</span>
-    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">AndroidBootldrHuawei</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">{</span>
-        <span class="k">public</span> <span class="k">static</span> <span class="n">AndroidBootldrHuawei</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">return</span> <span class="k">new</span> <span class="nf">AndroidBootldrHuawei</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-        <span class="p">}</span>
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Format of `bootloader-*.img` files found in factory images of certain Android devices from Huawei:</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// * Nexus 6P &amp;quot;angler&amp;quot;: [sample][sample-angler] ([other samples][others-angler]),</span>
+<span class="w">    </span><span class="c1">///   [releasetools.py](https://android.googlesource.com/device/huawei/angler/+/cf92cd8/releasetools.py#29)</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// [sample-angler]: https://androidfilehost.com/?fid=11410963190603870158 &amp;quot;bootloader-angler-angler-03.84.img&amp;quot;</span>
+<span class="w">    </span><span class="c1">/// [others-angler]: https://androidfilehost.com/?w=search&amp;amp;s=bootloader-angler&amp;amp;type=files</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// All image versions can be found in factory images at</span>
+<span class="w">    </span><span class="c1">/// &amp;lt;https://developers.google.com/android/images&amp;gt; for the specific device. To</span>
+<span class="w">    </span><span class="c1">/// avoid having to download an entire ZIP archive when you only need one file</span>
+<span class="w">    </span><span class="c1">/// from it, install [remotezip](https://github.com/gtsystem/python-remotezip) and</span>
+<span class="w">    </span><span class="c1">/// use its [command line</span>
+<span class="w">    </span><span class="c1">/// tool](https://github.com/gtsystem/python-remotezip#command-line-tool) to list</span>
+<span class="w">    </span><span class="c1">/// members in the archive and then to download only the file you want.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;https://android.googlesource.com/device/huawei/angler/+/673cfb9/releasetools.py&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_format.h?h=LA.UM.6.1.1&amp;amp;id=a68d284aee85&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;amp;id=a68d284aee85&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">AndroidBootldrHuawei</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">AndroidBootldrHuawei</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">AndroidBootldrHuawei</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
 
-        <span class="k">public</span> <span class="nf">AndroidBootldrHuawei</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">AndroidBootldrHuawei</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
-            <span class="n">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-        <span class="p">{</span>
-            <span class="n">_metaHeader</span> <span class="p">=</span> <span class="k">new</span> <span class="n">MetaHdr</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-            <span class="n">_headerExt</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">MetaHeader</span><span class="p">.</span><span class="n">LenMetaHeader</span> <span class="p">-</span> <span class="m">76</span><span class="p">));</span>
-            <span class="n">__raw_imageHeader</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">MetaHeader</span><span class="p">.</span><span class="n">LenImageHeader</span><span class="p">);</span>
-            <span class="kt">var</span> <span class="n">io___raw_imageHeader</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_imageHeader</span><span class="p">);</span>
-            <span class="n">_imageHeader</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ImageHdr</span><span class="p">(</span><span class="n">io___raw_imageHeader</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">MetaHdr</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">MetaHdr</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">MetaHdr</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="nf">AndroidBootldrHuawei</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">AndroidBootldrHuawei</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">            </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">            </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">_metaHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">MetaHdr</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">            </span><span class="n">_headerExt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">MetaHeader</span><span class="p">.</span><span class="n">LenMetaHeader</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">76</span><span class="p">));</span>
+<span class="w">            </span><span class="n">__raw_imageHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">MetaHeader</span><span class="p">.</span><span class="n">LenImageHeader</span><span class="p">);</span>
+<span class="w">            </span><span class="kt">var</span><span class="w"> </span><span class="n">io___raw_imageHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_imageHeader</span><span class="p">);</span>
+<span class="w">            </span><span class="n">_imageHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ImageHdr</span><span class="p">(</span><span class="n">io___raw_imageHeader</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">MetaHdr</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">MetaHdr</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">MetaHdr</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">MetaHdr</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">AndroidBootldrHuawei</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">AndroidBootldrHuawei</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_magic</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
-                <span class="k">if</span> <span class="p">(!((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">Magic</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">60</span><span class="p">,</span> <span class="m">214</span><span class="p">,</span> <span class="m">26</span><span class="p">,</span> <span class="m">206</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">)))</span>
-                <span class="p">{</span>
-                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">60</span><span class="p">,</span> <span class="m">214</span><span class="p">,</span> <span class="m">26</span><span class="p">,</span> <span class="m">206</span> <span class="p">},</span> <span class="n">Magic</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/types/meta_hdr/seq/0&quot;</span><span class="p">);</span>
-                <span class="p">}</span>
-                <span class="n">_version</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Version</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                <span class="n">_imageVersion</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">BytesTerminate</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">64</span><span class="p">),</span> <span class="m">0</span><span class="p">,</span> <span class="k">false</span><span class="p">));</span>
-                <span class="n">_lenMetaHeader</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
-                <span class="n">_lenImageHeader</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_magic</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">Version</span> <span class="n">_version</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">string</span> <span class="n">_imageVersion</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_lenMetaHeader</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_lenImageHeader</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">AndroidBootldrHuawei</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">AndroidBootldrHuawei</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Magic</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_magic</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">Version</span> <span class="n">Version</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_version</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">string</span> <span class="n">ImageVersion</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_imageVersion</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">LenMetaHeader</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenMetaHeader</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">LenImageHeader</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenImageHeader</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">AndroidBootldrHuawei</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">AndroidBootldrHuawei</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Version</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">Version</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">Version</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">MetaHdr</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">AndroidBootldrHuawei</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">AndroidBootldrHuawei</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">Magic</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="m">60</span><span class="p">,</span><span class="w"> </span><span class="m">214</span><span class="p">,</span><span class="w"> </span><span class="m">26</span><span class="p">,</span><span class="w"> </span><span class="m">206</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">)))</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="m">60</span><span class="p">,</span><span class="w"> </span><span class="m">214</span><span class="p">,</span><span class="w"> </span><span class="m">26</span><span class="p">,</span><span class="w"> </span><span class="m">206</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="n">Magic</span><span class="p">,</span><span class="w"> </span><span class="n">M_Io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/meta_hdr/seq/0&quot;</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="n">_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Version</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                </span><span class="n">_imageVersion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">BytesTerminate</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">64</span><span class="p">),</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="k">false</span><span class="p">));</span>
+<span class="w">                </span><span class="n">_lenMetaHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_lenImageHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_magic</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">Version</span><span class="w"> </span><span class="n">_version</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">_imageVersion</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">_lenMetaHeader</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">_lenImageHeader</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">AndroidBootldrHuawei</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">AndroidBootldrHuawei</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Magic</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_magic</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">Version</span><span class="w"> </span><span class="n">Version</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_version</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">ImageVersion</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_imageVersion</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">LenMetaHeader</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_lenMetaHeader</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">LenImageHeader</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_lenImageHeader</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">AndroidBootldrHuawei</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">AndroidBootldrHuawei</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Version</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">Version</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">Version</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">Version</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">AndroidBootldrHuawei</span><span class="p">.</span><span class="n">MetaHdr</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">AndroidBootldrHuawei</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_major</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
-                <span class="n">_minor</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_major</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_minor</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">AndroidBootldrHuawei</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">AndroidBootldrHuawei</span><span class="p">.</span><span class="n">MetaHdr</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Major</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_major</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Minor</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_minor</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">AndroidBootldrHuawei</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">AndroidBootldrHuawei</span><span class="p">.</span><span class="n">MetaHdr</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">ImageHdr</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">ImageHdr</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">ImageHdr</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">Version</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">AndroidBootldrHuawei</span><span class="p">.</span><span class="n">MetaHdr</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">AndroidBootldrHuawei</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_major</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_minor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">_major</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">_minor</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">AndroidBootldrHuawei</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">AndroidBootldrHuawei</span><span class="p">.</span><span class="n">MetaHdr</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">Major</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_major</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">Minor</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_minor</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">AndroidBootldrHuawei</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">AndroidBootldrHuawei</span><span class="p">.</span><span class="n">MetaHdr</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ImageHdr</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">ImageHdr</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">ImageHdr</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">ImageHdr</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">AndroidBootldrHuawei</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">AndroidBootldrHuawei</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_entries</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">ImageHdrEntry</span><span class="p">&gt;();</span>
-                <span class="p">{</span>
-                    <span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
-                    <span class="k">while</span> <span class="p">(!</span><span class="n">m_io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="n">_entries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">ImageHdrEntry</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
-                        <span class="n">i</span><span class="p">++;</span>
-                    <span class="p">}</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">ImageHdrEntry</span><span class="p">&gt;</span> <span class="n">_entries</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">AndroidBootldrHuawei</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">AndroidBootldrHuawei</span> <span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">ImageHdr</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">AndroidBootldrHuawei</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">AndroidBootldrHuawei</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">ImageHdrEntry</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="kt">var</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">m_io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">_entries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">ImageHdrEntry</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">));</span>
+<span class="w">                        </span><span class="n">i</span><span class="o">++</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">ImageHdrEntry</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_entries</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">AndroidBootldrHuawei</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">AndroidBootldrHuawei</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// The C generator program defines `img_header` as a [fixed size</span>
-            <span class="c1">/// array](https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;amp;id=a68d284aee85#n42)</span>
-            <span class="c1">/// of `img_header_entry_t` structs with length `MAX_IMAGES` (which is</span>
-            <span class="c1">/// defined as `16`).</span>
-            <span class="c1">/// </span>
-            <span class="c1">/// This means that technically there will always be 16 `image_hdr`</span>
-            <span class="c1">/// entries, the first *n* entries being used (filled with real values)</span>
-            <span class="c1">/// and the rest left unused with all bytes zero.</span>
-            <span class="c1">/// </span>
-            <span class="c1">/// To check if an entry is used, use the `is_used` attribute.</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">ImageHdrEntry</span><span class="p">&gt;</span> <span class="n">Entries</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_entries</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">AndroidBootldrHuawei</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">AndroidBootldrHuawei</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">ImageHdrEntry</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">ImageHdrEntry</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">ImageHdrEntry</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// The C generator program defines `img_header` as a [fixed size</span>
+<span class="w">            </span><span class="c1">/// array](https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;amp;id=a68d284aee85#n42)</span>
+<span class="w">            </span><span class="c1">/// of `img_header_entry_t` structs with length `MAX_IMAGES` (which is</span>
+<span class="w">            </span><span class="c1">/// defined as `16`).</span>
+<span class="w">            </span><span class="c1">/// </span>
+<span class="w">            </span><span class="c1">/// This means that technically there will always be 16 `image_hdr`</span>
+<span class="w">            </span><span class="c1">/// entries, the first *n* entries being used (filled with real values)</span>
+<span class="w">            </span><span class="c1">/// and the rest left unused with all bytes zero.</span>
+<span class="w">            </span><span class="c1">/// </span>
+<span class="w">            </span><span class="c1">/// To check if an entry is used, use the `is_used` attribute.</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">ImageHdrEntry</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Entries</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_entries</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">AndroidBootldrHuawei</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">AndroidBootldrHuawei</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ImageHdrEntry</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">ImageHdrEntry</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">ImageHdrEntry</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">ImageHdrEntry</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">AndroidBootldrHuawei</span><span class="p">.</span><span class="n">ImageHdr</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">AndroidBootldrHuawei</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">f_isUsed</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_body</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_name</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">BytesTerminate</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">72</span><span class="p">),</span> <span class="m">0</span><span class="p">,</span> <span class="k">false</span><span class="p">));</span>
-                <span class="n">_ofsBody</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
-                <span class="n">_lenBody</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isUsed</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isUsed</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">ImageHdrEntry</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">AndroidBootldrHuawei</span><span class="p">.</span><span class="n">ImageHdr</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">AndroidBootldrHuawei</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_isUsed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">BytesTerminate</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">72</span><span class="p">),</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="k">false</span><span class="p">));</span>
+<span class="w">                </span><span class="n">_ofsBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_lenBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_isUsed</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">_isUsed</span><span class="p">;</span>
 
-            <span class="c1">/// &lt;remarks&gt;</span>
-            <span class="c1">/// Reference: &lt;a href=&quot;https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;amp;id=a68d284aee85#n119&quot;&gt;Source&lt;/a&gt;</span>
-            <span class="c1">/// &lt;/remarks&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsUsed</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_isUsed</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_isUsed</span><span class="p">;</span>
-                    <span class="n">_isUsed</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span> <span class="p">((</span><span class="n">OfsBody</span> <span class="p">!=</span> <span class="m">0</span><span class="p">)</span> <span class="p">&amp;&amp;</span> <span class="p">(</span><span class="n">LenBody</span> <span class="p">!=</span> <span class="m">0</span><span class="p">))</span> <span class="p">);</span>
-                    <span class="n">f_isUsed</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_isUsed</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_body</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_body</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Body</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_body</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_body</span><span class="p">;</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">IsUsed</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="p">=</span> <span class="n">M_Root</span><span class="p">.</span><span class="n">M_Io</span><span class="p">;</span>
-                        <span class="kt">long</span> <span class="n">_pos</span> <span class="p">=</span> <span class="n">io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
-                        <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsBody</span><span class="p">);</span>
-                        <span class="n">_body</span> <span class="p">=</span> <span class="n">io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenBody</span><span class="p">);</span>
-                        <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
-                        <span class="n">f_body</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">return</span> <span class="n">_body</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">string</span> <span class="n">_name</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_ofsBody</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_lenBody</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">AndroidBootldrHuawei</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">AndroidBootldrHuawei</span><span class="p">.</span><span class="n">ImageHdr</span> <span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">            </span><span class="c1">/// Reference: &lt;a href=&quot;https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;amp;id=a68d284aee85#n119&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">            </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">IsUsed</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_isUsed</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_isUsed</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_isUsed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">bool</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="n">OfsBody</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">LenBody</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="m">0</span><span class="p">))</span><span class="w"> </span><span class="p">);</span>
+<span class="w">                    </span><span class="n">f_isUsed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_isUsed</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_body</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_body</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Body</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_body</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_body</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">IsUsed</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">M_Root</span><span class="p">.</span><span class="n">M_Io</span><span class="p">;</span>
+<span class="w">                        </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
+<span class="w">                        </span><span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsBody</span><span class="p">);</span>
+<span class="w">                        </span><span class="n">_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenBody</span><span class="p">);</span>
+<span class="w">                        </span><span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+<span class="w">                        </span><span class="n">f_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_body</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">_name</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">_ofsBody</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">_lenBody</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">AndroidBootldrHuawei</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">AndroidBootldrHuawei</span><span class="p">.</span><span class="n">ImageHdr</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// partition name</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_name</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">uint</span> <span class="n">OfsBody</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ofsBody</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">uint</span> <span class="n">LenBody</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenBody</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">AndroidBootldrHuawei</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">AndroidBootldrHuawei</span><span class="p">.</span><span class="n">ImageHdr</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="n">MetaHdr</span> <span class="n">_metaHeader</span><span class="p">;</span>
-        <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_headerExt</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">ImageHdr</span> <span class="n">_imageHeader</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">AndroidBootldrHuawei</span> <span class="n">m_root</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
-        <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_imageHeader</span><span class="p">;</span>
-        <span class="k">public</span> <span class="n">MetaHdr</span> <span class="n">MetaHeader</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_metaHeader</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">HeaderExt</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_headerExt</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">ImageHdr</span> <span class="n">ImageHeader</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_imageHeader</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">AndroidBootldrHuawei</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawImageHeader</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_imageHeader</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-    <span class="p">}</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// partition name</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Name</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_name</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">OfsBody</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_ofsBody</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">LenBody</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_lenBody</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">AndroidBootldrHuawei</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">AndroidBootldrHuawei</span><span class="p">.</span><span class="n">ImageHdr</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">MetaHdr</span><span class="w"> </span><span class="n">_metaHeader</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_headerExt</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">ImageHdr</span><span class="w"> </span><span class="n">_imageHeader</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">AndroidBootldrHuawei</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">__raw_imageHeader</span><span class="p">;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">MetaHdr</span><span class="w"> </span><span class="n">MetaHeader</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_metaHeader</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">HeaderExt</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_headerExt</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">ImageHdr</span><span class="w"> </span><span class="n">ImageHeader</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_imageHeader</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">AndroidBootldrHuawei</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">M_RawImageHeader</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">__raw_imageHeader</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 

@@ -279,625 +279,625 @@ Opcodes for <code>bytearray</code> and out of band data</li>
         <h2>Format specification in Kaitai Struct YAML</h2>
 
         <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
-  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">python_pickle</span>
-  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Python pickle serialization format</span>
-  <span class="nt">application</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Python</span>
-  <span class="nt">file-extension</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pickle</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pkl</span>
-  <span class="nt">xref</span><span class="p">:</span>
-    <span class="nt">justsolve</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Pickle</span>
-    <span class="nt">wikidata</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Q7190889</span>
-  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
-  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
-<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-  <span class="no">Python Pickle format serializes Python objects to a byte stream, as a sequence</span>
-  <span class="no">of operations to run on the Pickle Virtual Machine.</span>
+<span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python_pickle</span>
+<span class="w">  </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Python pickle serialization format</span>
+<span class="w">  </span><span class="nt">application</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Python</span>
+<span class="w">  </span><span class="nt">file-extension</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pickle</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pkl</span>
+<span class="w">  </span><span class="nt">xref</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">justsolve</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pickle</span>
+<span class="w">    </span><span class="nt">wikidata</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Q7190889</span>
+<span class="w">  </span><span class="nt">license</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+<span class="w">  </span><span class="nt">endian</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">le</span>
+<span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">  </span><span class="no">Python Pickle format serializes Python objects to a byte stream, as a sequence</span>
+<span class="w">  </span><span class="no">of operations to run on the Pickle Virtual Machine.</span>
 
-  <span class="no">The format is mostly implementation defined, there is no formal specification.</span>
-  <span class="no">Pickle data types are closely coupled to the Python object model.</span>
-  <span class="no">Python singletons, and most builtin types (e.g. `None`, `int`,`dict`, `list`)</span>
-  <span class="no">are serialised using dedicated Pickle opcodes.</span>
-  <span class="no">Other builtin types, and all classes  (e.g. `set`, `datetime.datetime`) are</span>
-  <span class="no">serialised by encoding the name of a constructor callable.</span>
-  <span class="no">They are deserialised by importing that constructor, and calling it.</span>
-  <span class="no">So, unpickling an arbitrary pickle, using the Python&#39;s stdlib pickle module</span>
-  <span class="no">can cause arbitrary code execution.</span>
+<span class="w">  </span><span class="no">The format is mostly implementation defined, there is no formal specification.</span>
+<span class="w">  </span><span class="no">Pickle data types are closely coupled to the Python object model.</span>
+<span class="w">  </span><span class="no">Python singletons, and most builtin types (e.g. `None`, `int`,`dict`, `list`)</span>
+<span class="w">  </span><span class="no">are serialised using dedicated Pickle opcodes.</span>
+<span class="w">  </span><span class="no">Other builtin types, and all classes  (e.g. `set`, `datetime.datetime`) are</span>
+<span class="w">  </span><span class="no">serialised by encoding the name of a constructor callable.</span>
+<span class="w">  </span><span class="no">They are deserialised by importing that constructor, and calling it.</span>
+<span class="w">  </span><span class="no">So, unpickling an arbitrary pickle, using the Python&#39;s stdlib pickle module</span>
+<span class="w">  </span><span class="no">can cause arbitrary code execution.</span>
 
-  <span class="no">Pickle format has evolved with Python, later protocols add opcodes &amp; types.</span>
-  <span class="no">Later Python releases can pickle to or unpickle from any earlier protocol.</span>
+<span class="w">  </span><span class="no">Pickle format has evolved with Python, later protocols add opcodes &amp; types.</span>
+<span class="w">  </span><span class="no">Later Python releases can pickle to or unpickle from any earlier protocol.</span>
 
-  <span class="no">* Protocol 0: ASCII clean, no explicit version, fields are &#39;\n&#39; terminated.</span>
-  <span class="no">* Protocol 1: Binary, no explicit version, first length prefixed types.</span>
-  <span class="no">* Protocol 2 ([PEP 307](https://peps.python.org/pep-0307/)): Python 2.3+.</span>
-    <span class="no">Explicit versioning, more length prefixed types.</span>
-  <span class="no">* Protocol 3: Python 3.0+. Dedicated opcodes for `bytes` objects.</span>
-  <span class="no">* Protocol 4 ([PEP 3154](https://peps.python.org/pep-3154/)): Python 3.4+.</span>
-    <span class="no">Opcodes for 64 bit strings, framing, `set`.</span>
-  <span class="no">* Protocol 5 ([PEP 574](https://peps.python.org/pep-0574/)): Python 3.8+:</span>
-  <span class="no">Opcodes for `bytearray` and out of band data</span>
-<span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/python/cpython/blob/v3.8.1/Lib/pickletools.py</span>
+<span class="w">  </span><span class="no">* Protocol 0: ASCII clean, no explicit version, fields are &#39;\n&#39; terminated.</span>
+<span class="w">  </span><span class="no">* Protocol 1: Binary, no explicit version, first length prefixed types.</span>
+<span class="w">  </span><span class="no">* Protocol 2 ([PEP 307](https://peps.python.org/pep-0307/)): Python 2.3+.</span>
+<span class="w">    </span><span class="no">Explicit versioning, more length prefixed types.</span>
+<span class="w">  </span><span class="no">* Protocol 3: Python 3.0+. Dedicated opcodes for `bytes` objects.</span>
+<span class="w">  </span><span class="no">* Protocol 4 ([PEP 3154](https://peps.python.org/pep-3154/)): Python 3.4+.</span>
+<span class="w">    </span><span class="no">Opcodes for 64 bit strings, framing, `set`.</span>
+<span class="w">  </span><span class="no">* Protocol 5 ([PEP 574](https://peps.python.org/pep-0574/)): Python 3.8+:</span>
+<span class="w">  </span><span class="no">Opcodes for `bytearray` and out of band data</span>
+<span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/python/cpython/blob/v3.8.1/Lib/pickletools.py</span>
 <span class="nt">seq</span><span class="p">:</span>
-  <span class="c1"># TODO is there a way to declare PROTO is optional, but only valid at position 0?</span>
-  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ops</span>
-    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">op</span>
-    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">until</span>
-    <span class="nt">repeat-until</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_.code == opcode::stop</span>
+<span class="w">  </span><span class="c1"># TODO is there a way to declare PROTO is optional, but only valid at position 0?</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ops</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">op</span>
+<span class="w">    </span><span class="nt">repeat</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">until</span>
+<span class="w">    </span><span class="nt">repeat-until</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">_.code == opcode::stop</span>
 <span class="nt">types</span><span class="p">:</span>
-  <span class="nt">op</span><span class="p">:</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">code</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
-        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">opcode</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-          <span class="no">Operation code that determines which action should be</span>
-          <span class="no">performed next by the Pickle Virtual Machine. Some opcodes</span>
-          <span class="no">are only available in later versions of the Pickle protocol.</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">arg</span>
-        <span class="nt">type</span><span class="p">:</span>
-          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">code</span>
-          <span class="nt">cases</span><span class="p">:</span>
-            <span class="s">&#39;opcode::int&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">decimalnl_short</span>
-            <span class="s">&#39;opcode::binint&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
-            <span class="s">&#39;opcode::binint1&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
-            <span class="s">&#39;opcode::binint2&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
-            <span class="s">&#39;opcode::long&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">decimalnl_long</span>
-            <span class="s">&#39;opcode::long1&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">long1</span>
-            <span class="s">&#39;opcode::long4&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">long4</span>
-            <span class="s">&#39;opcode::string&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">stringnl</span>
-            <span class="s">&#39;opcode::binstring&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">string4</span>
-            <span class="s">&#39;opcode::short_binstring&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">string1</span>
-            <span class="s">&#39;opcode::binbytes&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">bytes4</span>
-            <span class="s">&#39;opcode::short_binbytes&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">bytes1</span>
-            <span class="s">&#39;opcode::binbytes8&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">bytes8</span>
-            <span class="s">&#39;opcode::none&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-            <span class="s">&#39;opcode::newtrue&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-            <span class="s">&#39;opcode::newfalse&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-            <span class="s">&#39;opcode::unicode&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">unicodestringnl</span>
-            <span class="s">&#39;opcode::short_binunicode&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">unicodestring1</span>
-            <span class="s">&#39;opcode::binunicode&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">unicodestring4</span>
-            <span class="s">&#39;opcode::binunicode8&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">unicodestring8</span>
-            <span class="s">&#39;opcode::float&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">floatnl</span>
-            <span class="s">&#39;opcode::binfloat&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">f8be</span>
-            <span class="s">&#39;opcode::empty_list&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-            <span class="s">&#39;opcode::append&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-            <span class="s">&#39;opcode::appends&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-            <span class="s">&#39;opcode::list&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-            <span class="s">&#39;opcode::empty_tuple&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-            <span class="s">&#39;opcode::tuple&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-            <span class="s">&#39;opcode::tuple1&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-            <span class="s">&#39;opcode::tuple2&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-            <span class="s">&#39;opcode::tuple3&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-            <span class="s">&#39;opcode::empty_dict&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-            <span class="s">&#39;opcode::dict&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-            <span class="s">&#39;opcode::setitem&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-            <span class="s">&#39;opcode::setitems&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-            <span class="s">&#39;opcode::empty_set&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-            <span class="s">&#39;opcode::additems&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-            <span class="s">&#39;opcode::frozenset&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-            <span class="s">&#39;opcode::pop&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-            <span class="s">&#39;opcode::dup&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-            <span class="s">&#39;opcode::mark&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-            <span class="s">&#39;opcode::pop_mark&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-            <span class="s">&#39;opcode::get&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">decimalnl_short</span>
-            <span class="s">&#39;opcode::binget&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
-            <span class="s">&#39;opcode::long_binget&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-            <span class="s">&#39;opcode::put&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">decimalnl_short</span>
-            <span class="s">&#39;opcode::binput&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
-            <span class="s">&#39;opcode::long_binput&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-            <span class="s">&#39;opcode::memoize&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-            <span class="s">&#39;opcode::ext1&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
-            <span class="s">&#39;opcode::ext2&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
-            <span class="s">&#39;opcode::ext4&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-            <span class="s">&#39;opcode::global_opcode&#39;</span><span class="p p-Indicator">:</span>  <span class="l l-Scalar l-Scalar-Plain">stringnl_noescape_pair</span>
-            <span class="s">&#39;opcode::stack_global&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-            <span class="s">&#39;opcode::reduce&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-            <span class="s">&#39;opcode::build&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-            <span class="s">&#39;opcode::inst&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">stringnl_noescape_pair</span>
-            <span class="s">&#39;opcode::obj&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-            <span class="s">&#39;opcode::newobj&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-            <span class="s">&#39;opcode::newobj_ex&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-            <span class="s">&#39;opcode::proto&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
-            <span class="s">&#39;opcode::stop&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-            <span class="s">&#39;opcode::frame&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
-            <span class="s">&#39;opcode::persid&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">stringnl_noescape</span>
-            <span class="s">&#39;opcode::binpersid&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-            <span class="s">&#39;opcode::bytearray8&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">bytearray8</span>
-            <span class="s">&#39;opcode::next_buffer&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-            <span class="s">&#39;opcode::readonly_buffer&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-          <span class="no">Optional argument for the operation. Data type and length</span>
-          <span class="no">are determined by the value of the opcode.</span>
+<span class="w">  </span><span class="nt">op</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">code</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
+<span class="w">        </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">opcode</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Operation code that determines which action should be</span>
+<span class="w">          </span><span class="no">performed next by the Pickle Virtual Machine. Some opcodes</span>
+<span class="w">          </span><span class="no">are only available in later versions of the Pickle protocol.</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">arg</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">switch-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">code</span>
+<span class="w">          </span><span class="nt">cases</span><span class="p">:</span>
+<span class="w">            </span><span class="s">&#39;opcode::int&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">decimalnl_short</span>
+<span class="w">            </span><span class="s">&#39;opcode::binint&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s4</span>
+<span class="w">            </span><span class="s">&#39;opcode::binint1&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
+<span class="w">            </span><span class="s">&#39;opcode::binint2&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u2</span>
+<span class="w">            </span><span class="s">&#39;opcode::long&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">decimalnl_long</span>
+<span class="w">            </span><span class="s">&#39;opcode::long1&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">long1</span>
+<span class="w">            </span><span class="s">&#39;opcode::long4&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">long4</span>
+<span class="w">            </span><span class="s">&#39;opcode::string&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stringnl</span>
+<span class="w">            </span><span class="s">&#39;opcode::binstring&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string4</span>
+<span class="w">            </span><span class="s">&#39;opcode::short_binstring&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string1</span>
+<span class="w">            </span><span class="s">&#39;opcode::binbytes&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bytes4</span>
+<span class="w">            </span><span class="s">&#39;opcode::short_binbytes&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bytes1</span>
+<span class="w">            </span><span class="s">&#39;opcode::binbytes8&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bytes8</span>
+<span class="w">            </span><span class="s">&#39;opcode::none&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">            </span><span class="s">&#39;opcode::newtrue&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">            </span><span class="s">&#39;opcode::newfalse&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">            </span><span class="s">&#39;opcode::unicode&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unicodestringnl</span>
+<span class="w">            </span><span class="s">&#39;opcode::short_binunicode&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unicodestring1</span>
+<span class="w">            </span><span class="s">&#39;opcode::binunicode&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unicodestring4</span>
+<span class="w">            </span><span class="s">&#39;opcode::binunicode8&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unicodestring8</span>
+<span class="w">            </span><span class="s">&#39;opcode::float&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">floatnl</span>
+<span class="w">            </span><span class="s">&#39;opcode::binfloat&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">f8be</span>
+<span class="w">            </span><span class="s">&#39;opcode::empty_list&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">            </span><span class="s">&#39;opcode::append&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">            </span><span class="s">&#39;opcode::appends&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">            </span><span class="s">&#39;opcode::list&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">            </span><span class="s">&#39;opcode::empty_tuple&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">            </span><span class="s">&#39;opcode::tuple&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">            </span><span class="s">&#39;opcode::tuple1&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">            </span><span class="s">&#39;opcode::tuple2&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">            </span><span class="s">&#39;opcode::tuple3&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">            </span><span class="s">&#39;opcode::empty_dict&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">            </span><span class="s">&#39;opcode::dict&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">            </span><span class="s">&#39;opcode::setitem&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">            </span><span class="s">&#39;opcode::setitems&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">            </span><span class="s">&#39;opcode::empty_set&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">            </span><span class="s">&#39;opcode::additems&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">            </span><span class="s">&#39;opcode::frozenset&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">            </span><span class="s">&#39;opcode::pop&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">            </span><span class="s">&#39;opcode::dup&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">            </span><span class="s">&#39;opcode::mark&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">            </span><span class="s">&#39;opcode::pop_mark&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">            </span><span class="s">&#39;opcode::get&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">decimalnl_short</span>
+<span class="w">            </span><span class="s">&#39;opcode::binget&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
+<span class="w">            </span><span class="s">&#39;opcode::long_binget&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">            </span><span class="s">&#39;opcode::put&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">decimalnl_short</span>
+<span class="w">            </span><span class="s">&#39;opcode::binput&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
+<span class="w">            </span><span class="s">&#39;opcode::long_binput&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">            </span><span class="s">&#39;opcode::memoize&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">            </span><span class="s">&#39;opcode::ext1&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
+<span class="w">            </span><span class="s">&#39;opcode::ext2&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u2</span>
+<span class="w">            </span><span class="s">&#39;opcode::ext4&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">            </span><span class="s">&#39;opcode::global_opcode&#39;</span><span class="p p-Indicator">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">stringnl_noescape_pair</span>
+<span class="w">            </span><span class="s">&#39;opcode::stack_global&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">            </span><span class="s">&#39;opcode::reduce&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">            </span><span class="s">&#39;opcode::build&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">            </span><span class="s">&#39;opcode::inst&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stringnl_noescape_pair</span>
+<span class="w">            </span><span class="s">&#39;opcode::obj&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">            </span><span class="s">&#39;opcode::newobj&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">            </span><span class="s">&#39;opcode::newobj_ex&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">            </span><span class="s">&#39;opcode::proto&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
+<span class="w">            </span><span class="s">&#39;opcode::stop&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">            </span><span class="s">&#39;opcode::frame&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u8</span>
+<span class="w">            </span><span class="s">&#39;opcode::persid&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stringnl_noescape</span>
+<span class="w">            </span><span class="s">&#39;opcode::binpersid&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">            </span><span class="s">&#39;opcode::bytearray8&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bytearray8</span>
+<span class="w">            </span><span class="s">&#39;opcode::next_buffer&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">            </span><span class="s">&#39;opcode::readonly_buffer&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_arg</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Optional argument for the operation. Data type and length</span>
+<span class="w">          </span><span class="no">are determined by the value of the opcode.</span>
 
-  <span class="nt">decimalnl_short</span><span class="p">:</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-      <span class="no">Integer or boolean, encoded with the ASCII characters [0-9-].</span>
+<span class="w">  </span><span class="nt">decimalnl_short</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">Integer or boolean, encoded with the ASCII characters [0-9-].</span>
 
-      <span class="no">The values &#39;00&#39; and &#39;01&#39; encode the Python values `False` and `True`.</span>
-      <span class="no">Normally a value would not contain leading &#39;0&#39; characters.</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
-        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ascii</span>
-        <span class="nt">terminator</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x0a</span> <span class="c1"># &quot;\n&quot;</span>
+<span class="w">      </span><span class="no">The values &#39;00&#39; and &#39;01&#39; encode the Python values `False` and `True`.</span>
+<span class="w">      </span><span class="no">Normally a value would not contain leading &#39;0&#39; characters.</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">val</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ascii</span>
+<span class="w">        </span><span class="nt">terminator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0x0a</span><span class="w"> </span><span class="c1"># &quot;\n&quot;</span>
 
-  <span class="nt">decimalnl_long</span><span class="p">:</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Integer, encoded with the ASCII chracters [0-9-], followed by &#39;L&#39;.</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
-        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ascii</span>
-        <span class="nt">terminator</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x0a</span> <span class="c1"># &quot;\n&quot;</span>
+<span class="w">  </span><span class="nt">decimalnl_long</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Integer, encoded with the ASCII chracters [0-9-], followed by &#39;L&#39;.</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">val</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ascii</span>
+<span class="w">        </span><span class="nt">terminator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0x0a</span><span class="w"> </span><span class="c1"># &quot;\n&quot;</span>
 
-  <span class="c1"># TODO Can kaitai express constraint that these are quoted?</span>
-  <span class="nt">stringnl</span><span class="p">:</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Quoted string, possibly containing Python string escapes.</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
-        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ascii</span>
-        <span class="nt">terminator</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x0a</span> <span class="c1"># &quot;\n&quot;</span>
+<span class="w">  </span><span class="c1"># TODO Can kaitai express constraint that these are quoted?</span>
+<span class="w">  </span><span class="nt">stringnl</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Quoted string, possibly containing Python string escapes.</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">val</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ascii</span>
+<span class="w">        </span><span class="nt">terminator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0x0a</span><span class="w"> </span><span class="c1"># &quot;\n&quot;</span>
 
-  <span class="nt">stringnl_noescape</span><span class="p">:</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Unquoted string, does not contain string escapes.</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
-        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ascii</span>
-        <span class="nt">terminator</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x0a</span> <span class="c1"># &quot;\n&quot;</span>
+<span class="w">  </span><span class="nt">stringnl_noescape</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Unquoted string, does not contain string escapes.</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">val</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ascii</span>
+<span class="w">        </span><span class="nt">terminator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0x0a</span><span class="w"> </span><span class="c1"># &quot;\n&quot;</span>
 
-  <span class="nt">stringnl_noescape_pair</span><span class="p">:</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Pair of unquoted, unescaped strings.</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val1</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stringnl_noescape</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val2</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stringnl_noescape</span>
+<span class="w">  </span><span class="nt">stringnl_noescape_pair</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pair of unquoted, unescaped strings.</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">val1</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stringnl_noescape</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">val2</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stringnl_noescape</span>
 
-  <span class="nt">unicodestringnl</span><span class="p">:</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Unquoted string, containing Python Unicode escapes.</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
-        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ascii</span>
-        <span class="nt">terminator</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x0a</span> <span class="c1"># &quot;\n&quot;</span>
+<span class="w">  </span><span class="nt">unicodestringnl</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Unquoted string, containing Python Unicode escapes.</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">val</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ascii</span>
+<span class="w">        </span><span class="nt">terminator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0x0a</span><span class="w"> </span><span class="c1"># &quot;\n&quot;</span>
 
-  <span class="nt">floatnl</span><span class="p">:</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-      <span class="no">Double float, encoded with the ASCII characters [0-9.e+-], &#39;-inf&#39;, &#39;inf&#39;,</span>
-      <span class="no">or &#39;nan&#39;.</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
-        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ascii</span>
-        <span class="nt">terminator</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x0a</span> <span class="c1"># &quot;\n&quot;</span>
+<span class="w">  </span><span class="nt">floatnl</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">Double float, encoded with the ASCII characters [0-9.e+-], &#39;-inf&#39;, &#39;inf&#39;,</span>
+<span class="w">      </span><span class="no">or &#39;nan&#39;.</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">val</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ascii</span>
+<span class="w">        </span><span class="nt">terminator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0x0a</span><span class="w"> </span><span class="c1"># &quot;\n&quot;</span>
 
-  <span class="nt">long1</span><span class="p">:</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-      <span class="no">Large signed integer, in the range -2**(8*255-1) to 2**(8*255-1)-1,</span>
-      <span class="no">encoded as two&#39;s complement.</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
-        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
+<span class="w">  </span><span class="nt">long1</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">Large signed integer, in the range -2**(8*255-1) to 2**(8*255-1)-1,</span>
+<span class="w">      </span><span class="no">encoded as two&#39;s complement.</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">val</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len</span>
 
-  <span class="nt">long4</span><span class="p">:</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-      <span class="no">Large signed integer, in the range -2**(8*2**32-1) to 2**(8*2**32-1)-1,</span>
-      <span class="no">encoded as two&#39;s complement.</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
-        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
+<span class="w">  </span><span class="nt">long4</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">Large signed integer, in the range -2**(8*2**32-1) to 2**(8*2**32-1)-1,</span>
+<span class="w">      </span><span class="no">encoded as two&#39;s complement.</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">val</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len</span>
 
-  <span class="nt">string1</span><span class="p">:</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-      <span class="no">Length prefixed string, between 0 and 255 bytes long. Encoding is</span>
-      <span class="no">unspecified.</span>
+<span class="w">  </span><span class="nt">string1</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">Length prefixed string, between 0 and 255 bytes long. Encoding is</span>
+<span class="w">      </span><span class="no">unspecified.</span>
 
-      <span class="no">The default Python 2.x string type (`str`) is a sequence of bytes.</span>
-      <span class="no">These are pickled as `string1` or `string4`, when protocol == 2.</span>
-      <span class="no">The bytes are written directly, no explicit encoding is performed.</span>
+<span class="w">      </span><span class="no">The default Python 2.x string type (`str`) is a sequence of bytes.</span>
+<span class="w">      </span><span class="no">These are pickled as `string1` or `string4`, when protocol == 2.</span>
+<span class="w">      </span><span class="no">The bytes are written directly, no explicit encoding is performed.</span>
 
-      <span class="no">Python 3.x will not pickle an object as `string1` or `string4`.</span>
-      <span class="no">Instead, opcodes and types with a known encoding are used.</span>
-      <span class="no">When unpickling</span>
+<span class="w">      </span><span class="no">Python 3.x will not pickle an object as `string1` or `string4`.</span>
+<span class="w">      </span><span class="no">Instead, opcodes and types with a known encoding are used.</span>
+<span class="w">      </span><span class="no">When unpickling</span>
 
-      <span class="no">- `pickle.Unpickler` objects default to ASCII, which can be overriden</span>
-      <span class="no">- `pickletools.dis` uses latin1, and cannot be overriden</span>
-    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/python/cpython/blob/bb8071a4cae/Lib/pickle.py#L486-L495</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
-        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
+<span class="w">      </span><span class="no">- `pickle.Unpickler` objects default to ASCII, which can be overriden</span>
+<span class="w">      </span><span class="no">- `pickletools.dis` uses latin1, and cannot be overriden</span>
+<span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/python/cpython/blob/bb8071a4cae/Lib/pickle.py#L486-L495</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">val</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len</span>
 
-  <span class="nt">string4</span><span class="p">:</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-      <span class="no">Length prefixed string, between 0 and 2**31-1 bytes long. Encoding is</span>
-      <span class="no">unspecified.</span>
+<span class="w">  </span><span class="nt">string4</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">Length prefixed string, between 0 and 2**31-1 bytes long. Encoding is</span>
+<span class="w">      </span><span class="no">unspecified.</span>
 
-      <span class="no">Although the len field is signed, any length &lt; 0 will raise an exception</span>
-      <span class="no">during unpickling.</span>
+<span class="w">      </span><span class="no">Although the len field is signed, any length &lt; 0 will raise an exception</span>
+<span class="w">      </span><span class="no">during unpickling.</span>
 
-      <span class="no">See the documentation for `string1` for further detail about encodings.</span>
-    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/python/cpython/blob/bb8071a4cae/Lib/pickle.py#L486-L495</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
-        <span class="c1"># Not a typo, the length really is a signed integer</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
-        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
+<span class="w">      </span><span class="no">See the documentation for `string1` for further detail about encodings.</span>
+<span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/python/cpython/blob/bb8071a4cae/Lib/pickle.py#L486-L495</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len</span>
+<span class="w">        </span><span class="c1"># Not a typo, the length really is a signed integer</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">val</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len</span>
 
-  <span class="nt">bytes1</span><span class="p">:</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Length prefixed byte string, between 0 and 255 bytes long.</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
-        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
+<span class="w">  </span><span class="nt">bytes1</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Length prefixed byte string, between 0 and 255 bytes long.</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">val</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len</span>
 
-  <span class="nt">bytes4</span><span class="p">:</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Length prefixed string, between 0 and 2**32-1 bytes long</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
-        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
+<span class="w">  </span><span class="nt">bytes4</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Length prefixed string, between 0 and 2**32-1 bytes long</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">val</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len</span>
 
-  <span class="nt">bytes8</span><span class="p">:</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-      <span class="no">Length prefixed string, between 0 and 2**64-1 bytes long.</span>
+<span class="w">  </span><span class="nt">bytes8</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">Length prefixed string, between 0 and 2**64-1 bytes long.</span>
 
-      <span class="no">Only a 64-bit build of Python would produce a pickle containing strings</span>
-      <span class="no">large enough to need this type. Such a pickle could not be unpickled on</span>
-      <span class="no">a 32-bit build of Python, because the string would be larger than</span>
-      <span class="no">`sys.maxsize`.</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
-        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
+<span class="w">      </span><span class="no">Only a 64-bit build of Python would produce a pickle containing strings</span>
+<span class="w">      </span><span class="no">large enough to need this type. Such a pickle could not be unpickled on</span>
+<span class="w">      </span><span class="no">a 32-bit build of Python, because the string would be larger than</span>
+<span class="w">      </span><span class="no">`sys.maxsize`.</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u8</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">val</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len</span>
 
-  <span class="nt">bytearray8</span><span class="p">:</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-      <span class="no">Length prefixed string, between 0 and 2**64-1 bytes long.</span>
+<span class="w">  </span><span class="nt">bytearray8</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">Length prefixed string, between 0 and 2**64-1 bytes long.</span>
 
-      <span class="no">The contents are deserilised into a `bytearray` object.</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
-        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
+<span class="w">      </span><span class="no">The contents are deserilised into a `bytearray` object.</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u8</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">val</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len</span>
 
-  <span class="nt">unicodestring1</span><span class="p">:</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Length prefixed string, between 0 and 255 bytes long</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
-        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">utf8</span>
-        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
+<span class="w">  </span><span class="nt">unicodestring1</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Length prefixed string, between 0 and 255 bytes long</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">val</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">utf8</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len</span>
 
-  <span class="nt">unicodestring4</span><span class="p">:</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Length prefixed string, between 0 and 2**32-1 bytes long</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
-        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">utf8</span>
-        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
+<span class="w">  </span><span class="nt">unicodestring4</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Length prefixed string, between 0 and 2**32-1 bytes long</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">val</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">utf8</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len</span>
 
-  <span class="nt">unicodestring8</span><span class="p">:</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-      <span class="no">Length prefixed string, between 0 and 2**64-1 bytes long.</span>
+<span class="w">  </span><span class="nt">unicodestring8</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">Length prefixed string, between 0 and 2**64-1 bytes long.</span>
 
-      <span class="no">Only a 64-bit build of Python would produce a pickle containing strings</span>
-      <span class="no">large enough to need this type. Such a pickle could not be unpickled on</span>
-      <span class="no">a 32-bit build of Python, because the string would be larger than</span>
-      <span class="no">`sys.maxsize`.</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">val</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
-        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">utf8</span>
-        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
+<span class="w">      </span><span class="no">Only a 64-bit build of Python would produce a pickle containing strings</span>
+<span class="w">      </span><span class="no">large enough to need this type. Such a pickle could not be unpickled on</span>
+<span class="w">      </span><span class="no">a 32-bit build of Python, because the string would be larger than</span>
+<span class="w">      </span><span class="no">`sys.maxsize`.</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u8</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">val</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str</span>
+<span class="w">        </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">utf8</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len</span>
 
-  <span class="nt">no_arg</span><span class="p">:</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Some opcodes take no argument, this empty type is used for them.</span>
+<span class="w">  </span><span class="nt">no_arg</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Some opcodes take no argument, this empty type is used for them.</span>
 
 <span class="nt">enums</span><span class="p">:</span>
-  <span class="nt">opcode</span><span class="p">:</span>
-    <span class="nt">0x28</span><span class="p">:</span> <span class="c1"># &quot;(&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;mark&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MARK</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push special markobject on stack</span>
-    <span class="nt">0x2e</span><span class="p">:</span> <span class="c1"># &quot;.&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;stop&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">STOP</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">every pickle ends with STOP</span>
-    <span class="nt">0x30</span><span class="p">:</span> <span class="c1"># &quot;0&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;pop&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">POP</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">discard topmost stack item</span>
-    <span class="nt">0x31</span><span class="p">:</span> <span class="c1"># &quot;1&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;pop_mark&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">POP_MARK</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">discard stack top through topmost markobject</span>
-    <span class="nt">0x32</span><span class="p">:</span> <span class="c1"># &quot;2&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;dup&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">DUP</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">duplicate top stack item</span>
-    <span class="nt">0x46</span><span class="p">:</span> <span class="c1"># &quot;F&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;float&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">FLOAT</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push float object; decimal string argument</span>
-    <span class="nt">0x49</span><span class="p">:</span> <span class="c1"># &quot;I&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;int&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">INT</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push integer or bool; decimal string argument</span>
-    <span class="nt">0x4a</span><span class="p">:</span> <span class="c1"># &quot;J&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;binint&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">BININT</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push four-byte signed int</span>
-    <span class="nt">0x4b</span><span class="p">:</span> <span class="c1"># &quot;K&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;binint1&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">BININT1</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push 1-byte unsigned int</span>
-    <span class="nt">0x4c</span><span class="p">:</span> <span class="c1"># &quot;L&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;long&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">LONG</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push long; decimal string argument</span>
-    <span class="nt">0x4d</span><span class="p">:</span> <span class="c1"># &quot;M&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;binint2&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">BININT2</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push 2-byte unsigned int</span>
-    <span class="nt">0x4e</span><span class="p">:</span> <span class="c1"># &quot;N&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;none&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">NONE</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push None</span>
-    <span class="nt">0x50</span><span class="p">:</span> <span class="c1"># &quot;P&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;persid&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">PERSID</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push persistent object; id is taken from string arg</span>
-    <span class="nt">0x51</span><span class="p">:</span> <span class="c1"># &quot;Q&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;binpersid&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">BINPERSID</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push persistent object; id is taken from stack</span>
-    <span class="nt">0x52</span><span class="p">:</span> <span class="c1"># &quot;R&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;reduce&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">REDUCE</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">apply callable to argtuple, both on stack</span>
-    <span class="nt">0x53</span><span class="p">:</span> <span class="c1"># &quot;S&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;string&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">STRING</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push string; NL-terminated string argument</span>
-    <span class="nt">0x54</span><span class="p">:</span> <span class="c1"># &quot;T&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;binstring&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">BINSTRING</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push string; counted binary string argument</span>
-    <span class="nt">0x55</span><span class="p">:</span> <span class="c1"># &quot;U&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;short_binstring&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">SHORT_BINSTRING</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push string; counted binary string argument 256 bytes</span>
-    <span class="nt">0x56</span><span class="p">:</span> <span class="c1"># &quot;V&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;unicode&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UNICODE</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push Unicode string; raw-unicode-escaped argument</span>
-    <span class="nt">0x58</span><span class="p">:</span> <span class="c1"># &quot;X&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;binunicode&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">BINUNICODE</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push Unicode string; counted UTF-8 string argument</span>
-    <span class="nt">0x61</span><span class="p">:</span> <span class="c1"># &quot;a&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;append&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">APPEND</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">append stack top to list below it</span>
-    <span class="nt">0x62</span><span class="p">:</span> <span class="c1"># &quot;b&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;build&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">BUILD</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">call __setstate__ or __dict__.update()</span>
-    <span class="nt">0x63</span><span class="p">:</span> <span class="c1"># &quot;c&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;global_opcode&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">GLOBAL</span>
-      <span class="nt">-affected-by</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">90</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-        <span class="no">push self.find_class(modname, name); 2 string args</span>
+<span class="w">  </span><span class="nt">opcode</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">0x28</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;(&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;mark&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MARK</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push special markobject on stack</span>
+<span class="w">    </span><span class="nt">0x2e</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;.&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;stop&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">STOP</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">every pickle ends with STOP</span>
+<span class="w">    </span><span class="nt">0x30</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;0&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;pop&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">POP</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">discard topmost stack item</span>
+<span class="w">    </span><span class="nt">0x31</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;1&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;pop_mark&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">POP_MARK</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">discard stack top through topmost markobject</span>
+<span class="w">    </span><span class="nt">0x32</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;2&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;dup&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DUP</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">duplicate top stack item</span>
+<span class="w">    </span><span class="nt">0x46</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;F&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;float&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">FLOAT</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push float object; decimal string argument</span>
+<span class="w">    </span><span class="nt">0x49</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;I&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;int&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INT</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push integer or bool; decimal string argument</span>
+<span class="w">    </span><span class="nt">0x4a</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;J&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;binint&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BININT</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push four-byte signed int</span>
+<span class="w">    </span><span class="nt">0x4b</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;K&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;binint1&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BININT1</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push 1-byte unsigned int</span>
+<span class="w">    </span><span class="nt">0x4c</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;L&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;long&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LONG</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push long; decimal string argument</span>
+<span class="w">    </span><span class="nt">0x4d</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;M&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;binint2&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BININT2</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push 2-byte unsigned int</span>
+<span class="w">    </span><span class="nt">0x4e</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;N&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;none&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NONE</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push None</span>
+<span class="w">    </span><span class="nt">0x50</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;P&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;persid&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PERSID</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push persistent object; id is taken from string arg</span>
+<span class="w">    </span><span class="nt">0x51</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;Q&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;binpersid&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BINPERSID</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push persistent object; id is taken from stack</span>
+<span class="w">    </span><span class="nt">0x52</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;R&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;reduce&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">REDUCE</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apply callable to argtuple, both on stack</span>
+<span class="w">    </span><span class="nt">0x53</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;S&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;string&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">STRING</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push string; NL-terminated string argument</span>
+<span class="w">    </span><span class="nt">0x54</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;T&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;binstring&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BINSTRING</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push string; counted binary string argument</span>
+<span class="w">    </span><span class="nt">0x55</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;U&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;short_binstring&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SHORT_BINSTRING</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push string; counted binary string argument 256 bytes</span>
+<span class="w">    </span><span class="nt">0x56</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;V&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;unicode&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UNICODE</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push Unicode string; raw-unicode-escaped argument</span>
+<span class="w">    </span><span class="nt">0x58</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;X&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;binunicode&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BINUNICODE</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push Unicode string; counted UTF-8 string argument</span>
+<span class="w">    </span><span class="nt">0x61</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;a&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;append&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">APPEND</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">append stack top to list below it</span>
+<span class="w">    </span><span class="nt">0x62</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;b&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;build&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BUILD</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">call __setstate__ or __dict__.update()</span>
+<span class="w">    </span><span class="nt">0x63</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;c&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;global_opcode&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GLOBAL</span>
+<span class="w">      </span><span class="nt">-affected-by</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">push self.find_class(modname, name); 2 string args</span>
 
-        <span class="no">As of KSC 0.9, this enum key can&#39;t be called `global` because it would</span>
-        <span class="no">cause a syntax error in Python (it is a keyword).</span>
-    <span class="nt">0x64</span><span class="p">:</span> <span class="c1"># &quot;d&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;dict&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">DICT</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">build a dict from stack items</span>
-    <span class="nt">0x7d</span><span class="p">:</span> <span class="c1"># &quot;}&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;empty_dict&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EMPTY_DICT</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push empty dict</span>
-    <span class="nt">0x65</span><span class="p">:</span> <span class="c1"># &quot;e&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;appends&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">APPENDS</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">extend list on stack by topmost stack slice</span>
-    <span class="nt">0x67</span><span class="p">:</span> <span class="c1"># &quot;g&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;get&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">GET</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push item from memo on stack; index is string arg</span>
-    <span class="nt">0x68</span><span class="p">:</span> <span class="c1"># &quot;h&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;binget&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">BINGET</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push item from memo on stack; index is 1-byte arg</span>
-    <span class="nt">0x69</span><span class="p">:</span> <span class="c1"># &quot;i&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;inst&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">INST</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">build &amp; push class instance</span>
-    <span class="nt">0x6a</span><span class="p">:</span> <span class="c1"># &quot;j&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;long_binget&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">LONG_BINGET</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push item from memo on stack; index is 4-byte arg</span>
-    <span class="nt">0x6c</span><span class="p">:</span> <span class="c1"># &quot;l&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;list&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">LIST</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">build list from topmost stack items</span>
-    <span class="nt">0x5d</span><span class="p">:</span> <span class="c1"># &quot;]&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;empty_list&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EMPTY_LIST</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push empty list</span>
-    <span class="nt">0x6f</span><span class="p">:</span> <span class="c1"># &quot;o&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;obj&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">OBJ</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">build &amp; push class instance</span>
-    <span class="nt">0x70</span><span class="p">:</span> <span class="c1"># &quot;p&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;put&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">PUT</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">store stack top in memo; index is string arg</span>
-    <span class="nt">0x71</span><span class="p">:</span> <span class="c1"># &quot;q&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;binput&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">BINPUT</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">store stack top in memo; index is 1-byte arg</span>
-    <span class="nt">0x72</span><span class="p">:</span> <span class="c1"># &quot;r&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;long_binput&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">LONG_BINPUT</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">store stack top in memo; index is 4-byte arg</span>
-    <span class="nt">0x73</span><span class="p">:</span> <span class="c1"># &quot;s&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;setitem&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">SETITEM</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">add key+value pair to dict</span>
-    <span class="nt">0x74</span><span class="p">:</span> <span class="c1"># &quot;t&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;tuple&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">TUPLE</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">build tuple from topmost stack items</span>
-    <span class="nt">0x29</span><span class="p">:</span> <span class="c1"># &quot;)&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;empty_tuple&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EMPTY_TUPLE</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push empty tuple</span>
-    <span class="nt">0x75</span><span class="p">:</span> <span class="c1"># &quot;u&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;setitems&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">SETITEMS</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">modify dict by adding topmost key+value pairs</span>
-    <span class="nt">0x47</span><span class="p">:</span> <span class="c1"># &quot;G&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;binfloat&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">BINFLOAT</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push float; arg is 8-byte float encoding</span>
+<span class="w">        </span><span class="no">As of KSC 0.9, this enum key can&#39;t be called `global` because it would</span>
+<span class="w">        </span><span class="no">cause a syntax error in Python (it is a keyword).</span>
+<span class="w">    </span><span class="nt">0x64</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;d&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;dict&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DICT</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build a dict from stack items</span>
+<span class="w">    </span><span class="nt">0x7d</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;}&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;empty_dict&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EMPTY_DICT</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push empty dict</span>
+<span class="w">    </span><span class="nt">0x65</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;e&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;appends&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">APPENDS</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">extend list on stack by topmost stack slice</span>
+<span class="w">    </span><span class="nt">0x67</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;g&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;get&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GET</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push item from memo on stack; index is string arg</span>
+<span class="w">    </span><span class="nt">0x68</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;h&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;binget&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BINGET</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push item from memo on stack; index is 1-byte arg</span>
+<span class="w">    </span><span class="nt">0x69</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;i&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;inst&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">INST</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build &amp; push class instance</span>
+<span class="w">    </span><span class="nt">0x6a</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;j&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;long_binget&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LONG_BINGET</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push item from memo on stack; index is 4-byte arg</span>
+<span class="w">    </span><span class="nt">0x6c</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;l&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;list&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LIST</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build list from topmost stack items</span>
+<span class="w">    </span><span class="nt">0x5d</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;]&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;empty_list&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EMPTY_LIST</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push empty list</span>
+<span class="w">    </span><span class="nt">0x6f</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;o&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;obj&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OBJ</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build &amp; push class instance</span>
+<span class="w">    </span><span class="nt">0x70</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;p&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;put&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PUT</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">store stack top in memo; index is string arg</span>
+<span class="w">    </span><span class="nt">0x71</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;q&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;binput&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BINPUT</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">store stack top in memo; index is 1-byte arg</span>
+<span class="w">    </span><span class="nt">0x72</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;r&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;long_binput&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LONG_BINPUT</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">store stack top in memo; index is 4-byte arg</span>
+<span class="w">    </span><span class="nt">0x73</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;s&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;setitem&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SETITEM</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">add key+value pair to dict</span>
+<span class="w">    </span><span class="nt">0x74</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;t&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;tuple&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TUPLE</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build tuple from topmost stack items</span>
+<span class="w">    </span><span class="nt">0x29</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;)&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;empty_tuple&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EMPTY_TUPLE</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push empty tuple</span>
+<span class="w">    </span><span class="nt">0x75</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;u&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;setitems&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SETITEMS</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">modify dict by adding topmost key+value pairs</span>
+<span class="w">    </span><span class="nt">0x47</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;G&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;binfloat&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BINFLOAT</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push float; arg is 8-byte float encoding</span>
 
-    <span class="c1"># Protocol 2</span>
-    <span class="nt">0x80</span><span class="p">:</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;proto&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">PROTO</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">identify pickle protocol</span>
-    <span class="nt">0x81</span><span class="p">:</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;newobj&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">NEWOBJ</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">build object by applying cls.__new__ to argtuple</span>
-    <span class="nt">0x82</span><span class="p">:</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;ext1&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EXT1</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push object from extension registry; 1-byte index</span>
-    <span class="nt">0x83</span><span class="p">:</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;ext2&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EXT2</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ditto, but 2-byte index</span>
-    <span class="nt">0x84</span><span class="p">:</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;ext4&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EXT4</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ditto, but 4-byte index</span>
-    <span class="nt">0x85</span><span class="p">:</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;tuple1&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">TUPLE1</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">build 1-tuple from stack top</span>
-    <span class="nt">0x86</span><span class="p">:</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;tuple2&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">TUPLE2</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">build 2-tuple from two topmost stack items</span>
-    <span class="nt">0x87</span><span class="p">:</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;tuple3&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">TUPLE3</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">build 3-tuple from three topmost stack items</span>
-    <span class="nt">0x88</span><span class="p">:</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;newtrue&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">NEWTRUE</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push True</span>
-    <span class="nt">0x89</span><span class="p">:</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;newfalse&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">NEWFALSE</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push False</span>
-    <span class="nt">0x8a</span><span class="p">:</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;long1&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">LONG1</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push long from &lt; 256 bytes</span>
-    <span class="nt">0x8b</span><span class="p">:</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;long4&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">LONG4</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push really big long</span>
+<span class="w">    </span><span class="c1"># Protocol 2</span>
+<span class="w">    </span><span class="nt">0x80</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;proto&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PROTO</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">identify pickle protocol</span>
+<span class="w">    </span><span class="nt">0x81</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;newobj&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NEWOBJ</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build object by applying cls.__new__ to argtuple</span>
+<span class="w">    </span><span class="nt">0x82</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ext1&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EXT1</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push object from extension registry; 1-byte index</span>
+<span class="w">    </span><span class="nt">0x83</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ext2&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EXT2</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ditto, but 2-byte index</span>
+<span class="w">    </span><span class="nt">0x84</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ext4&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EXT4</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ditto, but 4-byte index</span>
+<span class="w">    </span><span class="nt">0x85</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;tuple1&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TUPLE1</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build 1-tuple from stack top</span>
+<span class="w">    </span><span class="nt">0x86</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;tuple2&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TUPLE2</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build 2-tuple from two topmost stack items</span>
+<span class="w">    </span><span class="nt">0x87</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;tuple3&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TUPLE3</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build 3-tuple from three topmost stack items</span>
+<span class="w">    </span><span class="nt">0x88</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;newtrue&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NEWTRUE</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push True</span>
+<span class="w">    </span><span class="nt">0x89</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;newfalse&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NEWFALSE</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push False</span>
+<span class="w">    </span><span class="nt">0x8a</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;long1&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LONG1</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push long from &lt; 256 bytes</span>
+<span class="w">    </span><span class="nt">0x8b</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;long4&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LONG4</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push really big long</span>
 
-    <span class="c1"># Protocol 3 (Python 3.x)</span>
-    <span class="nt">0x42</span><span class="p">:</span> <span class="c1"># &quot;B&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;binbytes&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">BINBYTES</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push bytes; counted binary string argument</span>
-    <span class="nt">0x43</span><span class="p">:</span> <span class="c1"># &quot;C&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;short_binbytes&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">SHORT_BINBYTES</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push bytes; counted binary string argument &lt; 256 bytes</span>
+<span class="w">    </span><span class="c1"># Protocol 3 (Python 3.x)</span>
+<span class="w">    </span><span class="nt">0x42</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;B&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;binbytes&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BINBYTES</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push bytes; counted binary string argument</span>
+<span class="w">    </span><span class="nt">0x43</span><span class="p">:</span><span class="w"> </span><span class="c1"># &quot;C&quot;</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;short_binbytes&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SHORT_BINBYTES</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push bytes; counted binary string argument &lt; 256 bytes</span>
 
-    <span class="c1"># Protocol 4</span>
-    <span class="nt">0x8c</span><span class="p">:</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;short_binunicode&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">SHORT_BINUNICODE</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push short string; UTF-8 length &lt; 256 bytes</span>
-    <span class="nt">0x8d</span><span class="p">:</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;binunicode8&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">BINUNICODE8</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push very long string</span>
-    <span class="nt">0x8e</span><span class="p">:</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;binbytes8&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">BINBYTES8</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push very long bytes string</span>
-    <span class="nt">0x8f</span><span class="p">:</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;empty_set&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EMPTY_SET</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push empty set on the stack</span>
-    <span class="nt">0x90</span><span class="p">:</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;additems&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ADDITEMS</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">modify set by adding topmost stack items</span>
-    <span class="nt">0x91</span><span class="p">:</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;frozenset&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">FROZENSET</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">build frozenset from topmost stack items</span>
-    <span class="nt">0x92</span><span class="p">:</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;newobj_ex&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">NEWOBJ_EX</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">like NEWOBJ but work with keyword only arguments</span>
-    <span class="nt">0x93</span><span class="p">:</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;stack_global&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">STACK_GLOBAL</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">same as GLOBAL but using names on the stacks</span>
-    <span class="nt">0x94</span><span class="p">:</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;memoize&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MEMOIZE</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">store top of the stack in memo</span>
-    <span class="nt">0x95</span><span class="p">:</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;frame&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">FRAME</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">indicate the beginning of a new frame</span>
+<span class="w">    </span><span class="c1"># Protocol 4</span>
+<span class="w">    </span><span class="nt">0x8c</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;short_binunicode&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SHORT_BINUNICODE</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push short string; UTF-8 length &lt; 256 bytes</span>
+<span class="w">    </span><span class="nt">0x8d</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;binunicode8&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BINUNICODE8</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push very long string</span>
+<span class="w">    </span><span class="nt">0x8e</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;binbytes8&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BINBYTES8</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push very long bytes string</span>
+<span class="w">    </span><span class="nt">0x8f</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;empty_set&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EMPTY_SET</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push empty set on the stack</span>
+<span class="w">    </span><span class="nt">0x90</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;additems&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ADDITEMS</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">modify set by adding topmost stack items</span>
+<span class="w">    </span><span class="nt">0x91</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;frozenset&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">FROZENSET</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build frozenset from topmost stack items</span>
+<span class="w">    </span><span class="nt">0x92</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;newobj_ex&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NEWOBJ_EX</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">like NEWOBJ but work with keyword only arguments</span>
+<span class="w">    </span><span class="nt">0x93</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;stack_global&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">STACK_GLOBAL</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">same as GLOBAL but using names on the stacks</span>
+<span class="w">    </span><span class="nt">0x94</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;memoize&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MEMOIZE</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">store top of the stack in memo</span>
+<span class="w">    </span><span class="nt">0x95</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;frame&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">FRAME</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">indicate the beginning of a new frame</span>
 
-    <span class="c1"># Protocol 5</span>
-    <span class="nt">0x96</span><span class="p">:</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;bytearray8&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="s">&quot;BYTEARRAY8&quot;</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push bytearray</span>
-    <span class="nt">0x97</span><span class="p">:</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;next_buffer&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="s">&quot;NEXT_BUFFER&quot;</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push next out-of-band buffer</span>
-    <span class="nt">0x98</span><span class="p">:</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;readonly_buffer&quot;</span>
-      <span class="nt">-orig-id</span><span class="p">:</span> <span class="s">&quot;READONLY_BUFFER&quot;</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">make top of stack readonly</span>
+<span class="w">    </span><span class="c1"># Protocol 5</span>
+<span class="w">    </span><span class="nt">0x96</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;bytearray8&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;BYTEARRAY8&quot;</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push bytearray</span>
+<span class="w">    </span><span class="nt">0x97</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;next_buffer&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;NEXT_BUFFER&quot;</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">push next out-of-band buffer</span>
+<span class="w">    </span><span class="nt">0x98</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;readonly_buffer&quot;</span>
+<span class="w">      </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;READONLY_BUFFER&quot;</span>
+<span class="w">      </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">make top of stack readonly</span>
 </pre></div>
     </div>
 </section>

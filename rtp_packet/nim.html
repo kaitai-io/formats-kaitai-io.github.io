@@ -265,171 +265,171 @@ Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).</p>
         </div>
 
         <div class="row">
-            <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">kaitai_struct_nim_runtime</span>
-<span class="kn">import</span> <span class="n">options</span>
+            <div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="n">kaitai_struct_nim_runtime</span>
+<span class="kn">import</span><span class="w"> </span><span class="n">options</span>
 
 <span class="k">type</span>
-  <span class="n">RtpPacket</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">version</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
-    <span class="p">`</span><span class="n">hasPadding</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">hasExtension</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">csrcCount</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
-    <span class="p">`</span><span class="n">marker</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">payloadType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">RtpPacket_PayloadTypeEnum</span>
-    <span class="p">`</span><span class="n">sequenceNumber</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
-    <span class="p">`</span><span class="n">timestamp</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">ssrc</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">headerExtension</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">RtpPacket_HeaderExtention</span>
-    <span class="p">`</span><span class="n">data</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">padding</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">lenPaddingIfExistsInst</span><span class="p">`:</span> <span class="n">uint8</span>
-    <span class="p">`</span><span class="n">lenPaddingIfExistsInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">lenPaddingInst</span><span class="p">`:</span> <span class="n">uint8</span>
-    <span class="p">`</span><span class="n">lenPaddingInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
-  <span class="n">RtpPacket_PayloadTypeEnum</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
-    <span class="n">pcmu</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">reserved1</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">reserved2</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="n">gsm</span> <span class="o">=</span> <span class="mi">3</span>
-    <span class="n">g723</span> <span class="o">=</span> <span class="mi">4</span>
-    <span class="n">dvi4_1</span> <span class="o">=</span> <span class="mi">5</span>
-    <span class="n">dvi4_2</span> <span class="o">=</span> <span class="mi">6</span>
-    <span class="n">lpc</span> <span class="o">=</span> <span class="mi">7</span>
-    <span class="n">pcma</span> <span class="o">=</span> <span class="mi">8</span>
-    <span class="n">g722</span> <span class="o">=</span> <span class="mi">9</span>
-    <span class="n">l16_1</span> <span class="o">=</span> <span class="mi">10</span>
-    <span class="n">l16_2</span> <span class="o">=</span> <span class="mi">11</span>
-    <span class="n">qcelp</span> <span class="o">=</span> <span class="mi">12</span>
-    <span class="n">cn</span> <span class="o">=</span> <span class="mi">13</span>
-    <span class="n">mpa</span> <span class="o">=</span> <span class="mi">14</span>
-    <span class="n">g728</span> <span class="o">=</span> <span class="mi">15</span>
-    <span class="n">dvi4_3</span> <span class="o">=</span> <span class="mi">16</span>
-    <span class="n">dvi4_4</span> <span class="o">=</span> <span class="mi">17</span>
-    <span class="n">g729</span> <span class="o">=</span> <span class="mi">18</span>
-    <span class="n">reserved19</span> <span class="o">=</span> <span class="mi">19</span>
-    <span class="n">unassigned20</span> <span class="o">=</span> <span class="mi">20</span>
-    <span class="n">unassigned21</span> <span class="o">=</span> <span class="mi">21</span>
-    <span class="n">unassigned22</span> <span class="o">=</span> <span class="mi">22</span>
-    <span class="n">unassigned23</span> <span class="o">=</span> <span class="mi">23</span>
-    <span class="n">unassigned24</span> <span class="o">=</span> <span class="mi">24</span>
-    <span class="n">celb</span> <span class="o">=</span> <span class="mi">25</span>
-    <span class="n">jpeg</span> <span class="o">=</span> <span class="mi">26</span>
-    <span class="n">unassigned27</span> <span class="o">=</span> <span class="mi">27</span>
-    <span class="n">nv</span> <span class="o">=</span> <span class="mi">28</span>
-    <span class="n">unassigned29</span> <span class="o">=</span> <span class="mi">29</span>
-    <span class="n">unassigned30</span> <span class="o">=</span> <span class="mi">30</span>
-    <span class="n">h261</span> <span class="o">=</span> <span class="mi">31</span>
-    <span class="n">mpv</span> <span class="o">=</span> <span class="mi">32</span>
-    <span class="n">mp2t</span> <span class="o">=</span> <span class="mi">33</span>
-    <span class="n">h263</span> <span class="o">=</span> <span class="mi">34</span>
-    <span class="n">mpeg_ps</span> <span class="o">=</span> <span class="mi">96</span>
-  <span class="n">RtpPacket_HeaderExtention</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">id</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
-    <span class="p">`</span><span class="n">length</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">RtpPacket</span>
+<span class="w">  </span><span class="n">RtpPacket</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">version</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint64</span>
+<span class="w">    </span><span class="p">`</span><span class="n">hasPadding</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">hasExtension</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">csrcCount</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint64</span>
+<span class="w">    </span><span class="p">`</span><span class="n">marker</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">payloadType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">RtpPacket_PayloadTypeEnum</span>
+<span class="w">    </span><span class="p">`</span><span class="n">sequenceNumber</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">timestamp</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">ssrc</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">headerExtension</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">RtpPacket_HeaderExtention</span>
+<span class="w">    </span><span class="p">`</span><span class="n">data</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">padding</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lenPaddingIfExistsInst</span><span class="p">`:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lenPaddingIfExistsInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lenPaddingInst</span><span class="p">`:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lenPaddingInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">  </span><span class="n">RtpPacket_PayloadTypeEnum</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">enum</span>
+<span class="w">    </span><span class="n">pcmu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="n">reserved1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="n">reserved2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">    </span><span class="n">gsm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">    </span><span class="n">g723</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">    </span><span class="n">dvi4_1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
+<span class="w">    </span><span class="n">dvi4_2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span>
+<span class="w">    </span><span class="n">lpc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span>
+<span class="w">    </span><span class="n">pcma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span>
+<span class="w">    </span><span class="n">g722</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">9</span>
+<span class="w">    </span><span class="n">l16_1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span>
+<span class="w">    </span><span class="n">l16_2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">11</span>
+<span class="w">    </span><span class="n">qcelp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span>
+<span class="w">    </span><span class="n">cn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">13</span>
+<span class="w">    </span><span class="n">mpa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">14</span>
+<span class="w">    </span><span class="n">g728</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15</span>
+<span class="w">    </span><span class="n">dvi4_3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">16</span>
+<span class="w">    </span><span class="n">dvi4_4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">17</span>
+<span class="w">    </span><span class="n">g729</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">18</span>
+<span class="w">    </span><span class="n">reserved19</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">19</span>
+<span class="w">    </span><span class="n">unassigned20</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span>
+<span class="w">    </span><span class="n">unassigned21</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">21</span>
+<span class="w">    </span><span class="n">unassigned22</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">22</span>
+<span class="w">    </span><span class="n">unassigned23</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">23</span>
+<span class="w">    </span><span class="n">unassigned24</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">24</span>
+<span class="w">    </span><span class="n">celb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">25</span>
+<span class="w">    </span><span class="n">jpeg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">26</span>
+<span class="w">    </span><span class="n">unassigned27</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">27</span>
+<span class="w">    </span><span class="n">nv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">28</span>
+<span class="w">    </span><span class="n">unassigned29</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">29</span>
+<span class="w">    </span><span class="n">unassigned30</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">30</span>
+<span class="w">    </span><span class="n">h261</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">31</span>
+<span class="w">    </span><span class="n">mpv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">32</span>
+<span class="w">    </span><span class="n">mp2t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">33</span>
+<span class="w">    </span><span class="n">h263</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">34</span>
+<span class="w">    </span><span class="n">mpeg_ps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">96</span>
+<span class="w">  </span><span class="n">RtpPacket_HeaderExtention</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">id</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">length</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">RtpPacket</span>
 
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[RtpPacket], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): RtpPacket</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[RtpPacket_HeaderExtention], io: KaitaiStream, root: KaitaiStruct, parent: RtpPacket): RtpPacket_HeaderExtention</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[RtpPacket], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): RtpPacket</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[RtpPacket_HeaderExtention], io: KaitaiStream, root: KaitaiStruct, parent: RtpPacket): RtpPacket_HeaderExtention</span>
 
-<span class="k">proc </span><span class="nf">lenPaddingIfExists</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">RtpPacket</span><span class="p">):</span> <span class="n">uint8</span>
-<span class="k">proc </span><span class="nf">lenPadding</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">RtpPacket</span><span class="p">):</span> <span class="n">uint8</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">lenPaddingIfExists</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">RtpPacket</span><span class="p">):</span><span class="w"> </span><span class="n">uint8</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">lenPadding</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">RtpPacket</span><span class="p">):</span><span class="w"> </span><span class="n">uint8</span>
 
 
 <span class="sd">##[</span>
-<span class="n">The</span> <span class="n">Real</span><span class="o">-</span><span class="n">time</span> <span class="n">Transport</span> <span class="n">Protocol</span> <span class="p">(</span><span class="n">RTP</span><span class="p">)</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">widely</span> <span class="n">used</span> <span class="n">network</span>
-<span class="n">protocol</span> <span class="k">for</span> <span class="n">transmitting</span> <span class="n">audio</span> <span class="ow">or</span> <span class="n">video</span><span class="p">.</span> <span class="n">It</span> <span class="n">usually</span> <span class="n">works</span> <span class="n">with</span> <span class="n">the</span>
-<span class="n">RTP</span> <span class="n">Control</span> <span class="n">Protocol</span> <span class="p">(</span><span class="n">RTCP</span><span class="p">).</span> <span class="n">The</span> <span class="n">transmission</span> <span class="n">can</span> <span class="n">be</span> <span class="n">based</span> <span class="n">on</span>
-<span class="n">Transmission</span> <span class="n">Control</span> <span class="n">Protocol</span> <span class="p">(</span><span class="n">TCP</span><span class="p">)</span> <span class="ow">or</span> <span class="n">User</span> <span class="n">Datagram</span> <span class="n">Protocol</span> <span class="p">(</span><span class="n">UDP</span><span class="p">).</span>
+<span class="sd">The Real-time Transport Protocol (RTP) is a widely used network</span>
+<span class="sd">protocol for transmitting audio or video. It usually works with the</span>
+<span class="sd">RTP Control Protocol (RTCP). The transmission can be based on</span>
+<span class="sd">Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).</span>
 
-<span class="o">]</span><span class="sd">##</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[RtpPacket], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): RtpPacket =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">RtpPacket</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">RtpPacket</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">RtpPacket</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[RtpPacket], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): RtpPacket =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">RtpPacket</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">RtpPacket</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">RtpPacket</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
-  <span class="k">let</span> <span class="n">versionExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">versionExpr</span>
-  <span class="k">let</span> <span class="n">hasPaddingExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">hasPadding</span> <span class="o">=</span> <span class="n">hasPaddingExpr</span>
-  <span class="k">let</span> <span class="n">hasExtensionExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">hasExtension</span> <span class="o">=</span> <span class="n">hasExtensionExpr</span>
-  <span class="k">let</span> <span class="n">csrcCountExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">csrcCount</span> <span class="o">=</span> <span class="n">csrcCountExpr</span>
-  <span class="k">let</span> <span class="n">markerExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">marker</span> <span class="o">=</span> <span class="n">markerExpr</span>
-  <span class="k">let</span> <span class="n">payloadTypeExpr</span> <span class="o">=</span> <span class="n">RtpPacket_PayloadTypeEnum</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">7</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">payloadType</span> <span class="o">=</span> <span class="n">payloadTypeExpr</span>
-  <span class="n">alignToByte</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">sequenceNumberExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">sequenceNumber</span> <span class="o">=</span> <span class="n">sequenceNumberExpr</span>
-  <span class="k">let</span> <span class="n">timestampExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">timestampExpr</span>
-  <span class="k">let</span> <span class="n">ssrcExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">ssrc</span> <span class="o">=</span> <span class="n">ssrcExpr</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">hasExtension</span><span class="p">:</span>
-    <span class="k">let</span> <span class="n">headerExtensionExpr</span> <span class="o">=</span> <span class="n">RtpPacket_HeaderExtention</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-    <span class="n">this</span><span class="p">.</span><span class="n">headerExtension</span> <span class="o">=</span> <span class="n">headerExtensionExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">versionExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">versionExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">hasPaddingExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">hasPadding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">hasPaddingExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">hasExtensionExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">hasExtension</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">hasExtensionExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">csrcCountExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">csrcCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">csrcCountExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">markerExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">marker</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">markerExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">payloadTypeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RtpPacket_PayloadTypeEnum</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">7</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">payloadType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">payloadTypeExpr</span>
+<span class="w">  </span><span class="n">alignToByte</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">sequenceNumberExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">sequenceNumber</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sequenceNumberExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">timestampExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">timestamp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">timestampExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">ssrcExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">ssrc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ssrcExpr</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">hasExtension</span><span class="p">:</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">headerExtensionExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RtpPacket_HeaderExtention</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">headerExtension</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">headerExtensionExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Payload</span> <span class="n">without</span> <span class="n">padding</span><span class="p">.</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">dataExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">size</span> <span class="o">-</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">)</span> <span class="o">-</span> <span class="n">this</span><span class="p">.</span><span class="n">lenPadding</span><span class="p">)))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">dataExpr</span>
-  <span class="k">let</span> <span class="n">paddingExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenPadding</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">padding</span> <span class="o">=</span> <span class="n">paddingExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Payload without padding.</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">dataExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lenPadding</span><span class="p">)))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dataExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">paddingExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenPadding</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">padding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">paddingExpr</span>
 
-<span class="k">proc </span><span class="nf">lenPaddingIfExists</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">RtpPacket</span><span class="p">):</span> <span class="n">uint8</span> <span class="o">=</span> 
+<span class="k">proc</span><span class="w"> </span><span class="nf">lenPaddingIfExists</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">RtpPacket</span><span class="p">):</span><span class="w"> </span><span class="n">uint8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
 
-  <span class="sd">##[</span>
-  <span class="k">If</span> <span class="n">padding</span> <span class="n">bit</span> <span class="ow">is</span> <span class="n">enabled</span><span class="p">,</span> <span class="n">last</span> <span class="n">byte</span> <span class="k">of</span> <span class="n">data</span> <span class="n">contains</span> <span class="n">number</span> <span class="k">of</span>
-<span class="n">bytes</span> <span class="n">appended</span> <span class="n">to</span> <span class="n">the</span> <span class="n">payload</span> <span class="k">as</span> <span class="n">padding</span><span class="p">.</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  If padding bit is enabled, last byte of data contains number of</span>
+<span class="sd">bytes appended to the payload as padding.</span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenPaddingIfExistsInstFlag</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenPaddingIfExistsInst</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">hasPadding</span><span class="p">:</span>
-    <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
-    <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span>
-    <span class="k">let</span> <span class="n">lenPaddingIfExistsInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-    <span class="n">this</span><span class="p">.</span><span class="n">lenPaddingIfExistsInst</span> <span class="o">=</span> <span class="n">lenPaddingIfExistsInstExpr</span>
-    <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">lenPaddingIfExistsInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
-  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenPaddingIfExistsInst</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lenPaddingIfExistsInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lenPaddingIfExistsInst</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">hasPadding</span><span class="p">:</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)))</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">lenPaddingIfExistsInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">lenPaddingIfExistsInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenPaddingIfExistsInstExpr</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenPaddingIfExistsInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lenPaddingIfExistsInst</span>
 
-<span class="k">proc </span><span class="nf">lenPadding</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">RtpPacket</span><span class="p">):</span> <span class="n">uint8</span> <span class="o">=</span> 
+<span class="k">proc</span><span class="w"> </span><span class="nf">lenPadding</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">RtpPacket</span><span class="p">):</span><span class="w"> </span><span class="n">uint8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
 
-  <span class="sd">##[</span>
-  <span class="n">Always</span> <span class="n">returns</span> <span class="n">number</span> <span class="k">of</span> <span class="n">padding</span> <span class="n">bytes</span> <span class="n">to</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">payload</span><span class="p">.</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenPaddingInstFlag</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenPaddingInst</span>
-  <span class="k">let</span> <span class="n">lenPaddingInstExpr</span> <span class="o">=</span> <span class="n">uint8</span><span class="p">((</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">hasPadding</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">lenPaddingIfExists</span> <span class="k">else</span><span class="p">:</span> <span class="mi">0</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">lenPaddingInst</span> <span class="o">=</span> <span class="n">lenPaddingInstExpr</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">lenPaddingInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
-  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenPaddingInst</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Always returns number of padding bytes to in the payload.</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lenPaddingInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lenPaddingInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenPaddingInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uint8</span><span class="p">((</span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">hasPadding</span><span class="p">:</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lenPaddingIfExists</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenPaddingInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenPaddingInstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenPaddingInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lenPaddingInst</span>
 
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[RtpPacket], filename: string): RtpPacket =</span>
-  <span class="n">RtpPacket</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[RtpPacket], filename: string): RtpPacket =</span>
+<span class="w">  </span><span class="n">RtpPacket</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[RtpPacket_HeaderExtention], io: KaitaiStream, root: KaitaiStruct, parent: RtpPacket): RtpPacket_HeaderExtention =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">RtpPacket_HeaderExtention</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">RtpPacket</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">RtpPacket</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[RtpPacket_HeaderExtention], io: KaitaiStream, root: KaitaiStruct, parent: RtpPacket): RtpPacket_HeaderExtention =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">RtpPacket_HeaderExtention</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">RtpPacket</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">RtpPacket</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
-  <span class="k">let</span> <span class="n">idExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">idExpr</span>
-  <span class="k">let</span> <span class="n">lengthExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">lengthExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">idExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">idExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lengthExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lengthExpr</span>
 
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[RtpPacket_HeaderExtention], filename: string): RtpPacket_HeaderExtention =</span>
-  <span class="n">RtpPacket_HeaderExtention</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[RtpPacket_HeaderExtention], filename: string): RtpPacket_HeaderExtention =</span>
+<span class="w">  </span><span class="n">RtpPacket_HeaderExtention</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 </pre></div>
 
         </div>

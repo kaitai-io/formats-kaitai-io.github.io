@@ -280,19 +280,19 @@ can also be found there.</p>
 
 
 
-<div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="n">AppleSingleDouble</span><span class="p">.</span><span class="n">FromFile</span><span class="p">(</span><span class="s">&quot;path/to/local/file.apple_single_double&quot;</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><span class="kt">var</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AppleSingleDouble</span><span class="p">.</span><span class="n">FromFile</span><span class="p">(</span><span class="s">&quot;path/to/local/file.apple_single_double&quot;</span><span class="p">);</span>
 </pre></div>
 
 <p>Or parse structure from a byte array:</p>
 
-<div class="highlight"><pre><span></span><span class="kt">byte</span><span class="p">[]</span> <span class="n">someArray</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
-<span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">AppleSingleDouble</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">someArray</span><span class="p">));</span>
+<div class="highlight"><pre><span></span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">someArray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">};</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">AppleSingleDouble</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">someArray</span><span class="p">));</span>
 </pre></div>
 
 <p>After that, one can get various attributes from the structure by accessing properties like:</p>
 
 
-<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">Reserved</span> <span class="c1">// =&gt; Must be all 0.</span>
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">Reserved</span><span class="w"> </span><span class="c1">// =&gt; Must be all 0.</span>
 </pre></div>
 
     </div>
@@ -322,245 +322,245 @@ can also be found there.</p>
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">System.Collections.Generic</span><span class="p">;</span>
 
-<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">Kaitai</span>
 <span class="p">{</span>
 
-    <span class="c1">/// &lt;summary&gt;</span>
-    <span class="c1">/// AppleSingle and AppleDouble files are used by certain Mac</span>
-    <span class="c1">/// applications (e.g. Finder) to store Mac-specific file attributes on</span>
-    <span class="c1">/// filesystems that do not support that.</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// Syntactically, both formats are the same, the only difference is how</span>
-    <span class="c1">/// they are being used:</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// * AppleSingle means that only one file will be created on external</span>
-    <span class="c1">///   filesystem that will hold both the data (AKA &amp;quot;data fork&amp;quot; in Apple</span>
-    <span class="c1">///   terminology), and the attributes (AKA &amp;quot;resource fork&amp;quot;).</span>
-    <span class="c1">/// * AppleDouble means that two files will be created: a normal file</span>
-    <span class="c1">///   that keeps the data (&amp;quot;data fork&amp;quot;) is kept separately from an</span>
-    <span class="c1">///   auxiliary file that contains attributes (&amp;quot;resource fork&amp;quot;), which</span>
-    <span class="c1">///   is kept with the same name, but starting with an extra dot and</span>
-    <span class="c1">///   underscore `._` to keep it hidden.</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// In modern practice (Mac OS X), Finder only uses AppleDouble to keep</span>
-    <span class="c1">/// compatibility with other OSes, as virtually nobody outside of Mac</span>
-    <span class="c1">/// understands how to access data in AppleSingle container.</span>
-    <span class="c1">/// &lt;/summary&gt;</span>
-    <span class="c1">/// &lt;remarks&gt;</span>
-    <span class="c1">/// Reference: &lt;a href=&quot;http://kaiser-edv.de/documents/AppleSingle_AppleDouble.pdf&quot;&gt;Source&lt;/a&gt;</span>
-    <span class="c1">/// &lt;/remarks&gt;</span>
-    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">AppleSingleDouble</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">{</span>
-        <span class="k">public</span> <span class="k">static</span> <span class="n">AppleSingleDouble</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">return</span> <span class="k">new</span> <span class="nf">AppleSingleDouble</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-        <span class="p">}</span>
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// AppleSingle and AppleDouble files are used by certain Mac</span>
+<span class="w">    </span><span class="c1">/// applications (e.g. Finder) to store Mac-specific file attributes on</span>
+<span class="w">    </span><span class="c1">/// filesystems that do not support that.</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// Syntactically, both formats are the same, the only difference is how</span>
+<span class="w">    </span><span class="c1">/// they are being used:</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// * AppleSingle means that only one file will be created on external</span>
+<span class="w">    </span><span class="c1">///   filesystem that will hold both the data (AKA &amp;quot;data fork&amp;quot; in Apple</span>
+<span class="w">    </span><span class="c1">///   terminology), and the attributes (AKA &amp;quot;resource fork&amp;quot;).</span>
+<span class="w">    </span><span class="c1">/// * AppleDouble means that two files will be created: a normal file</span>
+<span class="w">    </span><span class="c1">///   that keeps the data (&amp;quot;data fork&amp;quot;) is kept separately from an</span>
+<span class="w">    </span><span class="c1">///   auxiliary file that contains attributes (&amp;quot;resource fork&amp;quot;), which</span>
+<span class="w">    </span><span class="c1">///   is kept with the same name, but starting with an extra dot and</span>
+<span class="w">    </span><span class="c1">///   underscore `._` to keep it hidden.</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// In modern practice (Mac OS X), Finder only uses AppleDouble to keep</span>
+<span class="w">    </span><span class="c1">/// compatibility with other OSes, as virtually nobody outside of Mac</span>
+<span class="w">    </span><span class="c1">/// understands how to access data in AppleSingle container.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;http://kaiser-edv.de/documents/AppleSingle_AppleDouble.pdf&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">AppleSingleDouble</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">AppleSingleDouble</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">AppleSingleDouble</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
 
 
-        <span class="k">public</span> <span class="k">enum</span> <span class="n">FileType</span>
-        <span class="p">{</span>
-            <span class="n">AppleSingle</span> <span class="p">=</span> <span class="m">333312</span><span class="p">,</span>
-            <span class="n">AppleDouble</span> <span class="p">=</span> <span class="m">333319</span><span class="p">,</span>
-        <span class="p">}</span>
-        <span class="k">public</span> <span class="nf">AppleSingleDouble</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">AppleSingleDouble</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
-            <span class="n">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-        <span class="p">{</span>
-            <span class="n">_magic</span> <span class="p">=</span> <span class="p">((</span><span class="n">FileType</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">());</span>
-            <span class="n">_version</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
-            <span class="n">_reserved</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">16</span><span class="p">);</span>
-            <span class="n">_numEntries</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
-            <span class="n">_entries</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Entry</span><span class="p">&gt;();</span>
-            <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumEntries</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
-            <span class="p">{</span>
-                <span class="n">_entries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Entry</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Entry</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">Entry</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">Entry</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="n">FileType</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">AppleSingle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">333312</span><span class="p">,</span>
+<span class="w">            </span><span class="n">AppleDouble</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">333319</span><span class="p">,</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="nf">AppleSingleDouble</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">AppleSingleDouble</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">            </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">            </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">_magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">FileType</span><span class="p">)</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">());</span>
+<span class="w">            </span><span class="n">_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+<span class="w">            </span><span class="n">_reserved</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">16</span><span class="p">);</span>
+<span class="w">            </span><span class="n">_numEntries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+<span class="w">            </span><span class="n">_entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Entry</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">NumEntries</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_entries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Entry</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Entry</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">Entry</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">Entry</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
 
-            <span class="k">public</span> <span class="k">enum</span> <span class="n">Types</span>
-            <span class="p">{</span>
-                <span class="n">DataFork</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
-                <span class="n">ResourceFork</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
-                <span class="n">RealName</span> <span class="p">=</span> <span class="m">3</span><span class="p">,</span>
-                <span class="n">Comment</span> <span class="p">=</span> <span class="m">4</span><span class="p">,</span>
-                <span class="n">IconBw</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span>
-                <span class="n">IconColor</span> <span class="p">=</span> <span class="m">6</span><span class="p">,</span>
-                <span class="n">FileDatesInfo</span> <span class="p">=</span> <span class="m">8</span><span class="p">,</span>
-                <span class="n">FinderInfo</span> <span class="p">=</span> <span class="m">9</span><span class="p">,</span>
-                <span class="n">MacintoshFileInfo</span> <span class="p">=</span> <span class="m">10</span><span class="p">,</span>
-                <span class="n">ProdosFileInfo</span> <span class="p">=</span> <span class="m">11</span><span class="p">,</span>
-                <span class="n">MsdosFileInfo</span> <span class="p">=</span> <span class="m">12</span><span class="p">,</span>
-                <span class="n">AfpShortName</span> <span class="p">=</span> <span class="m">13</span><span class="p">,</span>
-                <span class="n">AfpFileInfo</span> <span class="p">=</span> <span class="m">14</span><span class="p">,</span>
-                <span class="n">AfpDirectoryId</span> <span class="p">=</span> <span class="m">15</span><span class="p">,</span>
-            <span class="p">}</span>
-            <span class="k">public</span> <span class="nf">Entry</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">AppleSingleDouble</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">AppleSingleDouble</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">f_body</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_type</span> <span class="p">=</span> <span class="p">((</span><span class="n">Types</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">());</span>
-                <span class="n">_ofsBody</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
-                <span class="n">_lenBody</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_body</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">object</span> <span class="n">_body</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">object</span> <span class="n">Body</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_body</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_body</span><span class="p">;</span>
-                    <span class="kt">long</span> <span class="n">_pos</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
-                    <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsBody</span><span class="p">);</span>
-                    <span class="k">switch</span> <span class="p">(</span><span class="n">Type</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="k">case</span> <span class="n">Types</span><span class="p">.</span><span class="n">FinderInfo</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenBody</span><span class="p">);</span>
-                        <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                        <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">FinderInfo</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="n">_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenBody</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="p">}</span>
-                    <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
-                    <span class="n">f_body</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_body</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="n">Types</span> <span class="n">_type</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_ofsBody</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_lenBody</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">AppleSingleDouble</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">AppleSingleDouble</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_body</span><span class="p">;</span>
-            <span class="k">public</span> <span class="n">Types</span> <span class="n">Type</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_type</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">uint</span> <span class="n">OfsBody</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ofsBody</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">uint</span> <span class="n">LenBody</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenBody</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">AppleSingleDouble</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">AppleSingleDouble</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawBody</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_body</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="n">Types</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">DataFork</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">,</span>
+<span class="w">                </span><span class="n">ResourceFork</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">,</span>
+<span class="w">                </span><span class="n">RealName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span><span class="p">,</span>
+<span class="w">                </span><span class="n">Comment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">,</span>
+<span class="w">                </span><span class="n">IconBw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span><span class="p">,</span>
+<span class="w">                </span><span class="n">IconColor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">6</span><span class="p">,</span>
+<span class="w">                </span><span class="n">FileDatesInfo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">8</span><span class="p">,</span>
+<span class="w">                </span><span class="n">FinderInfo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">9</span><span class="p">,</span>
+<span class="w">                </span><span class="n">MacintoshFileInfo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span>
+<span class="w">                </span><span class="n">ProdosFileInfo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">11</span><span class="p">,</span>
+<span class="w">                </span><span class="n">MsdosFileInfo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">12</span><span class="p">,</span>
+<span class="w">                </span><span class="n">AfpShortName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">13</span><span class="p">,</span>
+<span class="w">                </span><span class="n">AfpFileInfo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">14</span><span class="p">,</span>
+<span class="w">                </span><span class="n">AfpDirectoryId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">15</span><span class="p">,</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">Entry</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">AppleSingleDouble</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">AppleSingleDouble</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">Types</span><span class="p">)</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">());</span>
+<span class="w">                </span><span class="n">_ofsBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_lenBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_body</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">object</span><span class="w"> </span><span class="n">_body</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">object</span><span class="w"> </span><span class="n">Body</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_body</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_body</span><span class="p">;</span>
+<span class="w">                    </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsBody</span><span class="p">);</span>
+<span class="w">                    </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">Type</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">case</span><span class="w"> </span><span class="n">Types</span><span class="p">.</span><span class="n">FinderInfo</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenBody</span><span class="p">);</span>
+<span class="w">                        </span><span class="kt">var</span><span class="w"> </span><span class="n">io___raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+<span class="w">                        </span><span class="n">_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">FinderInfo</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">default</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenBody</span><span class="p">);</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">f_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_body</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">Types</span><span class="w"> </span><span class="n">_type</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">_ofsBody</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">_lenBody</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">AppleSingleDouble</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">AppleSingleDouble</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">__raw_body</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">Types</span><span class="w"> </span><span class="n">Type</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_type</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">OfsBody</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_ofsBody</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">LenBody</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_lenBody</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">AppleSingleDouble</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">AppleSingleDouble</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">M_RawBody</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">__raw_body</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
 
-        <span class="c1">/// &lt;summary&gt;</span>
-        <span class="c1">/// Information specific to Finder</span>
-        <span class="c1">/// &lt;/summary&gt;</span>
-        <span class="c1">/// &lt;remarks&gt;</span>
-        <span class="c1">/// Reference: older Inside Macintosh, Volume II page 84 or Volume IV page 104.</span>
-        <span class="c1">/// &lt;/remarks&gt;</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">FinderInfo</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">FinderInfo</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">FinderInfo</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">        </span><span class="c1">/// Information specific to Finder</span>
+<span class="w">        </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">        </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">        </span><span class="c1">/// Reference: older Inside Macintosh, Volume II page 84 or Volume IV page 104.</span>
+<span class="w">        </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">FinderInfo</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">FinderInfo</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">FinderInfo</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">FinderInfo</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">AppleSingleDouble</span><span class="p">.</span><span class="n">Entry</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">AppleSingleDouble</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_fileType</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
-                <span class="n">_fileCreator</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
-                <span class="n">_flags</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
-                <span class="n">_location</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Point</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                <span class="n">_folderId</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_fileType</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_fileCreator</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_flags</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">Point</span> <span class="n">_location</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_folderId</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">AppleSingleDouble</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">AppleSingleDouble</span><span class="p">.</span><span class="n">Entry</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">FileType</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_fileType</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">FileCreator</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_fileCreator</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Flags</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_flags</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">FinderInfo</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">AppleSingleDouble</span><span class="p">.</span><span class="n">Entry</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">AppleSingleDouble</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_fileType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+<span class="w">                </span><span class="n">_fileCreator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+<span class="w">                </span><span class="n">_flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_location</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Point</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                </span><span class="n">_folderId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_fileType</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_fileCreator</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">_flags</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">Point</span><span class="w"> </span><span class="n">_location</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">_folderId</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">AppleSingleDouble</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">AppleSingleDouble</span><span class="p">.</span><span class="n">Entry</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">FileType</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_fileType</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">FileCreator</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_fileCreator</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">Flags</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_flags</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// File icon&#39;s coordinates when displaying this folder.</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="n">Point</span> <span class="n">Location</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_location</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// File icon&#39;s coordinates when displaying this folder.</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">Point</span><span class="w"> </span><span class="n">Location</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_location</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// File folder ID (=window).</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">FolderId</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_folderId</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">AppleSingleDouble</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">AppleSingleDouble</span><span class="p">.</span><span class="n">Entry</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// File folder ID (=window).</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">FolderId</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_folderId</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">AppleSingleDouble</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">AppleSingleDouble</span><span class="p">.</span><span class="n">Entry</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
 
-        <span class="c1">/// &lt;summary&gt;</span>
-        <span class="c1">/// Specifies 2D coordinate in QuickDraw grid.</span>
-        <span class="c1">/// &lt;/summary&gt;</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Point</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">Point</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">Point</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">        </span><span class="c1">/// Specifies 2D coordinate in QuickDraw grid.</span>
+<span class="w">        </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Point</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">Point</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">Point</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">Point</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">AppleSingleDouble</span><span class="p">.</span><span class="n">FinderInfo</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">AppleSingleDouble</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_x</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
-                <span class="n">_y</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_x</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_y</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">AppleSingleDouble</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">AppleSingleDouble</span><span class="p">.</span><span class="n">FinderInfo</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">X</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_x</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Y</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_y</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">AppleSingleDouble</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">AppleSingleDouble</span><span class="p">.</span><span class="n">FinderInfo</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="n">FileType</span> <span class="n">_magic</span><span class="p">;</span>
-        <span class="k">private</span> <span class="kt">uint</span> <span class="n">_version</span><span class="p">;</span>
-        <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_reserved</span><span class="p">;</span>
-        <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_numEntries</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Entry</span><span class="p">&gt;</span> <span class="n">_entries</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">AppleSingleDouble</span> <span class="n">m_root</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
-        <span class="k">public</span> <span class="n">FileType</span> <span class="n">Magic</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_magic</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="kt">uint</span> <span class="n">Version</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_version</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">Point</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">AppleSingleDouble</span><span class="p">.</span><span class="n">FinderInfo</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">AppleSingleDouble</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">_x</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">_y</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">AppleSingleDouble</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">AppleSingleDouble</span><span class="p">.</span><span class="n">FinderInfo</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">X</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_x</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">Y</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_y</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">AppleSingleDouble</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">AppleSingleDouble</span><span class="p">.</span><span class="n">FinderInfo</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">FileType</span><span class="w"> </span><span class="n">_magic</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">_version</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_reserved</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">_numEntries</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Entry</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_entries</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">AppleSingleDouble</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">FileType</span><span class="w"> </span><span class="n">Magic</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_magic</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">Version</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_version</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 
-        <span class="c1">/// &lt;summary&gt;</span>
-        <span class="c1">/// Must be all 0.</span>
-        <span class="c1">/// &lt;/summary&gt;</span>
-        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Reserved</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_reserved</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="kt">ushort</span> <span class="n">NumEntries</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numEntries</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Entry</span><span class="p">&gt;</span> <span class="n">Entries</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_entries</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">AppleSingleDouble</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-    <span class="p">}</span>
+<span class="w">        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">        </span><span class="c1">/// Must be all 0.</span>
+<span class="w">        </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Reserved</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_reserved</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">NumEntries</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_numEntries</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Entry</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Entries</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_entries</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">AppleSingleDouble</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 

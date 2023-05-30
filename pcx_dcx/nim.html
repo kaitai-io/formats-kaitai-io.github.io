@@ -271,82 +271,82 @@ superseded with multi-page TIFFs and PDFs since then.</p>
         </div>
 
         <div class="row">
-            <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">kaitai_struct_nim_runtime</span>
-<span class="kn">import</span> <span class="n">options</span>
-<span class="kn">import</span> <span class="n">pcx</span>
+            <div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="n">kaitai_struct_nim_runtime</span>
+<span class="kn">import</span><span class="w"> </span><span class="n">options</span>
+<span class="kn">import</span><span class="w"> </span><span class="n">pcx</span>
 
-<span class="kn">import</span> <span class="s">&quot;pcx&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="s">&quot;pcx&quot;</span>
 <span class="k">type</span>
-  <span class="n">PcxDcx</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">files</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">PcxDcx_PcxOffset</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-  <span class="n">PcxDcx_PcxOffset</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">ofsBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">PcxDcx</span>
-    <span class="p">`</span><span class="n">bodyInst</span><span class="p">`:</span> <span class="n">Pcx</span>
-    <span class="p">`</span><span class="n">bodyInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+<span class="w">  </span><span class="n">PcxDcx</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">files</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">PcxDcx_PcxOffset</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">  </span><span class="n">PcxDcx_PcxOffset</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">ofsBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">PcxDcx</span>
+<span class="w">    </span><span class="p">`</span><span class="n">bodyInst</span><span class="p">`:</span><span class="w"> </span><span class="n">Pcx</span>
+<span class="w">    </span><span class="p">`</span><span class="n">bodyInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
 
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcxDcx], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): PcxDcx</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcxDcx_PcxOffset], io: KaitaiStream, root: KaitaiStruct, parent: PcxDcx): PcxDcx_PcxOffset</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcxDcx], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): PcxDcx</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcxDcx_PcxOffset], io: KaitaiStream, root: KaitaiStruct, parent: PcxDcx): PcxDcx_PcxOffset</span>
 
-<span class="k">proc </span><span class="nf">body</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PcxDcx_PcxOffset</span><span class="p">):</span> <span class="n">Pcx</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">body</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">PcxDcx_PcxOffset</span><span class="p">):</span><span class="w"> </span><span class="n">Pcx</span>
 
 
 <span class="sd">##[</span>
-<span class="n">DCX</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">simple</span> <span class="n">extension</span> <span class="k">of</span> <span class="n">PCX</span> <span class="n">image</span> <span class="n">format</span> <span class="n">allowing</span> <span class="n">to</span> <span class="n">bundle</span>
-<span class="n">many</span> <span class="n">PCX</span> <span class="n">images</span> <span class="p">(</span><span class="n">typically</span><span class="p">,</span> <span class="n">pages</span> <span class="k">of</span> <span class="n">a</span> <span class="n">document</span><span class="p">)</span> <span class="ow">in</span> <span class="n">one</span> <span class="n">file</span><span class="p">.</span> <span class="n">It</span> <span class="n">saw</span>
-<span class="n">some</span> <span class="n">limited</span> <span class="n">use</span> <span class="ow">in</span> <span class="n">DOS</span><span class="o">-</span><span class="n">era</span> <span class="n">fax</span> <span class="n">software</span><span class="p">,</span> <span class="n">but</span> <span class="n">was</span> <span class="n">largely</span>
-<span class="n">superseded</span> <span class="n">with</span> <span class="n">multi</span><span class="o">-</span><span class="n">page</span> <span class="n">TIFFs</span> <span class="ow">and</span> <span class="n">PDFs</span> <span class="n">since</span> <span class="n">then</span><span class="p">.</span>
+<span class="sd">DCX is a simple extension of PCX image format allowing to bundle</span>
+<span class="sd">many PCX images (typically, pages of a document) in one file. It saw</span>
+<span class="sd">some limited use in DOS-era fax software, but was largely</span>
+<span class="sd">superseded with multi-page TIFFs and PDFs since then.</span>
 
-<span class="o">]</span><span class="sd">##</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcxDcx], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): PcxDcx =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">PcxDcx</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PcxDcx</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PcxDcx</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcxDcx], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): PcxDcx =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">PcxDcx</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">PcxDcx</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">PcxDcx</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
-  <span class="k">let</span> <span class="n">magicExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">magicExpr</span>
-  <span class="k">block</span><span class="p">:</span>
-    <span class="kd">var</span> <span class="n">i</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="k">while</span> <span class="kp">true</span><span class="p">:</span>
-      <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">PcxDcx_PcxOffset</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">files</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
-      <span class="k">if</span> <span class="n">it</span><span class="p">.</span><span class="n">ofsBody</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">break</span>
-      <span class="n">inc</span> <span class="n">i</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">magicExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">magicExpr</span>
+<span class="w">  </span><span class="k">block</span><span class="p">:</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="n">i</span><span class="p">:</span><span class="w"> </span><span class="nb">int</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="kp">true</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PcxDcx_PcxOffset</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">files</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="n">it</span><span class="p">.</span><span class="n">ofsBody</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">:</span>
+<span class="w">        </span><span class="k">break</span>
+<span class="w">      </span><span class="n">inc</span><span class="w"> </span><span class="n">i</span>
 
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcxDcx], filename: string): PcxDcx =</span>
-  <span class="n">PcxDcx</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcxDcx], filename: string): PcxDcx =</span>
+<span class="w">  </span><span class="n">PcxDcx</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcxDcx_PcxOffset], io: KaitaiStream, root: KaitaiStruct, parent: PcxDcx): PcxDcx_PcxOffset =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">PcxDcx_PcxOffset</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PcxDcx</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">PcxDcx</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcxDcx_PcxOffset], io: KaitaiStream, root: KaitaiStruct, parent: PcxDcx): PcxDcx_PcxOffset =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">PcxDcx_PcxOffset</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">PcxDcx</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">PcxDcx</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
-  <span class="k">let</span> <span class="n">ofsBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">ofsBody</span> <span class="o">=</span> <span class="n">ofsBodyExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">ofsBodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">ofsBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ofsBodyExpr</span>
 
-<span class="k">proc </span><span class="nf">body</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">PcxDcx_PcxOffset</span><span class="p">):</span> <span class="n">Pcx</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInstFlag</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">ofsBody</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
-    <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofsBody</span><span class="p">))</span>
-    <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">Pcx</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-    <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">=</span> <span class="n">bodyInstExpr</span>
-    <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">bodyInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
-  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">body</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">PcxDcx_PcxOffset</span><span class="p">):</span><span class="w"> </span><span class="n">Pcx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">bodyInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">ofsBody</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">:</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofsBody</span><span class="p">))</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">bodyInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Pcx</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bodyInstExpr</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">bodyInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
 
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcxDcx_PcxOffset], filename: string): PcxDcx_PcxOffset =</span>
-  <span class="n">PcxDcx_PcxOffset</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[PcxDcx_PcxOffset], filename: string): PcxDcx_PcxOffset =</span>
+<span class="w">  </span><span class="n">PcxDcx_PcxOffset</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 </pre></div>
 
         </div>

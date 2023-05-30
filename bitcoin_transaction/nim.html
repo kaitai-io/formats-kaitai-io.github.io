@@ -236,332 +236,332 @@ section#format-index .row {
         </div>
 
         <div class="row">
-            <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">kaitai_struct_nim_runtime</span>
-<span class="kn">import</span> <span class="n">options</span>
+            <div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="n">kaitai_struct_nim_runtime</span>
+<span class="kn">import</span><span class="w"> </span><span class="n">options</span>
 
 <span class="k">type</span>
-  <span class="n">BitcoinTransaction</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">version</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">numVins</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
-    <span class="p">`</span><span class="n">vins</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">BitcoinTransaction_Vin</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">numVouts</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
-    <span class="p">`</span><span class="n">vouts</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">BitcoinTransaction_Vout</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">locktime</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-  <span class="n">BitcoinTransaction_Vin</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">txid</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">outputId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">lenScript</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
-    <span class="p">`</span><span class="n">scriptSig</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BitcoinTransaction_Vin_ScriptSignature</span>
-    <span class="p">`</span><span class="n">endOfVin</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BitcoinTransaction</span>
-    <span class="p">`</span><span class="n">rawScriptSig</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-  <span class="n">BitcoinTransaction_Vin_ScriptSignature</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">lenSigStack</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
-    <span class="p">`</span><span class="n">derSig</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BitcoinTransaction_Vin_ScriptSignature_DerSignature</span>
-    <span class="p">`</span><span class="n">sigType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BitcoinTransaction_Vin_ScriptSignature_SighashType</span>
-    <span class="p">`</span><span class="n">lenPubkeyStack</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
-    <span class="p">`</span><span class="n">pubkey</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BitcoinTransaction_Vin_ScriptSignature_PublicKey</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BitcoinTransaction_Vin</span>
-  <span class="n">BitcoinTransaction_Vin_ScriptSignature_SighashType</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
-    <span class="n">sighash_all</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">sighash_none</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="n">sighash_single</span> <span class="o">=</span> <span class="mi">3</span>
-    <span class="n">sighash_anyonecanpay</span> <span class="o">=</span> <span class="mi">80</span>
-  <span class="n">BitcoinTransaction_Vin_ScriptSignature_DerSignature</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">sequence</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">lenSig</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
-    <span class="p">`</span><span class="n">sep1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">lenSigR</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
-    <span class="p">`</span><span class="n">sigR</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">sep2</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">lenSigS</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
-    <span class="p">`</span><span class="n">sigS</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BitcoinTransaction_Vin_ScriptSignature</span>
-  <span class="n">BitcoinTransaction_Vin_ScriptSignature_PublicKey</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="k">type</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
-    <span class="p">`</span><span class="n">x</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">y</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BitcoinTransaction_Vin_ScriptSignature</span>
-  <span class="n">BitcoinTransaction_Vout</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">amount</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
-    <span class="p">`</span><span class="n">lenScript</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
-    <span class="p">`</span><span class="n">scriptPubKey</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">BitcoinTransaction</span>
+<span class="w">  </span><span class="n">BitcoinTransaction</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">version</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">numVins</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">vins</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">BitcoinTransaction_Vin</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">numVouts</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">vouts</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">BitcoinTransaction_Vout</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">locktime</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">  </span><span class="n">BitcoinTransaction_Vin</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">txid</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">outputId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lenScript</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">scriptSig</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">BitcoinTransaction_Vin_ScriptSignature</span>
+<span class="w">    </span><span class="p">`</span><span class="n">endOfVin</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">BitcoinTransaction</span>
+<span class="w">    </span><span class="p">`</span><span class="n">rawScriptSig</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">  </span><span class="n">BitcoinTransaction_Vin_ScriptSignature</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lenSigStack</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">derSig</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">BitcoinTransaction_Vin_ScriptSignature_DerSignature</span>
+<span class="w">    </span><span class="p">`</span><span class="n">sigType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">BitcoinTransaction_Vin_ScriptSignature_SighashType</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lenPubkeyStack</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">pubkey</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">BitcoinTransaction_Vin_ScriptSignature_PublicKey</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">BitcoinTransaction_Vin</span>
+<span class="w">  </span><span class="n">BitcoinTransaction_Vin_ScriptSignature_SighashType</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">enum</span>
+<span class="w">    </span><span class="n">sighash_all</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="n">sighash_none</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">    </span><span class="n">sighash_single</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">    </span><span class="n">sighash_anyonecanpay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">80</span>
+<span class="w">  </span><span class="n">BitcoinTransaction_Vin_ScriptSignature_DerSignature</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">sequence</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lenSig</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">sep1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lenSigR</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">sigR</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">sep2</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lenSigS</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">sigS</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">BitcoinTransaction_Vin_ScriptSignature</span>
+<span class="w">  </span><span class="n">BitcoinTransaction_Vin_ScriptSignature_PublicKey</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="k">type</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">x</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">y</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">BitcoinTransaction_Vin_ScriptSignature</span>
+<span class="w">  </span><span class="n">BitcoinTransaction_Vout</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">amount</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint64</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lenScript</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">scriptPubKey</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">BitcoinTransaction</span>
 
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): BitcoinTransaction</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction_Vin], io: KaitaiStream, root: KaitaiStruct, parent: BitcoinTransaction): BitcoinTransaction_Vin</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction_Vin_ScriptSignature], io: KaitaiStream, root: KaitaiStruct, parent: BitcoinTransaction_Vin): BitcoinTransaction_Vin_ScriptSignature</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction_Vin_ScriptSignature_DerSignature], io: KaitaiStream, root: KaitaiStruct, parent: BitcoinTransaction_Vin_ScriptSignature): BitcoinTransaction_Vin_ScriptSignature_DerSignature</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction_Vin_ScriptSignature_PublicKey], io: KaitaiStream, root: KaitaiStruct, parent: BitcoinTransaction_Vin_ScriptSignature): BitcoinTransaction_Vin_ScriptSignature_PublicKey</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction_Vout], io: KaitaiStream, root: KaitaiStruct, parent: BitcoinTransaction): BitcoinTransaction_Vout</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): BitcoinTransaction</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction_Vin], io: KaitaiStream, root: KaitaiStruct, parent: BitcoinTransaction): BitcoinTransaction_Vin</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction_Vin_ScriptSignature], io: KaitaiStream, root: KaitaiStruct, parent: BitcoinTransaction_Vin): BitcoinTransaction_Vin_ScriptSignature</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction_Vin_ScriptSignature_DerSignature], io: KaitaiStream, root: KaitaiStruct, parent: BitcoinTransaction_Vin_ScriptSignature): BitcoinTransaction_Vin_ScriptSignature_DerSignature</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction_Vin_ScriptSignature_PublicKey], io: KaitaiStream, root: KaitaiStruct, parent: BitcoinTransaction_Vin_ScriptSignature): BitcoinTransaction_Vin_ScriptSignature_PublicKey</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction_Vout], io: KaitaiStream, root: KaitaiStruct, parent: BitcoinTransaction): BitcoinTransaction_Vout</span>
 
 
 
 <span class="sd">##[</span>
-<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://bitcoin.org/en/developer-guide#transactions</span>
-<span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">en</span><span class="p">.</span><span class="n">bitcoin</span><span class="p">.</span><span class="n">it</span><span class="o">/</span><span class="n">wiki</span><span class="o">/</span><span class="n">Transaction</span>
-<span class="s">&quot;&gt;Source&lt;/a&gt;</span>
-<span class="o">]</span><span class="sd">##</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): BitcoinTransaction =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">BitcoinTransaction</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">BitcoinTransaction</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">BitcoinTransaction</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="sd">@see &lt;a href=&quot;https://bitcoin.org/en/developer-guide#transactions</span>
+<span class="sd">https://en.bitcoin.it/wiki/Transaction</span>
+<span class="sd">&quot;&gt;Source&lt;/a&gt;</span>
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): BitcoinTransaction =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">BitcoinTransaction</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">BitcoinTransaction</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">BitcoinTransaction</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
 
-  <span class="sd">##[</span>
-  <span class="n">Version</span> <span class="n">number</span><span class="p">.</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Version number.</span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">versionExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">versionExpr</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">versionExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">versionExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Number</span> <span class="k">of</span> <span class="n">input</span> <span class="n">transactions</span><span class="p">.</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Number of input transactions.</span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">numVinsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">numVins</span> <span class="o">=</span> <span class="n">numVinsExpr</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">numVinsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">numVins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">numVinsExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Input</span> <span class="n">transactions</span><span class="p">.</span>
-<span class="n">An</span> <span class="n">input</span> <span class="n">refers</span> <span class="n">to</span> <span class="n">an</span> <span class="n">output</span> <span class="kn">from</span> <span class="n">a</span> <span class="n">previous</span> <span class="n">transaction</span><span class="p">.</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Input transactions.</span>
+<span class="sd">An input refers to an output from a previous transaction.</span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">numVins</span><span class="p">):</span>
-    <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">BitcoinTransaction_Vin</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-    <span class="n">this</span><span class="p">.</span><span class="n">vins</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">..</span><span class="o">&lt;</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">numVins</span><span class="p">):</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BitcoinTransaction_Vin</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">vins</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Number</span> <span class="k">of</span> <span class="n">output</span> <span class="n">transactions</span><span class="p">.</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Number of output transactions.</span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">numVoutsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">numVouts</span> <span class="o">=</span> <span class="n">numVoutsExpr</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">numVoutsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">numVouts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">numVoutsExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Output</span> <span class="n">transactions</span><span class="p">.</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Output transactions.</span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">numVouts</span><span class="p">):</span>
-    <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">BitcoinTransaction_Vout</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-    <span class="n">this</span><span class="p">.</span><span class="n">vouts</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">locktimeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">locktime</span> <span class="o">=</span> <span class="n">locktimeExpr</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">..</span><span class="o">&lt;</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">numVouts</span><span class="p">):</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BitcoinTransaction_Vout</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">vouts</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">locktimeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">locktime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">locktimeExpr</span>
 
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction], filename: string): BitcoinTransaction =</span>
-  <span class="n">BitcoinTransaction</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction], filename: string): BitcoinTransaction =</span>
+<span class="w">  </span><span class="n">BitcoinTransaction</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction_Vin], io: KaitaiStream, root: KaitaiStruct, parent: BitcoinTransaction): BitcoinTransaction_Vin =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">BitcoinTransaction_Vin</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">BitcoinTransaction</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">BitcoinTransaction</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
-
-
-  <span class="sd">##[</span>
-  <span class="n">Previous</span> <span class="n">transaction</span> <span class="n">hash</span><span class="p">.</span>
-
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">txidExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">txid</span> <span class="o">=</span> <span class="n">txidExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="n">ID</span> <span class="n">indexing</span> <span class="n">an</span> <span class="n">ouput</span> <span class="k">of</span> <span class="n">the</span> <span class="n">transaction</span> <span class="n">refered</span> <span class="n">by</span> <span class="n">txid</span><span class="p">.</span>
-<span class="n">This</span> <span class="n">output</span> <span class="n">will</span> <span class="n">be</span> <span class="n">used</span> <span class="k">as</span> <span class="n">an</span> <span class="n">input</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">present</span> <span class="n">transaction</span><span class="p">.</span>
-
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">outputIdExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">outputId</span> <span class="o">=</span> <span class="n">outputIdExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="n">ScriptSig</span><span class="sc">&#39;s length.</span>
-
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">lenScriptExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">lenScript</span> <span class="o">=</span> <span class="n">lenScriptExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="n">ScriptSig</span><span class="p">.</span>
-
-  <span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://en.bitcoin.it/wiki/Transaction#Input</span>
-<span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">en</span><span class="p">.</span><span class="n">bitcoin</span><span class="p">.</span><span class="n">it</span><span class="o">/</span><span class="n">wiki</span><span class="o">/</span><span class="n">Script</span>
-<span class="s">&quot;&gt;Source&lt;/a&gt;</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">rawScriptSigExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenScript</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">rawScriptSig</span> <span class="o">=</span> <span class="n">rawScriptSigExpr</span>
-  <span class="k">let</span> <span class="n">rawScriptSigIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawScriptSigExpr</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">scriptSigExpr</span> <span class="o">=</span> <span class="n">BitcoinTransaction_Vin_ScriptSignature</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawScriptSigIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">scriptSig</span> <span class="o">=</span> <span class="n">scriptSigExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="n">Magic</span> <span class="n">number</span> <span class="n">indicating</span> <span class="n">the</span> <span class="k">end</span> <span class="k">of</span> <span class="n">the</span> <span class="n">current</span> <span class="n">input</span><span class="p">.</span>
-
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">endOfVinExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">endOfVin</span> <span class="o">=</span> <span class="n">endOfVinExpr</span>
-
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction_Vin], filename: string): BitcoinTransaction_Vin =</span>
-  <span class="n">BitcoinTransaction_Vin</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
-
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction_Vin_ScriptSignature], io: KaitaiStream, root: KaitaiStruct, parent: BitcoinTransaction_Vin): BitcoinTransaction_Vin_ScriptSignature =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">BitcoinTransaction_Vin_ScriptSignature</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">BitcoinTransaction</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">BitcoinTransaction</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
-
-  <span class="k">let</span> <span class="n">lenSigStackExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">lenSigStack</span> <span class="o">=</span> <span class="n">lenSigStackExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="n">DER</span><span class="o">-</span><span class="n">encoded</span> <span class="n">ECDSA</span> <span class="n">signature</span><span class="p">.</span>
-
-  <span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://en.wikipedia.org/wiki/X.690#DER_encoding</span>
-<span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">en</span><span class="p">.</span><span class="n">wikipedia</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">wiki</span><span class="o">/</span><span class="n">Elliptic_Curve_Digital_Signature_Algorithm</span>
-<span class="s">&quot;&gt;Source&lt;/a&gt;</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">derSigExpr</span> <span class="o">=</span> <span class="n">BitcoinTransaction_Vin_ScriptSignature_DerSignature</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">derSig</span> <span class="o">=</span> <span class="n">derSigExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="k">Type</span> <span class="k">of</span> <span class="n">signature</span><span class="p">.</span>
-
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">sigTypeExpr</span> <span class="o">=</span> <span class="n">BitcoinTransaction_Vin_ScriptSignature_SighashType</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">sigType</span> <span class="o">=</span> <span class="n">sigTypeExpr</span>
-  <span class="k">let</span> <span class="n">lenPubkeyStackExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">lenPubkeyStack</span> <span class="o">=</span> <span class="n">lenPubkeyStackExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="n">Public</span> <span class="n">key</span> <span class="p">(</span><span class="n">bitcoin</span> <span class="n">address</span> <span class="k">of</span> <span class="n">the</span> <span class="n">recipient</span><span class="p">).</span>
-
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">pubkeyExpr</span> <span class="o">=</span> <span class="n">BitcoinTransaction_Vin_ScriptSignature_PublicKey</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">pubkey</span> <span class="o">=</span> <span class="n">pubkeyExpr</span>
-
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction_Vin_ScriptSignature], filename: string): BitcoinTransaction_Vin_ScriptSignature =</span>
-  <span class="n">BitcoinTransaction_Vin_ScriptSignature</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
-
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction_Vin_ScriptSignature_DerSignature], io: KaitaiStream, root: KaitaiStruct, parent: BitcoinTransaction_Vin_ScriptSignature): BitcoinTransaction_Vin_ScriptSignature_DerSignature =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">BitcoinTransaction_Vin_ScriptSignature_DerSignature</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">BitcoinTransaction</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">BitcoinTransaction</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
-
-  <span class="k">let</span> <span class="n">sequenceExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="n">sequenceExpr</span>
-  <span class="k">let</span> <span class="n">lenSigExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">lenSig</span> <span class="o">=</span> <span class="n">lenSigExpr</span>
-  <span class="k">let</span> <span class="n">sep1Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">sep1</span> <span class="o">=</span> <span class="n">sep1Expr</span>
-
-  <span class="sd">##[</span>
-  <span class="sc">&#39;r&#39;</span> <span class="n">value</span><span class="sc">&#39;s length.</span>
-
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">lenSigRExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">lenSigR</span> <span class="o">=</span> <span class="n">lenSigRExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="sc">&#39;r&#39;</span> <span class="n">value</span> <span class="k">of</span> <span class="n">the</span> <span class="n">ECDSA</span> <span class="n">signature</span><span class="p">.</span>
-
-  <span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">sigRExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenSigR</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">sigR</span> <span class="o">=</span> <span class="n">sigRExpr</span>
-  <span class="k">let</span> <span class="n">sep2Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">sep2</span> <span class="o">=</span> <span class="n">sep2Expr</span>
-
-  <span class="sd">##[</span>
-  <span class="sc">&#39;s&#39;</span> <span class="n">value</span><span class="sc">&#39;s length.</span>
-
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">lenSigSExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">lenSigS</span> <span class="o">=</span> <span class="n">lenSigSExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="sc">&#39;s&#39;</span> <span class="n">value</span> <span class="k">of</span> <span class="n">the</span> <span class="n">ECDSA</span> <span class="n">signature</span><span class="p">.</span>
-
-  <span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">sigSExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenSigS</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">sigS</span> <span class="o">=</span> <span class="n">sigSExpr</span>
-
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction_Vin_ScriptSignature_DerSignature], filename: string): BitcoinTransaction_Vin_ScriptSignature_DerSignature =</span>
-  <span class="n">BitcoinTransaction_Vin_ScriptSignature_DerSignature</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
-
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction_Vin_ScriptSignature_PublicKey], io: KaitaiStream, root: KaitaiStruct, parent: BitcoinTransaction_Vin_ScriptSignature): BitcoinTransaction_Vin_ScriptSignature_PublicKey =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">BitcoinTransaction_Vin_ScriptSignature_PublicKey</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">BitcoinTransaction</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">BitcoinTransaction</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
-
-  <span class="k">let</span> <span class="n">typeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="k">type</span> <span class="o">=</span> <span class="n">typeExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="sc">&#39;x&#39;</span> <span class="n">coordinate</span> <span class="k">of</span> <span class="n">the</span> <span class="n">public</span> <span class="n">key</span> <span class="n">on</span> <span class="n">the</span> <span class="n">elliptic</span> <span class="n">curve</span><span class="p">.</span>
-
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">xExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">xExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="sc">&#39;y&#39;</span> <span class="n">coordinate</span> <span class="k">of</span> <span class="n">the</span> <span class="n">public</span> <span class="n">key</span> <span class="n">on</span> <span class="n">the</span> <span class="n">elliptic</span> <span class="n">curve</span><span class="p">.</span>
-
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">yExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">yExpr</span>
-
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction_Vin_ScriptSignature_PublicKey], filename: string): BitcoinTransaction_Vin_ScriptSignature_PublicKey =</span>
-  <span class="n">BitcoinTransaction_Vin_ScriptSignature_PublicKey</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
-
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction_Vout], io: KaitaiStream, root: KaitaiStruct, parent: BitcoinTransaction): BitcoinTransaction_Vout =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">BitcoinTransaction_Vout</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">BitcoinTransaction</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">BitcoinTransaction</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction_Vin], io: KaitaiStream, root: KaitaiStruct, parent: BitcoinTransaction): BitcoinTransaction_Vin =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">BitcoinTransaction_Vin</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">BitcoinTransaction</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">BitcoinTransaction</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
 
-  <span class="sd">##[</span>
-  <span class="n">Number</span> <span class="k">of</span> <span class="n">Satoshis</span> <span class="n">to</span> <span class="n">be</span> <span class="n">transfered</span><span class="p">.</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Previous transaction hash.</span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">amountExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU8le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">amount</span> <span class="o">=</span> <span class="n">amountExpr</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">txidExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">txid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">txidExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">ScriptPubKey</span><span class="sc">&#39;s length.</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  ID indexing an ouput of the transaction refered by txid.</span>
+<span class="sd">This output will be used as an input in the present transaction.</span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">lenScriptExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">lenScript</span> <span class="o">=</span> <span class="n">lenScriptExpr</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">outputIdExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">outputId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">outputIdExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">ScriptPubKey</span><span class="p">.</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  ScriptSig&#39;s length.</span>
 
-  <span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://en.bitcoin.it/wiki/Transaction#Output</span>
-<span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">en</span><span class="p">.</span><span class="n">bitcoin</span><span class="p">.</span><span class="n">it</span><span class="o">/</span><span class="n">wiki</span><span class="o">/</span><span class="n">Script</span>
-<span class="s">&quot;&gt;Source&lt;/a&gt;</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">scriptPubKeyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenScript</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">scriptPubKey</span> <span class="o">=</span> <span class="n">scriptPubKeyExpr</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenScriptExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenScript</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenScriptExpr</span>
 
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction_Vout], filename: string): BitcoinTransaction_Vout =</span>
-  <span class="n">BitcoinTransaction_Vout</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  ScriptSig.</span>
+
+<span class="sd">  @see &lt;a href=&quot;https://en.bitcoin.it/wiki/Transaction#Input</span>
+<span class="sd">https://en.bitcoin.it/wiki/Script</span>
+<span class="sd">&quot;&gt;Source&lt;/a&gt;</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawScriptSigExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenScript</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">rawScriptSig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawScriptSigExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawScriptSigIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawScriptSigExpr</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">scriptSigExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BitcoinTransaction_Vin_ScriptSignature</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawScriptSigIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">scriptSig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">scriptSigExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Magic number indicating the end of the current input.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">endOfVinExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">endOfVin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">endOfVinExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction_Vin], filename: string): BitcoinTransaction_Vin =</span>
+<span class="w">  </span><span class="n">BitcoinTransaction_Vin</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction_Vin_ScriptSignature], io: KaitaiStream, root: KaitaiStruct, parent: BitcoinTransaction_Vin): BitcoinTransaction_Vin_ScriptSignature =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">BitcoinTransaction_Vin_ScriptSignature</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">BitcoinTransaction</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">BitcoinTransaction</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
+
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenSigStackExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenSigStack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenSigStackExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  DER-encoded ECDSA signature.</span>
+
+<span class="sd">  @see &lt;a href=&quot;https://en.wikipedia.org/wiki/X.690#DER_encoding</span>
+<span class="sd">https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm</span>
+<span class="sd">&quot;&gt;Source&lt;/a&gt;</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">derSigExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BitcoinTransaction_Vin_ScriptSignature_DerSignature</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">derSig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">derSigExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Type of signature.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">sigTypeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BitcoinTransaction_Vin_ScriptSignature_SighashType</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">sigType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sigTypeExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenPubkeyStackExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenPubkeyStack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenPubkeyStackExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Public key (bitcoin address of the recipient).</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">pubkeyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BitcoinTransaction_Vin_ScriptSignature_PublicKey</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">pubkey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pubkeyExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction_Vin_ScriptSignature], filename: string): BitcoinTransaction_Vin_ScriptSignature =</span>
+<span class="w">  </span><span class="n">BitcoinTransaction_Vin_ScriptSignature</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction_Vin_ScriptSignature_DerSignature], io: KaitaiStream, root: KaitaiStruct, parent: BitcoinTransaction_Vin_ScriptSignature): BitcoinTransaction_Vin_ScriptSignature_DerSignature =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">BitcoinTransaction_Vin_ScriptSignature_DerSignature</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">BitcoinTransaction</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">BitcoinTransaction</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
+
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">sequenceExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">sequence</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sequenceExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenSigExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenSig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenSigExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">sep1Expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">sep1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sep1Expr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  &#39;r&#39; value&#39;s length.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenSigRExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenSigR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenSigRExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  &#39;r&#39; value of the ECDSA signature.</span>
+
+<span class="sd">  @see &lt;a href=&quot;https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm&quot;&gt;Source&lt;/a&gt;</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">sigRExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenSigR</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">sigR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sigRExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">sep2Expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">sep2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sep2Expr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  &#39;s&#39; value&#39;s length.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenSigSExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenSigS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenSigSExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  &#39;s&#39; value of the ECDSA signature.</span>
+
+<span class="sd">  @see &lt;a href=&quot;https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm&quot;&gt;Source&lt;/a&gt;</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">sigSExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenSigS</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">sigS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sigSExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction_Vin_ScriptSignature_DerSignature], filename: string): BitcoinTransaction_Vin_ScriptSignature_DerSignature =</span>
+<span class="w">  </span><span class="n">BitcoinTransaction_Vin_ScriptSignature_DerSignature</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction_Vin_ScriptSignature_PublicKey], io: KaitaiStream, root: KaitaiStruct, parent: BitcoinTransaction_Vin_ScriptSignature): BitcoinTransaction_Vin_ScriptSignature_PublicKey =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">BitcoinTransaction_Vin_ScriptSignature_PublicKey</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">BitcoinTransaction</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">BitcoinTransaction</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
+
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">typeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="k">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">typeExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  &#39;x&#39; coordinate of the public key on the elliptic curve.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">xExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  &#39;y&#39; coordinate of the public key on the elliptic curve.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">yExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">yExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction_Vin_ScriptSignature_PublicKey], filename: string): BitcoinTransaction_Vin_ScriptSignature_PublicKey =</span>
+<span class="w">  </span><span class="n">BitcoinTransaction_Vin_ScriptSignature_PublicKey</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction_Vout], io: KaitaiStream, root: KaitaiStruct, parent: BitcoinTransaction): BitcoinTransaction_Vout =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">BitcoinTransaction_Vout</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">BitcoinTransaction</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">BitcoinTransaction</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
+
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Number of Satoshis to be transfered.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">amountExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU8le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">amount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">amountExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  ScriptPubKey&#39;s length.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenScriptExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenScript</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenScriptExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  ScriptPubKey.</span>
+
+<span class="sd">  @see &lt;a href=&quot;https://en.bitcoin.it/wiki/Transaction#Output</span>
+<span class="sd">https://en.bitcoin.it/wiki/Script</span>
+<span class="sd">&quot;&gt;Source&lt;/a&gt;</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">scriptPubKeyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenScript</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">scriptPubKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">scriptPubKeyExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[BitcoinTransaction_Vout], filename: string): BitcoinTransaction_Vout =</span>
+<span class="w">  </span><span class="n">BitcoinTransaction_Vout</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 </pre></div>
 
         </div>

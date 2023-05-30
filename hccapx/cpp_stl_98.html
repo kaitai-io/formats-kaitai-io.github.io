@@ -262,23 +262,23 @@ and build them along with your project.</p>
         </ul>
         <div class="tab-content" style="margin-top: 6px">
             <div role="tabpanel" class="tab-pane active" id="example-local-file">
-<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;fstream&gt;</span><span class="cp"></span>
+<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;fstream&gt;</span>
 
-<span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="w"> </span><span class="nf">is</span><span class="p">(</span><span class="s">&quot;path/to/local/file.hccapx&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="o">::</span><span class="n">binary</span><span class="p">);</span><span class="w"></span>
+<span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="w"> </span><span class="n">is</span><span class="p">(</span><span class="s">&quot;path/to/local/file.hccapx&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="o">::</span><span class="n">binary</span><span class="p">);</span>
 </pre></div>
             </div>
             <div role="tabpanel" class="tab-pane" id="example-std-string">
-<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sstream&gt;</span><span class="cp"></span>
+<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sstream&gt;</span>
 
-<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span><span class="w"> </span><span class="nf">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span><span class="w"></span>
+<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span><span class="w"> </span><span class="nf">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
 </pre></div>
             </div>
             <div role="tabpanel" class="tab-pane" id="example-char-ptr">
-<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sstream&gt;</span><span class="cp"></span>
+<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sstream&gt;</span>
 
-<span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">buf</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">};</span><span class="w"></span>
-<span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">str</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="w"> </span><span class="n">buf</span><span class="p">);</span><span class="w"></span>
-<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span><span class="w"> </span><span class="nf">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span><span class="w"></span>
+<span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">buf</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">};</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">str</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="w"> </span><span class="n">buf</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span><span class="w"> </span><span class="nf">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
 </pre></div>
             </div>
         </div>
@@ -287,14 +287,14 @@ and build them along with your project.</p>
 
     <li>We need to wrap our input stream into Kaitai stream:
 
-<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/kaitaistream.h&quot;</span><span class="cp"></span>
+<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/kaitaistream.h&quot;</span>
 
-<span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="w"> </span><span class="nf">ks</span><span class="p">(</span><span class="o">&amp;</span><span class="n">is</span><span class="p">);</span><span class="w"></span>
+<span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="w"> </span><span class="nf">ks</span><span class="p">(</span><span class="o">&amp;</span><span class="n">is</span><span class="p">);</span>
 </pre></div>
     </li>
 
     <li>And finally, we can invoke the parsing:
-<div class="highlight"><pre><span></span><span class="n">hccapx_t</span><span class="w"> </span><span class="nf">data</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ks</span><span class="p">);</span><span class="w"></span>
+<div class="highlight"><pre><span></span><span class="n">hccapx_t</span><span class="w"> </span><span class="nf">data</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ks</span><span class="p">);</span>
 </pre></div>
     </li>
 </ol>
@@ -335,9 +335,9 @@ and build them along with your project.</p>
 
 <span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span><span class="cp"></span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdint.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span>
 
 <span class="cp">#if KAITAI_STRUCT_VERSION &lt; 9000L</span>
 <span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required&quot;</span>
@@ -346,62 +346,62 @@ and build them along with your project.</p>
 <span class="cm">/**</span>
 <span class="cm"> * Native format of Hashcat password &quot;recovery&quot; utility</span>
 <span class="cm"> * \sa https://hashcat.net/wiki/doku.php?id=hccapx Source</span>
-<span class="cm"> */</span><span class="w"></span>
+<span class="cm"> */</span>
 
-<span class="k">class</span> <span class="nc">hccapx_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="k">class</span><span class="w"> </span><span class="nc">hccapx_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
 
-<span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="k">class</span> <span class="nc">hccapx_record_t</span><span class="p">;</span><span class="w"></span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">hccapx_record_t</span><span class="p">;</span>
 
-<span class="w">    </span><span class="n">hccapx_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">hccapx_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="n">hccapx_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">hccapx_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
 
-<span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span><span class="w"></span>
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
 
-<span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="o">~</span><span class="n">hccapx_t</span><span class="p">();</span><span class="w"></span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="o">~</span><span class="n">hccapx_t</span><span class="p">();</span>
 
-<span class="w">    </span><span class="k">class</span> <span class="nc">hccapx_record_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">hccapx_record_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
 
-<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
 
-<span class="w">        </span><span class="n">hccapx_record_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">hccapx_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">hccapx_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="n">hccapx_record_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">hccapx_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">hccapx_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
 
-<span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
-<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span><span class="w"></span>
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
 
-<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="o">~</span><span class="n">hccapx_record_t</span><span class="p">();</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="o">~</span><span class="n">hccapx_record_t</span><span class="p">();</span>
 
-<span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_magic</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_version</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">m_ignore_replay_counter</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">m_message_pair</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_len_essid</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_essid</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_padding1</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_keyver</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_keymic</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_mac_ap</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_nonce_ap</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_mac_station</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_nonce_station</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_len_eapol</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_eapol</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_padding2</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">hccapx_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">hccapx_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_magic</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_version</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">m_ignore_replay_counter</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">m_message_pair</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_len_essid</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_essid</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_padding1</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_keyver</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_keymic</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_mac_ap</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_nonce_ap</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_mac_station</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_nonce_station</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_len_eapol</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_eapol</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_padding2</span><span class="p">;</span>
+<span class="w">        </span><span class="n">hccapx_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">        </span><span class="n">hccapx_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
 
-<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">magic</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_magic</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">magic</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_magic</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
 <span class="w">        </span><span class="cm">/**</span>
 <span class="cm">         * The version number of the .hccapx file format.</span>
-<span class="cm">         */</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">version</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_version</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">version</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_version</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
 <span class="w">        </span><span class="cm">/**</span>
 <span class="cm">         * Indicates if the message pair matching was done based on</span>
@@ -417,8 +417,8 @@ and build them along with your project.</p>
 <span class="cm">         * analysis/statistics. There could be some opportunity to</span>
 <span class="cm">         * implement some further logic based on this particular</span>
 <span class="cm">         * information also within hashcat (in the future).</span>
-<span class="cm">         */</span><span class="w"></span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">ignore_replay_counter</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_ignore_replay_counter</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">ignore_replay_counter</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_ignore_replay_counter</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
 <span class="w">        </span><span class="cm">/**</span>
 <span class="cm">         * The message_pair value describes which messages of the 4-way</span>
@@ -437,64 +437,64 @@ and build them along with your project.</p>
 <span class="cm">         * message 3 and/or message 4 were captured it should be a hard</span>
 <span class="cm">         * evidence that the connection was established and that the</span>
 <span class="cm">         * password the client used was the correct one.</span>
-<span class="cm">         */</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">message_pair</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_message_pair</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">len_essid</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_len_essid</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">essid</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_essid</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">padding1</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_padding1</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">message_pair</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_message_pair</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">len_essid</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_len_essid</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">essid</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_essid</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">padding1</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_padding1</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
 <span class="w">        </span><span class="cm">/**</span>
 <span class="cm">         * The flag used to distinguish WPA from WPA2 ciphers. Value of</span>
 <span class="cm">         * 1 means WPA, other - WPA2.</span>
-<span class="cm">         */</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">keyver</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_keyver</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">keyver</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_keyver</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
 <span class="w">        </span><span class="cm">/**</span>
 <span class="cm">         * The final hash value. MD5 for WPA and SHA-1 for WPA2</span>
 <span class="cm">         * (truncated to 128 bit).</span>
-<span class="cm">         */</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">keymic</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_keymic</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">keymic</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_keymic</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
 <span class="w">        </span><span class="cm">/**</span>
 <span class="cm">         * The BSSID (MAC address) of the access point.</span>
-<span class="cm">         */</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">mac_ap</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_mac_ap</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">mac_ap</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_mac_ap</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
 <span class="w">        </span><span class="cm">/**</span>
 <span class="cm">         * Nonce (random salt) generated by the access point.</span>
-<span class="cm">         */</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">nonce_ap</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_nonce_ap</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">nonce_ap</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_nonce_ap</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
 <span class="w">        </span><span class="cm">/**</span>
 <span class="cm">         * The MAC address of the client connecting to the access point.</span>
-<span class="cm">         */</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">mac_station</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_mac_station</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">mac_station</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_mac_station</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
 <span class="w">        </span><span class="cm">/**</span>
 <span class="cm">         * Nonce (random salt) generated by the client connecting to the access point.</span>
-<span class="cm">         */</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">nonce_station</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_nonce_station</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">nonce_station</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_nonce_station</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
 <span class="w">        </span><span class="cm">/**</span>
 <span class="cm">         * The length of the EAPOL data.</span>
-<span class="cm">         */</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">len_eapol</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_len_eapol</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">eapol</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_eapol</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">padding2</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_padding2</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="n">hccapx_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="n">hccapx_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="p">};</span><span class="w"></span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">len_eapol</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_len_eapol</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">eapol</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_eapol</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">padding2</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_padding2</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">hccapx_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">hccapx_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
 
-<span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">hccapx_record_t</span><span class="o">*&gt;*</span><span class="w"> </span><span class="n">m_records</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">hccapx_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"></span>
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">hccapx_record_t</span><span class="o">*&gt;*</span><span class="w"> </span><span class="n">m_records</span><span class="p">;</span>
+<span class="w">    </span><span class="n">hccapx_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
 
-<span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">hccapx_record_t</span><span class="o">*&gt;*</span><span class="w"> </span><span class="n">records</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_records</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="n">hccapx_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="p">};</span><span class="w"></span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">hccapx_record_t</span><span class="o">*&gt;*</span><span class="w"> </span><span class="n">records</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_records</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">hccapx_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">};</span>
 
 <span class="cp">#endif  </span><span class="c1">// HCCAPX_H_</span>
 </pre></div>
@@ -515,87 +515,87 @@ and build them along with your project.</p>
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;hccapx.h&quot;</span><span class="cp"></span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/exceptions.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;hccapx.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/exceptions.h&quot;</span>
 
-<span class="n">hccapx_t</span><span class="o">::</span><span class="n">hccapx_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">hccapx_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_records</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
+<span class="n">hccapx_t</span><span class="o">::</span><span class="n">hccapx_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">hccapx_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_records</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
 
-<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="p">(...)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">_clean_up</span><span class="p">();</span><span class="w"></span>
-<span class="w">        </span><span class="k">throw</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="p">(...)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="w">        </span><span class="k">throw</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 
-<span class="kt">void</span><span class="w"> </span><span class="n">hccapx_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_records</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">hccapx_record_t</span><span class="o">*&gt;</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">            </span><span class="n">m_records</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">hccapx_record_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span><span class="w"></span>
-<span class="w">            </span><span class="n">i</span><span class="o">++</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">void</span><span class="w"> </span><span class="n">hccapx_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_records</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">hccapx_record_t</span><span class="o">*&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">m_records</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">hccapx_record_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
+<span class="w">            </span><span class="n">i</span><span class="o">++</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 
-<span class="n">hccapx_t</span><span class="o">::~</span><span class="n">hccapx_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="n">hccapx_t</span><span class="o">::~</span><span class="n">hccapx_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
 
-<span class="kt">void</span><span class="w"> </span><span class="n">hccapx_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_records</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">hccapx_record_t</span><span class="o">*&gt;::</span><span class="n">iterator</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_records</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">m_records</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">it</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">            </span><span class="k">delete</span><span class="w"> </span><span class="o">*</span><span class="n">it</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="k">delete</span><span class="w"> </span><span class="n">m_records</span><span class="p">;</span><span class="w"> </span><span class="n">m_records</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">void</span><span class="w"> </span><span class="n">hccapx_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_records</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">hccapx_record_t</span><span class="o">*&gt;::</span><span class="n">iterator</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_records</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">m_records</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">it</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">delete</span><span class="w"> </span><span class="o">*</span><span class="n">it</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">delete</span><span class="w"> </span><span class="n">m_records</span><span class="p">;</span><span class="w"> </span><span class="n">m_records</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 
-<span class="n">hccapx_t</span><span class="o">::</span><span class="n">hccapx_record_t</span><span class="o">::</span><span class="n">hccapx_record_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">hccapx_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">hccapx_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span><span class="w"></span>
+<span class="n">hccapx_t</span><span class="o">::</span><span class="n">hccapx_record_t</span><span class="o">::</span><span class="n">hccapx_record_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">hccapx_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">hccapx_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
 
-<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="p">(...)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">_clean_up</span><span class="p">();</span><span class="w"></span>
-<span class="w">        </span><span class="k">throw</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="p">(...)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="w">        </span><span class="k">throw</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 
-<span class="kt">void</span><span class="w"> </span><span class="n">hccapx_t</span><span class="o">::</span><span class="n">hccapx_record_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">magic</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x48\x43\x50\x58</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x48\x43\x50\x58</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">),</span><span class="w"> </span><span class="n">magic</span><span class="p">(),</span><span class="w"> </span><span class="n">_io</span><span class="p">(),</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/hccapx_record/seq/0&quot;</span><span class="p">));</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_ignore_replay_counter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_message_pair</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">align_to_byte</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_len_essid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_essid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_essid</span><span class="p">());</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_padding1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="mi">32</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">len_essid</span><span class="p">()));</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_keyver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_keymic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_mac_ap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_nonce_ap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_mac_station</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_nonce_station</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_len_eapol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_eapol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_eapol</span><span class="p">());</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_padding2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="mi">256</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">len_eapol</span><span class="p">()));</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">void</span><span class="w"> </span><span class="n">hccapx_t</span><span class="o">::</span><span class="n">hccapx_record_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">magic</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x48\x43\x50\x58</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x48\x43\x50\x58</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">),</span><span class="w"> </span><span class="n">magic</span><span class="p">(),</span><span class="w"> </span><span class="n">_io</span><span class="p">(),</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/hccapx_record/seq/0&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">m_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_ignore_replay_counter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">    </span><span class="n">m_message_pair</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span>
+<span class="w">    </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">align_to_byte</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_len_essid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_essid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_essid</span><span class="p">());</span>
+<span class="w">    </span><span class="n">m_padding1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="mi">32</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">len_essid</span><span class="p">()));</span>
+<span class="w">    </span><span class="n">m_keyver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_keymic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>
+<span class="w">    </span><span class="n">m_mac_ap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+<span class="w">    </span><span class="n">m_nonce_ap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">);</span>
+<span class="w">    </span><span class="n">m_mac_station</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+<span class="w">    </span><span class="n">m_nonce_station</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">);</span>
+<span class="w">    </span><span class="n">m_len_eapol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_eapol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_eapol</span><span class="p">());</span>
+<span class="w">    </span><span class="n">m_padding2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="mi">256</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">len_eapol</span><span class="p">()));</span>
+<span class="p">}</span>
 
-<span class="n">hccapx_t</span><span class="o">::</span><span class="n">hccapx_record_t</span><span class="o">::~</span><span class="n">hccapx_record_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="n">hccapx_t</span><span class="o">::</span><span class="n">hccapx_record_t</span><span class="o">::~</span><span class="n">hccapx_record_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
 
-<span class="kt">void</span><span class="w"> </span><span class="n">hccapx_t</span><span class="o">::</span><span class="n">hccapx_record_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">void</span><span class="w"> </span><span class="n">hccapx_t</span><span class="o">::</span><span class="n">hccapx_record_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
 </pre></div>
 
         </div>

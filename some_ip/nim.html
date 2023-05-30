@@ -243,302 +243,302 @@ and the underlying serialization/wire format.</p>
         </div>
 
         <div class="row">
-            <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">kaitai_struct_nim_runtime</span>
-<span class="kn">import</span> <span class="n">options</span>
-<span class="kn">import</span> <span class="o">/</span><span class="n">network</span><span class="o">/</span><span class="n">some_ip</span><span class="o">/</span><span class="n">some_ip_sd</span>
+            <div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="n">kaitai_struct_nim_runtime</span>
+<span class="kn">import</span><span class="w"> </span><span class="n">options</span>
+<span class="kn">import</span><span class="w"> </span><span class="o">/</span><span class="n">network</span><span class="o">/</span><span class="n">some_ip</span><span class="o">/</span><span class="n">some_ip_sd</span>
 
-<span class="kn">import</span> <span class="s">&quot;some_ip_sd&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="s">&quot;some_ip_sd&quot;</span>
 <span class="k">type</span>
-  <span class="n">SomeIp</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">header</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">SomeIp_Header</span>
-    <span class="p">`</span><span class="n">payload</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">rawPayload</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-  <span class="n">SomeIp_Header</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">messageId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">SomeIp_Header_MessageId</span>
-    <span class="p">`</span><span class="n">length</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">requestId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">SomeIp_Header_RequestId</span>
-    <span class="p">`</span><span class="n">protocolVersion</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
-    <span class="p">`</span><span class="n">interfaceVersion</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
-    <span class="p">`</span><span class="n">messageType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">SomeIp_Header_MessageTypeEnum</span>
-    <span class="p">`</span><span class="n">returnCode</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">SomeIp_Header_ReturnCodeEnum</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">SomeIp</span>
-    <span class="p">`</span><span class="n">rawMessageId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">rawRequestId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">isValidServiceDiscoveryInst</span><span class="p">`:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">isValidServiceDiscoveryInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
-  <span class="n">SomeIp_Header_MessageTypeEnum</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
-    <span class="n">request</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">request_no_return</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">notification</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="n">request_ack</span> <span class="o">=</span> <span class="mi">64</span>
-    <span class="n">request_no_return_ack</span> <span class="o">=</span> <span class="mi">65</span>
-    <span class="n">notification_ack</span> <span class="o">=</span> <span class="mi">66</span>
-    <span class="n">response</span> <span class="o">=</span> <span class="mi">128</span>
-    <span class="n">error</span> <span class="o">=</span> <span class="mi">129</span>
-    <span class="n">response_ack</span> <span class="o">=</span> <span class="mi">192</span>
-    <span class="n">error_ack</span> <span class="o">=</span> <span class="mi">193</span>
-  <span class="n">SomeIp_Header_ReturnCodeEnum</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
-    <span class="n">ok</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">not_ok</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">unknown_service</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="n">unknown_method</span> <span class="o">=</span> <span class="mi">3</span>
-    <span class="n">not_ready</span> <span class="o">=</span> <span class="mi">4</span>
-    <span class="n">not_reachable</span> <span class="o">=</span> <span class="mi">5</span>
-    <span class="n">time_out</span> <span class="o">=</span> <span class="mi">6</span>
-    <span class="n">wrong_protocol_version</span> <span class="o">=</span> <span class="mi">7</span>
-    <span class="n">wrong_interface_version</span> <span class="o">=</span> <span class="mi">8</span>
-    <span class="n">malformed_message</span> <span class="o">=</span> <span class="mi">9</span>
-    <span class="n">wrong_message_type</span> <span class="o">=</span> <span class="mi">10</span>
-  <span class="n">SomeIp_Header_MessageId</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">serviceId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
-    <span class="p">`</span><span class="n">subId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">methodId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
-    <span class="p">`</span><span class="n">eventId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">SomeIp_Header</span>
-    <span class="p">`</span><span class="n">valueInst</span><span class="p">`:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">valueInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
-  <span class="n">SomeIp_Header_RequestId</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">clientId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
-    <span class="p">`</span><span class="n">sessionId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">SomeIp_Header</span>
-    <span class="p">`</span><span class="n">valueInst</span><span class="p">`:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">valueInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+<span class="w">  </span><span class="n">SomeIp</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">header</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">SomeIp_Header</span>
+<span class="w">    </span><span class="p">`</span><span class="n">payload</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">rawPayload</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">  </span><span class="n">SomeIp_Header</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">messageId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">SomeIp_Header_MessageId</span>
+<span class="w">    </span><span class="p">`</span><span class="n">length</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">requestId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">SomeIp_Header_RequestId</span>
+<span class="w">    </span><span class="p">`</span><span class="n">protocolVersion</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">interfaceVersion</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">messageType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">SomeIp_Header_MessageTypeEnum</span>
+<span class="w">    </span><span class="p">`</span><span class="n">returnCode</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">SomeIp_Header_ReturnCodeEnum</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">SomeIp</span>
+<span class="w">    </span><span class="p">`</span><span class="n">rawMessageId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">rawRequestId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">isValidServiceDiscoveryInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">isValidServiceDiscoveryInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">  </span><span class="n">SomeIp_Header_MessageTypeEnum</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">enum</span>
+<span class="w">    </span><span class="n">request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="n">request_no_return</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="n">notification</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">    </span><span class="n">request_ack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">64</span>
+<span class="w">    </span><span class="n">request_no_return_ack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">65</span>
+<span class="w">    </span><span class="n">notification_ack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">66</span>
+<span class="w">    </span><span class="n">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">128</span>
+<span class="w">    </span><span class="n">error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">129</span>
+<span class="w">    </span><span class="n">response_ack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">192</span>
+<span class="w">    </span><span class="n">error_ack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">193</span>
+<span class="w">  </span><span class="n">SomeIp_Header_ReturnCodeEnum</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">enum</span>
+<span class="w">    </span><span class="n">ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="n">not_ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="n">unknown_service</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">    </span><span class="n">unknown_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">    </span><span class="n">not_ready</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">    </span><span class="n">not_reachable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
+<span class="w">    </span><span class="n">time_out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span>
+<span class="w">    </span><span class="n">wrong_protocol_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span>
+<span class="w">    </span><span class="n">wrong_interface_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span>
+<span class="w">    </span><span class="n">malformed_message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">9</span>
+<span class="w">    </span><span class="n">wrong_message_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span>
+<span class="w">  </span><span class="n">SomeIp_Header_MessageId</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">serviceId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">subId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">methodId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint64</span>
+<span class="w">    </span><span class="p">`</span><span class="n">eventId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint64</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">SomeIp_Header</span>
+<span class="w">    </span><span class="p">`</span><span class="n">valueInst</span><span class="p">`:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">valueInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">  </span><span class="n">SomeIp_Header_RequestId</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">clientId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">sessionId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">SomeIp_Header</span>
+<span class="w">    </span><span class="p">`</span><span class="n">valueInst</span><span class="p">`:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">valueInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
 
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[SomeIp], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): SomeIp</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[SomeIp_Header], io: KaitaiStream, root: KaitaiStruct, parent: SomeIp): SomeIp_Header</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[SomeIp_Header_MessageId], io: KaitaiStream, root: KaitaiStruct, parent: SomeIp_Header): SomeIp_Header_MessageId</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[SomeIp_Header_RequestId], io: KaitaiStream, root: KaitaiStruct, parent: SomeIp_Header): SomeIp_Header_RequestId</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[SomeIp], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): SomeIp</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[SomeIp_Header], io: KaitaiStream, root: KaitaiStruct, parent: SomeIp): SomeIp_Header</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[SomeIp_Header_MessageId], io: KaitaiStream, root: KaitaiStruct, parent: SomeIp_Header): SomeIp_Header_MessageId</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[SomeIp_Header_RequestId], io: KaitaiStream, root: KaitaiStruct, parent: SomeIp_Header): SomeIp_Header_RequestId</span>
 
-<span class="k">proc </span><span class="nf">isValidServiceDiscovery</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">SomeIp_Header</span><span class="p">):</span> <span class="kt">bool</span>
-<span class="k">proc </span><span class="nf">value</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">SomeIp_Header_MessageId</span><span class="p">):</span> <span class="n">uint32</span>
-<span class="k">proc </span><span class="nf">value</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">SomeIp_Header_RequestId</span><span class="p">):</span> <span class="n">uint32</span>
-
-
-<span class="sd">##[</span>
-<span class="n">SOME</span><span class="o">/</span><span class="n">IP</span> <span class="p">(</span><span class="n">Scalable</span> <span class="n">service</span><span class="o">-</span><span class="n">Oriented</span> <span class="n">MiddlewarE</span> <span class="n">over</span> <span class="n">IP</span><span class="p">)</span> <span class="ow">is</span> <span class="n">an</span> <span class="n">automotive</span><span class="o">/</span><span class="n">embedded</span>
-<span class="n">communication</span> <span class="n">protocol</span> <span class="n">which</span> <span class="n">supports</span> <span class="n">remoteprocedure</span> <span class="n">calls</span><span class="p">,</span> <span class="n">event</span> <span class="n">notifications</span>
-<span class="ow">and</span> <span class="n">the</span> <span class="n">underlying</span> <span class="n">serialization</span><span class="o">/</span><span class="n">wire</span> <span class="n">format</span><span class="p">.</span>
-
-<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://www.autosar.org/fileadmin/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPProtocol.pdf&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
-<span class="o">]</span><span class="sd">##</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[SomeIp], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): SomeIp =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">SomeIp</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">SomeIp</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">SomeIp</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
-
-  <span class="k">let</span> <span class="n">headerExpr</span> <span class="o">=</span> <span class="n">SomeIp_Header</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">headerExpr</span>
-  <span class="k">block</span><span class="p">:</span>
-    <span class="k">let</span> <span class="n">on</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">messageId</span><span class="p">.</span><span class="n">value</span>
-    <span class="k">if</span> <span class="n">on</span> <span class="o">==</span> <span class="mi">4294934784</span><span class="il">&#39;i64</span><span class="p">:</span>
-      <span class="k">let</span> <span class="n">rawPayloadExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="mi">8</span><span class="p">)))</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">rawPayload</span> <span class="o">=</span> <span class="n">rawPayloadExpr</span>
-      <span class="k">let</span> <span class="n">rawPayloadIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawPayloadExpr</span><span class="p">)</span>
-      <span class="k">let</span> <span class="n">payloadExpr</span> <span class="o">=</span> <span class="n">SomeIpSd</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawPayloadIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">payload</span> <span class="o">=</span> <span class="n">payloadExpr</span>
-    <span class="k">else</span><span class="p">:</span>
-      <span class="k">let</span> <span class="n">payloadExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="mi">8</span><span class="p">)))</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">payload</span> <span class="o">=</span> <span class="n">payloadExpr</span>
-
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[SomeIp], filename: string): SomeIp =</span>
-  <span class="n">SomeIp</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
-
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[SomeIp_Header], io: KaitaiStream, root: KaitaiStruct, parent: SomeIp): SomeIp_Header =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">SomeIp_Header</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">SomeIp</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">SomeIp</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
-
-
-  <span class="sd">##[</span>
-  <span class="n">The</span> <span class="n">Message</span> <span class="n">ID</span> <span class="n">shall</span> <span class="n">be</span> <span class="n">a</span> <span class="mi">32</span> <span class="n">Bit</span> <span class="n">identifier</span> <span class="n">that</span> <span class="ow">is</span> <span class="n">used</span> <span class="n">to</span> <span class="n">identify</span>
-<span class="n">the</span> <span class="n">RPC</span> <span class="n">call</span> <span class="n">to</span> <span class="n">a</span> <span class="k">method</span> <span class="k">of</span> <span class="n">an</span> <span class="n">application</span> <span class="ow">or</span> <span class="n">to</span> <span class="n">identify</span> <span class="n">an</span> <span class="n">event</span><span class="p">.</span>
-
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">rawMessageIdExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">rawMessageId</span> <span class="o">=</span> <span class="n">rawMessageIdExpr</span>
-  <span class="k">let</span> <span class="n">rawMessageIdIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawMessageIdExpr</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">messageIdExpr</span> <span class="o">=</span> <span class="n">SomeIp_Header_MessageId</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawMessageIdIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">messageId</span> <span class="o">=</span> <span class="n">messageIdExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="o">[</span><span class="n">PRS_SOMEIP_00042</span><span class="o">]</span> <span class="n">Length</span> <span class="n">field</span> <span class="n">shall</span> <span class="n">contain</span> <span class="n">the</span> <span class="n">length</span> <span class="ow">in</span> <span class="n">Byte</span>
-<span class="n">starting</span> <span class="kn">from</span> <span class="n">Request</span> <span class="n">ID</span><span class="o">/</span><span class="n">Client</span> <span class="n">ID</span> <span class="n">until</span> <span class="n">the</span> <span class="k">end</span> <span class="k">of</span> <span class="n">the</span> <span class="n">SOME</span><span class="o">/</span><span class="n">IP</span> <span class="n">message</span><span class="p">.</span>
-
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">lengthExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">lengthExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="n">The</span> <span class="n">Request</span> <span class="n">ID</span> <span class="n">allows</span> <span class="n">a</span> <span class="n">provider</span> <span class="ow">and</span> <span class="n">subscriber</span> <span class="n">to</span> <span class="n">differentiate</span>
-<span class="n">multiple</span> <span class="n">parallel</span> <span class="n">uses</span> <span class="k">of</span> <span class="n">the</span> <span class="n">same</span> <span class="k">method</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">getter</span> <span class="ow">or</span> <span class="n">setter</span><span class="p">.</span>
-
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">rawRequestIdExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">rawRequestId</span> <span class="o">=</span> <span class="n">rawRequestIdExpr</span>
-  <span class="k">let</span> <span class="n">rawRequestIdIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawRequestIdExpr</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">requestIdExpr</span> <span class="o">=</span> <span class="n">SomeIp_Header_RequestId</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawRequestIdIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">requestId</span> <span class="o">=</span> <span class="n">requestIdExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="n">The</span> <span class="n">Protocol</span> <span class="n">Version</span> <span class="n">identifies</span> <span class="n">the</span> <span class="n">used</span> <span class="n">SOME</span><span class="o">/</span><span class="n">IP</span> <span class="n">Header</span> <span class="n">format</span>
-<span class="p">(</span><span class="ow">not</span> <span class="n">including</span> <span class="n">the</span> <span class="n">Payload</span> <span class="n">format</span><span class="p">).</span>
-
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">protocolVersionExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">protocolVersion</span> <span class="o">=</span> <span class="n">protocolVersionExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="k">Interface</span> <span class="n">Version</span> <span class="n">shall</span> <span class="n">be</span> <span class="n">an</span> <span class="mi">8</span> <span class="n">Bit</span> <span class="n">field</span> <span class="n">that</span> <span class="n">contains</span> <span class="n">the</span>
-<span class="n">MajorVersion</span> <span class="k">of</span> <span class="n">the</span> <span class="n">Service</span> <span class="k">Interface</span><span class="p">.</span>
-
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">interfaceVersionExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">interfaceVersion</span> <span class="o">=</span> <span class="n">interfaceVersionExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="n">The</span> <span class="n">Message</span> <span class="k">Type</span> <span class="n">field</span> <span class="ow">is</span> <span class="n">used</span> <span class="n">to</span> <span class="n">differentiate</span> <span class="n">different</span> <span class="n">types</span> <span class="k">of</span>
-<span class="n">messages</span><span class="p">.</span>
-
-  <span class="o">@</span><span class="n">see</span> <span class="s">&quot;AUTOSAR_PRS_SOMEIPProtocol.pdf - Table 4.4&quot;</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">messageTypeExpr</span> <span class="o">=</span> <span class="n">SomeIp_Header_MessageTypeEnum</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">messageType</span> <span class="o">=</span> <span class="n">messageTypeExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="n">The</span> <span class="k">Return</span> <span class="n">Code</span> <span class="n">shall</span> <span class="n">be</span> <span class="n">used</span> <span class="n">to</span> <span class="n">signal</span> <span class="n">whether</span> <span class="n">a</span> <span class="n">request</span> <span class="n">was</span>
-<span class="n">successfully</span> <span class="n">processed</span><span class="p">.</span>
-
-  <span class="o">@</span><span class="n">see</span> <span class="s">&quot;AUTOSAR_PRS_SOMEIPProtocol.pdf - Table 4.5&quot;</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">returnCodeExpr</span> <span class="o">=</span> <span class="n">SomeIp_Header_ReturnCodeEnum</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">returnCode</span> <span class="o">=</span> <span class="n">returnCodeExpr</span>
-
-<span class="k">proc </span><span class="nf">isValidServiceDiscovery</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">SomeIp_Header</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
-
-  <span class="sd">##[</span>
-  <span class="n">auxillary</span> <span class="n">value</span>
-  <span class="o">@</span><span class="n">see</span> <span class="s">&quot;AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf - section 4.1.2.1 General Requirements&quot;</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isValidServiceDiscoveryInstFlag</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isValidServiceDiscoveryInst</span>
-  <span class="k">let</span> <span class="n">isValidServiceDiscoveryInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span> <span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">messageId</span><span class="p">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">4294934784</span><span class="il">&#39;i64</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">protocolVersion</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">interfaceVersion</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">messageType</span> <span class="o">==</span> <span class="n">some_ip</span><span class="p">.</span><span class="n">notification</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">returnCode</span> <span class="o">==</span> <span class="n">some_ip</span><span class="p">.</span><span class="n">ok</span><span class="p">))</span> <span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">isValidServiceDiscoveryInst</span> <span class="o">=</span> <span class="n">isValidServiceDiscoveryInstExpr</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">isValidServiceDiscoveryInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
-  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isValidServiceDiscoveryInst</span>
-
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[SomeIp_Header], filename: string): SomeIp_Header =</span>
-  <span class="n">SomeIp_Header</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">isValidServiceDiscovery</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">SomeIp_Header</span><span class="p">):</span><span class="w"> </span><span class="nb">bool</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">value</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">SomeIp_Header_MessageId</span><span class="p">):</span><span class="w"> </span><span class="n">uint32</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">value</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">SomeIp_Header_RequestId</span><span class="p">):</span><span class="w"> </span><span class="n">uint32</span>
 
 
 <span class="sd">##[</span>
-<span class="o">[</span><span class="n">PRS_SOMEIP_00035</span><span class="o">]</span> <span class="n">The</span> <span class="n">assignment</span> <span class="k">of</span> <span class="n">the</span> <span class="n">Message</span> <span class="n">ID</span> <span class="n">shall</span> <span class="n">be</span> <span class="n">up</span> <span class="n">to</span>
-<span class="n">the</span> <span class="n">user</span><span class="p">.</span> <span class="n">However</span><span class="p">,</span> <span class="n">the</span> <span class="n">Message</span> <span class="n">ID</span> <span class="n">shall</span> <span class="n">be</span> <span class="n">unique</span> <span class="k">for</span> <span class="n">the</span> <span class="n">whole</span>
-<span class="n">system</span> <span class="p">(</span><span class="n">i</span><span class="p">.</span><span class="n">e</span><span class="p">.</span> <span class="n">the</span> <span class="n">vehicle</span><span class="p">).</span> <span class="n">TheMessage</span> <span class="n">ID</span> <span class="ow">is</span> <span class="n">similar</span> <span class="n">to</span> <span class="n">a</span> <span class="n">CAN</span> <span class="n">ID</span> <span class="ow">and</span>
-<span class="n">should</span> <span class="n">be</span> <span class="n">handled</span> <span class="n">via</span> <span class="n">a</span> <span class="n">comparable</span> <span class="n">process</span><span class="p">.</span>
-<span class="o">[</span><span class="n">PRS_SOMEIP_00038</span><span class="o">]</span> <span class="n">Message</span> <span class="n">IDs</span> <span class="k">of</span> <span class="k">method</span> <span class="n">calls</span> <span class="n">shall</span> <span class="n">be</span> <span class="n">structured</span> <span class="ow">in</span>
-<span class="n">the</span> <span class="n">ID</span> <span class="n">with</span> <span class="mi">2</span><span class="p">^</span><span class="mi">16</span> <span class="n">services</span> <span class="n">with</span> <span class="mi">2</span><span class="p">^</span><span class="mi">15</span> <span class="n">methods</span><span class="p">.</span>
+<span class="sd">SOME/IP (Scalable service-Oriented MiddlewarE over IP) is an automotive/embedded</span>
+<span class="sd">communication protocol which supports remoteprocedure calls, event notifications</span>
+<span class="sd">and the underlying serialization/wire format.</span>
 
-<span class="o">@</span><span class="n">see</span> <span class="s">&quot;AUTOSAR_PRS_SOMEIPProtocol.pdf 4.1.1.1  Message ID&quot;</span>
-<span class="o">]</span><span class="sd">##</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[SomeIp_Header_MessageId], io: KaitaiStream, root: KaitaiStruct, parent: SomeIp_Header): SomeIp_Header_MessageId =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">SomeIp_Header_MessageId</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">SomeIp</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">SomeIp</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="sd">@see &lt;a href=&quot;https://www.autosar.org/fileadmin/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPProtocol.pdf&quot;&gt;Source&lt;/a&gt;</span>
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[SomeIp], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): SomeIp =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">SomeIp</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">SomeIp</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">SomeIp</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
+
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">headerExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SomeIp_Header</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">headerExpr</span>
+<span class="w">  </span><span class="k">block</span><span class="p">:</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">messageId</span><span class="p">.</span><span class="n">value</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">4294934784</span><span class="il">&#39;i64</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">rawPayloadExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">length</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">8</span><span class="p">)))</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">rawPayload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawPayloadExpr</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">rawPayloadIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawPayloadExpr</span><span class="p">)</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">payloadExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SomeIpSd</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawPayloadIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">payloadExpr</span>
+<span class="w">    </span><span class="k">else</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">payloadExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">length</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">8</span><span class="p">)))</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">payloadExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[SomeIp], filename: string): SomeIp =</span>
+<span class="w">  </span><span class="n">SomeIp</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[SomeIp_Header], io: KaitaiStream, root: KaitaiStruct, parent: SomeIp): SomeIp_Header =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">SomeIp_Header</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">SomeIp</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">SomeIp</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
 
-  <span class="sd">##[</span>
-  <span class="n">Service</span> <span class="n">ID</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">serviceIdExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">serviceId</span> <span class="o">=</span> <span class="n">serviceIdExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The Message ID shall be a 32 Bit identifier that is used to identify</span>
+<span class="sd">the RPC call to a method of an application or to identify an event.</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Single</span> <span class="n">bit</span> <span class="n">to</span> <span class="n">flag</span><span class="p">,</span> <span class="k">if</span> <span class="n">there</span> <span class="ow">is</span> <span class="n">a</span> <span class="k">Method</span> <span class="ow">or</span> <span class="n">a</span> <span class="n">Event</span> <span class="n">ID</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">subIdExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">subId</span> <span class="o">=</span> <span class="n">subIdExpr</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawMessageIdExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">rawMessageId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawMessageIdExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawMessageIdIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawMessageIdExpr</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">messageIdExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SomeIp_Header_MessageId</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawMessageIdIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">messageId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">messageIdExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="k">Method</span> <span class="n">ID</span>
-  <span class="o">@</span><span class="n">see</span> <span class="s">&quot;AUTOSAR_PRS_SOMEIPProtocol.pdf - Table 4.1.&quot;</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">subId</span> <span class="o">==</span> <span class="kp">false</span><span class="p">:</span>
-    <span class="k">let</span> <span class="n">methodIdExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
-    <span class="n">this</span><span class="p">.</span><span class="n">methodId</span> <span class="o">=</span> <span class="n">methodIdExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  [PRS_SOMEIP_00042] Length field shall contain the length in Byte</span>
+<span class="sd">starting from Request ID/Client ID until the end of the SOME/IP message.</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Event</span> <span class="n">ID</span>
-  <span class="o">@</span><span class="n">see</span> <span class="s">&quot;AUTOSAR_PRS_SOMEIPProtocol.pdf - Table 4.6&quot;</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">subId</span> <span class="o">==</span> <span class="kp">true</span><span class="p">:</span>
-    <span class="k">let</span> <span class="n">eventIdExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
-    <span class="n">this</span><span class="p">.</span><span class="n">eventId</span> <span class="o">=</span> <span class="n">eventIdExpr</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lengthExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lengthExpr</span>
 
-<span class="k">proc </span><span class="nf">value</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">SomeIp_Header_MessageId</span><span class="p">):</span> <span class="n">uint32</span> <span class="o">=</span> 
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The Request ID allows a provider and subscriber to differentiate</span>
+<span class="sd">multiple parallel uses of the same method, event, getter or setter.</span>
 
-  <span class="sd">##[</span>
-  <span class="n">The</span> <span class="n">value</span> <span class="n">provides</span> <span class="n">the</span> <span class="n">undissected</span> <span class="n">Message</span> <span class="n">ID</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInstFlag</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
-  <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
-  <span class="k">let</span> <span class="n">valueInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">=</span> <span class="n">valueInstExpr</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">valueInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
-  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawRequestIdExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">rawRequestId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawRequestIdExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawRequestIdIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawRequestIdExpr</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">requestIdExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SomeIp_Header_RequestId</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawRequestIdIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">requestId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">requestIdExpr</span>
 
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[SomeIp_Header_MessageId], filename: string): SomeIp_Header_MessageId =</span>
-  <span class="n">SomeIp_Header_MessageId</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The Protocol Version identifies the used SOME/IP Header format</span>
+<span class="sd">(not including the Payload format).</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">protocolVersionExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">protocolVersion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">protocolVersionExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Interface Version shall be an 8 Bit field that contains the</span>
+<span class="sd">MajorVersion of the Service Interface.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">interfaceVersionExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">interfaceVersion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">interfaceVersionExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The Message Type field is used to differentiate different types of</span>
+<span class="sd">messages.</span>
+
+<span class="sd">  @see &quot;AUTOSAR_PRS_SOMEIPProtocol.pdf - Table 4.4&quot;</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">messageTypeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SomeIp_Header_MessageTypeEnum</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">messageType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">messageTypeExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The Return Code shall be used to signal whether a request was</span>
+<span class="sd">successfully processed.</span>
+
+<span class="sd">  @see &quot;AUTOSAR_PRS_SOMEIPProtocol.pdf - Table 4.5&quot;</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">returnCodeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SomeIp_Header_ReturnCodeEnum</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">returnCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">returnCodeExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">isValidServiceDiscovery</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">SomeIp_Header</span><span class="p">):</span><span class="w"> </span><span class="nb">bool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  auxillary value</span>
+<span class="sd">  @see &quot;AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf - section 4.1.2.1 General Requirements&quot;</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">isValidServiceDiscoveryInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">isValidServiceDiscoveryInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">isValidServiceDiscoveryInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">bool</span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">messageId</span><span class="p">.</span><span class="n">value</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">4294934784</span><span class="il">&#39;i64</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">protocolVersion</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">interfaceVersion</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">messageType</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">some_ip</span><span class="p">.</span><span class="n">notification</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">returnCode</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">some_ip</span><span class="p">.</span><span class="n">ok</span><span class="p">))</span><span class="w"> </span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">isValidServiceDiscoveryInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">isValidServiceDiscoveryInstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">isValidServiceDiscoveryInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">isValidServiceDiscoveryInst</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[SomeIp_Header], filename: string): SomeIp_Header =</span>
+<span class="w">  </span><span class="n">SomeIp_Header</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
 
 <span class="sd">##[</span>
-<span class="n">The</span> <span class="n">Request</span> <span class="n">ID</span> <span class="n">allows</span> <span class="n">a</span> <span class="n">provider</span> <span class="ow">and</span> <span class="n">subscriber</span> <span class="n">to</span> <span class="n">differentiate</span>
-<span class="n">multiple</span> <span class="n">parallel</span> <span class="n">usesof</span> <span class="n">the</span> <span class="n">same</span> <span class="k">method</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">getter</span> <span class="ow">or</span> <span class="n">setter</span><span class="p">.</span>
+<span class="sd">[PRS_SOMEIP_00035] The assignment of the Message ID shall be up to</span>
+<span class="sd">the user. However, the Message ID shall be unique for the whole</span>
+<span class="sd">system (i.e. the vehicle). TheMessage ID is similar to a CAN ID and</span>
+<span class="sd">should be handled via a comparable process.</span>
+<span class="sd">[PRS_SOMEIP_00038] Message IDs of method calls shall be structured in</span>
+<span class="sd">the ID with 2^16 services with 2^15 methods.</span>
 
-<span class="o">@</span><span class="n">see</span> <span class="s">&quot;AUTOSAR_PRS_SOMEIPProtocol.pdf - section 4.1.1.3  Request ID&quot;</span>
-<span class="o">]</span><span class="sd">##</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[SomeIp_Header_RequestId], io: KaitaiStream, root: KaitaiStruct, parent: SomeIp_Header): SomeIp_Header_RequestId =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">SomeIp_Header_RequestId</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">SomeIp</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">SomeIp</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="sd">@see &quot;AUTOSAR_PRS_SOMEIPProtocol.pdf 4.1.1.1  Message ID&quot;</span>
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[SomeIp_Header_MessageId], io: KaitaiStream, root: KaitaiStruct, parent: SomeIp_Header): SomeIp_Header_MessageId =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">SomeIp_Header_MessageId</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">SomeIp</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">SomeIp</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
-  <span class="k">let</span> <span class="n">clientIdExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">clientId</span> <span class="o">=</span> <span class="n">clientIdExpr</span>
-  <span class="k">let</span> <span class="n">sessionIdExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">sessionId</span> <span class="o">=</span> <span class="n">sessionIdExpr</span>
 
-<span class="k">proc </span><span class="nf">value</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">SomeIp_Header_RequestId</span><span class="p">):</span> <span class="n">uint32</span> <span class="o">=</span> 
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Service ID</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">serviceIdExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">serviceId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">serviceIdExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">The</span> <span class="n">value</span> <span class="n">provides</span> <span class="n">the</span> <span class="n">undissected</span> <span class="n">Request</span> <span class="n">ID</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInstFlag</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
-  <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
-  <span class="k">let</span> <span class="n">valueInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">=</span> <span class="n">valueInstExpr</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">valueInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
-  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Single bit to flag, if there is a Method or a Event ID</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">subIdExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">subId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">subIdExpr</span>
 
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[SomeIp_Header_RequestId], filename: string): SomeIp_Header_RequestId =</span>
-  <span class="n">SomeIp_Header_RequestId</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Method ID</span>
+<span class="sd">  @see &quot;AUTOSAR_PRS_SOMEIPProtocol.pdf - Table 4.1.&quot;</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">subId</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">false</span><span class="p">:</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">methodIdExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">methodId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">methodIdExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Event ID</span>
+<span class="sd">  @see &quot;AUTOSAR_PRS_SOMEIPProtocol.pdf - Table 4.6&quot;</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">subId</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">true</span><span class="p">:</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">eventIdExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">eventId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">eventIdExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">value</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">SomeIp_Header_MessageId</span><span class="p">):</span><span class="w"> </span><span class="n">uint32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The value provides the undissected Message ID</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">valueInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">valueInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">valueInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">valueInstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">valueInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[SomeIp_Header_MessageId], filename: string): SomeIp_Header_MessageId =</span>
+<span class="w">  </span><span class="n">SomeIp_Header_MessageId</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="sd">The Request ID allows a provider and subscriber to differentiate</span>
+<span class="sd">multiple parallel usesof the same method, event, getter or setter.</span>
+
+<span class="sd">@see &quot;AUTOSAR_PRS_SOMEIPProtocol.pdf - section 4.1.1.3  Request ID&quot;</span>
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[SomeIp_Header_RequestId], io: KaitaiStream, root: KaitaiStruct, parent: SomeIp_Header): SomeIp_Header_RequestId =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">SomeIp_Header_RequestId</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">SomeIp</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">SomeIp</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
+
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">clientIdExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">clientId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">clientIdExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">sessionIdExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">sessionId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sessionIdExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">value</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">SomeIp_Header_RequestId</span><span class="p">):</span><span class="w"> </span><span class="n">uint32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The value provides the undissected Request ID</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">valueInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">valueInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">valueInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">valueInstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">valueInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[SomeIp_Header_RequestId], filename: string): SomeIp_Header_RequestId =</span>
+<span class="w">  </span><span class="n">SomeIp_Header_RequestId</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 </pre></div>
 
         </div>

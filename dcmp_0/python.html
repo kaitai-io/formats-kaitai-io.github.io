@@ -320,7 +320,7 @@ with the main difference that it operates mostly on single bytes rather than two
 
 <span class="kn">import</span> <span class="nn">dcmp_variable_length_integer</span>
 <span class="k">class</span> <span class="nc">Dcmp0</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Compressed resource data in `&#39;dcmp&#39; (0)` format,</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compressed resource data in `&#39;dcmp&#39; (0)` format,</span>
 <span class="sd">    as stored in compressed resources with header type `8` and decompressor ID `0`.</span>
 <span class="sd">    </span>
 <span class="sd">    The `&#39;dcmp&#39; (0)` decompressor resource is included in the System file of System 7.0 and later.</span>
@@ -367,7 +367,7 @@ with the main difference that it operates mostly on single bytes rather than two
             <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
 
     <span class="k">class</span> <span class="nc">Chunk</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;A single chunk of compressed data.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A single chunk of compressed data.</span>
 <span class="sd">        Each chunk in the compressed data expands to a sequence of bytes in the uncompressed data,</span>
 <span class="sd">        except when `tag == 0xff`,</span>
 <span class="sd">        which marks the end of the data and does not correspond to any bytes in the uncompressed data.</span>
@@ -407,7 +407,7 @@ with the main difference that it operates mostly on single bytes rather than two
                 <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">Dcmp0</span><span class="o">.</span><span class="n">Chunk</span><span class="o">.</span><span class="n">BackreferenceBody</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
 
         <span class="k">class</span> <span class="nc">LiteralBody</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;The body of a literal data chunk.</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;The body of a literal data chunk.</span>
 <span class="sd">            </span>
 <span class="sd">            The data that this chunk expands to is stored literally in the body (`literal`).</span>
 <span class="sd">            Optionally,</span>
@@ -431,7 +431,7 @@ with the main difference that it operates mostly on single bytes rather than two
 
             <span class="nd">@property</span>
             <span class="k">def</span> <span class="nf">do_store</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                <span class="sd">&quot;&quot;&quot;Whether this literal should be stored for use by future backreference chunks.</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;Whether this literal should be stored for use by future backreference chunks.</span>
 <span class="sd">                </span>
 <span class="sd">                See the documentation of the `backreference_body` type for details about backreference chunks.</span>
 <span class="sd">                &quot;&quot;&quot;</span>
@@ -443,7 +443,7 @@ with the main difference that it operates mostly on single bytes rather than two
 
             <span class="nd">@property</span>
             <span class="k">def</span> <span class="nf">len_literal_div2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                <span class="sd">&quot;&quot;&quot;The length of the literal data,</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;The length of the literal data,</span>
 <span class="sd">                in two-byte units.</span>
 <span class="sd">                </span>
 <span class="sd">                In practice,</span>
@@ -458,7 +458,7 @@ with the main difference that it operates mostly on single bytes rather than two
 
             <span class="nd">@property</span>
             <span class="k">def</span> <span class="nf">len_literal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                <span class="sd">&quot;&quot;&quot;The length of the literal data,</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;The length of the literal data,</span>
 <span class="sd">                in bytes.</span>
 <span class="sd">                &quot;&quot;&quot;</span>
                 <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_len_literal&#39;</span><span class="p">):</span>
@@ -469,7 +469,7 @@ with the main difference that it operates mostly on single bytes rather than two
 
             <span class="nd">@property</span>
             <span class="k">def</span> <span class="nf">len_literal_div2_in_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                <span class="sd">&quot;&quot;&quot;The part of the tag byte that indicates the length of the literal data,</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;The part of the tag byte that indicates the length of the literal data,</span>
 <span class="sd">                in two-byte units.</span>
 <span class="sd">                If this value is 0,</span>
 <span class="sd">                the length is stored in a separate byte after the tag byte and before the literal data.</span>
@@ -482,7 +482,7 @@ with the main difference that it operates mostly on single bytes rather than two
 
             <span class="nd">@property</span>
             <span class="k">def</span> <span class="nf">is_len_literal_div2_separate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                <span class="sd">&quot;&quot;&quot;Whether the length of the literal is stored separately from the tag.</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;Whether the length of the literal is stored separately from the tag.</span>
 <span class="sd">                &quot;&quot;&quot;</span>
                 <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_len_literal_div2_separate&#39;</span><span class="p">):</span>
                     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_len_literal_div2_separate</span>
@@ -492,7 +492,7 @@ with the main difference that it operates mostly on single bytes rather than two
 
 
         <span class="k">class</span> <span class="nc">BackreferenceBody</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;The body of a backreference chunk.</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;The body of a backreference chunk.</span>
 <span class="sd">            </span>
 <span class="sd">            This chunk expands to the data stored in a preceding literal chunk,</span>
 <span class="sd">            indicated by an index number (`index`).</span>
@@ -517,7 +517,7 @@ with the main difference that it operates mostly on single bytes rather than two
 
             <span class="nd">@property</span>
             <span class="k">def</span> <span class="nf">is_index_separate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                <span class="sd">&quot;&quot;&quot;Whether the index is stored separately from the tag.</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;Whether the index is stored separately from the tag.</span>
 <span class="sd">                &quot;&quot;&quot;</span>
                 <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_index_separate&#39;</span><span class="p">):</span>
                     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_index_separate</span>
@@ -527,7 +527,7 @@ with the main difference that it operates mostly on single bytes rather than two
 
             <span class="nd">@property</span>
             <span class="k">def</span> <span class="nf">index_in_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                <span class="sd">&quot;&quot;&quot;The index of the referenced literal chunk,</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;The index of the referenced literal chunk,</span>
 <span class="sd">                as stored in the tag byte.</span>
 <span class="sd">                &quot;&quot;&quot;</span>
                 <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_index_in_tag&#39;</span><span class="p">):</span>
@@ -538,7 +538,7 @@ with the main difference that it operates mostly on single bytes rather than two
 
             <span class="nd">@property</span>
             <span class="k">def</span> <span class="nf">index_separate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                <span class="sd">&quot;&quot;&quot;The index of the referenced literal chunk,</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;The index of the referenced literal chunk,</span>
 <span class="sd">                as stored separately from the tag byte,</span>
 <span class="sd">                with the implicit offset corrected for.</span>
 <span class="sd">                &quot;&quot;&quot;</span>
@@ -552,7 +552,7 @@ with the main difference that it operates mostly on single bytes rather than two
 
             <span class="nd">@property</span>
             <span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                <span class="sd">&quot;&quot;&quot;The index of the referenced literal chunk.</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;The index of the referenced literal chunk.</span>
 <span class="sd">                </span>
 <span class="sd">                Stored literals are assigned index numbers in the order in which they appear in the compressed data,</span>
 <span class="sd">                starting at 0.</span>
@@ -572,7 +572,7 @@ with the main difference that it operates mostly on single bytes rather than two
 
 
         <span class="k">class</span> <span class="nc">TableLookupBody</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;The body of a table lookup chunk.</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;The body of a table lookup chunk.</span>
 <span class="sd">            This body is always empty.</span>
 <span class="sd">            </span>
 <span class="sd">            This chunk always expands to two bytes (`value`),</span>
@@ -591,7 +591,7 @@ with the main difference that it operates mostly on single bytes rather than two
 
             <span class="nd">@property</span>
             <span class="k">def</span> <span class="nf">lookup_table</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                <span class="sd">&quot;&quot;&quot;Fixed lookup table that maps tag byte numbers to two bytes each.</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;Fixed lookup table that maps tag byte numbers to two bytes each.</span>
 <span class="sd">                </span>
 <span class="sd">                The entries in the lookup table are offset -</span>
 <span class="sd">                index 0 stands for tag 0x4b, 1 for 0x4c, etc.</span>
@@ -604,7 +604,7 @@ with the main difference that it operates mostly on single bytes rather than two
 
             <span class="nd">@property</span>
             <span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                <span class="sd">&quot;&quot;&quot;The two bytes that the tag byte expands to,</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;The two bytes that the tag byte expands to,</span>
 <span class="sd">                based on the fixed lookup table.</span>
 <span class="sd">                &quot;&quot;&quot;</span>
                 <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value&#39;</span><span class="p">):</span>
@@ -615,7 +615,7 @@ with the main difference that it operates mostly on single bytes rather than two
 
 
         <span class="k">class</span> <span class="nc">EndBody</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;The body of an end chunk.</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;The body of an end chunk.</span>
 <span class="sd">            This body is always empty.</span>
 <span class="sd">            </span>
 <span class="sd">            The last chunk in the compressed data must always be an end chunk.</span>
@@ -632,7 +632,7 @@ with the main difference that it operates mostly on single bytes rather than two
 
 
         <span class="k">class</span> <span class="nc">ExtendedBody</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;The body of an extended chunk.</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;The body of an extended chunk.</span>
 <span class="sd">            The meaning of this chunk depends on the extended tag byte stored in the chunk data.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -656,7 +656,7 @@ with the main difference that it operates mostly on single bytes rather than two
                     <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">Dcmp0</span><span class="o">.</span><span class="n">Chunk</span><span class="o">.</span><span class="n">ExtendedBody</span><span class="o">.</span><span class="n">RepeatBody</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
 
             <span class="k">class</span> <span class="nc">JumpTableBody</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-                <span class="sd">&quot;&quot;&quot;The body of a jump table chunk.</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;The body of a jump table chunk.</span>
 <span class="sd">                </span>
 <span class="sd">                This chunk generates parts of a segment loader jump table,</span>
 <span class="sd">                in the format found in `&#39;CODE&#39; (0)` resources.</span>
@@ -692,7 +692,7 @@ with the main difference that it operates mostly on single bytes rather than two
 
                 <span class="nd">@property</span>
                 <span class="k">def</span> <span class="nf">segment_number</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                    <span class="sd">&quot;&quot;&quot;The segment number for all of the generated jump table entries.</span>
+<span class="w">                    </span><span class="sd">&quot;&quot;&quot;The segment number for all of the generated jump table entries.</span>
 <span class="sd">                    </span>
 <span class="sd">                    Although it is stored as a variable-length integer,</span>
 <span class="sd">                    the segment number must be in the range `0x0 &lt;= x &lt;= 0xffff`,</span>
@@ -706,7 +706,7 @@ with the main difference that it operates mostly on single bytes rather than two
 
                 <span class="nd">@property</span>
                 <span class="k">def</span> <span class="nf">num_addresses</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                    <span class="sd">&quot;&quot;&quot;The number of addresses stored in this chunk.</span>
+<span class="w">                    </span><span class="sd">&quot;&quot;&quot;The number of addresses stored in this chunk.</span>
 <span class="sd">                    </span>
 <span class="sd">                    This number must be greater than 0.</span>
 <span class="sd">                    &quot;&quot;&quot;</span>
@@ -718,7 +718,7 @@ with the main difference that it operates mostly on single bytes rather than two
 
 
             <span class="k">class</span> <span class="nc">RepeatBody</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-                <span class="sd">&quot;&quot;&quot;The body of a repeat chunk.</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;The body of a repeat chunk.</span>
 <span class="sd">                </span>
 <span class="sd">                This chunk expands to a 1-byte or 2-byte value repeated a number of times,</span>
 <span class="sd">                i. e. it implements a form of run-length encoding.</span>
@@ -736,7 +736,7 @@ with the main difference that it operates mostly on single bytes rather than two
 
                 <span class="nd">@property</span>
                 <span class="k">def</span> <span class="nf">byte_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                    <span class="sd">&quot;&quot;&quot;The length in bytes of the value to be repeated.</span>
+<span class="w">                    </span><span class="sd">&quot;&quot;&quot;The length in bytes of the value to be repeated.</span>
 <span class="sd">                    Regardless of the byte count,</span>
 <span class="sd">                    the value to be repeated is stored as a variable-length integer.</span>
 <span class="sd">                    &quot;&quot;&quot;</span>
@@ -748,7 +748,7 @@ with the main difference that it operates mostly on single bytes rather than two
 
                 <span class="nd">@property</span>
                 <span class="k">def</span> <span class="nf">to_repeat</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                    <span class="sd">&quot;&quot;&quot;The value to repeat.</span>
+<span class="w">                    </span><span class="sd">&quot;&quot;&quot;The value to repeat.</span>
 <span class="sd">                    </span>
 <span class="sd">                    Although it is stored as a variable-length integer,</span>
 <span class="sd">                    this value must fit into an unsigned big-endian integer that is as long as `byte_count`,</span>
@@ -762,7 +762,7 @@ with the main difference that it operates mostly on single bytes rather than two
 
                 <span class="nd">@property</span>
                 <span class="k">def</span> <span class="nf">repeat_count_m1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                    <span class="sd">&quot;&quot;&quot;The number of times to repeat the value,</span>
+<span class="w">                    </span><span class="sd">&quot;&quot;&quot;The number of times to repeat the value,</span>
 <span class="sd">                    minus one.</span>
 <span class="sd">                    </span>
 <span class="sd">                    This value must not be negative.</span>
@@ -775,7 +775,7 @@ with the main difference that it operates mostly on single bytes rather than two
 
                 <span class="nd">@property</span>
                 <span class="k">def</span> <span class="nf">repeat_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                    <span class="sd">&quot;&quot;&quot;The number of times to repeat the value.</span>
+<span class="w">                    </span><span class="sd">&quot;&quot;&quot;The number of times to repeat the value.</span>
 <span class="sd">                    </span>
 <span class="sd">                    This value must be positive.</span>
 <span class="sd">                    &quot;&quot;&quot;</span>
@@ -787,7 +787,7 @@ with the main difference that it operates mostly on single bytes rather than two
 
 
             <span class="k">class</span> <span class="nc">DeltaEncoding16BitBody</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-                <span class="sd">&quot;&quot;&quot;The body of a 16-bit delta encoding chunk.</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;The body of a 16-bit delta encoding chunk.</span>
 <span class="sd">                </span>
 <span class="sd">                This chunk expands to a sequence of 16-bit big-endian integer values.</span>
 <span class="sd">                The first value is stored literally.</span>
@@ -809,7 +809,7 @@ with the main difference that it operates mostly on single bytes rather than two
 
                 <span class="nd">@property</span>
                 <span class="k">def</span> <span class="nf">first_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                    <span class="sd">&quot;&quot;&quot;The first value in the sequence.</span>
+<span class="w">                    </span><span class="sd">&quot;&quot;&quot;The first value in the sequence.</span>
 <span class="sd">                    </span>
 <span class="sd">                    Although it is stored as a variable-length integer,</span>
 <span class="sd">                    this value must be in the range `-0x8000 &lt;= x &lt;= 0x7fff`,</span>
@@ -823,7 +823,7 @@ with the main difference that it operates mostly on single bytes rather than two
 
                 <span class="nd">@property</span>
                 <span class="k">def</span> <span class="nf">num_deltas</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                    <span class="sd">&quot;&quot;&quot;The number of deltas stored in this chunk.</span>
+<span class="w">                    </span><span class="sd">&quot;&quot;&quot;The number of deltas stored in this chunk.</span>
 <span class="sd">                    </span>
 <span class="sd">                    This number must not be negative.</span>
 <span class="sd">                    &quot;&quot;&quot;</span>
@@ -835,7 +835,7 @@ with the main difference that it operates mostly on single bytes rather than two
 
 
             <span class="k">class</span> <span class="nc">DeltaEncoding32BitBody</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-                <span class="sd">&quot;&quot;&quot;The body of a 32-bit delta encoding chunk.</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;The body of a 32-bit delta encoding chunk.</span>
 <span class="sd">                </span>
 <span class="sd">                This chunk expands to a sequence of 32-bit big-endian integer values.</span>
 <span class="sd">                The first value is stored literally.</span>
@@ -857,7 +857,7 @@ with the main difference that it operates mostly on single bytes rather than two
 
                 <span class="nd">@property</span>
                 <span class="k">def</span> <span class="nf">first_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                    <span class="sd">&quot;&quot;&quot;The first value in the sequence.</span>
+<span class="w">                    </span><span class="sd">&quot;&quot;&quot;The first value in the sequence.</span>
 <span class="sd">                    &quot;&quot;&quot;</span>
                     <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_first_value&#39;</span><span class="p">):</span>
                         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_first_value</span>
@@ -867,7 +867,7 @@ with the main difference that it operates mostly on single bytes rather than two
 
                 <span class="nd">@property</span>
                 <span class="k">def</span> <span class="nf">num_deltas</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                    <span class="sd">&quot;&quot;&quot;The number of deltas stored in this chunk.</span>
+<span class="w">                    </span><span class="sd">&quot;&quot;&quot;The number of deltas stored in this chunk.</span>
 <span class="sd">                    </span>
 <span class="sd">                    This number must not be negative.</span>
 <span class="sd">                    &quot;&quot;&quot;</span>

@@ -277,19 +277,19 @@ speed).</p>
 
 
 
-<div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="no">Iso9660</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;path/to/local/file.iso&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Iso9660</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;path/to/local/file.iso&quot;</span><span class="p">)</span>
 </pre></div>
 
 <p>Or parse structure from a string of bytes:</p>
 
-<div class="highlight"><pre><span></span><span class="n">bytes</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\x00\x01\x02</span><span class="s2">...&quot;</span>
-<span class="n">data</span> <span class="o">=</span> <span class="no">Iso9660</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">bytes</span><span class="p">))</span>
+<div class="highlight"><pre><span></span><span class="n">bytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\x00\x01\x02</span><span class="s2">...&quot;</span>
+<span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Iso9660</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">bytes</span><span class="p">))</span>
 </pre></div>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
 
-<div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">sector_size</span> <span class="c1"># =&gt; get sector size</span>
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">sector_size</span><span class="w"> </span><span class="c1"># =&gt; get sector size</span>
 </pre></div>
 
     </div>
@@ -319,10 +319,10 @@ speed).</p>
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
+<span class="nb">require</span><span class="w"> </span><span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.9&#39;</span><span class="p">)</span>
-  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">unless</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.9&#39;</span><span class="p">)</span>
+<span class="w">  </span><span class="k">raise</span><span class="w"> </span><span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="k">end</span>
 
 
@@ -336,378 +336,378 @@ speed).</p>
 <span class="c1"># features and very conservative file names standards) and sequential</span>
 <span class="c1"># access (which favors disc devices with relatively slow rotation</span>
 <span class="c1"># speed).</span>
-<span class="k">class</span> <span class="nc">Iso9660</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
-    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-    <span class="n">_read</span>
-  <span class="k">end</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Iso9660</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">    </span><span class="n">_read</span>
+<span class="w">  </span><span class="k">end</span>
 
-  <span class="k">def</span> <span class="n">_read</span>
-    <span class="nb">self</span>
-  <span class="k">end</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">    </span><span class="nb">self</span>
+<span class="w">  </span><span class="k">end</span>
 
-  <span class="c1">##</span>
-  <span class="c1"># @see https://wiki.osdev.org/ISO_9660#The_Primary_Volume_Descriptor Source</span>
-  <span class="k">class</span> <span class="nc">VolDescPrimary</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
-      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-      <span class="n">_read</span>
-    <span class="k">end</span>
+<span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># @see https://wiki.osdev.org/ISO_9660#The_Primary_Volume_Descriptor Source</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">VolDescPrimary</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
 
-    <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@unused1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-      <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">unused1</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/vol_desc_primary/seq/0&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">unused1</span> <span class="o">==</span> <span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
-      <span class="vi">@system_id</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
-      <span class="vi">@volume_id</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
-      <span class="vi">@unused2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
-      <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">unused2</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/vol_desc_primary/seq/3&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">unused2</span> <span class="o">==</span> <span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
-      <span class="vi">@vol_space_size</span> <span class="o">=</span> <span class="no">U4bi</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="vi">@unused3</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
-      <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">unused3</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/vol_desc_primary/seq/5&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">unused3</span> <span class="o">==</span> <span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
-      <span class="vi">@vol_set_size</span> <span class="o">=</span> <span class="no">U2bi</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="vi">@vol_seq_num</span> <span class="o">=</span> <span class="no">U2bi</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="vi">@logical_block_size</span> <span class="o">=</span> <span class="no">U2bi</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="vi">@path_table_size</span> <span class="o">=</span> <span class="no">U4bi</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="vi">@lba_path_table_le</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-      <span class="vi">@lba_opt_path_table_le</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-      <span class="vi">@lba_path_table_be</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-      <span class="vi">@lba_opt_path_table_be</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-      <span class="vi">@_raw_root_dir</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">34</span><span class="p">)</span>
-      <span class="n">_io__raw_root_dir</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_root_dir</span><span class="p">)</span>
-      <span class="vi">@root_dir</span> <span class="o">=</span> <span class="no">DirEntry</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_root_dir</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="vi">@vol_set_id</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">128</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
-      <span class="vi">@publisher_id</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">128</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
-      <span class="vi">@data_preparer_id</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">128</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
-      <span class="vi">@application_id</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">128</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
-      <span class="vi">@copyright_file_id</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">38</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
-      <span class="vi">@abstract_file_id</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">36</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
-      <span class="vi">@bibliographic_file_id</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">37</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
-      <span class="vi">@vol_create_datetime</span> <span class="o">=</span> <span class="no">DecDatetime</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="vi">@vol_mod_datetime</span> <span class="o">=</span> <span class="no">DecDatetime</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="vi">@vol_expire_datetime</span> <span class="o">=</span> <span class="no">DecDatetime</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="vi">@vol_effective_datetime</span> <span class="o">=</span> <span class="no">DecDatetime</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="vi">@file_structure_version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="vi">@unused4</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="vi">@application_area</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">512</span><span class="p">)</span>
-      <span class="nb">self</span>
-    <span class="k">end</span>
-    <span class="k">def</span> <span class="nf">path_table</span>
-      <span class="k">return</span> <span class="vi">@path_table</span> <span class="k">unless</span> <span class="vi">@path_table</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
-      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">((</span><span class="n">lba_path_table_le</span> <span class="o">*</span> <span class="n">_root</span><span class="o">.</span><span class="n">sector_size</span><span class="p">))</span>
-      <span class="vi">@_raw_path_table</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">path_table_size</span><span class="o">.</span><span class="n">le</span><span class="p">)</span>
-      <span class="n">_io__raw_path_table</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_path_table</span><span class="p">)</span>
-      <span class="vi">@path_table</span> <span class="o">=</span> <span class="no">PathTableLe</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_path_table</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-      <span class="vi">@path_table</span>
-    <span class="k">end</span>
-    <span class="kp">attr_reader</span> <span class="ss">:unused1</span>
-    <span class="kp">attr_reader</span> <span class="ss">:system_id</span>
-    <span class="kp">attr_reader</span> <span class="ss">:volume_id</span>
-    <span class="kp">attr_reader</span> <span class="ss">:unused2</span>
-    <span class="kp">attr_reader</span> <span class="ss">:vol_space_size</span>
-    <span class="kp">attr_reader</span> <span class="ss">:unused3</span>
-    <span class="kp">attr_reader</span> <span class="ss">:vol_set_size</span>
-    <span class="kp">attr_reader</span> <span class="ss">:vol_seq_num</span>
-    <span class="kp">attr_reader</span> <span class="ss">:logical_block_size</span>
-    <span class="kp">attr_reader</span> <span class="ss">:path_table_size</span>
-    <span class="kp">attr_reader</span> <span class="ss">:lba_path_table_le</span>
-    <span class="kp">attr_reader</span> <span class="ss">:lba_opt_path_table_le</span>
-    <span class="kp">attr_reader</span> <span class="ss">:lba_path_table_be</span>
-    <span class="kp">attr_reader</span> <span class="ss">:lba_opt_path_table_be</span>
-    <span class="kp">attr_reader</span> <span class="ss">:root_dir</span>
-    <span class="kp">attr_reader</span> <span class="ss">:vol_set_id</span>
-    <span class="kp">attr_reader</span> <span class="ss">:publisher_id</span>
-    <span class="kp">attr_reader</span> <span class="ss">:data_preparer_id</span>
-    <span class="kp">attr_reader</span> <span class="ss">:application_id</span>
-    <span class="kp">attr_reader</span> <span class="ss">:copyright_file_id</span>
-    <span class="kp">attr_reader</span> <span class="ss">:abstract_file_id</span>
-    <span class="kp">attr_reader</span> <span class="ss">:bibliographic_file_id</span>
-    <span class="kp">attr_reader</span> <span class="ss">:vol_create_datetime</span>
-    <span class="kp">attr_reader</span> <span class="ss">:vol_mod_datetime</span>
-    <span class="kp">attr_reader</span> <span class="ss">:vol_expire_datetime</span>
-    <span class="kp">attr_reader</span> <span class="ss">:vol_effective_datetime</span>
-    <span class="kp">attr_reader</span> <span class="ss">:file_structure_version</span>
-    <span class="kp">attr_reader</span> <span class="ss">:unused4</span>
-    <span class="kp">attr_reader</span> <span class="ss">:application_area</span>
-    <span class="kp">attr_reader</span> <span class="ss">:_raw_root_dir</span>
-    <span class="kp">attr_reader</span> <span class="ss">:_raw_path_table</span>
-  <span class="k">end</span>
-  <span class="k">class</span> <span class="nc">VolDescBootRecord</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
-      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-      <span class="n">_read</span>
-    <span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@unused1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span><span class="w"> </span><span class="n">unused1</span><span class="p">,</span><span class="w"> </span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/vol_desc_primary/seq/0&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">unused1</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@system_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@volume_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@unused2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span><span class="w"> </span><span class="n">unused2</span><span class="p">,</span><span class="w"> </span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/vol_desc_primary/seq/3&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">unused2</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@vol_space_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">U4bi</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@unused3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span><span class="w"> </span><span class="n">unused3</span><span class="p">,</span><span class="w"> </span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/vol_desc_primary/seq/5&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">unused3</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@vol_set_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">U2bi</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@vol_seq_num</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">U2bi</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@logical_block_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">U2bi</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@path_table_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">U4bi</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@lba_path_table_le</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">      </span><span class="vi">@lba_opt_path_table_le</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">      </span><span class="vi">@lba_path_table_be</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="vi">@lba_opt_path_table_be</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="vi">@_raw_root_dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">34</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_io__raw_root_dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_root_dir</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@root_dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">DirEntry</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_root_dir</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@vol_set_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">128</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@publisher_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">128</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@data_preparer_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">128</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@application_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">128</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@copyright_file_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">38</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@abstract_file_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">36</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@bibliographic_file_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">37</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@vol_create_datetime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">DecDatetime</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@vol_mod_datetime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">DecDatetime</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@vol_expire_datetime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">DecDatetime</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@vol_effective_datetime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">DecDatetime</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@file_structure_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@unused4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@application_area</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">512</span><span class="p">)</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">path_table</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@path_table</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@path_table</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+<span class="w">      </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">((</span><span class="n">lba_path_table_le</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="o">.</span><span class="n">sector_size</span><span class="p">))</span>
+<span class="w">      </span><span class="vi">@_raw_path_table</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">path_table_size</span><span class="o">.</span><span class="n">le</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_io__raw_path_table</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_path_table</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@path_table</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">PathTableLe</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_path_table</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@path_table</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:unused1</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:system_id</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:volume_id</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:unused2</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:vol_space_size</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:unused3</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:vol_set_size</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:vol_seq_num</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:logical_block_size</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:path_table_size</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:lba_path_table_le</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:lba_opt_path_table_le</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:lba_path_table_be</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:lba_opt_path_table_be</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:root_dir</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:vol_set_id</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:publisher_id</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:data_preparer_id</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:application_id</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:copyright_file_id</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:abstract_file_id</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:bibliographic_file_id</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:vol_create_datetime</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:vol_mod_datetime</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:vol_expire_datetime</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:vol_effective_datetime</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:file_structure_version</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:unused4</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:application_area</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:_raw_root_dir</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:_raw_path_table</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">VolDescBootRecord</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
 
-    <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@boot_system_id</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
-      <span class="vi">@boot_id</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
-      <span class="nb">self</span>
-    <span class="k">end</span>
-    <span class="kp">attr_reader</span> <span class="ss">:boot_system_id</span>
-    <span class="kp">attr_reader</span> <span class="ss">:boot_id</span>
-  <span class="k">end</span>
-  <span class="k">class</span> <span class="nc">Datetime</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
-      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-      <span class="n">_read</span>
-    <span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@boot_system_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@boot_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:boot_system_id</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:boot_id</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">Datetime</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
 
-    <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@year</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="vi">@month</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="vi">@day</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="vi">@hour</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="vi">@minute</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="vi">@sec</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="vi">@timezone</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="nb">self</span>
-    <span class="k">end</span>
-    <span class="kp">attr_reader</span> <span class="ss">:year</span>
-    <span class="kp">attr_reader</span> <span class="ss">:month</span>
-    <span class="kp">attr_reader</span> <span class="ss">:day</span>
-    <span class="kp">attr_reader</span> <span class="ss">:hour</span>
-    <span class="kp">attr_reader</span> <span class="ss">:minute</span>
-    <span class="kp">attr_reader</span> <span class="ss">:sec</span>
-    <span class="kp">attr_reader</span> <span class="ss">:timezone</span>
-  <span class="k">end</span>
-  <span class="k">class</span> <span class="nc">DirEntry</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
-      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-      <span class="n">_read</span>
-    <span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@year</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@month</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@day</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@hour</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@minute</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@sec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@timezone</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:year</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:month</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:day</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:hour</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:minute</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:sec</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:timezone</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">DirEntry</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
 
-    <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@len</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">if</span> <span class="n">len</span> <span class="o">&gt;</span> <span class="mi">0</span>
-        <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">len</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
-        <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
-        <span class="vi">@body</span> <span class="o">=</span> <span class="no">DirEntryBody</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">end</span>
-      <span class="nb">self</span>
-    <span class="k">end</span>
-    <span class="kp">attr_reader</span> <span class="ss">:len</span>
-    <span class="kp">attr_reader</span> <span class="ss">:body</span>
-    <span class="kp">attr_reader</span> <span class="ss">:_raw_body</span>
-  <span class="k">end</span>
-  <span class="k">class</span> <span class="nc">VolDesc</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
-      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-      <span class="n">_read</span>
-    <span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="n">len</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">        </span><span class="vi">@_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">len</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+<span class="w">        </span><span class="n">_io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">DirEntryBody</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:len</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:body</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:_raw_body</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">VolDesc</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
 
-    <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@type</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="vi">@magic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-      <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">67</span><span class="p">,</span> <span class="mi">68</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="mi">49</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">magic</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/vol_desc/seq/1&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">magic</span> <span class="o">==</span> <span class="o">[</span><span class="mi">67</span><span class="p">,</span> <span class="mi">68</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="mi">49</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
-      <span class="vi">@version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">if</span> <span class="n">type</span> <span class="o">==</span> <span class="mi">0</span>
-        <span class="vi">@vol_desc_boot_record</span> <span class="o">=</span> <span class="no">VolDescBootRecord</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">end</span>
-      <span class="k">if</span> <span class="n">type</span> <span class="o">==</span> <span class="mi">1</span>
-        <span class="vi">@vol_desc_primary</span> <span class="o">=</span> <span class="no">VolDescPrimary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">end</span>
-      <span class="nb">self</span>
-    <span class="k">end</span>
-    <span class="kp">attr_reader</span> <span class="ss">:type</span>
-    <span class="kp">attr_reader</span> <span class="ss">:magic</span>
-    <span class="kp">attr_reader</span> <span class="ss">:version</span>
-    <span class="kp">attr_reader</span> <span class="ss">:vol_desc_boot_record</span>
-    <span class="kp">attr_reader</span> <span class="ss">:vol_desc_primary</span>
-  <span class="k">end</span>
-  <span class="k">class</span> <span class="nc">PathTableEntryLe</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
-      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-      <span class="n">_read</span>
-    <span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">67</span><span class="p">,</span><span class="w"> </span><span class="mi">68</span><span class="p">,</span><span class="w"> </span><span class="mi">48</span><span class="p">,</span><span class="w"> </span><span class="mi">48</span><span class="p">,</span><span class="w"> </span><span class="mi">49</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span><span class="w"> </span><span class="n">magic</span><span class="p">,</span><span class="w"> </span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/vol_desc/seq/1&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">magic</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">67</span><span class="p">,</span><span class="w"> </span><span class="mi">68</span><span class="p">,</span><span class="w"> </span><span class="mi">48</span><span class="p">,</span><span class="w"> </span><span class="mi">48</span><span class="p">,</span><span class="w"> </span><span class="mi">49</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">        </span><span class="vi">@vol_desc_boot_record</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">VolDescBootRecord</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">        </span><span class="vi">@vol_desc_primary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">VolDescPrimary</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:type</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:magic</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:version</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:vol_desc_boot_record</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:vol_desc_primary</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">PathTableEntryLe</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
 
-    <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@len_dir_name</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="vi">@len_ext_attr_rec</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="vi">@lba_extent</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-      <span class="vi">@parent_dir_idx</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="vi">@dir_name</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_dir_name</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
-      <span class="k">if</span> <span class="p">(</span><span class="n">len_dir_name</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
-        <span class="vi">@padding</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">end</span>
-      <span class="nb">self</span>
-    <span class="k">end</span>
-    <span class="kp">attr_reader</span> <span class="ss">:len_dir_name</span>
-    <span class="kp">attr_reader</span> <span class="ss">:len_ext_attr_rec</span>
-    <span class="kp">attr_reader</span> <span class="ss">:lba_extent</span>
-    <span class="kp">attr_reader</span> <span class="ss">:parent_dir_idx</span>
-    <span class="kp">attr_reader</span> <span class="ss">:dir_name</span>
-    <span class="kp">attr_reader</span> <span class="ss">:padding</span>
-  <span class="k">end</span>
-  <span class="k">class</span> <span class="nc">DirEntries</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
-      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-      <span class="n">_read</span>
-    <span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@len_dir_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@len_ext_attr_rec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@lba_extent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">      </span><span class="vi">@parent_dir_idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+<span class="w">      </span><span class="vi">@dir_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_dir_name</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">len_dir_name</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">        </span><span class="vi">@padding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:len_dir_name</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:len_ext_attr_rec</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:lba_extent</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:parent_dir_idx</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:dir_name</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:padding</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">DirEntries</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
 
-    <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@entries</span> <span class="o">=</span> <span class="o">[]</span>
-      <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-      <span class="k">begin</span>
-        <span class="n">_</span> <span class="o">=</span> <span class="no">DirEntry</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-        <span class="vi">@entries</span> <span class="o">&lt;&lt;</span> <span class="n">_</span>
-        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
-      <span class="k">end</span> <span class="k">until</span> <span class="n">_</span><span class="o">.</span><span class="n">len</span> <span class="o">==</span> <span class="mi">0</span>
-      <span class="nb">self</span>
-    <span class="k">end</span>
-    <span class="kp">attr_reader</span> <span class="ss">:entries</span>
-  <span class="k">end</span>
-  <span class="k">class</span> <span class="nc">U4bi</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
-      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-      <span class="n">_read</span>
-    <span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
+<span class="w">      </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="k">begin</span>
+<span class="w">        </span><span class="n">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">DirEntry</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@entries</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">_</span>
+<span class="w">        </span><span class="n">i</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">      </span><span class="k">end</span><span class="w"> </span><span class="k">until</span><span class="w"> </span><span class="n">_</span><span class="o">.</span><span class="n">len</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:entries</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">U4bi</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
 
-    <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@le</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-      <span class="vi">@be</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-      <span class="nb">self</span>
-    <span class="k">end</span>
-    <span class="kp">attr_reader</span> <span class="ss">:le</span>
-    <span class="kp">attr_reader</span> <span class="ss">:be</span>
-  <span class="k">end</span>
-  <span class="k">class</span> <span class="nc">U2bi</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
-      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-      <span class="n">_read</span>
-    <span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@le</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">      </span><span class="vi">@be</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:le</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:be</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">U2bi</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
 
-    <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@le</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="vi">@be</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
-      <span class="nb">self</span>
-    <span class="k">end</span>
-    <span class="kp">attr_reader</span> <span class="ss">:le</span>
-    <span class="kp">attr_reader</span> <span class="ss">:be</span>
-  <span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@le</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+<span class="w">      </span><span class="vi">@be</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:le</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:be</span>
+<span class="w">  </span><span class="k">end</span>
 
-  <span class="c1">##</span>
-  <span class="c1"># @see https://wiki.osdev.org/ISO_9660#The_Path_Table Source</span>
-  <span class="k">class</span> <span class="nc">PathTableLe</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
-      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-      <span class="n">_read</span>
-    <span class="k">end</span>
+<span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># @see https://wiki.osdev.org/ISO_9660#The_Path_Table Source</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">PathTableLe</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
 
-    <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@entries</span> <span class="o">=</span> <span class="o">[]</span>
-      <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-      <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
-        <span class="vi">@entries</span> <span class="o">&lt;&lt;</span> <span class="no">PathTableEntryLe</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
-      <span class="k">end</span>
-      <span class="nb">self</span>
-    <span class="k">end</span>
-    <span class="kp">attr_reader</span> <span class="ss">:entries</span>
-  <span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
+<span class="w">      </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="k">while</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
+<span class="w">        </span><span class="vi">@entries</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="no">PathTableEntryLe</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">        </span><span class="n">i</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:entries</span>
+<span class="w">  </span><span class="k">end</span>
 
-  <span class="c1">##</span>
-  <span class="c1"># @see https://wiki.osdev.org/ISO_9660#Date.2Ftime_format Source</span>
-  <span class="k">class</span> <span class="nc">DecDatetime</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
-      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-      <span class="n">_read</span>
-    <span class="k">end</span>
+<span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># @see https://wiki.osdev.org/ISO_9660#Date.2Ftime_format Source</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">DecDatetime</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
 
-    <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@year</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
-      <span class="vi">@month</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
-      <span class="vi">@day</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
-      <span class="vi">@hour</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
-      <span class="vi">@minute</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
-      <span class="vi">@sec</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
-      <span class="vi">@sec_hundreds</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
-      <span class="vi">@timezone</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="nb">self</span>
-    <span class="k">end</span>
-    <span class="kp">attr_reader</span> <span class="ss">:year</span>
-    <span class="kp">attr_reader</span> <span class="ss">:month</span>
-    <span class="kp">attr_reader</span> <span class="ss">:day</span>
-    <span class="kp">attr_reader</span> <span class="ss">:hour</span>
-    <span class="kp">attr_reader</span> <span class="ss">:minute</span>
-    <span class="kp">attr_reader</span> <span class="ss">:sec</span>
-    <span class="kp">attr_reader</span> <span class="ss">:sec_hundreds</span>
-    <span class="kp">attr_reader</span> <span class="ss">:timezone</span>
-  <span class="k">end</span>
-  <span class="k">class</span> <span class="nc">DirEntryBody</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
-      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-      <span class="n">_read</span>
-    <span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@year</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@month</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@day</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@hour</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@minute</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@sec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@sec_hundreds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@timezone</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:year</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:month</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:day</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:hour</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:minute</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:sec</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:sec_hundreds</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:timezone</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">DirEntryBody</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
 
-    <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@len_ext_attr_rec</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="vi">@lba_extent</span> <span class="o">=</span> <span class="no">U4bi</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="vi">@size_extent</span> <span class="o">=</span> <span class="no">U4bi</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="vi">@datetime</span> <span class="o">=</span> <span class="no">Datetime</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="vi">@file_flags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="vi">@file_unit_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="vi">@interleave_gap_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="vi">@vol_seq_num</span> <span class="o">=</span> <span class="no">U2bi</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="vi">@len_file_name</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="vi">@file_name</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_file_name</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
-      <span class="k">if</span> <span class="p">(</span><span class="n">len_file_name</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
-        <span class="vi">@padding</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">end</span>
-      <span class="vi">@rest</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span>
-      <span class="nb">self</span>
-    <span class="k">end</span>
-    <span class="k">def</span> <span class="nf">extent_as_dir</span>
-      <span class="k">return</span> <span class="vi">@extent_as_dir</span> <span class="k">unless</span> <span class="vi">@extent_as_dir</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="k">if</span> <span class="p">(</span><span class="n">file_flags</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-        <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="o">.</span><span class="n">_io</span>
-        <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span>
-        <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">((</span><span class="n">lba_extent</span><span class="o">.</span><span class="n">le</span> <span class="o">*</span> <span class="n">_root</span><span class="o">.</span><span class="n">sector_size</span><span class="p">))</span>
-        <span class="vi">@_raw_extent_as_dir</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">size_extent</span><span class="o">.</span><span class="n">le</span><span class="p">)</span>
-        <span class="n">_io__raw_extent_as_dir</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_extent_as_dir</span><span class="p">)</span>
-        <span class="vi">@extent_as_dir</span> <span class="o">=</span> <span class="no">DirEntries</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_extent_as_dir</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-        <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-      <span class="k">end</span>
-      <span class="vi">@extent_as_dir</span>
-    <span class="k">end</span>
-    <span class="k">def</span> <span class="nf">extent_as_file</span>
-      <span class="k">return</span> <span class="vi">@extent_as_file</span> <span class="k">unless</span> <span class="vi">@extent_as_file</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="k">if</span> <span class="p">(</span><span class="n">file_flags</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
-        <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="o">.</span><span class="n">_io</span>
-        <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span>
-        <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">((</span><span class="n">lba_extent</span><span class="o">.</span><span class="n">le</span> <span class="o">*</span> <span class="n">_root</span><span class="o">.</span><span class="n">sector_size</span><span class="p">))</span>
-        <span class="vi">@extent_as_file</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">size_extent</span><span class="o">.</span><span class="n">le</span><span class="p">)</span>
-        <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-      <span class="k">end</span>
-      <span class="vi">@extent_as_file</span>
-    <span class="k">end</span>
-    <span class="kp">attr_reader</span> <span class="ss">:len_ext_attr_rec</span>
-    <span class="kp">attr_reader</span> <span class="ss">:lba_extent</span>
-    <span class="kp">attr_reader</span> <span class="ss">:size_extent</span>
-    <span class="kp">attr_reader</span> <span class="ss">:datetime</span>
-    <span class="kp">attr_reader</span> <span class="ss">:file_flags</span>
-    <span class="kp">attr_reader</span> <span class="ss">:file_unit_size</span>
-    <span class="kp">attr_reader</span> <span class="ss">:interleave_gap_size</span>
-    <span class="kp">attr_reader</span> <span class="ss">:vol_seq_num</span>
-    <span class="kp">attr_reader</span> <span class="ss">:len_file_name</span>
-    <span class="kp">attr_reader</span> <span class="ss">:file_name</span>
-    <span class="kp">attr_reader</span> <span class="ss">:padding</span>
-    <span class="kp">attr_reader</span> <span class="ss">:rest</span>
-    <span class="kp">attr_reader</span> <span class="ss">:_raw_extent_as_dir</span>
-  <span class="k">end</span>
-  <span class="k">def</span> <span class="nf">sector_size</span>
-    <span class="k">return</span> <span class="vi">@sector_size</span> <span class="k">unless</span> <span class="vi">@sector_size</span><span class="o">.</span><span class="n">nil?</span>
-    <span class="vi">@sector_size</span> <span class="o">=</span> <span class="mi">2048</span>
-    <span class="vi">@sector_size</span>
-  <span class="k">end</span>
-  <span class="k">def</span> <span class="nf">primary_vol_desc</span>
-    <span class="k">return</span> <span class="vi">@primary_vol_desc</span> <span class="k">unless</span> <span class="vi">@primary_vol_desc</span><span class="o">.</span><span class="n">nil?</span>
-    <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
-    <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">((</span><span class="mi">16</span> <span class="o">*</span> <span class="n">sector_size</span><span class="p">))</span>
-    <span class="vi">@primary_vol_desc</span> <span class="o">=</span> <span class="no">VolDesc</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-    <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-    <span class="vi">@primary_vol_desc</span>
-  <span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@len_ext_attr_rec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@lba_extent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">U4bi</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@size_extent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">U4bi</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@datetime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Datetime</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@file_flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@file_unit_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@interleave_gap_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@vol_seq_num</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">U2bi</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@len_file_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@file_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_file_name</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">len_file_name</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">        </span><span class="vi">@padding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="vi">@rest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">extent_as_dir</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@extent_as_dir</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@extent_as_dir</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">file_flags</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">        </span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_root</span><span class="o">.</span><span class="n">_io</span>
+<span class="w">        </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span><span class="o">.</span><span class="n">pos</span>
+<span class="w">        </span><span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">((</span><span class="n">lba_extent</span><span class="o">.</span><span class="n">le</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="o">.</span><span class="n">sector_size</span><span class="p">))</span>
+<span class="w">        </span><span class="vi">@_raw_extent_as_dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">size_extent</span><span class="o">.</span><span class="n">le</span><span class="p">)</span>
+<span class="w">        </span><span class="n">_io__raw_extent_as_dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_extent_as_dir</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@extent_as_dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">DirEntries</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_extent_as_dir</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">        </span><span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="vi">@extent_as_dir</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">extent_as_file</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@extent_as_file</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@extent_as_file</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">file_flags</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">        </span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_root</span><span class="o">.</span><span class="n">_io</span>
+<span class="w">        </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span><span class="o">.</span><span class="n">pos</span>
+<span class="w">        </span><span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">((</span><span class="n">lba_extent</span><span class="o">.</span><span class="n">le</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="o">.</span><span class="n">sector_size</span><span class="p">))</span>
+<span class="w">        </span><span class="vi">@extent_as_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">size_extent</span><span class="o">.</span><span class="n">le</span><span class="p">)</span>
+<span class="w">        </span><span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="vi">@extent_as_file</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:len_ext_attr_rec</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:lba_extent</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:size_extent</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:datetime</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:file_flags</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:file_unit_size</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:interleave_gap_size</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:vol_seq_num</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:len_file_name</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:file_name</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:padding</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:rest</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:_raw_extent_as_dir</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">sector_size</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="vi">@sector_size</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@sector_size</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">    </span><span class="vi">@sector_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2048</span>
+<span class="w">    </span><span class="vi">@sector_size</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">primary_vol_desc</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="vi">@primary_vol_desc</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@primary_vol_desc</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">    </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+<span class="w">    </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">((</span><span class="mi">16</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">sector_size</span><span class="p">))</span>
+<span class="w">    </span><span class="vi">@primary_vol_desc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">VolDesc</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">    </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+<span class="w">    </span><span class="vi">@primary_vol_desc</span>
+<span class="w">  </span><span class="k">end</span>
 <span class="k">end</span>
 </pre></div>
 

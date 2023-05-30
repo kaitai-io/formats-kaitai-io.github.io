@@ -241,265 +241,265 @@ with sha1 and md5 checksums.</p>
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-<span class="k">use</span> <span class="nn">strict</span><span class="p">;</span>
-<span class="k">use</span> <span class="nn">warnings</span><span class="p">;</span>
-<span class="k">use</span> <span class="nn">IO::KaitaiStruct</span> <span class="mf">0.009_000</span><span class="p">;</span>
-<span class="k">use</span> <span class="nn">Encode</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="nn">strict</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="nn">warnings</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="nn">IO::KaitaiStruct</span><span class="w"> </span><span class="mf">0.009_000</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="nn">Encode</span><span class="p">;</span>
 
 <span class="c1">########################################################################</span>
-<span class="k">package</span> <span class="nn">Uimage</span><span class="p">;</span>
+<span class="k">package</span><span class="w"> </span><span class="nn">Uimage</span><span class="p">;</span>
 
-<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
 
-<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">from_file</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$fd</span><span class="p">;</span>
 
-    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
-    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
-    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="w">    </span><span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;&lt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">undef</span><span class="p">;</span>
+<span class="w">    </span><span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
 <span class="p">}</span>
 
-<span class="k">our</span> <span class="nv">$UIMAGE_OS_INVALID</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_OS_OPENBSD</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_OS_NETBSD</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_OS_FREEBSD</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_OS_BSD4_4</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_OS_LINUX</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_OS_SVR4</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_OS_ESIX</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_OS_SOLARIS</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_OS_IRIX</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_OS_SCO</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_OS_DELL</span> <span class="o">=</span> <span class="mi">11</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_OS_NCR</span> <span class="o">=</span> <span class="mi">12</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_OS_LYNXOS</span> <span class="o">=</span> <span class="mi">13</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_OS_VXWORKS</span> <span class="o">=</span> <span class="mi">14</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_OS_PSOS</span> <span class="o">=</span> <span class="mi">15</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_OS_QNX</span> <span class="o">=</span> <span class="mi">16</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_OS_U_BOOT</span> <span class="o">=</span> <span class="mi">17</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_OS_RTEMS</span> <span class="o">=</span> <span class="mi">18</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_OS_ARTOS</span> <span class="o">=</span> <span class="mi">19</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_OS_UNITY</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_OS_INTEGRITY</span> <span class="o">=</span> <span class="mi">21</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_OS_OSE</span> <span class="o">=</span> <span class="mi">22</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_OS_PLAN9</span> <span class="o">=</span> <span class="mi">23</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_OS_OPENRTOS</span> <span class="o">=</span> <span class="mi">24</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_OS_ARM_TRUSTED_FIRMWARE</span> <span class="o">=</span> <span class="mi">25</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_OS_TEE</span> <span class="o">=</span> <span class="mi">26</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_OS_OPENSBI</span> <span class="o">=</span> <span class="mi">27</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_OS_EFI</span> <span class="o">=</span> <span class="mi">28</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_OS_INVALID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_OS_OPENBSD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_OS_NETBSD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_OS_FREEBSD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_OS_BSD4_4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_OS_LINUX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_OS_SVR4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_OS_ESIX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_OS_SOLARIS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_OS_IRIX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">9</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_OS_SCO</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_OS_DELL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">11</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_OS_NCR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_OS_LYNXOS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">13</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_OS_VXWORKS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">14</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_OS_PSOS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_OS_QNX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">16</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_OS_U_BOOT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">17</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_OS_RTEMS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">18</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_OS_ARTOS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">19</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_OS_UNITY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_OS_INTEGRITY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">21</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_OS_OSE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">22</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_OS_PLAN9</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">23</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_OS_OPENRTOS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">24</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_OS_ARM_TRUSTED_FIRMWARE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">25</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_OS_TEE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">26</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_OS_OPENSBI</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">27</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_OS_EFI</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">28</span><span class="p">;</span>
 
-<span class="k">our</span> <span class="nv">$UIMAGE_ARCH_INVALID</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_ARCH_ALPHA</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_ARCH_ARM</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_ARCH_I386</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_ARCH_IA64</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_ARCH_MIPS</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_ARCH_MIPS64</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_ARCH_PPC</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_ARCH_S390</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_ARCH_SH</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_ARCH_SPARC</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_ARCH_SPARC64</span> <span class="o">=</span> <span class="mi">11</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_ARCH_M68K</span> <span class="o">=</span> <span class="mi">12</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_ARCH_NIOS</span> <span class="o">=</span> <span class="mi">13</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_ARCH_MICROBLAZE</span> <span class="o">=</span> <span class="mi">14</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_ARCH_NIOS2</span> <span class="o">=</span> <span class="mi">15</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_ARCH_BLACKFIN</span> <span class="o">=</span> <span class="mi">16</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_ARCH_AVR32</span> <span class="o">=</span> <span class="mi">17</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_ARCH_ST200</span> <span class="o">=</span> <span class="mi">18</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_ARCH_SANDBOX</span> <span class="o">=</span> <span class="mi">19</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_ARCH_NDS32</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_ARCH_OPENRISC</span> <span class="o">=</span> <span class="mi">21</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_ARCH_ARM64</span> <span class="o">=</span> <span class="mi">22</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_ARCH_ARC</span> <span class="o">=</span> <span class="mi">23</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_ARCH_X86_64</span> <span class="o">=</span> <span class="mi">24</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_ARCH_XTENSA</span> <span class="o">=</span> <span class="mi">25</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_ARCH_RISCV</span> <span class="o">=</span> <span class="mi">26</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_ARCH_INVALID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_ARCH_ALPHA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_ARCH_ARM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_ARCH_I386</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_ARCH_IA64</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_ARCH_MIPS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_ARCH_MIPS64</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_ARCH_PPC</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_ARCH_S390</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_ARCH_SH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">9</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_ARCH_SPARC</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_ARCH_SPARC64</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">11</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_ARCH_M68K</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_ARCH_NIOS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">13</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_ARCH_MICROBLAZE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">14</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_ARCH_NIOS2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_ARCH_BLACKFIN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">16</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_ARCH_AVR32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">17</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_ARCH_ST200</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">18</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_ARCH_SANDBOX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">19</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_ARCH_NDS32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_ARCH_OPENRISC</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">21</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_ARCH_ARM64</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">22</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_ARCH_ARC</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">23</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_ARCH_X86_64</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">24</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_ARCH_XTENSA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">25</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_ARCH_RISCV</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">26</span><span class="p">;</span>
 
-<span class="k">our</span> <span class="nv">$UIMAGE_COMP_NONE</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_COMP_GZIP</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_COMP_BZIP2</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_COMP_LZMA</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_COMP_LZO</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_COMP_LZ4</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_COMP_ZSTD</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_COMP_NONE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_COMP_GZIP</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_COMP_BZIP2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_COMP_LZMA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_COMP_LZO</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_COMP_LZ4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_COMP_ZSTD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span><span class="p">;</span>
 
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_INVALID</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_STANDALONE</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_KERNEL</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_RAMDISK</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_MULTI</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_FIRMWARE</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_SCRIPT</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_FILESYSTEM</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_FLATDT</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_KWBIMAGE</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_IMXIMAGE</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_UBLIMAGE</span> <span class="o">=</span> <span class="mi">11</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_OMAPIMAGE</span> <span class="o">=</span> <span class="mi">12</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_AISIMAGE</span> <span class="o">=</span> <span class="mi">13</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_KERNEL_NOLOAD</span> <span class="o">=</span> <span class="mi">14</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_PBLIMAGE</span> <span class="o">=</span> <span class="mi">15</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_MXSIMAGE</span> <span class="o">=</span> <span class="mi">16</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_GPIMAGE</span> <span class="o">=</span> <span class="mi">17</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_ATMELIMAGE</span> <span class="o">=</span> <span class="mi">18</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_SOCFPGAIMAGE</span> <span class="o">=</span> <span class="mi">19</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_X86_SETUP</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_LPC32XXIMAGE</span> <span class="o">=</span> <span class="mi">21</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_LOADABLE</span> <span class="o">=</span> <span class="mi">22</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_RKIMAGE</span> <span class="o">=</span> <span class="mi">23</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_RKSD</span> <span class="o">=</span> <span class="mi">24</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_RKSPI</span> <span class="o">=</span> <span class="mi">25</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_ZYNQIMAGE</span> <span class="o">=</span> <span class="mi">26</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_ZYNQMPIMAGE</span> <span class="o">=</span> <span class="mi">27</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_ZYNQMPBIF</span> <span class="o">=</span> <span class="mi">28</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_FPGA</span> <span class="o">=</span> <span class="mi">29</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_VYBRIDIMAGE</span> <span class="o">=</span> <span class="mi">30</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_TEE</span> <span class="o">=</span> <span class="mi">31</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_FIRMWARE_IVT</span> <span class="o">=</span> <span class="mi">32</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_PMMC</span> <span class="o">=</span> <span class="mi">33</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_STM32IMAGE</span> <span class="o">=</span> <span class="mi">34</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_SOCFPGAIMAGE_V1</span> <span class="o">=</span> <span class="mi">35</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_MTKIMAGE</span> <span class="o">=</span> <span class="mi">36</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_IMX8MIMAGE</span> <span class="o">=</span> <span class="mi">37</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_IMX8IMAGE</span> <span class="o">=</span> <span class="mi">38</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_COPRO</span> <span class="o">=</span> <span class="mi">39</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$UIMAGE_TYPE_SUNXI_EGON</span> <span class="o">=</span> <span class="mi">40</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_INVALID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_STANDALONE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_KERNEL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_RAMDISK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_MULTI</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_FIRMWARE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_SCRIPT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_FILESYSTEM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_FLATDT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_KWBIMAGE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">9</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_IMXIMAGE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_UBLIMAGE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">11</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_OMAPIMAGE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_AISIMAGE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">13</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_KERNEL_NOLOAD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">14</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_PBLIMAGE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_MXSIMAGE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">16</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_GPIMAGE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">17</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_ATMELIMAGE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">18</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_SOCFPGAIMAGE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">19</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_X86_SETUP</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_LPC32XXIMAGE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">21</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_LOADABLE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">22</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_RKIMAGE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">23</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_RKSD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">24</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_RKSPI</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">25</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_ZYNQIMAGE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">26</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_ZYNQMPIMAGE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">27</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_ZYNQMPBIF</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">28</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_FPGA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">29</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_VYBRIDIMAGE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">30</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_TEE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">31</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_FIRMWARE_IVT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">32</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_PMMC</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">33</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_STM32IMAGE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">34</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_SOCFPGAIMAGE_V1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">35</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_MTKIMAGE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">36</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_IMX8MIMAGE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">37</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_IMX8IMAGE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">38</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_COPRO</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">39</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$UIMAGE_TYPE_SUNXI_EGON</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">40</span><span class="p">;</span>
 
-<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">new</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$_io</span><span class="p">,</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">,</span><span class="w"> </span><span class="nv">$_root</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$self</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
 
-    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
+<span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">$self</span><span class="p">;;</span>
 
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
 
-    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">_read</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
 
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">header</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Uimage::Uheader</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">data</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">len_image</span><span class="p">());</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">header</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Uimage::Uheader</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">data</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">len_image</span><span class="p">());</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">header</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">header</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">header</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">header</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">data</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">data</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">data</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">data</span><span class="p">};</span>
 <span class="p">}</span>
 
 <span class="c1">########################################################################</span>
-<span class="k">package</span> <span class="nn">Uimage::Uheader</span><span class="p">;</span>
+<span class="k">package</span><span class="w"> </span><span class="nn">Uimage::Uheader</span><span class="p">;</span>
 
-<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
 
-<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">from_file</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$fd</span><span class="p">;</span>
 
-    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
-    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
-    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="w">    </span><span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;&lt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">undef</span><span class="p">;</span>
+<span class="w">    </span><span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">new</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$_io</span><span class="p">,</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">,</span><span class="w"> </span><span class="nv">$_root</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$self</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
 
-    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
+<span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">$self</span><span class="p">;;</span>
 
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
 
-    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">_read</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
 
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">magic</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">header_crc</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">timestamp</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">len_image</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">load_address</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">entry_address</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">data_crc</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">os_type</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">architecture</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">image_type</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">compression_type</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">name</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Encode::</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream::</span><span class="n">bytes_terminate</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">magic</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">header_crc</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">timestamp</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">len_image</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">load_address</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">entry_address</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">data_crc</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">os_type</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">architecture</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">image_type</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">compression_type</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">name</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Encode::</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">,</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream::</span><span class="n">bytes_terminate</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">));</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">magic</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">magic</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">magic</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">magic</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">header_crc</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">header_crc</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">header_crc</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">header_crc</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">timestamp</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">timestamp</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">timestamp</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">timestamp</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">len_image</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">len_image</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">len_image</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">len_image</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">load_address</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">load_address</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">load_address</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">load_address</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">entry_address</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">entry_address</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">entry_address</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">entry_address</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">data_crc</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">data_crc</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">data_crc</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">data_crc</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">os_type</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">os_type</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">os_type</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">os_type</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">architecture</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">architecture</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">architecture</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">architecture</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">image_type</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">image_type</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">image_type</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">image_type</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">compression_type</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">compression_type</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">compression_type</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">compression_type</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">name</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">name</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">name</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">name</span><span class="p">};</span>
 <span class="p">}</span>
 
 <span class="mi">1</span><span class="p">;</span>

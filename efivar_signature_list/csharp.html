@@ -273,19 +273,19 @@ can also be found there.</p>
 
 
 
-<div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="n">EfivarSignatureList</span><span class="p">.</span><span class="n">FromFile</span><span class="p">(</span><span class="s">&quot;path/to/local/file.efivar_signature_list&quot;</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><span class="kt">var</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EfivarSignatureList</span><span class="p">.</span><span class="n">FromFile</span><span class="p">(</span><span class="s">&quot;path/to/local/file.efivar_signature_list&quot;</span><span class="p">);</span>
 </pre></div>
 
 <p>Or parse structure from a byte array:</p>
 
-<div class="highlight"><pre><span></span><span class="kt">byte</span><span class="p">[]</span> <span class="n">someArray</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
-<span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">EfivarSignatureList</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">someArray</span><span class="p">));</span>
+<div class="highlight"><pre><span></span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">someArray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">};</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">EfivarSignatureList</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">someArray</span><span class="p">));</span>
 </pre></div>
 
 <p>After that, one can get various attributes from the structure by accessing properties like:</p>
 
 
-<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">VarAttributes</span> <span class="c1">// =&gt; Attributes of the UEFI variable</span>
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">VarAttributes</span><span class="w"> </span><span class="c1">// =&gt; Attributes of the UEFI variable</span>
 </pre></div>
 
     </div>
@@ -315,511 +315,511 @@ can also be found there.</p>
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">System.Collections.Generic</span><span class="p">;</span>
 
-<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">Kaitai</span>
 <span class="p">{</span>
 
-    <span class="c1">/// &lt;summary&gt;</span>
-    <span class="c1">/// Parse UEFI variables db and dbx that contain signatures, certificates and</span>
-    <span class="c1">/// hashes. On a Linux system using UEFI, these variables are readable from</span>
-    <span class="c1">/// /sys/firmware/efi/efivars/db-d719b2cb-3d3a-4596-a3bc-dad00e67656f,</span>
-    <span class="c1">/// /sys/firmware/efi/efivars/dbDefault-8be4df61-93ca-11d2-aa0d-00e098032b8c,</span>
-    <span class="c1">/// /sys/firmware/efi/efivars/dbx-d719b2cb-3d3a-4596-a3bc-dad00e67656f and</span>
-    <span class="c1">/// /sys/firmware/efi/efivars/dbxDefault-8be4df61-93ca-11d2-aa0d-00e098032b8c.</span>
-    <span class="c1">/// (&amp;quot;d719b2cb-3d3a-4596-a3bc-dad00e67656f&amp;quot; is defined as</span>
-    <span class="c1">/// EFI_IMAGE_SECURITY_DATABASE_GUID and &amp;quot;8be4df61-93ca-11d2-aa0d-00e098032b8c&amp;quot;</span>
-    <span class="c1">/// as EFI_GLOBAL_VARIABLE).</span>
-    <span class="c1">/// Each file contains an EFI attribute (32-bit integer) followed by a list of</span>
-    <span class="c1">/// EFI_SIGNATURE_LIST structures.</span>
-    <span class="c1">/// &lt;/summary&gt;</span>
-    <span class="c1">/// &lt;remarks&gt;</span>
-    <span class="c1">/// Reference: &lt;a href=&quot;https://uefi.org/sites/default/files/resources/UEFI_Spec_2_8_final.pdf&quot;&gt;Source&lt;/a&gt;</span>
-    <span class="c1">/// &lt;/remarks&gt;</span>
-    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">EfivarSignatureList</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">{</span>
-        <span class="k">public</span> <span class="k">static</span> <span class="n">EfivarSignatureList</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">return</span> <span class="k">new</span> <span class="nf">EfivarSignatureList</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-        <span class="p">}</span>
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Parse UEFI variables db and dbx that contain signatures, certificates and</span>
+<span class="w">    </span><span class="c1">/// hashes. On a Linux system using UEFI, these variables are readable from</span>
+<span class="w">    </span><span class="c1">/// /sys/firmware/efi/efivars/db-d719b2cb-3d3a-4596-a3bc-dad00e67656f,</span>
+<span class="w">    </span><span class="c1">/// /sys/firmware/efi/efivars/dbDefault-8be4df61-93ca-11d2-aa0d-00e098032b8c,</span>
+<span class="w">    </span><span class="c1">/// /sys/firmware/efi/efivars/dbx-d719b2cb-3d3a-4596-a3bc-dad00e67656f and</span>
+<span class="w">    </span><span class="c1">/// /sys/firmware/efi/efivars/dbxDefault-8be4df61-93ca-11d2-aa0d-00e098032b8c.</span>
+<span class="w">    </span><span class="c1">/// (&amp;quot;d719b2cb-3d3a-4596-a3bc-dad00e67656f&amp;quot; is defined as</span>
+<span class="w">    </span><span class="c1">/// EFI_IMAGE_SECURITY_DATABASE_GUID and &amp;quot;8be4df61-93ca-11d2-aa0d-00e098032b8c&amp;quot;</span>
+<span class="w">    </span><span class="c1">/// as EFI_GLOBAL_VARIABLE).</span>
+<span class="w">    </span><span class="c1">/// Each file contains an EFI attribute (32-bit integer) followed by a list of</span>
+<span class="w">    </span><span class="c1">/// EFI_SIGNATURE_LIST structures.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;https://uefi.org/sites/default/files/resources/UEFI_Spec_2_8_final.pdf&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">EfivarSignatureList</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">EfivarSignatureList</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">EfivarSignatureList</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
 
-        <span class="k">public</span> <span class="nf">EfivarSignatureList</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">EfivarSignatureList</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
-            <span class="n">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-        <span class="p">{</span>
-            <span class="n">_varAttributes</span> <span class="p">=</span> <span class="k">new</span> <span class="n">EfiVarAttr</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-            <span class="n">_signatures</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">SignatureList</span><span class="p">&gt;();</span>
-            <span class="p">{</span>
-                <span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
-                <span class="k">while</span> <span class="p">(!</span><span class="n">m_io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="n">_signatures</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">SignatureList</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
-                    <span class="n">i</span><span class="p">++;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="nf">EfivarSignatureList</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">EfivarSignatureList</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">            </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">            </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">_varAttributes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">EfiVarAttr</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">            </span><span class="n">_signatures</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">SignatureList</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="kt">var</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span>
+<span class="w">                </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">m_io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">_signatures</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">SignatureList</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">));</span>
+<span class="w">                    </span><span class="n">i</span><span class="o">++</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
 
-        <span class="c1">/// &lt;remarks&gt;</span>
-        <span class="c1">/// Reference: EFI_SIGNATURE_LIST</span>
-        <span class="c1">/// &lt;/remarks&gt;</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">SignatureList</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">SignatureList</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">SignatureList</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">        </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">        </span><span class="c1">/// Reference: EFI_SIGNATURE_LIST</span>
+<span class="w">        </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">SignatureList</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">SignatureList</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">SignatureList</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">SignatureList</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">EfivarSignatureList</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">EfivarSignatureList</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">f_isCertSha512X509</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_isCertSha224</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_isCertX509</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_isCertSha256X509</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_isCertRsa2048Key</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_isCertSha512</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_isCertSha384</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_isCertSha1</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_isCertRsa2048Sha1</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_isCertSha256</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_isCertSha384X509</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_isCertRsa2048Sha256</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_isCertDerPkcs7</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_signatureType</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">16</span><span class="p">);</span>
-                <span class="n">_lenSignatureList</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
-                <span class="n">_lenSignatureHeader</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
-                <span class="n">_lenSignature</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
-                <span class="n">_header</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenSignatureHeader</span><span class="p">);</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">LenSignature</span> <span class="p">&gt;</span> <span class="m">0</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="n">__raw_signatures</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">[]&gt;();</span>
-                    <span class="n">_signatures</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">SignatureData</span><span class="p">&gt;();</span>
-                    <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="p">(((</span><span class="n">LenSignatureList</span> <span class="p">-</span> <span class="n">LenSignatureHeader</span><span class="p">)</span> <span class="p">-</span> <span class="m">28</span><span class="p">)</span> <span class="p">/</span> <span class="n">LenSignature</span><span class="p">);</span> <span class="n">i</span><span class="p">++)</span>
-                    <span class="p">{</span>
-                        <span class="n">__raw_signatures</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenSignature</span><span class="p">));</span>
-                        <span class="kt">var</span> <span class="n">io___raw_signatures</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_signatures</span><span class="p">[</span><span class="n">__raw_signatures</span><span class="p">.</span><span class="n">Count</span> <span class="p">-</span> <span class="m">1</span><span class="p">]);</span>
-                        <span class="n">_signatures</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">SignatureData</span><span class="p">(</span><span class="n">io___raw_signatures</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
-                    <span class="p">}</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isCertSha512X509</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isCertSha512X509</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">SignatureList</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">EfivarSignatureList</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">EfivarSignatureList</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_isCertSha512X509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_isCertSha224</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_isCertX509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_isCertSha256X509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_isCertRsa2048Key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_isCertSha512</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_isCertSha384</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_isCertSha1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_isCertRsa2048Sha1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_isCertSha256</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_isCertSha384X509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_isCertRsa2048Sha256</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_isCertDerPkcs7</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_signatureType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">16</span><span class="p">);</span>
+<span class="w">                </span><span class="n">_lenSignatureList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_lenSignatureHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_lenSignature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenSignatureHeader</span><span class="p">);</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">LenSignature</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">__raw_signatures</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">byte</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">                    </span><span class="n">_signatures</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">SignatureData</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">                    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="p">(((</span><span class="n">LenSignatureList</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">LenSignatureHeader</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">28</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">LenSignature</span><span class="p">);</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">                    </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">__raw_signatures</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenSignature</span><span class="p">));</span>
+<span class="w">                        </span><span class="kt">var</span><span class="w"> </span><span class="n">io___raw_signatures</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_signatures</span><span class="p">[</span><span class="n">__raw_signatures</span><span class="p">.</span><span class="n">Count</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">1</span><span class="p">]);</span>
+<span class="w">                        </span><span class="n">_signatures</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">SignatureData</span><span class="p">(</span><span class="n">io___raw_signatures</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">));</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_isCertSha512X509</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">_isCertSha512X509</span><span class="p">;</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// SHA512 hash of an X.509 certificate&#39;s To-Be-Signed contents, and a time of revocation</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="c1">/// &lt;remarks&gt;</span>
-            <span class="c1">/// Reference: EFI_CERT_X509_SHA512_GUID</span>
-            <span class="c1">/// &lt;/remarks&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsCertSha512X509</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_isCertSha512X509</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_isCertSha512X509</span><span class="p">;</span>
-                    <span class="n">_isCertSha512X509</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">SignatureType</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">99</span><span class="p">,</span> <span class="m">191</span><span class="p">,</span> <span class="m">109</span><span class="p">,</span> <span class="m">68</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">37</span><span class="p">,</span> <span class="m">218</span><span class="p">,</span> <span class="m">76</span><span class="p">,</span> <span class="m">188</span><span class="p">,</span> <span class="m">250</span><span class="p">,</span> <span class="m">36</span><span class="p">,</span> <span class="m">101</span><span class="p">,</span> <span class="m">210</span><span class="p">,</span> <span class="m">176</span><span class="p">,</span> <span class="m">254</span><span class="p">,</span> <span class="m">157</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">));</span>
-                    <span class="n">f_isCertSha512X509</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_isCertSha512X509</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isCertSha224</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isCertSha224</span><span class="p">;</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// SHA512 hash of an X.509 certificate&#39;s To-Be-Signed contents, and a time of revocation</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">            </span><span class="c1">/// Reference: EFI_CERT_X509_SHA512_GUID</span>
+<span class="w">            </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">IsCertSha512X509</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_isCertSha512X509</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_isCertSha512X509</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_isCertSha512X509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">bool</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">SignatureType</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="m">99</span><span class="p">,</span><span class="w"> </span><span class="m">191</span><span class="p">,</span><span class="w"> </span><span class="m">109</span><span class="p">,</span><span class="w"> </span><span class="m">68</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="m">37</span><span class="p">,</span><span class="w"> </span><span class="m">218</span><span class="p">,</span><span class="w"> </span><span class="m">76</span><span class="p">,</span><span class="w"> </span><span class="m">188</span><span class="p">,</span><span class="w"> </span><span class="m">250</span><span class="p">,</span><span class="w"> </span><span class="m">36</span><span class="p">,</span><span class="w"> </span><span class="m">101</span><span class="p">,</span><span class="w"> </span><span class="m">210</span><span class="p">,</span><span class="w"> </span><span class="m">176</span><span class="p">,</span><span class="w"> </span><span class="m">254</span><span class="p">,</span><span class="w"> </span><span class="m">157</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">));</span>
+<span class="w">                    </span><span class="n">f_isCertSha512X509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_isCertSha512X509</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_isCertSha224</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">_isCertSha224</span><span class="p">;</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// SHA-224 hash</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="c1">/// &lt;remarks&gt;</span>
-            <span class="c1">/// Reference: EFI_CERT_SHA224_GUID</span>
-            <span class="c1">/// &lt;/remarks&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsCertSha224</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_isCertSha224</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_isCertSha224</span><span class="p">;</span>
-                    <span class="n">_isCertSha224</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">SignatureType</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">51</span><span class="p">,</span> <span class="m">82</span><span class="p">,</span> <span class="m">110</span><span class="p">,</span> <span class="m">11</span><span class="p">,</span> <span class="m">92</span><span class="p">,</span> <span class="m">166</span><span class="p">,</span> <span class="m">201</span><span class="p">,</span> <span class="m">68</span><span class="p">,</span> <span class="m">148</span><span class="p">,</span> <span class="m">7</span><span class="p">,</span> <span class="m">217</span><span class="p">,</span> <span class="m">171</span><span class="p">,</span> <span class="m">131</span><span class="p">,</span> <span class="m">191</span><span class="p">,</span> <span class="m">200</span><span class="p">,</span> <span class="m">189</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">));</span>
-                    <span class="n">f_isCertSha224</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_isCertSha224</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isCertX509</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isCertX509</span><span class="p">;</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// SHA-224 hash</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">            </span><span class="c1">/// Reference: EFI_CERT_SHA224_GUID</span>
+<span class="w">            </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">IsCertSha224</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_isCertSha224</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_isCertSha224</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_isCertSha224</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">bool</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">SignatureType</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="m">51</span><span class="p">,</span><span class="w"> </span><span class="m">82</span><span class="p">,</span><span class="w"> </span><span class="m">110</span><span class="p">,</span><span class="w"> </span><span class="m">11</span><span class="p">,</span><span class="w"> </span><span class="m">92</span><span class="p">,</span><span class="w"> </span><span class="m">166</span><span class="p">,</span><span class="w"> </span><span class="m">201</span><span class="p">,</span><span class="w"> </span><span class="m">68</span><span class="p">,</span><span class="w"> </span><span class="m">148</span><span class="p">,</span><span class="w"> </span><span class="m">7</span><span class="p">,</span><span class="w"> </span><span class="m">217</span><span class="p">,</span><span class="w"> </span><span class="m">171</span><span class="p">,</span><span class="w"> </span><span class="m">131</span><span class="p">,</span><span class="w"> </span><span class="m">191</span><span class="p">,</span><span class="w"> </span><span class="m">200</span><span class="p">,</span><span class="w"> </span><span class="m">189</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">));</span>
+<span class="w">                    </span><span class="n">f_isCertSha224</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_isCertSha224</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_isCertX509</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">_isCertX509</span><span class="p">;</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// X.509 certificate</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="c1">/// &lt;remarks&gt;</span>
-            <span class="c1">/// Reference: EFI_CERT_X509_GUID</span>
-            <span class="c1">/// &lt;/remarks&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsCertX509</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_isCertX509</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_isCertX509</span><span class="p">;</span>
-                    <span class="n">_isCertX509</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">SignatureType</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">161</span><span class="p">,</span> <span class="m">89</span><span class="p">,</span> <span class="m">192</span><span class="p">,</span> <span class="m">165</span><span class="p">,</span> <span class="m">228</span><span class="p">,</span> <span class="m">148</span><span class="p">,</span> <span class="m">167</span><span class="p">,</span> <span class="m">74</span><span class="p">,</span> <span class="m">135</span><span class="p">,</span> <span class="m">181</span><span class="p">,</span> <span class="m">171</span><span class="p">,</span> <span class="m">21</span><span class="p">,</span> <span class="m">92</span><span class="p">,</span> <span class="m">43</span><span class="p">,</span> <span class="m">240</span><span class="p">,</span> <span class="m">114</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">));</span>
-                    <span class="n">f_isCertX509</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_isCertX509</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isCertSha256X509</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isCertSha256X509</span><span class="p">;</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// X.509 certificate</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">            </span><span class="c1">/// Reference: EFI_CERT_X509_GUID</span>
+<span class="w">            </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">IsCertX509</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_isCertX509</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_isCertX509</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_isCertX509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">bool</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">SignatureType</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="m">161</span><span class="p">,</span><span class="w"> </span><span class="m">89</span><span class="p">,</span><span class="w"> </span><span class="m">192</span><span class="p">,</span><span class="w"> </span><span class="m">165</span><span class="p">,</span><span class="w"> </span><span class="m">228</span><span class="p">,</span><span class="w"> </span><span class="m">148</span><span class="p">,</span><span class="w"> </span><span class="m">167</span><span class="p">,</span><span class="w"> </span><span class="m">74</span><span class="p">,</span><span class="w"> </span><span class="m">135</span><span class="p">,</span><span class="w"> </span><span class="m">181</span><span class="p">,</span><span class="w"> </span><span class="m">171</span><span class="p">,</span><span class="w"> </span><span class="m">21</span><span class="p">,</span><span class="w"> </span><span class="m">92</span><span class="p">,</span><span class="w"> </span><span class="m">43</span><span class="p">,</span><span class="w"> </span><span class="m">240</span><span class="p">,</span><span class="w"> </span><span class="m">114</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">));</span>
+<span class="w">                    </span><span class="n">f_isCertX509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_isCertX509</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_isCertSha256X509</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">_isCertSha256X509</span><span class="p">;</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// SHA256 hash of an X.509 certificate&#39;s To-Be-Signed contents, and a time of revocation</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="c1">/// &lt;remarks&gt;</span>
-            <span class="c1">/// Reference: EFI_CERT_X509_SHA256_GUID</span>
-            <span class="c1">/// &lt;/remarks&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsCertSha256X509</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_isCertSha256X509</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_isCertSha256X509</span><span class="p">;</span>
-                    <span class="n">_isCertSha256X509</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">SignatureType</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">146</span><span class="p">,</span> <span class="m">164</span><span class="p">,</span> <span class="m">210</span><span class="p">,</span> <span class="m">59</span><span class="p">,</span> <span class="m">192</span><span class="p">,</span> <span class="m">150</span><span class="p">,</span> <span class="m">121</span><span class="p">,</span> <span class="m">64</span><span class="p">,</span> <span class="m">180</span><span class="p">,</span> <span class="m">32</span><span class="p">,</span> <span class="m">252</span><span class="p">,</span> <span class="m">249</span><span class="p">,</span> <span class="m">142</span><span class="p">,</span> <span class="m">241</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">237</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">));</span>
-                    <span class="n">f_isCertSha256X509</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_isCertSha256X509</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isCertRsa2048Key</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isCertRsa2048Key</span><span class="p">;</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// SHA256 hash of an X.509 certificate&#39;s To-Be-Signed contents, and a time of revocation</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">            </span><span class="c1">/// Reference: EFI_CERT_X509_SHA256_GUID</span>
+<span class="w">            </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">IsCertSha256X509</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_isCertSha256X509</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_isCertSha256X509</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_isCertSha256X509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">bool</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">SignatureType</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="m">146</span><span class="p">,</span><span class="w"> </span><span class="m">164</span><span class="p">,</span><span class="w"> </span><span class="m">210</span><span class="p">,</span><span class="w"> </span><span class="m">59</span><span class="p">,</span><span class="w"> </span><span class="m">192</span><span class="p">,</span><span class="w"> </span><span class="m">150</span><span class="p">,</span><span class="w"> </span><span class="m">121</span><span class="p">,</span><span class="w"> </span><span class="m">64</span><span class="p">,</span><span class="w"> </span><span class="m">180</span><span class="p">,</span><span class="w"> </span><span class="m">32</span><span class="p">,</span><span class="w"> </span><span class="m">252</span><span class="p">,</span><span class="w"> </span><span class="m">249</span><span class="p">,</span><span class="w"> </span><span class="m">142</span><span class="p">,</span><span class="w"> </span><span class="m">241</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">237</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">));</span>
+<span class="w">                    </span><span class="n">f_isCertSha256X509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_isCertSha256X509</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_isCertRsa2048Key</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">_isCertRsa2048Key</span><span class="p">;</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// RSA-2048 key (only the modulus since the public key exponent is known to be 0x10001)</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="c1">/// &lt;remarks&gt;</span>
-            <span class="c1">/// Reference: EFI_CERT_RSA2048_GUID</span>
-            <span class="c1">/// &lt;/remarks&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsCertRsa2048Key</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_isCertRsa2048Key</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_isCertRsa2048Key</span><span class="p">;</span>
-                    <span class="n">_isCertRsa2048Key</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">SignatureType</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">232</span><span class="p">,</span> <span class="m">102</span><span class="p">,</span> <span class="m">87</span><span class="p">,</span> <span class="m">60</span><span class="p">,</span> <span class="m">156</span><span class="p">,</span> <span class="m">38</span><span class="p">,</span> <span class="m">52</span><span class="p">,</span> <span class="m">78</span><span class="p">,</span> <span class="m">170</span><span class="p">,</span> <span class="m">20</span><span class="p">,</span> <span class="m">237</span><span class="p">,</span> <span class="m">119</span><span class="p">,</span> <span class="m">110</span><span class="p">,</span> <span class="m">133</span><span class="p">,</span> <span class="m">179</span><span class="p">,</span> <span class="m">182</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">));</span>
-                    <span class="n">f_isCertRsa2048Key</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_isCertRsa2048Key</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isCertSha512</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isCertSha512</span><span class="p">;</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// RSA-2048 key (only the modulus since the public key exponent is known to be 0x10001)</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">            </span><span class="c1">/// Reference: EFI_CERT_RSA2048_GUID</span>
+<span class="w">            </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">IsCertRsa2048Key</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_isCertRsa2048Key</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_isCertRsa2048Key</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_isCertRsa2048Key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">bool</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">SignatureType</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="m">232</span><span class="p">,</span><span class="w"> </span><span class="m">102</span><span class="p">,</span><span class="w"> </span><span class="m">87</span><span class="p">,</span><span class="w"> </span><span class="m">60</span><span class="p">,</span><span class="w"> </span><span class="m">156</span><span class="p">,</span><span class="w"> </span><span class="m">38</span><span class="p">,</span><span class="w"> </span><span class="m">52</span><span class="p">,</span><span class="w"> </span><span class="m">78</span><span class="p">,</span><span class="w"> </span><span class="m">170</span><span class="p">,</span><span class="w"> </span><span class="m">20</span><span class="p">,</span><span class="w"> </span><span class="m">237</span><span class="p">,</span><span class="w"> </span><span class="m">119</span><span class="p">,</span><span class="w"> </span><span class="m">110</span><span class="p">,</span><span class="w"> </span><span class="m">133</span><span class="p">,</span><span class="w"> </span><span class="m">179</span><span class="p">,</span><span class="w"> </span><span class="m">182</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">));</span>
+<span class="w">                    </span><span class="n">f_isCertRsa2048Key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_isCertRsa2048Key</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_isCertSha512</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">_isCertSha512</span><span class="p">;</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// SHA-512 hash</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="c1">/// &lt;remarks&gt;</span>
-            <span class="c1">/// Reference: EFI_CERT_SHA512_GUID</span>
-            <span class="c1">/// &lt;/remarks&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsCertSha512</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_isCertSha512</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_isCertSha512</span><span class="p">;</span>
-                    <span class="n">_isCertSha512</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">SignatureType</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">174</span><span class="p">,</span> <span class="m">15</span><span class="p">,</span> <span class="m">62</span><span class="p">,</span> <span class="m">9</span><span class="p">,</span> <span class="m">196</span><span class="p">,</span> <span class="m">166</span><span class="p">,</span> <span class="m">80</span><span class="p">,</span> <span class="m">79</span><span class="p">,</span> <span class="m">159</span><span class="p">,</span> <span class="m">27</span><span class="p">,</span> <span class="m">212</span><span class="p">,</span> <span class="m">30</span><span class="p">,</span> <span class="m">43</span><span class="p">,</span> <span class="m">137</span><span class="p">,</span> <span class="m">193</span><span class="p">,</span> <span class="m">154</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">));</span>
-                    <span class="n">f_isCertSha512</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_isCertSha512</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isCertSha384</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isCertSha384</span><span class="p">;</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// SHA-512 hash</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">            </span><span class="c1">/// Reference: EFI_CERT_SHA512_GUID</span>
+<span class="w">            </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">IsCertSha512</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_isCertSha512</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_isCertSha512</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_isCertSha512</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">bool</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">SignatureType</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="m">174</span><span class="p">,</span><span class="w"> </span><span class="m">15</span><span class="p">,</span><span class="w"> </span><span class="m">62</span><span class="p">,</span><span class="w"> </span><span class="m">9</span><span class="p">,</span><span class="w"> </span><span class="m">196</span><span class="p">,</span><span class="w"> </span><span class="m">166</span><span class="p">,</span><span class="w"> </span><span class="m">80</span><span class="p">,</span><span class="w"> </span><span class="m">79</span><span class="p">,</span><span class="w"> </span><span class="m">159</span><span class="p">,</span><span class="w"> </span><span class="m">27</span><span class="p">,</span><span class="w"> </span><span class="m">212</span><span class="p">,</span><span class="w"> </span><span class="m">30</span><span class="p">,</span><span class="w"> </span><span class="m">43</span><span class="p">,</span><span class="w"> </span><span class="m">137</span><span class="p">,</span><span class="w"> </span><span class="m">193</span><span class="p">,</span><span class="w"> </span><span class="m">154</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">));</span>
+<span class="w">                    </span><span class="n">f_isCertSha512</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_isCertSha512</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_isCertSha384</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">_isCertSha384</span><span class="p">;</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// SHA-384 hash</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="c1">/// &lt;remarks&gt;</span>
-            <span class="c1">/// Reference: EFI_CERT_SHA384_GUID</span>
-            <span class="c1">/// &lt;/remarks&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsCertSha384</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_isCertSha384</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_isCertSha384</span><span class="p">;</span>
-                    <span class="n">_isCertSha384</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">SignatureType</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">7</span><span class="p">,</span> <span class="m">83</span><span class="p">,</span> <span class="m">62</span><span class="p">,</span> <span class="m">255</span><span class="p">,</span> <span class="m">208</span><span class="p">,</span> <span class="m">159</span><span class="p">,</span> <span class="m">201</span><span class="p">,</span> <span class="m">72</span><span class="p">,</span> <span class="m">133</span><span class="p">,</span> <span class="m">241</span><span class="p">,</span> <span class="m">138</span><span class="p">,</span> <span class="m">213</span><span class="p">,</span> <span class="m">108</span><span class="p">,</span> <span class="m">112</span><span class="p">,</span> <span class="m">30</span><span class="p">,</span> <span class="m">1</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">));</span>
-                    <span class="n">f_isCertSha384</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_isCertSha384</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isCertSha1</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isCertSha1</span><span class="p">;</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// SHA-384 hash</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">            </span><span class="c1">/// Reference: EFI_CERT_SHA384_GUID</span>
+<span class="w">            </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">IsCertSha384</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_isCertSha384</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_isCertSha384</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_isCertSha384</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">bool</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">SignatureType</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="m">7</span><span class="p">,</span><span class="w"> </span><span class="m">83</span><span class="p">,</span><span class="w"> </span><span class="m">62</span><span class="p">,</span><span class="w"> </span><span class="m">255</span><span class="p">,</span><span class="w"> </span><span class="m">208</span><span class="p">,</span><span class="w"> </span><span class="m">159</span><span class="p">,</span><span class="w"> </span><span class="m">201</span><span class="p">,</span><span class="w"> </span><span class="m">72</span><span class="p">,</span><span class="w"> </span><span class="m">133</span><span class="p">,</span><span class="w"> </span><span class="m">241</span><span class="p">,</span><span class="w"> </span><span class="m">138</span><span class="p">,</span><span class="w"> </span><span class="m">213</span><span class="p">,</span><span class="w"> </span><span class="m">108</span><span class="p">,</span><span class="w"> </span><span class="m">112</span><span class="p">,</span><span class="w"> </span><span class="m">30</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">));</span>
+<span class="w">                    </span><span class="n">f_isCertSha384</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_isCertSha384</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_isCertSha1</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">_isCertSha1</span><span class="p">;</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// SHA-1 hash</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="c1">/// &lt;remarks&gt;</span>
-            <span class="c1">/// Reference: EFI_CERT_SHA1_GUID</span>
-            <span class="c1">/// &lt;/remarks&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsCertSha1</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_isCertSha1</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_isCertSha1</span><span class="p">;</span>
-                    <span class="n">_isCertSha1</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">SignatureType</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">18</span><span class="p">,</span> <span class="m">165</span><span class="p">,</span> <span class="m">108</span><span class="p">,</span> <span class="m">130</span><span class="p">,</span> <span class="m">16</span><span class="p">,</span> <span class="m">207</span><span class="p">,</span> <span class="m">201</span><span class="p">,</span> <span class="m">74</span><span class="p">,</span> <span class="m">177</span><span class="p">,</span> <span class="m">135</span><span class="p">,</span> <span class="m">190</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">73</span><span class="p">,</span> <span class="m">102</span><span class="p">,</span> <span class="m">49</span><span class="p">,</span> <span class="m">189</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">));</span>
-                    <span class="n">f_isCertSha1</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_isCertSha1</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isCertRsa2048Sha1</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isCertRsa2048Sha1</span><span class="p">;</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// SHA-1 hash</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">            </span><span class="c1">/// Reference: EFI_CERT_SHA1_GUID</span>
+<span class="w">            </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">IsCertSha1</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_isCertSha1</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_isCertSha1</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_isCertSha1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">bool</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">SignatureType</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="m">18</span><span class="p">,</span><span class="w"> </span><span class="m">165</span><span class="p">,</span><span class="w"> </span><span class="m">108</span><span class="p">,</span><span class="w"> </span><span class="m">130</span><span class="p">,</span><span class="w"> </span><span class="m">16</span><span class="p">,</span><span class="w"> </span><span class="m">207</span><span class="p">,</span><span class="w"> </span><span class="m">201</span><span class="p">,</span><span class="w"> </span><span class="m">74</span><span class="p">,</span><span class="w"> </span><span class="m">177</span><span class="p">,</span><span class="w"> </span><span class="m">135</span><span class="p">,</span><span class="w"> </span><span class="m">190</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">73</span><span class="p">,</span><span class="w"> </span><span class="m">102</span><span class="p">,</span><span class="w"> </span><span class="m">49</span><span class="p">,</span><span class="w"> </span><span class="m">189</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">));</span>
+<span class="w">                    </span><span class="n">f_isCertSha1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_isCertSha1</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_isCertRsa2048Sha1</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">_isCertRsa2048Sha1</span><span class="p">;</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// RSA-2048 signature of a SHA-1 hash</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="c1">/// &lt;remarks&gt;</span>
-            <span class="c1">/// Reference: EFI_CERT_RSA2048_SHA1_GUID</span>
-            <span class="c1">/// &lt;/remarks&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsCertRsa2048Sha1</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_isCertRsa2048Sha1</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_isCertRsa2048Sha1</span><span class="p">;</span>
-                    <span class="n">_isCertRsa2048Sha1</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">SignatureType</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">79</span><span class="p">,</span> <span class="m">68</span><span class="p">,</span> <span class="m">248</span><span class="p">,</span> <span class="m">103</span><span class="p">,</span> <span class="m">67</span><span class="p">,</span> <span class="m">135</span><span class="p">,</span> <span class="m">241</span><span class="p">,</span> <span class="m">72</span><span class="p">,</span> <span class="m">163</span><span class="p">,</span> <span class="m">40</span><span class="p">,</span> <span class="m">30</span><span class="p">,</span> <span class="m">170</span><span class="p">,</span> <span class="m">184</span><span class="p">,</span> <span class="m">115</span><span class="p">,</span> <span class="m">96</span><span class="p">,</span> <span class="m">128</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">));</span>
-                    <span class="n">f_isCertRsa2048Sha1</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_isCertRsa2048Sha1</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isCertSha256</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isCertSha256</span><span class="p">;</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// RSA-2048 signature of a SHA-1 hash</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">            </span><span class="c1">/// Reference: EFI_CERT_RSA2048_SHA1_GUID</span>
+<span class="w">            </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">IsCertRsa2048Sha1</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_isCertRsa2048Sha1</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_isCertRsa2048Sha1</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_isCertRsa2048Sha1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">bool</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">SignatureType</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="m">79</span><span class="p">,</span><span class="w"> </span><span class="m">68</span><span class="p">,</span><span class="w"> </span><span class="m">248</span><span class="p">,</span><span class="w"> </span><span class="m">103</span><span class="p">,</span><span class="w"> </span><span class="m">67</span><span class="p">,</span><span class="w"> </span><span class="m">135</span><span class="p">,</span><span class="w"> </span><span class="m">241</span><span class="p">,</span><span class="w"> </span><span class="m">72</span><span class="p">,</span><span class="w"> </span><span class="m">163</span><span class="p">,</span><span class="w"> </span><span class="m">40</span><span class="p">,</span><span class="w"> </span><span class="m">30</span><span class="p">,</span><span class="w"> </span><span class="m">170</span><span class="p">,</span><span class="w"> </span><span class="m">184</span><span class="p">,</span><span class="w"> </span><span class="m">115</span><span class="p">,</span><span class="w"> </span><span class="m">96</span><span class="p">,</span><span class="w"> </span><span class="m">128</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">));</span>
+<span class="w">                    </span><span class="n">f_isCertRsa2048Sha1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_isCertRsa2048Sha1</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_isCertSha256</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">_isCertSha256</span><span class="p">;</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// SHA-256 hash</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="c1">/// &lt;remarks&gt;</span>
-            <span class="c1">/// Reference: EFI_CERT_SHA256_GUID</span>
-            <span class="c1">/// &lt;/remarks&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsCertSha256</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_isCertSha256</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_isCertSha256</span><span class="p">;</span>
-                    <span class="n">_isCertSha256</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">SignatureType</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">38</span><span class="p">,</span> <span class="m">22</span><span class="p">,</span> <span class="m">196</span><span class="p">,</span> <span class="m">193</span><span class="p">,</span> <span class="m">76</span><span class="p">,</span> <span class="m">80</span><span class="p">,</span> <span class="m">146</span><span class="p">,</span> <span class="m">64</span><span class="p">,</span> <span class="m">172</span><span class="p">,</span> <span class="m">169</span><span class="p">,</span> <span class="m">65</span><span class="p">,</span> <span class="m">249</span><span class="p">,</span> <span class="m">54</span><span class="p">,</span> <span class="m">147</span><span class="p">,</span> <span class="m">67</span><span class="p">,</span> <span class="m">40</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">));</span>
-                    <span class="n">f_isCertSha256</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_isCertSha256</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isCertSha384X509</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isCertSha384X509</span><span class="p">;</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// SHA-256 hash</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">            </span><span class="c1">/// Reference: EFI_CERT_SHA256_GUID</span>
+<span class="w">            </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">IsCertSha256</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_isCertSha256</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_isCertSha256</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_isCertSha256</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">bool</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">SignatureType</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="m">38</span><span class="p">,</span><span class="w"> </span><span class="m">22</span><span class="p">,</span><span class="w"> </span><span class="m">196</span><span class="p">,</span><span class="w"> </span><span class="m">193</span><span class="p">,</span><span class="w"> </span><span class="m">76</span><span class="p">,</span><span class="w"> </span><span class="m">80</span><span class="p">,</span><span class="w"> </span><span class="m">146</span><span class="p">,</span><span class="w"> </span><span class="m">64</span><span class="p">,</span><span class="w"> </span><span class="m">172</span><span class="p">,</span><span class="w"> </span><span class="m">169</span><span class="p">,</span><span class="w"> </span><span class="m">65</span><span class="p">,</span><span class="w"> </span><span class="m">249</span><span class="p">,</span><span class="w"> </span><span class="m">54</span><span class="p">,</span><span class="w"> </span><span class="m">147</span><span class="p">,</span><span class="w"> </span><span class="m">67</span><span class="p">,</span><span class="w"> </span><span class="m">40</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">));</span>
+<span class="w">                    </span><span class="n">f_isCertSha256</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_isCertSha256</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_isCertSha384X509</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">_isCertSha384X509</span><span class="p">;</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// SHA384 hash of an X.509 certificate&#39;s To-Be-Signed contents, and a time of revocation</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="c1">/// &lt;remarks&gt;</span>
-            <span class="c1">/// Reference: EFI_CERT_X509_SHA384_GUID</span>
-            <span class="c1">/// &lt;/remarks&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsCertSha384X509</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_isCertSha384X509</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_isCertSha384X509</span><span class="p">;</span>
-                    <span class="n">_isCertSha384X509</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">SignatureType</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">110</span><span class="p">,</span> <span class="m">135</span><span class="p">,</span> <span class="m">118</span><span class="p">,</span> <span class="m">112</span><span class="p">,</span> <span class="m">194</span><span class="p">,</span> <span class="m">128</span><span class="p">,</span> <span class="m">230</span><span class="p">,</span> <span class="m">78</span><span class="p">,</span> <span class="m">170</span><span class="p">,</span> <span class="m">210</span><span class="p">,</span> <span class="m">40</span><span class="p">,</span> <span class="m">179</span><span class="p">,</span> <span class="m">73</span><span class="p">,</span> <span class="m">166</span><span class="p">,</span> <span class="m">134</span><span class="p">,</span> <span class="m">91</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">));</span>
-                    <span class="n">f_isCertSha384X509</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_isCertSha384X509</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isCertRsa2048Sha256</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isCertRsa2048Sha256</span><span class="p">;</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// SHA384 hash of an X.509 certificate&#39;s To-Be-Signed contents, and a time of revocation</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">            </span><span class="c1">/// Reference: EFI_CERT_X509_SHA384_GUID</span>
+<span class="w">            </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">IsCertSha384X509</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_isCertSha384X509</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_isCertSha384X509</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_isCertSha384X509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">bool</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">SignatureType</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="m">110</span><span class="p">,</span><span class="w"> </span><span class="m">135</span><span class="p">,</span><span class="w"> </span><span class="m">118</span><span class="p">,</span><span class="w"> </span><span class="m">112</span><span class="p">,</span><span class="w"> </span><span class="m">194</span><span class="p">,</span><span class="w"> </span><span class="m">128</span><span class="p">,</span><span class="w"> </span><span class="m">230</span><span class="p">,</span><span class="w"> </span><span class="m">78</span><span class="p">,</span><span class="w"> </span><span class="m">170</span><span class="p">,</span><span class="w"> </span><span class="m">210</span><span class="p">,</span><span class="w"> </span><span class="m">40</span><span class="p">,</span><span class="w"> </span><span class="m">179</span><span class="p">,</span><span class="w"> </span><span class="m">73</span><span class="p">,</span><span class="w"> </span><span class="m">166</span><span class="p">,</span><span class="w"> </span><span class="m">134</span><span class="p">,</span><span class="w"> </span><span class="m">91</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">));</span>
+<span class="w">                    </span><span class="n">f_isCertSha384X509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_isCertSha384X509</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_isCertRsa2048Sha256</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">_isCertRsa2048Sha256</span><span class="p">;</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// RSA-2048 signature of a SHA-256 hash</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="c1">/// &lt;remarks&gt;</span>
-            <span class="c1">/// Reference: EFI_CERT_RSA2048_SHA256_GUID</span>
-            <span class="c1">/// &lt;/remarks&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsCertRsa2048Sha256</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_isCertRsa2048Sha256</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_isCertRsa2048Sha256</span><span class="p">;</span>
-                    <span class="n">_isCertRsa2048Sha256</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">SignatureType</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">144</span><span class="p">,</span> <span class="m">97</span><span class="p">,</span> <span class="m">179</span><span class="p">,</span> <span class="m">226</span><span class="p">,</span> <span class="m">155</span><span class="p">,</span> <span class="m">135</span><span class="p">,</span> <span class="m">61</span><span class="p">,</span> <span class="m">74</span><span class="p">,</span> <span class="m">173</span><span class="p">,</span> <span class="m">141</span><span class="p">,</span> <span class="m">242</span><span class="p">,</span> <span class="m">231</span><span class="p">,</span> <span class="m">187</span><span class="p">,</span> <span class="m">163</span><span class="p">,</span> <span class="m">39</span><span class="p">,</span> <span class="m">132</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">));</span>
-                    <span class="n">f_isCertRsa2048Sha256</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_isCertRsa2048Sha256</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isCertDerPkcs7</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isCertDerPkcs7</span><span class="p">;</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// RSA-2048 signature of a SHA-256 hash</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">            </span><span class="c1">/// Reference: EFI_CERT_RSA2048_SHA256_GUID</span>
+<span class="w">            </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">IsCertRsa2048Sha256</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_isCertRsa2048Sha256</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_isCertRsa2048Sha256</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_isCertRsa2048Sha256</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">bool</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">SignatureType</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="m">144</span><span class="p">,</span><span class="w"> </span><span class="m">97</span><span class="p">,</span><span class="w"> </span><span class="m">179</span><span class="p">,</span><span class="w"> </span><span class="m">226</span><span class="p">,</span><span class="w"> </span><span class="m">155</span><span class="p">,</span><span class="w"> </span><span class="m">135</span><span class="p">,</span><span class="w"> </span><span class="m">61</span><span class="p">,</span><span class="w"> </span><span class="m">74</span><span class="p">,</span><span class="w"> </span><span class="m">173</span><span class="p">,</span><span class="w"> </span><span class="m">141</span><span class="p">,</span><span class="w"> </span><span class="m">242</span><span class="p">,</span><span class="w"> </span><span class="m">231</span><span class="p">,</span><span class="w"> </span><span class="m">187</span><span class="p">,</span><span class="w"> </span><span class="m">163</span><span class="p">,</span><span class="w"> </span><span class="m">39</span><span class="p">,</span><span class="w"> </span><span class="m">132</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">));</span>
+<span class="w">                    </span><span class="n">f_isCertRsa2048Sha256</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_isCertRsa2048Sha256</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_isCertDerPkcs7</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">_isCertDerPkcs7</span><span class="p">;</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// DER-encoded PKCS #7 version 1.5 [RFC2315]</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="c1">/// &lt;remarks&gt;</span>
-            <span class="c1">/// Reference: EFI_CERT_TYPE_PKCS7_GUID</span>
-            <span class="c1">/// &lt;/remarks&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsCertDerPkcs7</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_isCertDerPkcs7</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_isCertDerPkcs7</span><span class="p">;</span>
-                    <span class="n">_isCertDerPkcs7</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">SignatureType</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">157</span><span class="p">,</span> <span class="m">210</span><span class="p">,</span> <span class="m">175</span><span class="p">,</span> <span class="m">74</span><span class="p">,</span> <span class="m">223</span><span class="p">,</span> <span class="m">104</span><span class="p">,</span> <span class="m">238</span><span class="p">,</span> <span class="m">73</span><span class="p">,</span> <span class="m">138</span><span class="p">,</span> <span class="m">169</span><span class="p">,</span> <span class="m">52</span><span class="p">,</span> <span class="m">125</span><span class="p">,</span> <span class="m">55</span><span class="p">,</span> <span class="m">86</span><span class="p">,</span> <span class="m">101</span><span class="p">,</span> <span class="m">167</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">));</span>
-                    <span class="n">f_isCertDerPkcs7</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_isCertDerPkcs7</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_signatureType</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_lenSignatureList</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_lenSignatureHeader</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_lenSignature</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_header</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">SignatureData</span><span class="p">&gt;</span> <span class="n">_signatures</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">EfivarSignatureList</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">EfivarSignatureList</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">[]&gt;</span> <span class="n">__raw_signatures</span><span class="p">;</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// DER-encoded PKCS #7 version 1.5 [RFC2315]</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">            </span><span class="c1">/// Reference: EFI_CERT_TYPE_PKCS7_GUID</span>
+<span class="w">            </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">IsCertDerPkcs7</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_isCertDerPkcs7</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_isCertDerPkcs7</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_isCertDerPkcs7</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">bool</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">SignatureType</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="m">157</span><span class="p">,</span><span class="w"> </span><span class="m">210</span><span class="p">,</span><span class="w"> </span><span class="m">175</span><span class="p">,</span><span class="w"> </span><span class="m">74</span><span class="p">,</span><span class="w"> </span><span class="m">223</span><span class="p">,</span><span class="w"> </span><span class="m">104</span><span class="p">,</span><span class="w"> </span><span class="m">238</span><span class="p">,</span><span class="w"> </span><span class="m">73</span><span class="p">,</span><span class="w"> </span><span class="m">138</span><span class="p">,</span><span class="w"> </span><span class="m">169</span><span class="p">,</span><span class="w"> </span><span class="m">52</span><span class="p">,</span><span class="w"> </span><span class="m">125</span><span class="p">,</span><span class="w"> </span><span class="m">55</span><span class="p">,</span><span class="w"> </span><span class="m">86</span><span class="p">,</span><span class="w"> </span><span class="m">101</span><span class="p">,</span><span class="w"> </span><span class="m">167</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">));</span>
+<span class="w">                    </span><span class="n">f_isCertDerPkcs7</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_isCertDerPkcs7</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_signatureType</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">_lenSignatureList</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">_lenSignatureHeader</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">_lenSignature</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_header</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">SignatureData</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_signatures</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">EfivarSignatureList</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">EfivarSignatureList</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">byte</span><span class="p">[]</span><span class="o">&gt;</span><span class="w"> </span><span class="n">__raw_signatures</span><span class="p">;</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Type of the signature as a GUID</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">SignatureType</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_signatureType</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// Type of the signature as a GUID</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">SignatureType</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_signatureType</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Total size of the signature list, including this header</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">uint</span> <span class="n">LenSignatureList</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenSignatureList</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// Total size of the signature list, including this header</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">LenSignatureList</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_lenSignatureList</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Size of the signature header which precedes the array of signatures</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">uint</span> <span class="n">LenSignatureHeader</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenSignatureHeader</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// Size of the signature header which precedes the array of signatures</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">LenSignatureHeader</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_lenSignatureHeader</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Size of each signature</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">uint</span> <span class="n">LenSignature</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenSignature</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// Size of each signature</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">LenSignature</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_lenSignature</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Header before the array of signatures</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Header</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_header</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// Header before the array of signatures</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Header</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_header</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// An array of signatures</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">SignatureData</span><span class="p">&gt;</span> <span class="n">Signatures</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_signatures</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">EfivarSignatureList</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">EfivarSignatureList</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">[]&gt;</span> <span class="n">M_RawSignatures</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_signatures</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// An array of signatures</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">SignatureData</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Signatures</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_signatures</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">EfivarSignatureList</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">EfivarSignatureList</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">byte</span><span class="p">[]</span><span class="o">&gt;</span><span class="w"> </span><span class="n">M_RawSignatures</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">__raw_signatures</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
 
-        <span class="c1">/// &lt;remarks&gt;</span>
-        <span class="c1">/// Reference: EFI_SIGNATURE_DATA</span>
-        <span class="c1">/// &lt;/remarks&gt;</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">SignatureData</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">SignatureData</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">SignatureData</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">        </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">        </span><span class="c1">/// Reference: EFI_SIGNATURE_DATA</span>
+<span class="w">        </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">SignatureData</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">SignatureData</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">SignatureData</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">SignatureData</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">EfivarSignatureList</span><span class="p">.</span><span class="n">SignatureList</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">EfivarSignatureList</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_owner</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">16</span><span class="p">);</span>
-                <span class="n">_data</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesFull</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_owner</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_data</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">EfivarSignatureList</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">EfivarSignatureList</span><span class="p">.</span><span class="n">SignatureList</span> <span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">SignatureData</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">EfivarSignatureList</span><span class="p">.</span><span class="n">SignatureList</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">EfivarSignatureList</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_owner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">16</span><span class="p">);</span>
+<span class="w">                </span><span class="n">_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesFull</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_owner</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_data</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">EfivarSignatureList</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">EfivarSignatureList</span><span class="p">.</span><span class="n">SignatureList</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// An identifier which identifies the agent which added the signature to the list</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Owner</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_owner</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// An identifier which identifies the agent which added the signature to the list</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Owner</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_owner</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// The format of the signature is defined by the SignatureType.</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Data</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_data</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">EfivarSignatureList</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">EfivarSignatureList</span><span class="p">.</span><span class="n">SignatureList</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// The format of the signature is defined by the SignatureType.</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Data</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_data</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">EfivarSignatureList</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">EfivarSignatureList</span><span class="p">.</span><span class="n">SignatureList</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
 
-        <span class="c1">/// &lt;summary&gt;</span>
-        <span class="c1">/// Attributes of a UEFI variable</span>
-        <span class="c1">/// &lt;/summary&gt;</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">EfiVarAttr</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">EfiVarAttr</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">EfiVarAttr</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">        </span><span class="c1">/// Attributes of a UEFI variable</span>
+<span class="w">        </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">EfiVarAttr</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">EfiVarAttr</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">EfiVarAttr</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">EfiVarAttr</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">EfivarSignatureList</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">EfivarSignatureList</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_enhancedAuthenticatedAccess</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
-                <span class="n">_appendWrite</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
-                <span class="n">_timeBasedAuthenticatedWriteAccess</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
-                <span class="n">_authenticatedWriteAccess</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
-                <span class="n">_hardwareErrorRecord</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
-                <span class="n">_runtimeAccess</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
-                <span class="n">_bootserviceAccess</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
-                <span class="n">_nonVolatile</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
-                <span class="n">_reserved1</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">24</span><span class="p">);</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_enhancedAuthenticatedAccess</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_appendWrite</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_timeBasedAuthenticatedWriteAccess</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_authenticatedWriteAccess</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_hardwareErrorRecord</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_runtimeAccess</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_bootserviceAccess</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_nonVolatile</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_reserved1</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">EfivarSignatureList</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">EfivarSignatureList</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">EnhancedAuthenticatedAccess</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_enhancedAuthenticatedAccess</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">AppendWrite</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_appendWrite</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">TimeBasedAuthenticatedWriteAccess</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_timeBasedAuthenticatedWriteAccess</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">AuthenticatedWriteAccess</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_authenticatedWriteAccess</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">HardwareErrorRecord</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_hardwareErrorRecord</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">RuntimeAccess</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_runtimeAccess</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">BootserviceAccess</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_bootserviceAccess</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">NonVolatile</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_nonVolatile</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">EfiVarAttr</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">EfivarSignatureList</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">EfivarSignatureList</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_enhancedAuthenticatedAccess</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_appendWrite</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_timeBasedAuthenticatedWriteAccess</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_authenticatedWriteAccess</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_hardwareErrorRecord</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_runtimeAccess</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_bootserviceAccess</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_nonVolatile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_reserved1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">24</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">_enhancedAuthenticatedAccess</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">_appendWrite</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">_timeBasedAuthenticatedWriteAccess</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">_authenticatedWriteAccess</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">_hardwareErrorRecord</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">_runtimeAccess</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">_bootserviceAccess</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">_nonVolatile</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">_reserved1</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">EfivarSignatureList</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">EfivarSignatureList</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">EnhancedAuthenticatedAccess</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_enhancedAuthenticatedAccess</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">AppendWrite</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_appendWrite</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">TimeBasedAuthenticatedWriteAccess</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_timeBasedAuthenticatedWriteAccess</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">AuthenticatedWriteAccess</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_authenticatedWriteAccess</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">HardwareErrorRecord</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_hardwareErrorRecord</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">RuntimeAccess</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_runtimeAccess</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">BootserviceAccess</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_bootserviceAccess</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">NonVolatile</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_nonVolatile</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Reserved (unused) bits</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">Reserved1</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_reserved1</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">EfivarSignatureList</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">EfivarSignatureList</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="n">EfiVarAttr</span> <span class="n">_varAttributes</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">SignatureList</span><span class="p">&gt;</span> <span class="n">_signatures</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">EfivarSignatureList</span> <span class="n">m_root</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// Reserved (unused) bits</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">Reserved1</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_reserved1</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">EfivarSignatureList</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">EfivarSignatureList</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">EfiVarAttr</span><span class="w"> </span><span class="n">_varAttributes</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">SignatureList</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_signatures</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">EfivarSignatureList</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
 
-        <span class="c1">/// &lt;summary&gt;</span>
-        <span class="c1">/// Attributes of the UEFI variable</span>
-        <span class="c1">/// &lt;/summary&gt;</span>
-        <span class="k">public</span> <span class="n">EfiVarAttr</span> <span class="n">VarAttributes</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_varAttributes</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">SignatureList</span><span class="p">&gt;</span> <span class="n">Signatures</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_signatures</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">EfivarSignatureList</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-    <span class="p">}</span>
+<span class="w">        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">        </span><span class="c1">/// Attributes of the UEFI variable</span>
+<span class="w">        </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">EfiVarAttr</span><span class="w"> </span><span class="n">VarAttributes</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_varAttributes</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">SignatureList</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Signatures</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_signatures</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">EfivarSignatureList</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 

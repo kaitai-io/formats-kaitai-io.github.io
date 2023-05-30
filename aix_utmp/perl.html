@@ -239,203 +239,203 @@ section#format-index .row {
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-<span class="k">use</span> <span class="nn">strict</span><span class="p">;</span>
-<span class="k">use</span> <span class="nn">warnings</span><span class="p">;</span>
-<span class="k">use</span> <span class="nn">IO::KaitaiStruct</span> <span class="mf">0.009_000</span><span class="p">;</span>
-<span class="k">use</span> <span class="nn">Encode</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="nn">strict</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="nn">warnings</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="nn">IO::KaitaiStruct</span><span class="w"> </span><span class="mf">0.009_000</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="nn">Encode</span><span class="p">;</span>
 
 <span class="c1">########################################################################</span>
-<span class="k">package</span> <span class="nn">AixUtmp</span><span class="p">;</span>
+<span class="k">package</span><span class="w"> </span><span class="nn">AixUtmp</span><span class="p">;</span>
 
-<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
 
-<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">from_file</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$fd</span><span class="p">;</span>
 
-    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
-    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
-    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="w">    </span><span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;&lt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">undef</span><span class="p">;</span>
+<span class="w">    </span><span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
 <span class="p">}</span>
 
-<span class="k">our</span> <span class="nv">$ENTRY_TYPE_EMPTY</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$ENTRY_TYPE_RUN_LVL</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$ENTRY_TYPE_BOOT_TIME</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$ENTRY_TYPE_OLD_TIME</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$ENTRY_TYPE_NEW_TIME</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$ENTRY_TYPE_INIT_PROCESS</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$ENTRY_TYPE_LOGIN_PROCESS</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$ENTRY_TYPE_USER_PROCESS</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$ENTRY_TYPE_DEAD_PROCESS</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
-<span class="k">our</span> <span class="nv">$ENTRY_TYPE_ACCOUNTING</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$ENTRY_TYPE_EMPTY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$ENTRY_TYPE_RUN_LVL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$ENTRY_TYPE_BOOT_TIME</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$ENTRY_TYPE_OLD_TIME</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$ENTRY_TYPE_NEW_TIME</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$ENTRY_TYPE_INIT_PROCESS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$ENTRY_TYPE_LOGIN_PROCESS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$ENTRY_TYPE_USER_PROCESS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$ENTRY_TYPE_DEAD_PROCESS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">$ENTRY_TYPE_ACCOUNTING</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">9</span><span class="p">;</span>
 
-<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">new</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$_io</span><span class="p">,</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">,</span><span class="w"> </span><span class="nv">$_root</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$self</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
 
-    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
+<span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">$self</span><span class="p">;;</span>
 
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
 
-    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">_read</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
 
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">records</span><span class="p">}</span> <span class="o">=</span> <span class="p">();</span>
-    <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">())</span> <span class="p">{</span>
-        <span class="nb">push</span> <span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">records</span><span class="p">}},</span> <span class="nn">AixUtmp::Record</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
-    <span class="p">}</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">records</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">();</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nb">push</span><span class="w"> </span><span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">records</span><span class="p">}},</span><span class="w"> </span><span class="nn">AixUtmp::Record</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">records</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">records</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="c1">########################################################################</span>
-<span class="k">package</span> <span class="nn">AixUtmp::Record</span><span class="p">;</span>
-
-<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
-
-<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
-
-    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
-    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
-    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
-
-    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
-
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
-
-    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">user</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Encode::</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;ascii&quot;</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">256</span><span class="p">));</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">inittab_id</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Encode::</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;ascii&quot;</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">14</span><span class="p">));</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">device</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Encode::</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;ascii&quot;</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">64</span><span class="p">));</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">pid</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u8be</span><span class="p">();</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">type</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_s2be</span><span class="p">();</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">timestamp</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_s8be</span><span class="p">();</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">exit_status</span><span class="p">}</span> <span class="o">=</span> <span class="nn">AixUtmp::ExitStatus</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">hostname</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Encode::</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;ascii&quot;</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">256</span><span class="p">));</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">dbl_word_pad</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_s4be</span><span class="p">();</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">reserved_a</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">reserved_v</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">24</span><span class="p">);</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">user</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">user</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">inittab_id</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">inittab_id</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">device</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">device</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">pid</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">pid</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">type</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">type</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">timestamp</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">timestamp</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">exit_status</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">exit_status</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">hostname</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">hostname</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">dbl_word_pad</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">dbl_word_pad</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">reserved_a</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">reserved_a</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">reserved_v</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">reserved_v</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">records</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">records</span><span class="p">};</span>
 <span class="p">}</span>
 
 <span class="c1">########################################################################</span>
-<span class="k">package</span> <span class="nn">AixUtmp::ExitStatus</span><span class="p">;</span>
+<span class="k">package</span><span class="w"> </span><span class="nn">AixUtmp::Record</span><span class="p">;</span>
 
-<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+<span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
 
-<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">from_file</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$fd</span><span class="p">;</span>
 
-    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
-    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
-    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="w">    </span><span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;&lt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">undef</span><span class="p">;</span>
+<span class="w">    </span><span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">new</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$_io</span><span class="p">,</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">,</span><span class="w"> </span><span class="nv">$_root</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$self</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
 
-    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
+<span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">$self</span><span class="p">;;</span>
 
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
 
-    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">_read</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
 
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">termination_code</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_s2be</span><span class="p">();</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">exit_code</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_s2be</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">user</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Encode::</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;ascii&quot;</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">256</span><span class="p">));</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">inittab_id</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Encode::</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;ascii&quot;</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">14</span><span class="p">));</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">device</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Encode::</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;ascii&quot;</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">64</span><span class="p">));</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">pid</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u8be</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">type</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_s2be</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">timestamp</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_s8be</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">exit_status</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">AixUtmp::ExitStatus</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">hostname</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Encode::</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;ascii&quot;</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">256</span><span class="p">));</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">dbl_word_pad</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_s4be</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">reserved_a</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">reserved_v</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">24</span><span class="p">);</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">termination_code</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">termination_code</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">user</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">user</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">exit_code</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">exit_code</span><span class="p">};</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">inittab_id</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">inittab_id</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">device</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">device</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">pid</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">pid</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">type</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">type</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">timestamp</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">timestamp</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">exit_status</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">exit_status</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">hostname</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">hostname</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">dbl_word_pad</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">dbl_word_pad</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">reserved_a</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">reserved_a</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">reserved_v</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">reserved_v</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">########################################################################</span>
+<span class="k">package</span><span class="w"> </span><span class="nn">AixUtmp::ExitStatus</span><span class="p">;</span>
+
+<span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">from_file</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$fd</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;&lt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">undef</span><span class="p">;</span>
+<span class="w">    </span><span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">new</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$_io</span><span class="p">,</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">,</span><span class="w"> </span><span class="nv">$_root</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$self</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+
+<span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">$self</span><span class="p">;;</span>
+
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">_read</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">termination_code</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_s2be</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">exit_code</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_s2be</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">termination_code</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">termination_code</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">exit_code</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">exit_code</span><span class="p">};</span>
 <span class="p">}</span>
 
 <span class="mi">1</span><span class="p">;</span>

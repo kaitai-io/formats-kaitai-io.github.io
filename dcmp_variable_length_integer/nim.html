@@ -264,108 +264,108 @@ but technically any of the larger formats could be used as well.</p>
         </div>
 
         <div class="row">
-            <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">kaitai_struct_nim_runtime</span>
-<span class="kn">import</span> <span class="n">options</span>
+            <div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="n">kaitai_struct_nim_runtime</span>
+<span class="kn">import</span><span class="w"> </span><span class="n">options</span>
 
 <span class="k">type</span>
-  <span class="n">DcmpVariableLengthInteger</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">first</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
-    <span class="p">`</span><span class="n">more</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int32</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">valueInst</span><span class="p">`:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">valueInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+<span class="w">  </span><span class="n">DcmpVariableLengthInteger</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">first</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">more</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">int32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">valueInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">int</span>
+<span class="w">    </span><span class="p">`</span><span class="n">valueInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
 
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DcmpVariableLengthInteger], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): DcmpVariableLengthInteger</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DcmpVariableLengthInteger], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): DcmpVariableLengthInteger</span>
 
-<span class="k">proc </span><span class="nf">value</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DcmpVariableLengthInteger</span><span class="p">):</span> <span class="kt">int</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">value</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">DcmpVariableLengthInteger</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span>
 
 
 <span class="sd">##[</span>
-<span class="n">A</span> <span class="n">variable</span><span class="o">-</span><span class="n">length</span> <span class="n">integer</span><span class="p">,</span>
-<span class="ow">in</span> <span class="n">the</span> <span class="n">format</span> <span class="n">used</span> <span class="n">by</span> <span class="n">the</span> <span class="mh">0xfe</span> <span class="n">chunks</span> <span class="ow">in</span> <span class="n">the</span> <span class="p">`</span><span class="sc">&#39;dcmp&#39;</span> <span class="p">(</span><span class="mi">0</span><span class="p">)`</span> <span class="ow">and</span> <span class="p">`</span><span class="sc">&#39;dcmp&#39;</span> <span class="p">(</span><span class="mi">1</span><span class="p">)`</span> <span class="n">resource</span> <span class="n">compression</span> <span class="n">formats</span><span class="p">.</span>
-<span class="n">See</span> <span class="n">the</span> <span class="n">dcmp_0</span> <span class="ow">and</span> <span class="n">dcmp_1</span> <span class="n">specs</span> <span class="k">for</span> <span class="n">more</span> <span class="n">information</span> <span class="n">about</span> <span class="n">these</span> <span class="n">compression</span> <span class="n">formats</span><span class="p">.</span>
+<span class="sd">A variable-length integer,</span>
+<span class="sd">in the format used by the 0xfe chunks in the `&#39;dcmp&#39; (0)` and `&#39;dcmp&#39; (1)` resource compression formats.</span>
+<span class="sd">See the dcmp_0 and dcmp_1 specs for more information about these compression formats.</span>
 
-<span class="n">This</span> <span class="n">variable</span><span class="o">-</span><span class="n">length</span> <span class="n">integer</span> <span class="n">format</span> <span class="n">can</span> <span class="n">store</span> <span class="n">an</span> <span class="n">integer</span> <span class="p">`</span><span class="n">x</span><span class="p">`</span> <span class="ow">in</span> <span class="n">any</span> <span class="k">of</span> <span class="n">the</span> <span class="n">following</span> <span class="n">ways</span><span class="p">:</span>
+<span class="sd">This variable-length integer format can store an integer `x` in any of the following ways:</span>
 
-<span class="o">*</span> <span class="ow">In</span> <span class="n">a</span> <span class="n">single</span> <span class="n">byte</span><span class="p">,</span>
-  <span class="k">if</span> <span class="p">`</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="mh">0x7f</span><span class="p">`</span>
-  <span class="p">(</span><span class="mi">7</span><span class="o">-</span><span class="n">bit</span> <span class="n">unsigned</span> <span class="n">integer</span><span class="p">)</span>
-<span class="o">*</span> <span class="ow">In</span> <span class="mi">2</span> <span class="n">bytes</span><span class="p">,</span>
-  <span class="k">if</span> <span class="p">`</span><span class="o">-</span><span class="mh">0x4000</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="mh">0x3eff</span><span class="p">`</span>
-  <span class="p">(</span><span class="mi">15</span><span class="o">-</span><span class="n">bit</span> <span class="n">signed</span> <span class="n">integer</span> <span class="n">with</span> <span class="n">the</span> <span class="n">highest</span> <span class="p">`</span><span class="mh">0x100</span><span class="p">`</span> <span class="n">values</span> <span class="n">unavailable</span><span class="p">)</span>
-<span class="o">*</span> <span class="ow">In</span> <span class="mi">5</span> <span class="n">bytes</span><span class="p">,</span> <span class="k">if</span> <span class="p">`</span><span class="o">-</span><span class="mh">0x80000000</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="mh">0x7fffffff</span><span class="p">`</span>
-  <span class="p">(</span><span class="mi">32</span><span class="o">-</span><span class="n">bit</span> <span class="n">signed</span> <span class="n">integer</span><span class="p">)</span>
+<span class="sd">* In a single byte,</span>
+<span class="sd">  if `0 &lt;= x &lt;= 0x7f`</span>
+<span class="sd">  (7-bit unsigned integer)</span>
+<span class="sd">* In 2 bytes,</span>
+<span class="sd">  if `-0x4000 &lt;= x &lt;= 0x3eff`</span>
+<span class="sd">  (15-bit signed integer with the highest `0x100` values unavailable)</span>
+<span class="sd">* In 5 bytes, if `-0x80000000 &lt;= x &lt;= 0x7fffffff`</span>
+<span class="sd">  (32-bit signed integer)</span>
 
-<span class="ow">In</span> <span class="n">practice</span><span class="p">,</span>
-<span class="n">values</span> <span class="n">are</span> <span class="n">always</span> <span class="n">stored</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">smallest</span> <span class="n">possible</span> <span class="n">format</span><span class="p">,</span>
-<span class="n">but</span> <span class="n">technically</span> <span class="n">any</span> <span class="k">of</span> <span class="n">the</span> <span class="n">larger</span> <span class="n">formats</span> <span class="n">could</span> <span class="n">be</span> <span class="n">used</span> <span class="k">as</span> <span class="n">well</span><span class="p">.</span>
+<span class="sd">In practice,</span>
+<span class="sd">values are always stored in the smallest possible format,</span>
+<span class="sd">but technically any of the larger formats could be used as well.</span>
 
-<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://github.com/dgelessus/python-rsrcfork/blob/f891a6e/src/rsrcfork/compress/common.py&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
-<span class="o">]</span><span class="sd">##</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DcmpVariableLengthInteger], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): DcmpVariableLengthInteger =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">DcmpVariableLengthInteger</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">DcmpVariableLengthInteger</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">DcmpVariableLengthInteger</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="sd">@see &lt;a href=&quot;https://github.com/dgelessus/python-rsrcfork/blob/f891a6e/src/rsrcfork/compress/common.py&quot;&gt;Source&lt;/a&gt;</span>
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DcmpVariableLengthInteger], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): DcmpVariableLengthInteger =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">DcmpVariableLengthInteger</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">DcmpVariableLengthInteger</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">DcmpVariableLengthInteger</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
 
-  <span class="sd">##[</span>
-  <span class="n">The</span> <span class="n">first</span> <span class="n">byte</span> <span class="k">of</span> <span class="n">the</span> <span class="n">variable</span><span class="o">-</span><span class="n">length</span> <span class="n">integer</span><span class="p">.</span>
-<span class="n">This</span> <span class="n">determines</span> <span class="n">which</span> <span class="n">storage</span> <span class="n">format</span> <span class="ow">is</span> <span class="n">used</span><span class="p">.</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The first byte of the variable-length integer.</span>
+<span class="sd">This determines which storage format is used.</span>
 
-<span class="o">*</span> <span class="k">For</span> <span class="n">the</span> <span class="mi">1</span><span class="o">-</span><span class="n">byte</span> <span class="n">format</span><span class="p">,</span>
-  <span class="n">this</span> <span class="n">encodes</span> <span class="n">the</span> <span class="n">entire</span> <span class="n">value</span> <span class="k">of</span> <span class="n">the</span> <span class="n">value</span><span class="p">.</span>
-<span class="o">*</span> <span class="k">For</span> <span class="n">the</span> <span class="mi">2</span><span class="o">-</span><span class="n">byte</span> <span class="n">format</span><span class="p">,</span>
-  <span class="n">this</span> <span class="n">encodes</span> <span class="n">the</span> <span class="n">high</span> <span class="mi">7</span> <span class="n">bits</span> <span class="k">of</span> <span class="n">the</span> <span class="n">value</span><span class="p">,</span>
-  <span class="n">minus</span> <span class="p">`</span><span class="mh">0xc0</span><span class="p">`.</span>
-  <span class="n">The</span> <span class="n">highest</span> <span class="n">bit</span> <span class="k">of</span> <span class="n">the</span> <span class="n">value</span><span class="p">,</span>
-  <span class="n">i</span><span class="p">.</span> <span class="n">e</span><span class="p">.</span> <span class="n">the</span> <span class="n">second</span><span class="o">-</span><span class="n">highest</span> <span class="n">bit</span> <span class="k">of</span> <span class="n">this</span> <span class="n">field</span><span class="p">,</span>
-  <span class="ow">is</span> <span class="n">the</span> <span class="n">sign</span> <span class="n">bit</span><span class="p">.</span>
-<span class="o">*</span> <span class="k">For</span> <span class="n">the</span> <span class="mi">5</span><span class="o">-</span><span class="n">byte</span> <span class="n">format</span><span class="p">,</span>
-  <span class="n">this</span> <span class="ow">is</span> <span class="n">always</span> <span class="p">`</span><span class="mh">0xff</span><span class="p">`.</span>
+<span class="sd">* For the 1-byte format,</span>
+<span class="sd">  this encodes the entire value of the value.</span>
+<span class="sd">* For the 2-byte format,</span>
+<span class="sd">  this encodes the high 7 bits of the value,</span>
+<span class="sd">  minus `0xc0`.</span>
+<span class="sd">  The highest bit of the value,</span>
+<span class="sd">  i. e. the second-highest bit of this field,</span>
+<span class="sd">  is the sign bit.</span>
+<span class="sd">* For the 5-byte format,</span>
+<span class="sd">  this is always `0xff`.</span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">firstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">first</span> <span class="o">=</span> <span class="n">firstExpr</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">firstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">first</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">firstExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">The</span> <span class="n">remaining</span> <span class="n">bytes</span> <span class="k">of</span> <span class="n">the</span> <span class="n">variable</span><span class="o">-</span><span class="n">length</span> <span class="n">integer</span><span class="p">.</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The remaining bytes of the variable-length integer.</span>
 
-<span class="o">*</span> <span class="k">For</span> <span class="n">the</span> <span class="mi">1</span><span class="o">-</span><span class="n">byte</span> <span class="n">format</span><span class="p">,</span>
-  <span class="n">this</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">present</span><span class="p">.</span>
-<span class="o">*</span> <span class="k">For</span> <span class="n">the</span> <span class="mi">2</span><span class="o">-</span><span class="n">byte</span> <span class="n">format</span><span class="p">,</span>
-  <span class="n">this</span> <span class="n">encodes</span> <span class="n">the</span> <span class="n">low</span> <span class="mi">8</span> <span class="n">bits</span> <span class="k">of</span> <span class="n">the</span> <span class="n">value</span><span class="p">.</span>
-<span class="o">*</span> <span class="k">For</span> <span class="n">the</span> <span class="mi">5</span><span class="o">-</span><span class="n">byte</span> <span class="n">format</span><span class="p">,</span>
-  <span class="n">this</span> <span class="n">encodes</span> <span class="n">the</span> <span class="n">entire</span> <span class="n">value</span><span class="p">.</span>
+<span class="sd">* For the 1-byte format,</span>
+<span class="sd">  this is not present.</span>
+<span class="sd">* For the 2-byte format,</span>
+<span class="sd">  this encodes the low 8 bits of the value.</span>
+<span class="sd">* For the 5-byte format,</span>
+<span class="sd">  this encodes the entire value.</span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">first</span> <span class="o">&gt;=</span> <span class="mi">128</span><span class="p">:</span>
-    <span class="k">block</span><span class="p">:</span>
-      <span class="k">let</span> <span class="n">on</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">first</span>
-      <span class="k">if</span> <span class="n">on</span> <span class="o">==</span> <span class="mi">255</span><span class="p">:</span>
-        <span class="k">let</span> <span class="n">moreExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readS4be</span><span class="p">()</span>
-        <span class="n">this</span><span class="p">.</span><span class="n">more</span> <span class="o">=</span> <span class="n">moreExpr</span>
-      <span class="k">else</span><span class="p">:</span>
-        <span class="k">let</span> <span class="n">moreExpr</span> <span class="o">=</span> <span class="kt">int32</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
-        <span class="n">this</span><span class="p">.</span><span class="n">more</span> <span class="o">=</span> <span class="n">moreExpr</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">first</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">128</span><span class="p">:</span>
+<span class="w">    </span><span class="k">block</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">first</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">255</span><span class="p">:</span>
+<span class="w">        </span><span class="k">let</span><span class="w"> </span><span class="n">moreExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readS4be</span><span class="p">()</span>
+<span class="w">        </span><span class="n">this</span><span class="p">.</span><span class="n">more</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">moreExpr</span>
+<span class="w">      </span><span class="k">else</span><span class="p">:</span>
+<span class="w">        </span><span class="k">let</span><span class="w"> </span><span class="n">moreExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int32</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
+<span class="w">        </span><span class="n">this</span><span class="p">.</span><span class="n">more</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">moreExpr</span>
 
-<span class="k">proc </span><span class="nf">value</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">DcmpVariableLengthInteger</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
+<span class="k">proc</span><span class="w"> </span><span class="nf">value</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">DcmpVariableLengthInteger</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
 
-  <span class="sd">##[</span>
-  <span class="n">The</span> <span class="n">decoded</span> <span class="n">value</span> <span class="k">of</span> <span class="n">the</span> <span class="n">variable</span><span class="o">-</span><span class="n">length</span> <span class="n">integer</span><span class="p">.</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The decoded value of the variable-length integer.</span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInstFlag</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
-  <span class="k">let</span> <span class="n">valueInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">first</span> <span class="o">==</span> <span class="mi">255</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">more</span> <span class="k">else</span><span class="p">:</span> <span class="p">(</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">first</span> <span class="o">&gt;=</span> <span class="mi">128</span><span class="p">:</span> <span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">first</span> <span class="ow">shl</span> <span class="mi">8</span><span class="p">)</span> <span class="ow">or</span> <span class="n">this</span><span class="p">.</span><span class="n">more</span><span class="p">)</span> <span class="o">-</span> <span class="mi">49152</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">first</span><span class="p">)))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span> <span class="o">=</span> <span class="n">valueInstExpr</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">valueInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
-  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">valueInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">valueInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">((</span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">first</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">255</span><span class="p">:</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">more</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">first</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">128</span><span class="p">:</span><span class="w"> </span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">first</span><span class="w"> </span><span class="ow">shl</span><span class="w"> </span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">more</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">49152</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">first</span><span class="p">)))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">valueInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">valueInstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">valueInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">valueInst</span>
 
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DcmpVariableLengthInteger], filename: string): DcmpVariableLengthInteger =</span>
-  <span class="n">DcmpVariableLengthInteger</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DcmpVariableLengthInteger], filename: string): DcmpVariableLengthInteger =</span>
+<span class="w">  </span><span class="n">DcmpVariableLengthInteger</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 </pre></div>
 
         </div>

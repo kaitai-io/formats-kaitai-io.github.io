@@ -282,23 +282,23 @@ and build them along with your project.</p>
         </ul>
         <div class="tab-content" style="margin-top: 6px">
             <div role="tabpanel" class="tab-pane active" id="example-local-file">
-<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;fstream&gt;</span><span class="cp"></span>
+<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;fstream&gt;</span>
 
-<span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="w"> </span><span class="nf">is</span><span class="p">(</span><span class="s">&quot;path/to/local/file.ico&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="o">::</span><span class="n">binary</span><span class="p">);</span><span class="w"></span>
+<span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="w"> </span><span class="n">is</span><span class="p">(</span><span class="s">&quot;path/to/local/file.ico&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="o">::</span><span class="n">binary</span><span class="p">);</span>
 </pre></div>
             </div>
             <div role="tabpanel" class="tab-pane" id="example-std-string">
-<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sstream&gt;</span><span class="cp"></span>
+<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sstream&gt;</span>
 
-<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span><span class="w"> </span><span class="nf">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span><span class="w"></span>
+<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span><span class="w"> </span><span class="nf">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
 </pre></div>
             </div>
             <div role="tabpanel" class="tab-pane" id="example-char-ptr">
-<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sstream&gt;</span><span class="cp"></span>
+<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sstream&gt;</span>
 
-<span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">buf</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">};</span><span class="w"></span>
-<span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">str</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="w"> </span><span class="n">buf</span><span class="p">);</span><span class="w"></span>
-<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span><span class="w"> </span><span class="nf">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span><span class="w"></span>
+<span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">buf</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">};</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">str</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="w"> </span><span class="n">buf</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span><span class="w"> </span><span class="nf">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
 </pre></div>
             </div>
         </div>
@@ -307,14 +307,14 @@ and build them along with your project.</p>
 
     <li>We need to wrap our input stream into Kaitai stream:
 
-<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/kaitaistream.h&quot;</span><span class="cp"></span>
+<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/kaitaistream.h&quot;</span>
 
-<span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="w"> </span><span class="nf">ks</span><span class="p">(</span><span class="o">&amp;</span><span class="n">is</span><span class="p">);</span><span class="w"></span>
+<span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="w"> </span><span class="nf">ks</span><span class="p">(</span><span class="o">&amp;</span><span class="n">is</span><span class="p">);</span>
 </pre></div>
     </li>
 
     <li>And finally, we can invoke the parsing:
-<div class="highlight"><pre><span></span><span class="n">ico_t</span><span class="w"> </span><span class="nf">data</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ks</span><span class="p">);</span><span class="w"></span>
+<div class="highlight"><pre><span></span><span class="n">ico_t</span><span class="w"> </span><span class="nf">data</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ks</span><span class="p">);</span>
 </pre></div>
     </li>
 </ol>
@@ -354,10 +354,10 @@ and build them along with your project.</p>
 
 <span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span><span class="cp"></span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;memory&gt;</span><span class="cp"></span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdint.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;memory&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span>
 
 <span class="cp">#if KAITAI_STRUCT_VERSION &lt; 9000L</span>
 <span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required&quot;</span>
@@ -369,143 +369,143 @@ and build them along with your project.</p>
 <span class="cm"> * files (effectively, DIB parts of BMP files or full PNG files are</span>
 <span class="cm"> * contained inside).</span>
 <span class="cm"> * \sa https://learn.microsoft.com/en-us/previous-versions/ms997538(v=msdn.10) Source</span>
-<span class="cm"> */</span><span class="w"></span>
+<span class="cm"> */</span>
 
-<span class="k">class</span> <span class="nc">ico_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ico_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
 
-<span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="k">class</span> <span class="nc">icon_dir_entry_t</span><span class="p">;</span><span class="w"></span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">icon_dir_entry_t</span><span class="p">;</span>
 
-<span class="w">    </span><span class="n">ico_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">ico_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="n">ico_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">ico_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
 
-<span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span><span class="w"></span>
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
 
-<span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="o">~</span><span class="n">ico_t</span><span class="p">();</span><span class="w"></span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="o">~</span><span class="n">ico_t</span><span class="p">();</span>
 
-<span class="w">    </span><span class="k">class</span> <span class="nc">icon_dir_entry_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">icon_dir_entry_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
 
-<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
 
-<span class="w">        </span><span class="n">icon_dir_entry_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">ico_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">ico_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="n">icon_dir_entry_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">ico_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">ico_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
 
-<span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
-<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span><span class="w"></span>
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
 
-<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="o">~</span><span class="n">icon_dir_entry_t</span><span class="p">();</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="o">~</span><span class="n">icon_dir_entry_t</span><span class="p">();</span>
 
-<span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_img</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_img</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_img</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_img</span><span class="p">;</span>
 
-<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
 
 <span class="w">        </span><span class="cm">/**</span>
 <span class="cm">         * Raw image data. Use `is_png` to determine whether this is an</span>
 <span class="cm">         * embedded PNG file (true) or a DIB bitmap (false) and call a</span>
 <span class="cm">         * relevant parser, if needed to parse image data further.</span>
-<span class="cm">         */</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">img</span><span class="p">();</span><span class="w"></span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">img</span><span class="p">();</span>
 
-<span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_png_header</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_png_header</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_png_header</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_png_header</span><span class="p">;</span>
 
-<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
 
 <span class="w">        </span><span class="cm">/**</span>
 <span class="cm">         * Pre-reads first 8 bytes of the image to determine if it&#39;s an</span>
 <span class="cm">         * embedded PNG file.</span>
-<span class="cm">         */</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">png_header</span><span class="p">();</span><span class="w"></span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">png_header</span><span class="p">();</span>
 
-<span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_is_png</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">m_is_png</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_is_png</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">m_is_png</span><span class="p">;</span>
 
-<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
 
 <span class="w">        </span><span class="cm">/**</span>
 <span class="cm">         * True if this image is in PNG format.</span>
-<span class="cm">         */</span><span class="w"></span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">is_png</span><span class="p">();</span><span class="w"></span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">is_png</span><span class="p">();</span>
 
-<span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_width</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_height</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_num_colors</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_reserved</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_num_planes</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_bpp</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_len_img</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_ofs_img</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">ico_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">ico_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_width</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_height</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_num_colors</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_reserved</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_num_planes</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_bpp</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_len_img</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_ofs_img</span><span class="p">;</span>
+<span class="w">        </span><span class="n">ico_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">        </span><span class="n">ico_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
 
-<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
 
 <span class="w">        </span><span class="cm">/**</span>
 <span class="cm">         * Width of image, px</span>
-<span class="cm">         */</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">width</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_width</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">width</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_width</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
 <span class="w">        </span><span class="cm">/**</span>
 <span class="cm">         * Height of image, px</span>
-<span class="cm">         */</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">height</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_height</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">height</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_height</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
 <span class="w">        </span><span class="cm">/**</span>
 <span class="cm">         * Number of colors in palette of the image or 0 if image has</span>
 <span class="cm">         * no palette (i.e. RGB, RGBA, etc)</span>
-<span class="cm">         */</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">num_colors</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_num_colors</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">reserved</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_reserved</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">num_colors</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_num_colors</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">reserved</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_reserved</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
 <span class="w">        </span><span class="cm">/**</span>
 <span class="cm">         * Number of color planes</span>
-<span class="cm">         */</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">num_planes</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_num_planes</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">num_planes</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_num_planes</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
 <span class="w">        </span><span class="cm">/**</span>
 <span class="cm">         * Bits per pixel in the image</span>
-<span class="cm">         */</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">bpp</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_bpp</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">bpp</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_bpp</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
 <span class="w">        </span><span class="cm">/**</span>
 <span class="cm">         * Size of the image data</span>
-<span class="cm">         */</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">len_img</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_len_img</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">len_img</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_len_img</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
 <span class="w">        </span><span class="cm">/**</span>
 <span class="cm">         * Absolute offset of the image data start in the file</span>
-<span class="cm">         */</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">ofs_img</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_ofs_img</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="n">ico_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="n">ico_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="p">};</span><span class="w"></span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">ofs_img</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_ofs_img</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">ico_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">ico_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
 
-<span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_magic</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_num_images</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">icon_dir_entry_t</span><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">m_images</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">ico_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"></span>
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_magic</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_num_images</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">icon_dir_entry_t</span><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">m_images</span><span class="p">;</span>
+<span class="w">    </span><span class="n">ico_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
 
-<span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">magic</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_magic</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">magic</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_magic</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
 <span class="w">    </span><span class="cm">/**</span>
 <span class="cm">     * Number of images contained in this file</span>
-<span class="cm">     */</span><span class="w"></span>
-<span class="w">    </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">num_images</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_num_images</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">icon_dir_entry_t</span><span class="o">&gt;&gt;*</span><span class="w"> </span><span class="n">images</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_images</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="n">ico_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="p">};</span><span class="w"></span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">num_images</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_num_images</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">icon_dir_entry_t</span><span class="o">&gt;&gt;*</span><span class="w"> </span><span class="n">images</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_images</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">ico_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">};</span>
 </pre></div>
 
         </div>
@@ -524,99 +524,99 @@ and build them along with your project.</p>
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;ico.h&quot;</span><span class="cp"></span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/exceptions.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;ico.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/exceptions.h&quot;</span>
 
-<span class="n">ico_t</span><span class="o">::</span><span class="n">ico_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">ico_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_images</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="n">ico_t</span><span class="o">::</span><span class="n">ico_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">ico_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_images</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="w">    </span><span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-<span class="kt">void</span><span class="w"> </span><span class="n">ico_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">magic</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x00\x00\x01\x00</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x00\x00\x01\x00</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">),</span><span class="w"> </span><span class="n">magic</span><span class="p">(),</span><span class="w"> </span><span class="n">_io</span><span class="p">(),</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/seq/0&quot;</span><span class="p">));</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_num_images</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_images</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">icon_dir_entry_t</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">icon_dir_entry_t</span><span class="o">&gt;&gt;</span><span class="p">());</span><span class="w"></span>
-<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">l_images</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">num_images</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">l_images</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">m_images</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">icon_dir_entry_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">icon_dir_entry_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">))));</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">void</span><span class="w"> </span><span class="n">ico_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">magic</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x00\x00\x01\x00</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x00\x00\x01\x00</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">),</span><span class="w"> </span><span class="n">magic</span><span class="p">(),</span><span class="w"> </span><span class="n">_io</span><span class="p">(),</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/seq/0&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">m_num_images</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_images</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">icon_dir_entry_t</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">icon_dir_entry_t</span><span class="o">&gt;&gt;</span><span class="p">());</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">l_images</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">num_images</span><span class="p">();</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">l_images</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">m_images</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">icon_dir_entry_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">icon_dir_entry_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">))));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 
-<span class="n">ico_t</span><span class="o">::~</span><span class="n">ico_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="n">ico_t</span><span class="o">::~</span><span class="n">ico_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
 
-<span class="kt">void</span><span class="w"> </span><span class="n">ico_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">void</span><span class="w"> </span><span class="n">ico_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
 
-<span class="n">ico_t</span><span class="o">::</span><span class="n">icon_dir_entry_t</span><span class="o">::</span><span class="n">icon_dir_entry_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">ico_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">ico_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">f_img</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">f_png_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">f_is_png</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="n">ico_t</span><span class="o">::</span><span class="n">icon_dir_entry_t</span><span class="o">::</span><span class="n">icon_dir_entry_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">ico_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">ico_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_img</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_png_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_is_png</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-<span class="kt">void</span><span class="w"> </span><span class="n">ico_t</span><span class="o">::</span><span class="n">icon_dir_entry_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_num_colors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_reserved</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">reserved</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x00</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x00</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">reserved</span><span class="p">(),</span><span class="w"> </span><span class="n">_io</span><span class="p">(),</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/icon_dir_entry/seq/3&quot;</span><span class="p">));</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_num_planes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_bpp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_len_img</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_ofs_img</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">void</span><span class="w"> </span><span class="n">ico_t</span><span class="o">::</span><span class="n">icon_dir_entry_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_num_colors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_reserved</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">reserved</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x00</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x00</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">reserved</span><span class="p">(),</span><span class="w"> </span><span class="n">_io</span><span class="p">(),</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/icon_dir_entry/seq/3&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">m_num_planes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_bpp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_len_img</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_ofs_img</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="p">}</span>
 
-<span class="n">ico_t</span><span class="o">::</span><span class="n">icon_dir_entry_t</span><span class="o">::~</span><span class="n">icon_dir_entry_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="n">ico_t</span><span class="o">::</span><span class="n">icon_dir_entry_t</span><span class="o">::~</span><span class="n">icon_dir_entry_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
 
-<span class="kt">void</span><span class="w"> </span><span class="n">ico_t</span><span class="o">::</span><span class="n">icon_dir_entry_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_img</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_png_header</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">void</span><span class="w"> </span><span class="n">ico_t</span><span class="o">::</span><span class="n">icon_dir_entry_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_img</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_png_header</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 
-<span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">ico_t</span><span class="o">::</span><span class="n">icon_dir_entry_t</span><span class="o">::</span><span class="n">img</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_img</span><span class="p">)</span><span class="w"></span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_img</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">streampos</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_img</span><span class="p">());</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_img</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_img</span><span class="p">());</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">f_img</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_img</span><span class="p">;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">ico_t</span><span class="o">::</span><span class="n">icon_dir_entry_t</span><span class="o">::</span><span class="n">img</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_img</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_img</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">streampos</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_img</span><span class="p">());</span>
+<span class="w">    </span><span class="n">m_img</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_img</span><span class="p">());</span>
+<span class="w">    </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+<span class="w">    </span><span class="n">f_img</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_img</span><span class="p">;</span>
+<span class="p">}</span>
 
-<span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">ico_t</span><span class="o">::</span><span class="n">icon_dir_entry_t</span><span class="o">::</span><span class="n">png_header</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_png_header</span><span class="p">)</span><span class="w"></span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_png_header</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">streampos</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_img</span><span class="p">());</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_png_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">f_png_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_png_header</span><span class="p">;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">ico_t</span><span class="o">::</span><span class="n">icon_dir_entry_t</span><span class="o">::</span><span class="n">png_header</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_png_header</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_png_header</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">streampos</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_img</span><span class="p">());</span>
+<span class="w">    </span><span class="n">m_png_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+<span class="w">    </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+<span class="w">    </span><span class="n">f_png_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_png_header</span><span class="p">;</span>
+<span class="p">}</span>
 
-<span class="kt">bool</span><span class="w"> </span><span class="n">ico_t</span><span class="o">::</span><span class="n">icon_dir_entry_t</span><span class="o">::</span><span class="n">is_png</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_is_png</span><span class="p">)</span><span class="w"></span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_is_png</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_is_png</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">png_header</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x89\x50\x4E\x47\x0D\x0A\x1A\x0A</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">f_is_png</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_is_png</span><span class="p">;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">bool</span><span class="w"> </span><span class="n">ico_t</span><span class="o">::</span><span class="n">icon_dir_entry_t</span><span class="o">::</span><span class="n">is_png</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_is_png</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_is_png</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_is_png</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">png_header</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x89\x50\x4E\x47\x0D\x0A\x1A\x0A</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">);</span>
+<span class="w">    </span><span class="n">f_is_png</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_is_png</span><span class="p">;</span>
+<span class="p">}</span>
 </pre></div>
 
         </div>

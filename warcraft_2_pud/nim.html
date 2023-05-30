@@ -287,473 +287,473 @@ features got limited support in v1.3).</p>
         </div>
 
         <div class="row">
-            <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">kaitai_struct_nim_runtime</span>
-<span class="kn">import</span> <span class="n">options</span>
+            <div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="n">kaitai_struct_nim_runtime</span>
+<span class="kn">import</span><span class="w"> </span><span class="n">options</span>
 
 <span class="k">type</span>
-  <span class="n">Warcraft2Pud</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">sections</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">Warcraft2Pud_Section</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-  <span class="n">Warcraft2Pud_Controller</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
-    <span class="n">computer1</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">passive_computer</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="n">nobody</span> <span class="o">=</span> <span class="mi">3</span>
-    <span class="n">computer4</span> <span class="o">=</span> <span class="mi">4</span>
-    <span class="n">human</span> <span class="o">=</span> <span class="mi">5</span>
-    <span class="n">rescue_passive</span> <span class="o">=</span> <span class="mi">6</span>
-    <span class="n">rescue_active</span> <span class="o">=</span> <span class="mi">7</span>
-  <span class="n">Warcraft2Pud_TerrainType</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
-    <span class="n">forest</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">winter</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">wasteland</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="n">swamp</span> <span class="o">=</span> <span class="mi">3</span>
-  <span class="n">Warcraft2Pud_UnitType</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
-    <span class="n">infantry</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">grunt</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">peasant</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="n">peon</span> <span class="o">=</span> <span class="mi">3</span>
-    <span class="n">ballista</span> <span class="o">=</span> <span class="mi">4</span>
-    <span class="n">catapult</span> <span class="o">=</span> <span class="mi">5</span>
-    <span class="n">knight</span> <span class="o">=</span> <span class="mi">6</span>
-    <span class="n">ogre</span> <span class="o">=</span> <span class="mi">7</span>
-    <span class="n">archer</span> <span class="o">=</span> <span class="mi">8</span>
-    <span class="n">axethrower</span> <span class="o">=</span> <span class="mi">9</span>
-    <span class="n">mage</span> <span class="o">=</span> <span class="mi">10</span>
-    <span class="n">death_knight</span> <span class="o">=</span> <span class="mi">11</span>
-    <span class="n">paladin</span> <span class="o">=</span> <span class="mi">12</span>
-    <span class="n">ogre_mage</span> <span class="o">=</span> <span class="mi">13</span>
-    <span class="n">dwarves</span> <span class="o">=</span> <span class="mi">14</span>
-    <span class="n">goblin_sapper</span> <span class="o">=</span> <span class="mi">15</span>
-    <span class="n">attack_peasant</span> <span class="o">=</span> <span class="mi">16</span>
-    <span class="n">attack_peon</span> <span class="o">=</span> <span class="mi">17</span>
-    <span class="n">ranger</span> <span class="o">=</span> <span class="mi">18</span>
-    <span class="n">berserker</span> <span class="o">=</span> <span class="mi">19</span>
-    <span class="n">alleria</span> <span class="o">=</span> <span class="mi">20</span>
-    <span class="n">teron_gorefiend</span> <span class="o">=</span> <span class="mi">21</span>
-    <span class="n">kurdan_and_sky_ree</span> <span class="o">=</span> <span class="mi">22</span>
-    <span class="n">dentarg</span> <span class="o">=</span> <span class="mi">23</span>
-    <span class="n">khadgar</span> <span class="o">=</span> <span class="mi">24</span>
-    <span class="n">grom_hellscream</span> <span class="o">=</span> <span class="mi">25</span>
-    <span class="n">human_tanker</span> <span class="o">=</span> <span class="mi">26</span>
-    <span class="n">orc_tanker</span> <span class="o">=</span> <span class="mi">27</span>
-    <span class="n">human_transport</span> <span class="o">=</span> <span class="mi">28</span>
-    <span class="n">orc_transport</span> <span class="o">=</span> <span class="mi">29</span>
-    <span class="n">elven_destroyer</span> <span class="o">=</span> <span class="mi">30</span>
-    <span class="n">troll_destroyer</span> <span class="o">=</span> <span class="mi">31</span>
-    <span class="n">battleship</span> <span class="o">=</span> <span class="mi">32</span>
-    <span class="n">juggernaught</span> <span class="o">=</span> <span class="mi">33</span>
-    <span class="n">deathwing</span> <span class="o">=</span> <span class="mi">35</span>
-    <span class="n">gnomish_submarine</span> <span class="o">=</span> <span class="mi">38</span>
-    <span class="n">giant_turtle</span> <span class="o">=</span> <span class="mi">39</span>
-    <span class="n">gnomish_flying_machine</span> <span class="o">=</span> <span class="mi">40</span>
-    <span class="n">goblin_zepplin</span> <span class="o">=</span> <span class="mi">41</span>
-    <span class="n">gryphon_rider</span> <span class="o">=</span> <span class="mi">42</span>
-    <span class="n">dragon</span> <span class="o">=</span> <span class="mi">43</span>
-    <span class="n">turalyon</span> <span class="o">=</span> <span class="mi">44</span>
-    <span class="n">eye_of_kilrogg</span> <span class="o">=</span> <span class="mi">45</span>
-    <span class="n">danath</span> <span class="o">=</span> <span class="mi">46</span>
-    <span class="n">khorgath_bladefist</span> <span class="o">=</span> <span class="mi">47</span>
-    <span class="n">cho_gall</span> <span class="o">=</span> <span class="mi">49</span>
-    <span class="n">lothar</span> <span class="o">=</span> <span class="mi">50</span>
-    <span class="n">gul_dan</span> <span class="o">=</span> <span class="mi">51</span>
-    <span class="n">uther_lightbringer</span> <span class="o">=</span> <span class="mi">52</span>
-    <span class="n">zuljin</span> <span class="o">=</span> <span class="mi">53</span>
-    <span class="n">skeleton</span> <span class="o">=</span> <span class="mi">55</span>
-    <span class="n">daemon</span> <span class="o">=</span> <span class="mi">56</span>
-    <span class="n">critter</span> <span class="o">=</span> <span class="mi">57</span>
-    <span class="n">farm</span> <span class="o">=</span> <span class="mi">58</span>
-    <span class="n">pig_farm</span> <span class="o">=</span> <span class="mi">59</span>
-    <span class="n">human_barracks</span> <span class="o">=</span> <span class="mi">60</span>
-    <span class="n">orc_barracks</span> <span class="o">=</span> <span class="mi">61</span>
-    <span class="n">church</span> <span class="o">=</span> <span class="mi">62</span>
-    <span class="n">altar_of_storms</span> <span class="o">=</span> <span class="mi">63</span>
-    <span class="n">human_scout_tower</span> <span class="o">=</span> <span class="mi">64</span>
-    <span class="n">orc_scout_tower</span> <span class="o">=</span> <span class="mi">65</span>
-    <span class="n">stables</span> <span class="o">=</span> <span class="mi">66</span>
-    <span class="n">ogre_mound</span> <span class="o">=</span> <span class="mi">67</span>
-    <span class="n">gnomish_inventor</span> <span class="o">=</span> <span class="mi">68</span>
-    <span class="n">goblin_alchemist</span> <span class="o">=</span> <span class="mi">69</span>
-    <span class="n">gryphon_aviary</span> <span class="o">=</span> <span class="mi">70</span>
-    <span class="n">dragon_roost</span> <span class="o">=</span> <span class="mi">71</span>
-    <span class="n">human_shipyard</span> <span class="o">=</span> <span class="mi">72</span>
-    <span class="n">orc_shipyard</span> <span class="o">=</span> <span class="mi">73</span>
-    <span class="n">town_hall</span> <span class="o">=</span> <span class="mi">74</span>
-    <span class="n">great_hall</span> <span class="o">=</span> <span class="mi">75</span>
-    <span class="n">elven_lumber_mill</span> <span class="o">=</span> <span class="mi">76</span>
-    <span class="n">troll_lumber_mill</span> <span class="o">=</span> <span class="mi">77</span>
-    <span class="n">human_foundry</span> <span class="o">=</span> <span class="mi">78</span>
-    <span class="n">orc_foundry</span> <span class="o">=</span> <span class="mi">79</span>
-    <span class="n">mage_tower</span> <span class="o">=</span> <span class="mi">80</span>
-    <span class="n">temple_of_the_damned</span> <span class="o">=</span> <span class="mi">81</span>
-    <span class="n">human_blacksmith</span> <span class="o">=</span> <span class="mi">82</span>
-    <span class="n">orc_blacksmith</span> <span class="o">=</span> <span class="mi">83</span>
-    <span class="n">human_refinery</span> <span class="o">=</span> <span class="mi">84</span>
-    <span class="n">orc_refinery</span> <span class="o">=</span> <span class="mi">85</span>
-    <span class="n">human_oil_well</span> <span class="o">=</span> <span class="mi">86</span>
-    <span class="n">orc_oil_well</span> <span class="o">=</span> <span class="mi">87</span>
-    <span class="n">keep</span> <span class="o">=</span> <span class="mi">88</span>
-    <span class="n">stronghold</span> <span class="o">=</span> <span class="mi">89</span>
-    <span class="n">castle</span> <span class="o">=</span> <span class="mi">90</span>
-    <span class="n">fortress</span> <span class="o">=</span> <span class="mi">91</span>
-    <span class="n">gold_mine</span> <span class="o">=</span> <span class="mi">92</span>
-    <span class="n">oil_patch</span> <span class="o">=</span> <span class="mi">93</span>
-    <span class="n">human_start</span> <span class="o">=</span> <span class="mi">94</span>
-    <span class="n">orc_start</span> <span class="o">=</span> <span class="mi">95</span>
-    <span class="n">human_guard_tower</span> <span class="o">=</span> <span class="mi">96</span>
-    <span class="n">orc_guard_tower</span> <span class="o">=</span> <span class="mi">97</span>
-    <span class="n">human_cannon_tower</span> <span class="o">=</span> <span class="mi">98</span>
-    <span class="n">orc_cannon_tower</span> <span class="o">=</span> <span class="mi">99</span>
-    <span class="n">circle_of_power</span> <span class="o">=</span> <span class="mi">100</span>
-    <span class="n">dark_portal</span> <span class="o">=</span> <span class="mi">101</span>
-    <span class="n">runestone</span> <span class="o">=</span> <span class="mi">102</span>
-    <span class="n">human_wall</span> <span class="o">=</span> <span class="mi">103</span>
-    <span class="n">orc_wall</span> <span class="o">=</span> <span class="mi">104</span>
-  <span class="n">Warcraft2Pud_SectionStartingResource</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">resourcesByPlayer</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">uint16</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Warcraft2Pud_Section</span>
-  <span class="n">Warcraft2Pud_SectionEra</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">terrain</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Warcraft2Pud_TerrainType</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Warcraft2Pud_Section</span>
-  <span class="n">Warcraft2Pud_SectionVer</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">version</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Warcraft2Pud_Section</span>
-  <span class="n">Warcraft2Pud_SectionDim</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">x</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
-    <span class="p">`</span><span class="n">y</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Warcraft2Pud_Section</span>
-  <span class="n">Warcraft2Pud_SectionType</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">unused</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">idTag</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Warcraft2Pud_Section</span>
-  <span class="n">Warcraft2Pud_SectionUnit</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">units</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">Warcraft2Pud_Unit</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Warcraft2Pud_Section</span>
-  <span class="n">Warcraft2Pud_Section</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">name</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
-    <span class="p">`</span><span class="n">size</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">body</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Warcraft2Pud</span>
-    <span class="p">`</span><span class="n">rawBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-  <span class="n">Warcraft2Pud_SectionOwnr</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">controllerByPlayer</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">Warcraft2Pud_Controller</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Warcraft2Pud_Section</span>
-  <span class="n">Warcraft2Pud_Unit</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">x</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
-    <span class="p">`</span><span class="n">y</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
-    <span class="p">`</span><span class="n">uType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Warcraft2Pud_UnitType</span>
-    <span class="p">`</span><span class="n">owner</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
-    <span class="p">`</span><span class="n">options</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Warcraft2Pud_SectionUnit</span>
-    <span class="p">`</span><span class="n">resourceInst</span><span class="p">`:</span> <span class="kt">int</span>
-    <span class="p">`</span><span class="n">resourceInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+<span class="w">  </span><span class="n">Warcraft2Pud</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">sections</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">Warcraft2Pud_Section</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">  </span><span class="n">Warcraft2Pud_Controller</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">enum</span>
+<span class="w">    </span><span class="n">computer1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="n">passive_computer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">    </span><span class="n">nobody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">    </span><span class="n">computer4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">    </span><span class="n">human</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
+<span class="w">    </span><span class="n">rescue_passive</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span>
+<span class="w">    </span><span class="n">rescue_active</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span>
+<span class="w">  </span><span class="n">Warcraft2Pud_TerrainType</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">enum</span>
+<span class="w">    </span><span class="n">forest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="n">winter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="n">wasteland</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">    </span><span class="n">swamp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">  </span><span class="n">Warcraft2Pud_UnitType</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">enum</span>
+<span class="w">    </span><span class="n">infantry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="n">grunt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="n">peasant</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">    </span><span class="n">peon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">    </span><span class="n">ballista</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">    </span><span class="n">catapult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
+<span class="w">    </span><span class="n">knight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span>
+<span class="w">    </span><span class="n">ogre</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span>
+<span class="w">    </span><span class="n">archer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span>
+<span class="w">    </span><span class="n">axethrower</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">9</span>
+<span class="w">    </span><span class="n">mage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span>
+<span class="w">    </span><span class="n">death_knight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">11</span>
+<span class="w">    </span><span class="n">paladin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span>
+<span class="w">    </span><span class="n">ogre_mage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">13</span>
+<span class="w">    </span><span class="n">dwarves</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">14</span>
+<span class="w">    </span><span class="n">goblin_sapper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15</span>
+<span class="w">    </span><span class="n">attack_peasant</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">16</span>
+<span class="w">    </span><span class="n">attack_peon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">17</span>
+<span class="w">    </span><span class="n">ranger</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">18</span>
+<span class="w">    </span><span class="n">berserker</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">19</span>
+<span class="w">    </span><span class="n">alleria</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span>
+<span class="w">    </span><span class="n">teron_gorefiend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">21</span>
+<span class="w">    </span><span class="n">kurdan_and_sky_ree</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">22</span>
+<span class="w">    </span><span class="n">dentarg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">23</span>
+<span class="w">    </span><span class="n">khadgar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">24</span>
+<span class="w">    </span><span class="n">grom_hellscream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">25</span>
+<span class="w">    </span><span class="n">human_tanker</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">26</span>
+<span class="w">    </span><span class="n">orc_tanker</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">27</span>
+<span class="w">    </span><span class="n">human_transport</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">28</span>
+<span class="w">    </span><span class="n">orc_transport</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">29</span>
+<span class="w">    </span><span class="n">elven_destroyer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">30</span>
+<span class="w">    </span><span class="n">troll_destroyer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">31</span>
+<span class="w">    </span><span class="n">battleship</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">32</span>
+<span class="w">    </span><span class="n">juggernaught</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">33</span>
+<span class="w">    </span><span class="n">deathwing</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">35</span>
+<span class="w">    </span><span class="n">gnomish_submarine</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">38</span>
+<span class="w">    </span><span class="n">giant_turtle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">39</span>
+<span class="w">    </span><span class="n">gnomish_flying_machine</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">40</span>
+<span class="w">    </span><span class="n">goblin_zepplin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">41</span>
+<span class="w">    </span><span class="n">gryphon_rider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span>
+<span class="w">    </span><span class="n">dragon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">43</span>
+<span class="w">    </span><span class="n">turalyon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">44</span>
+<span class="w">    </span><span class="n">eye_of_kilrogg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">45</span>
+<span class="w">    </span><span class="n">danath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">46</span>
+<span class="w">    </span><span class="n">khorgath_bladefist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">47</span>
+<span class="w">    </span><span class="n">cho_gall</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">49</span>
+<span class="w">    </span><span class="n">lothar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">50</span>
+<span class="w">    </span><span class="n">gul_dan</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">51</span>
+<span class="w">    </span><span class="n">uther_lightbringer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">52</span>
+<span class="w">    </span><span class="n">zuljin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">53</span>
+<span class="w">    </span><span class="n">skeleton</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">55</span>
+<span class="w">    </span><span class="n">daemon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">56</span>
+<span class="w">    </span><span class="n">critter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">57</span>
+<span class="w">    </span><span class="n">farm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">58</span>
+<span class="w">    </span><span class="n">pig_farm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">59</span>
+<span class="w">    </span><span class="n">human_barracks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">60</span>
+<span class="w">    </span><span class="n">orc_barracks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">61</span>
+<span class="w">    </span><span class="n">church</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">62</span>
+<span class="w">    </span><span class="n">altar_of_storms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">63</span>
+<span class="w">    </span><span class="n">human_scout_tower</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">64</span>
+<span class="w">    </span><span class="n">orc_scout_tower</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">65</span>
+<span class="w">    </span><span class="n">stables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">66</span>
+<span class="w">    </span><span class="n">ogre_mound</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">67</span>
+<span class="w">    </span><span class="n">gnomish_inventor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">68</span>
+<span class="w">    </span><span class="n">goblin_alchemist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">69</span>
+<span class="w">    </span><span class="n">gryphon_aviary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">70</span>
+<span class="w">    </span><span class="n">dragon_roost</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">71</span>
+<span class="w">    </span><span class="n">human_shipyard</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">72</span>
+<span class="w">    </span><span class="n">orc_shipyard</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">73</span>
+<span class="w">    </span><span class="n">town_hall</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">74</span>
+<span class="w">    </span><span class="n">great_hall</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">75</span>
+<span class="w">    </span><span class="n">elven_lumber_mill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">76</span>
+<span class="w">    </span><span class="n">troll_lumber_mill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">77</span>
+<span class="w">    </span><span class="n">human_foundry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">78</span>
+<span class="w">    </span><span class="n">orc_foundry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">79</span>
+<span class="w">    </span><span class="n">mage_tower</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">80</span>
+<span class="w">    </span><span class="n">temple_of_the_damned</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">81</span>
+<span class="w">    </span><span class="n">human_blacksmith</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">82</span>
+<span class="w">    </span><span class="n">orc_blacksmith</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">83</span>
+<span class="w">    </span><span class="n">human_refinery</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">84</span>
+<span class="w">    </span><span class="n">orc_refinery</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">85</span>
+<span class="w">    </span><span class="n">human_oil_well</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">86</span>
+<span class="w">    </span><span class="n">orc_oil_well</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">87</span>
+<span class="w">    </span><span class="n">keep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">88</span>
+<span class="w">    </span><span class="n">stronghold</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">89</span>
+<span class="w">    </span><span class="n">castle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">90</span>
+<span class="w">    </span><span class="n">fortress</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">91</span>
+<span class="w">    </span><span class="n">gold_mine</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">92</span>
+<span class="w">    </span><span class="n">oil_patch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">93</span>
+<span class="w">    </span><span class="n">human_start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">94</span>
+<span class="w">    </span><span class="n">orc_start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">95</span>
+<span class="w">    </span><span class="n">human_guard_tower</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">96</span>
+<span class="w">    </span><span class="n">orc_guard_tower</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">97</span>
+<span class="w">    </span><span class="n">human_cannon_tower</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">98</span>
+<span class="w">    </span><span class="n">orc_cannon_tower</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">99</span>
+<span class="w">    </span><span class="n">circle_of_power</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span>
+<span class="w">    </span><span class="n">dark_portal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">101</span>
+<span class="w">    </span><span class="n">runestone</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">102</span>
+<span class="w">    </span><span class="n">human_wall</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">103</span>
+<span class="w">    </span><span class="n">orc_wall</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">104</span>
+<span class="w">  </span><span class="n">Warcraft2Pud_SectionStartingResource</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">resourcesByPlayer</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">uint16</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Warcraft2Pud_Section</span>
+<span class="w">  </span><span class="n">Warcraft2Pud_SectionEra</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">terrain</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Warcraft2Pud_TerrainType</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Warcraft2Pud_Section</span>
+<span class="w">  </span><span class="n">Warcraft2Pud_SectionVer</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">version</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Warcraft2Pud_Section</span>
+<span class="w">  </span><span class="n">Warcraft2Pud_SectionDim</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">x</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">y</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Warcraft2Pud_Section</span>
+<span class="w">  </span><span class="n">Warcraft2Pud_SectionType</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">unused</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">idTag</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Warcraft2Pud_Section</span>
+<span class="w">  </span><span class="n">Warcraft2Pud_SectionUnit</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">units</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">Warcraft2Pud_Unit</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Warcraft2Pud_Section</span>
+<span class="w">  </span><span class="n">Warcraft2Pud_Section</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">name</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">string</span>
+<span class="w">    </span><span class="p">`</span><span class="n">size</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">body</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Warcraft2Pud</span>
+<span class="w">    </span><span class="p">`</span><span class="n">rawBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">  </span><span class="n">Warcraft2Pud_SectionOwnr</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">controllerByPlayer</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">Warcraft2Pud_Controller</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Warcraft2Pud_Section</span>
+<span class="w">  </span><span class="n">Warcraft2Pud_Unit</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">x</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">y</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">uType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Warcraft2Pud_UnitType</span>
+<span class="w">    </span><span class="p">`</span><span class="n">owner</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">options</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Warcraft2Pud_SectionUnit</span>
+<span class="w">    </span><span class="p">`</span><span class="n">resourceInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">int</span>
+<span class="w">    </span><span class="p">`</span><span class="n">resourceInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
 
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Warcraft2Pud</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionStartingResource], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionStartingResource</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionEra], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionEra</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionVer], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionVer</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionDim], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionDim</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionType], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionType</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionUnit], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionUnit</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_Section], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud): Warcraft2Pud_Section</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionOwnr], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionOwnr</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_Unit], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_SectionUnit): Warcraft2Pud_Unit</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Warcraft2Pud</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionStartingResource], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionStartingResource</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionEra], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionEra</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionVer], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionVer</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionDim], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionDim</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionType], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionType</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionUnit], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionUnit</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_Section], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud): Warcraft2Pud_Section</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionOwnr], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionOwnr</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_Unit], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_SectionUnit): Warcraft2Pud_Unit</span>
 
-<span class="k">proc </span><span class="nf">resource</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Warcraft2Pud_Unit</span><span class="p">):</span> <span class="kt">int</span>
-
-
-<span class="sd">##[</span>
-<span class="n">Warcraft</span> <span class="n">II</span> <span class="n">game</span> <span class="n">engine</span> <span class="n">uses</span> <span class="n">this</span> <span class="n">format</span> <span class="k">for</span> <span class="n">map</span> <span class="n">files</span><span class="p">.</span> <span class="n">External</span>
-<span class="n">maps</span> <span class="n">can</span> <span class="n">be</span> <span class="n">edited</span> <span class="n">by</span> <span class="n">official</span> <span class="n">Warcraft</span> <span class="n">II</span> <span class="n">map</span> <span class="n">editor</span> <span class="ow">and</span> <span class="n">saved</span> <span class="ow">in</span>
-<span class="p">.</span><span class="n">pud</span> <span class="n">files</span><span class="p">.</span> <span class="n">Maps</span> <span class="n">supplied</span> <span class="n">with</span> <span class="n">the</span> <span class="n">game</span> <span class="p">(</span><span class="n">i</span><span class="p">.</span><span class="n">e</span><span class="p">.</span> <span class="n">single</span> <span class="n">player</span>
-<span class="n">campaign</span><span class="p">)</span> <span class="n">follow</span> <span class="n">the</span> <span class="n">same</span> <span class="n">format</span><span class="p">,</span> <span class="n">but</span> <span class="n">are</span> <span class="n">instead</span> <span class="n">embedded</span> <span class="n">inside</span>
-<span class="n">the</span> <span class="n">game</span> <span class="n">container</span> <span class="n">files</span><span class="p">.</span>
-
-<span class="n">There</span> <span class="n">are</span> <span class="n">two</span> <span class="n">major</span> <span class="n">versions</span><span class="p">:</span> <span class="mh">0x11</span> <span class="p">(</span><span class="n">original</span> <span class="n">one</span><span class="p">)</span> <span class="ow">and</span> <span class="mh">0x13</span> <span class="p">(</span><span class="n">roughly</span>
-<span class="n">corresponds</span> <span class="n">to</span> <span class="n">v1</span><span class="p">.</span><span class="mi">33</span> <span class="k">of</span> <span class="n">the</span> <span class="n">game</span> <span class="n">engine</span><span class="p">,</span> <span class="n">although</span> <span class="n">some</span> <span class="k">of</span> <span class="n">the</span>
-<span class="n">features</span> <span class="n">got</span> <span class="n">limited</span> <span class="n">support</span> <span class="ow">in</span> <span class="n">v1</span><span class="p">.</span><span class="mi">3</span><span class="p">).</span>
-
-<span class="n">File</span> <span class="n">consists</span> <span class="k">of</span> <span class="n">a</span> <span class="n">sequence</span> <span class="k">of</span> <span class="n">typed</span> <span class="n">sections</span><span class="p">.</span>
-
-<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;http://cade.datamax.bg/war2x/pudspec.html&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
-<span class="o">]</span><span class="sd">##</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Warcraft2Pud =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Warcraft2Pud</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
-
-  <span class="k">block</span><span class="p">:</span>
-    <span class="kd">var</span> <span class="n">i</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="k">while</span> <span class="ow">not</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">:</span>
-      <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">Warcraft2Pud_Section</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">sections</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
-      <span class="n">inc</span> <span class="n">i</span>
-
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud], filename: string): Warcraft2Pud =</span>
-  <span class="n">Warcraft2Pud</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
-
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionStartingResource], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionStartingResource =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Warcraft2Pud_SectionStartingResource</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
-
-  <span class="k">block</span><span class="p">:</span>
-    <span class="kd">var</span> <span class="n">i</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="k">while</span> <span class="ow">not</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">:</span>
-      <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">resourcesByPlayer</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
-      <span class="n">inc</span> <span class="n">i</span>
-
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionStartingResource], filename: string): Warcraft2Pud_SectionStartingResource =</span>
-  <span class="n">Warcraft2Pud_SectionStartingResource</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">resource</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Warcraft2Pud_Unit</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span>
 
 
 <span class="sd">##[</span>
-<span class="n">Section</span> <span class="n">that</span> <span class="n">specifies</span> <span class="n">terrain</span> <span class="k">type</span> <span class="k">for</span> <span class="n">this</span> <span class="n">map</span><span class="p">.</span>
-<span class="o">]</span><span class="sd">##</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionEra], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionEra =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Warcraft2Pud_SectionEra</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="sd">Warcraft II game engine uses this format for map files. External</span>
+<span class="sd">maps can be edited by official Warcraft II map editor and saved in</span>
+<span class="sd">.pud files. Maps supplied with the game (i.e. single player</span>
+<span class="sd">campaign) follow the same format, but are instead embedded inside</span>
+<span class="sd">the game container files.</span>
 
-  <span class="k">let</span> <span class="n">terrainExpr</span> <span class="o">=</span> <span class="n">Warcraft2Pud_TerrainType</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">())</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">terrain</span> <span class="o">=</span> <span class="n">terrainExpr</span>
+<span class="sd">There are two major versions: 0x11 (original one) and 0x13 (roughly</span>
+<span class="sd">corresponds to v1.33 of the game engine, although some of the</span>
+<span class="sd">features got limited support in v1.3).</span>
 
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionEra], filename: string): Warcraft2Pud_SectionEra =</span>
-  <span class="n">Warcraft2Pud_SectionEra</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="sd">File consists of a sequence of typed sections.</span>
 
+<span class="sd">@see &lt;a href=&quot;http://cade.datamax.bg/war2x/pudspec.html&quot;&gt;Source&lt;/a&gt;</span>
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Warcraft2Pud =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Warcraft2Pud</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
-<span class="sd">##[</span>
-<span class="n">Section</span> <span class="n">that</span> <span class="n">specifies</span> <span class="n">format</span> <span class="n">version</span><span class="p">.</span>
-<span class="o">]</span><span class="sd">##</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionVer], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionVer =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Warcraft2Pud_SectionVer</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="w">  </span><span class="k">block</span><span class="p">:</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="n">i</span><span class="p">:</span><span class="w"> </span><span class="nb">int</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Warcraft2Pud_Section</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">sections</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+<span class="w">      </span><span class="n">inc</span><span class="w"> </span><span class="n">i</span>
 
-  <span class="k">let</span> <span class="n">versionExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">versionExpr</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud], filename: string): Warcraft2Pud =</span>
+<span class="w">  </span><span class="n">Warcraft2Pud</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionVer], filename: string): Warcraft2Pud_SectionVer =</span>
-  <span class="n">Warcraft2Pud_SectionVer</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionStartingResource], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionStartingResource =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Warcraft2Pud_SectionStartingResource</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionDim], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionDim =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Warcraft2Pud_SectionDim</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="w">  </span><span class="k">block</span><span class="p">:</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="n">i</span><span class="p">:</span><span class="w"> </span><span class="nb">int</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">resourcesByPlayer</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+<span class="w">      </span><span class="n">inc</span><span class="w"> </span><span class="n">i</span>
 
-  <span class="k">let</span> <span class="n">xExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">xExpr</span>
-  <span class="k">let</span> <span class="n">yExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">yExpr</span>
-
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionDim], filename: string): Warcraft2Pud_SectionDim =</span>
-  <span class="n">Warcraft2Pud_SectionDim</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
-
-
-<span class="sd">##[</span>
-<span class="n">Section</span> <span class="n">that</span> <span class="n">confirms</span> <span class="n">that</span> <span class="n">this</span> <span class="n">file</span> <span class="ow">is</span> <span class="n">a</span> <span class="s">&quot;map file&quot;</span> <span class="n">by</span> <span class="n">certain</span>
-<span class="n">magic</span> <span class="kt">string</span> <span class="ow">and</span> <span class="n">supplies</span> <span class="n">a</span> <span class="n">tag</span> <span class="n">that</span> <span class="n">could</span> <span class="n">be</span> <span class="n">used</span> <span class="ow">in</span>
-<span class="n">multiplayer</span> <span class="n">to</span> <span class="n">check</span> <span class="n">that</span> <span class="n">all</span> <span class="n">player</span> <span class="n">use</span> <span class="n">the</span> <span class="n">same</span> <span class="n">version</span> <span class="k">of</span> <span class="n">the</span>
-<span class="n">map</span><span class="p">.</span>
-
-<span class="o">]</span><span class="sd">##</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionType], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionType =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Warcraft2Pud_SectionType</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
-
-  <span class="k">let</span> <span class="n">magicExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">magicExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="n">unused</span> <span class="p">(</span><span class="n">always</span> <span class="kt">set</span> <span class="n">to</span> <span class="o">$</span><span class="mi">0</span><span class="err">a and $ff by editor, but can be anything for the game)</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">unusedExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">unused</span> <span class="o">=</span> <span class="n">unusedExpr</span>
-
-  <span class="sd">##[</span>
-  <span class="n">id</span> <span class="n">tag</span> <span class="p">(</span><span class="k">for</span> <span class="n">consistency</span> <span class="n">check</span> <span class="ow">in</span> <span class="n">multiplayer</span><span class="p">)</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">idTagExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">idTag</span> <span class="o">=</span> <span class="n">idTagExpr</span>
-
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionType], filename: string): Warcraft2Pud_SectionType =</span>
-  <span class="n">Warcraft2Pud_SectionType</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
-
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionUnit], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionUnit =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Warcraft2Pud_SectionUnit</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
-
-  <span class="k">block</span><span class="p">:</span>
-    <span class="kd">var</span> <span class="n">i</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="k">while</span> <span class="ow">not</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">:</span>
-      <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">Warcraft2Pud_Unit</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">units</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
-      <span class="n">inc</span> <span class="n">i</span>
-
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionUnit], filename: string): Warcraft2Pud_SectionUnit =</span>
-  <span class="n">Warcraft2Pud_SectionUnit</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
-
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_Section], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud): Warcraft2Pud_Section =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Warcraft2Pud_Section</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
-
-  <span class="k">let</span> <span class="n">nameExpr</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">4</span><span class="p">)),</span> <span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">nameExpr</span>
-  <span class="k">let</span> <span class="n">sizeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">sizeExpr</span>
-  <span class="k">block</span><span class="p">:</span>
-    <span class="k">let</span> <span class="n">on</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">name</span>
-    <span class="k">if</span> <span class="n">on</span> <span class="o">==</span> <span class="s">&quot;SLBR&quot;</span><span class="p">:</span>
-      <span class="k">let</span> <span class="n">rawBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">size</span><span class="p">))</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">rawBody</span> <span class="o">=</span> <span class="n">rawBodyExpr</span>
-      <span class="k">let</span> <span class="n">rawBodyIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
-      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">Warcraft2Pud_SectionStartingResource</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
-    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="s">&quot;ERAX&quot;</span><span class="p">:</span>
-      <span class="k">let</span> <span class="n">rawBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">size</span><span class="p">))</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">rawBody</span> <span class="o">=</span> <span class="n">rawBodyExpr</span>
-      <span class="k">let</span> <span class="n">rawBodyIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
-      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">Warcraft2Pud_SectionEra</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
-    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="s">&quot;OWNR&quot;</span><span class="p">:</span>
-      <span class="k">let</span> <span class="n">rawBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">size</span><span class="p">))</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">rawBody</span> <span class="o">=</span> <span class="n">rawBodyExpr</span>
-      <span class="k">let</span> <span class="n">rawBodyIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
-      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">Warcraft2Pud_SectionOwnr</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
-    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="s">&quot;ERA &quot;</span><span class="p">:</span>
-      <span class="k">let</span> <span class="n">rawBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">size</span><span class="p">))</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">rawBody</span> <span class="o">=</span> <span class="n">rawBodyExpr</span>
-      <span class="k">let</span> <span class="n">rawBodyIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
-      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">Warcraft2Pud_SectionEra</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
-    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="s">&quot;SGLD&quot;</span><span class="p">:</span>
-      <span class="k">let</span> <span class="n">rawBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">size</span><span class="p">))</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">rawBody</span> <span class="o">=</span> <span class="n">rawBodyExpr</span>
-      <span class="k">let</span> <span class="n">rawBodyIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
-      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">Warcraft2Pud_SectionStartingResource</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
-    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="s">&quot;VER &quot;</span><span class="p">:</span>
-      <span class="k">let</span> <span class="n">rawBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">size</span><span class="p">))</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">rawBody</span> <span class="o">=</span> <span class="n">rawBodyExpr</span>
-      <span class="k">let</span> <span class="n">rawBodyIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
-      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">Warcraft2Pud_SectionVer</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
-    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="s">&quot;SOIL&quot;</span><span class="p">:</span>
-      <span class="k">let</span> <span class="n">rawBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">size</span><span class="p">))</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">rawBody</span> <span class="o">=</span> <span class="n">rawBodyExpr</span>
-      <span class="k">let</span> <span class="n">rawBodyIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
-      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">Warcraft2Pud_SectionStartingResource</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
-    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="s">&quot;UNIT&quot;</span><span class="p">:</span>
-      <span class="k">let</span> <span class="n">rawBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">size</span><span class="p">))</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">rawBody</span> <span class="o">=</span> <span class="n">rawBodyExpr</span>
-      <span class="k">let</span> <span class="n">rawBodyIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
-      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">Warcraft2Pud_SectionUnit</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
-    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="s">&quot;DIM &quot;</span><span class="p">:</span>
-      <span class="k">let</span> <span class="n">rawBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">size</span><span class="p">))</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">rawBody</span> <span class="o">=</span> <span class="n">rawBodyExpr</span>
-      <span class="k">let</span> <span class="n">rawBodyIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
-      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">Warcraft2Pud_SectionDim</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
-    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="s">&quot;TYPE&quot;</span><span class="p">:</span>
-      <span class="k">let</span> <span class="n">rawBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">size</span><span class="p">))</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">rawBody</span> <span class="o">=</span> <span class="n">rawBodyExpr</span>
-      <span class="k">let</span> <span class="n">rawBodyIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
-      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">Warcraft2Pud_SectionType</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
-    <span class="k">else</span><span class="p">:</span>
-      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">size</span><span class="p">))</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
-
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_Section], filename: string): Warcraft2Pud_Section =</span>
-  <span class="n">Warcraft2Pud_Section</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionStartingResource], filename: string): Warcraft2Pud_SectionStartingResource =</span>
+<span class="w">  </span><span class="n">Warcraft2Pud_SectionStartingResource</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
 
 <span class="sd">##[</span>
-<span class="n">Section</span> <span class="n">that</span> <span class="n">specifies</span> <span class="n">who</span> <span class="n">controls</span> <span class="n">each</span> <span class="n">player</span><span class="p">.</span>
-<span class="o">]</span><span class="sd">##</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionOwnr], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionOwnr =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Warcraft2Pud_SectionOwnr</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="sd">Section that specifies terrain type for this map.</span>
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionEra], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionEra =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Warcraft2Pud_SectionEra</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
-  <span class="k">block</span><span class="p">:</span>
-    <span class="kd">var</span> <span class="n">i</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="k">while</span> <span class="ow">not</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">:</span>
-      <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">Warcraft2Pud_Controller</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">controllerByPlayer</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
-      <span class="n">inc</span> <span class="n">i</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">terrainExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Warcraft2Pud_TerrainType</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">())</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">terrain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">terrainExpr</span>
 
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionOwnr], filename: string): Warcraft2Pud_SectionOwnr =</span>
-  <span class="n">Warcraft2Pud_SectionOwnr</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionEra], filename: string): Warcraft2Pud_SectionEra =</span>
+<span class="w">  </span><span class="n">Warcraft2Pud_SectionEra</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_Unit], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_SectionUnit): Warcraft2Pud_Unit =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Warcraft2Pud_Unit</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
 
-  <span class="k">let</span> <span class="n">xExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">xExpr</span>
-  <span class="k">let</span> <span class="n">yExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">yExpr</span>
-  <span class="k">let</span> <span class="n">uTypeExpr</span> <span class="o">=</span> <span class="n">Warcraft2Pud_UnitType</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">uType</span> <span class="o">=</span> <span class="n">uTypeExpr</span>
-  <span class="k">let</span> <span class="n">ownerExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">owner</span> <span class="o">=</span> <span class="n">ownerExpr</span>
+<span class="sd">##[</span>
+<span class="sd">Section that specifies format version.</span>
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionVer], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionVer =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Warcraft2Pud_SectionVer</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
-  <span class="sd">##[</span>
-  <span class="k">if</span> <span class="n">gold</span> <span class="n">mine</span> <span class="ow">or</span> <span class="n">oil</span> <span class="n">well</span><span class="p">,</span> <span class="n">contains</span> <span class="mi">2500</span> <span class="o">*</span> <span class="n">this</span><span class="p">,</span> <span class="n">otherwise</span> <span class="mi">0</span> <span class="n">passive</span> <span class="mi">1</span> <span class="n">active</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">optionsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">options</span> <span class="o">=</span> <span class="n">optionsExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">versionExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">versionExpr</span>
 
-<span class="k">proc </span><span class="nf">resource</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Warcraft2Pud_Unit</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">resourceInstFlag</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">resourceInst</span>
-  <span class="k">if</span>  <span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">uType</span> <span class="o">==</span> <span class="n">warcraft_2_pud</span><span class="p">.</span><span class="n">gold_mine</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">uType</span> <span class="o">==</span> <span class="n">warcraft_2_pud</span><span class="p">.</span><span class="n">human_oil_well</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">uType</span> <span class="o">==</span> <span class="n">warcraft_2_pud</span><span class="p">.</span><span class="n">orc_oil_well</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">uType</span> <span class="o">==</span> <span class="n">warcraft_2_pud</span><span class="p">.</span><span class="n">oil_patch</span><span class="p">))</span> <span class="p">:</span>
-    <span class="k">let</span> <span class="n">resourceInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">options</span> <span class="o">*</span> <span class="mi">2500</span><span class="p">))</span>
-    <span class="n">this</span><span class="p">.</span><span class="n">resourceInst</span> <span class="o">=</span> <span class="n">resourceInstExpr</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">resourceInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
-  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">resourceInst</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionVer], filename: string): Warcraft2Pud_SectionVer =</span>
+<span class="w">  </span><span class="n">Warcraft2Pud_SectionVer</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_Unit], filename: string): Warcraft2Pud_Unit =</span>
-  <span class="n">Warcraft2Pud_Unit</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionDim], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionDim =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Warcraft2Pud_SectionDim</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
+
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">xExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">yExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">yExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionDim], filename: string): Warcraft2Pud_SectionDim =</span>
+<span class="w">  </span><span class="n">Warcraft2Pud_SectionDim</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="sd">Section that confirms that this file is a &quot;map file&quot; by certain</span>
+<span class="sd">magic string and supplies a tag that could be used in</span>
+<span class="sd">multiplayer to check that all player use the same version of the</span>
+<span class="sd">map.</span>
+
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionType], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionType =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Warcraft2Pud_SectionType</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
+
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">magicExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">magicExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  unused (always set to $0a and $ff by editor, but can be anything for the game)</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">unusedExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">unused</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">unusedExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  id tag (for consistency check in multiplayer)</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">idTagExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">idTag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">idTagExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionType], filename: string): Warcraft2Pud_SectionType =</span>
+<span class="w">  </span><span class="n">Warcraft2Pud_SectionType</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionUnit], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionUnit =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Warcraft2Pud_SectionUnit</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
+
+<span class="w">  </span><span class="k">block</span><span class="p">:</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="n">i</span><span class="p">:</span><span class="w"> </span><span class="nb">int</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Warcraft2Pud_Unit</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">units</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+<span class="w">      </span><span class="n">inc</span><span class="w"> </span><span class="n">i</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionUnit], filename: string): Warcraft2Pud_SectionUnit =</span>
+<span class="w">  </span><span class="n">Warcraft2Pud_SectionUnit</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_Section], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud): Warcraft2Pud_Section =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Warcraft2Pud_Section</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
+
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">nameExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">)),</span><span class="w"> </span><span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nameExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">sizeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sizeExpr</span>
+<span class="w">  </span><span class="k">block</span><span class="p">:</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">name</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;SLBR&quot;</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">rawBodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">size</span><span class="p">))</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">rawBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawBodyExpr</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">rawBodyIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">bodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Warcraft2Pud_SectionStartingResource</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bodyExpr</span>
+<span class="w">    </span><span class="k">elif</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;ERAX&quot;</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">rawBodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">size</span><span class="p">))</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">rawBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawBodyExpr</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">rawBodyIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">bodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Warcraft2Pud_SectionEra</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bodyExpr</span>
+<span class="w">    </span><span class="k">elif</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;OWNR&quot;</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">rawBodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">size</span><span class="p">))</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">rawBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawBodyExpr</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">rawBodyIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">bodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Warcraft2Pud_SectionOwnr</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bodyExpr</span>
+<span class="w">    </span><span class="k">elif</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;ERA &quot;</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">rawBodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">size</span><span class="p">))</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">rawBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawBodyExpr</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">rawBodyIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">bodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Warcraft2Pud_SectionEra</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bodyExpr</span>
+<span class="w">    </span><span class="k">elif</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;SGLD&quot;</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">rawBodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">size</span><span class="p">))</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">rawBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawBodyExpr</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">rawBodyIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">bodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Warcraft2Pud_SectionStartingResource</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bodyExpr</span>
+<span class="w">    </span><span class="k">elif</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;VER &quot;</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">rawBodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">size</span><span class="p">))</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">rawBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawBodyExpr</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">rawBodyIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">bodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Warcraft2Pud_SectionVer</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bodyExpr</span>
+<span class="w">    </span><span class="k">elif</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;SOIL&quot;</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">rawBodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">size</span><span class="p">))</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">rawBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawBodyExpr</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">rawBodyIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">bodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Warcraft2Pud_SectionStartingResource</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bodyExpr</span>
+<span class="w">    </span><span class="k">elif</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;UNIT&quot;</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">rawBodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">size</span><span class="p">))</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">rawBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawBodyExpr</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">rawBodyIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">bodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Warcraft2Pud_SectionUnit</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bodyExpr</span>
+<span class="w">    </span><span class="k">elif</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;DIM &quot;</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">rawBodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">size</span><span class="p">))</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">rawBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawBodyExpr</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">rawBodyIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">bodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Warcraft2Pud_SectionDim</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bodyExpr</span>
+<span class="w">    </span><span class="k">elif</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;TYPE&quot;</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">rawBodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">size</span><span class="p">))</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">rawBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawBodyExpr</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">rawBodyIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">bodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Warcraft2Pud_SectionType</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bodyExpr</span>
+<span class="w">    </span><span class="k">else</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">bodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">size</span><span class="p">))</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bodyExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_Section], filename: string): Warcraft2Pud_Section =</span>
+<span class="w">  </span><span class="n">Warcraft2Pud_Section</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="sd">Section that specifies who controls each player.</span>
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionOwnr], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionOwnr =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Warcraft2Pud_SectionOwnr</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
+
+<span class="w">  </span><span class="k">block</span><span class="p">:</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="n">i</span><span class="p">:</span><span class="w"> </span><span class="nb">int</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Warcraft2Pud_Controller</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">controllerByPlayer</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+<span class="w">      </span><span class="n">inc</span><span class="w"> </span><span class="n">i</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_SectionOwnr], filename: string): Warcraft2Pud_SectionOwnr =</span>
+<span class="w">  </span><span class="n">Warcraft2Pud_SectionOwnr</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_Unit], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_SectionUnit): Warcraft2Pud_Unit =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Warcraft2Pud_Unit</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Warcraft2Pud</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
+
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">xExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">yExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">yExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">uTypeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Warcraft2Pud_UnitType</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">uType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uTypeExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">ownerExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">owner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ownerExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  if gold mine or oil well, contains 2500 * this, otherwise 0 passive 1 active</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">optionsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">optionsExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">resource</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Warcraft2Pud_Unit</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">resourceInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">resourceInst</span>
+<span class="w">  </span><span class="k">if</span><span class="w">  </span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">uType</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">warcraft_2_pud</span><span class="p">.</span><span class="n">gold_mine</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">uType</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">warcraft_2_pud</span><span class="p">.</span><span class="n">human_oil_well</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">uType</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">warcraft_2_pud</span><span class="p">.</span><span class="n">orc_oil_well</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">uType</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">warcraft_2_pud</span><span class="p">.</span><span class="n">oil_patch</span><span class="p">))</span><span class="w"> </span><span class="p">:</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">resourceInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">options</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2500</span><span class="p">))</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">resourceInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">resourceInstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">resourceInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">resourceInst</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Warcraft2Pud_Unit], filename: string): Warcraft2Pud_Unit =</span>
+<span class="w">  </span><span class="n">Warcraft2Pud_Unit</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 </pre></div>
 
         </div>

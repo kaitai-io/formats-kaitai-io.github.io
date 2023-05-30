@@ -242,19 +242,19 @@ section#format-index .row {
 
 
 
-<div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="no">Edid</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;path/to/local/file.EDID (VESA Enhanced Extended Display Identification Data)&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Edid</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;path/to/local/file.EDID (VESA Enhanced Extended Display Identification Data)&quot;</span><span class="p">)</span>
 </pre></div>
 
 <p>Or parse structure from a string of bytes:</p>
 
-<div class="highlight"><pre><span></span><span class="n">bytes</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\x00\x01\x02</span><span class="s2">...&quot;</span>
-<span class="n">data</span> <span class="o">=</span> <span class="no">Edid</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">bytes</span><span class="p">))</span>
+<div class="highlight"><pre><span></span><span class="n">bytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\x00\x01\x02</span><span class="s2">...&quot;</span>
+<span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Edid</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">bytes</span><span class="p">))</span>
 </pre></div>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
 
-<div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">product_code</span> <span class="c1"># =&gt; Manufacturer product code</span>
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">product_code</span><span class="w"> </span><span class="c1"># =&gt; Manufacturer product code</span>
 </pre></div>
 
     </div>
@@ -284,502 +284,502 @@ section#format-index .row {
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
+<span class="nb">require</span><span class="w"> </span><span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.9&#39;</span><span class="p">)</span>
-  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">unless</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.9&#39;</span><span class="p">)</span>
+<span class="w">  </span><span class="k">raise</span><span class="w"> </span><span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="k">end</span>
 
-<span class="k">class</span> <span class="nc">Edid</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
-    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-    <span class="n">_read</span>
-  <span class="k">end</span>
-
-  <span class="k">def</span> <span class="n">_read</span>
-    <span class="vi">@magic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
-    <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">magic</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/seq/0&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">magic</span> <span class="o">==</span> <span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
-    <span class="vi">@mfg_bytes</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
-    <span class="vi">@product_code</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-    <span class="vi">@serial</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-    <span class="vi">@mfg_week</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-    <span class="vi">@mfg_year_mod</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-    <span class="vi">@edid_version_major</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-    <span class="vi">@edid_version_minor</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-    <span class="vi">@input_flags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-    <span class="vi">@screen_size_h</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-    <span class="vi">@screen_size_v</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-    <span class="vi">@gamma_mod</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-    <span class="vi">@features_flags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-    <span class="vi">@chromacity</span> <span class="o">=</span> <span class="no">ChromacityInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-    <span class="vi">@est_timings</span> <span class="o">=</span> <span class="no">EstTimingsInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-    <span class="vi">@_raw_std_timings</span> <span class="o">=</span> <span class="o">[]</span>
-    <span class="vi">@std_timings</span> <span class="o">=</span> <span class="o">[]</span>
-    <span class="p">(</span><span class="mi">8</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-      <span class="vi">@_raw_std_timings</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-      <span class="n">_io__raw_std_timings</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_std_timings</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">)</span>
-      <span class="vi">@std_timings</span> <span class="o">&lt;&lt;</span> <span class="no">StdTiming</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_std_timings</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-    <span class="p">}</span>
-    <span class="nb">self</span>
-  <span class="k">end</span>
-
-  <span class="c1">##</span>
-  <span class="c1"># Chromaticity information: colorimetry and white point</span>
-  <span class="c1"># coordinates. All coordinates are stored as fixed precision</span>
-  <span class="c1"># 10-bit numbers, bits are shuffled for compactness.</span>
-  <span class="k">class</span> <span class="nc">ChromacityInfo</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
-      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-      <span class="n">_read</span>
-    <span class="k">end</span>
-
-    <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@red_x_1_0</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-      <span class="vi">@red_y_1_0</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-      <span class="vi">@green_x_1_0</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-      <span class="vi">@green_y_1_0</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-      <span class="vi">@blue_x_1_0</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-      <span class="vi">@blue_y_1_0</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-      <span class="vi">@white_x_1_0</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-      <span class="vi">@white_y_1_0</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-      <span class="vi">@_io</span><span class="o">.</span><span class="n">align_to_byte</span>
-      <span class="vi">@red_x_9_2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="vi">@red_y_9_2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="vi">@green_x_9_2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="vi">@green_y_9_2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="vi">@blue_x_9_2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="vi">@blue_y_9_2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="vi">@white_x_9_2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="vi">@white_y_9_2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="nb">self</span>
-    <span class="k">end</span>
-    <span class="k">def</span> <span class="nf">green_x_int</span>
-      <span class="k">return</span> <span class="vi">@green_x_int</span> <span class="k">unless</span> <span class="vi">@green_x_int</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@green_x_int</span> <span class="o">=</span> <span class="p">((</span><span class="n">green_x_9_2</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">|</span> <span class="n">green_x_1_0</span><span class="p">)</span>
-      <span class="vi">@green_x_int</span>
-    <span class="k">end</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Red Y coordinate</span>
-    <span class="k">def</span> <span class="nf">red_y</span>
-      <span class="k">return</span> <span class="vi">@red_y</span> <span class="k">unless</span> <span class="vi">@red_y</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@red_y</span> <span class="o">=</span> <span class="p">(</span><span class="n">red_y_int</span> <span class="o">/</span> <span class="mi">1024</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span>
-      <span class="vi">@red_y</span>
-    <span class="k">end</span>
-    <span class="k">def</span> <span class="nf">green_y_int</span>
-      <span class="k">return</span> <span class="vi">@green_y_int</span> <span class="k">unless</span> <span class="vi">@green_y_int</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@green_y_int</span> <span class="o">=</span> <span class="p">((</span><span class="n">green_y_9_2</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">|</span> <span class="n">green_y_1_0</span><span class="p">)</span>
-      <span class="vi">@green_y_int</span>
-    <span class="k">end</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># White Y coordinate</span>
-    <span class="k">def</span> <span class="nf">white_y</span>
-      <span class="k">return</span> <span class="vi">@white_y</span> <span class="k">unless</span> <span class="vi">@white_y</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@white_y</span> <span class="o">=</span> <span class="p">(</span><span class="n">white_y_int</span> <span class="o">/</span> <span class="mi">1024</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span>
-      <span class="vi">@white_y</span>
-    <span class="k">end</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Red X coordinate</span>
-    <span class="k">def</span> <span class="nf">red_x</span>
-      <span class="k">return</span> <span class="vi">@red_x</span> <span class="k">unless</span> <span class="vi">@red_x</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@red_x</span> <span class="o">=</span> <span class="p">(</span><span class="n">red_x_int</span> <span class="o">/</span> <span class="mi">1024</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span>
-      <span class="vi">@red_x</span>
-    <span class="k">end</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># White X coordinate</span>
-    <span class="k">def</span> <span class="nf">white_x</span>
-      <span class="k">return</span> <span class="vi">@white_x</span> <span class="k">unless</span> <span class="vi">@white_x</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@white_x</span> <span class="o">=</span> <span class="p">(</span><span class="n">white_x_int</span> <span class="o">/</span> <span class="mi">1024</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span>
-      <span class="vi">@white_x</span>
-    <span class="k">end</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Blue X coordinate</span>
-    <span class="k">def</span> <span class="nf">blue_x</span>
-      <span class="k">return</span> <span class="vi">@blue_x</span> <span class="k">unless</span> <span class="vi">@blue_x</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@blue_x</span> <span class="o">=</span> <span class="p">(</span><span class="n">blue_x_int</span> <span class="o">/</span> <span class="mi">1024</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span>
-      <span class="vi">@blue_x</span>
-    <span class="k">end</span>
-    <span class="k">def</span> <span class="nf">white_x_int</span>
-      <span class="k">return</span> <span class="vi">@white_x_int</span> <span class="k">unless</span> <span class="vi">@white_x_int</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@white_x_int</span> <span class="o">=</span> <span class="p">((</span><span class="n">white_x_9_2</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">|</span> <span class="n">white_x_1_0</span><span class="p">)</span>
-      <span class="vi">@white_x_int</span>
-    <span class="k">end</span>
-    <span class="k">def</span> <span class="nf">white_y_int</span>
-      <span class="k">return</span> <span class="vi">@white_y_int</span> <span class="k">unless</span> <span class="vi">@white_y_int</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@white_y_int</span> <span class="o">=</span> <span class="p">((</span><span class="n">white_y_9_2</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">|</span> <span class="n">white_y_1_0</span><span class="p">)</span>
-      <span class="vi">@white_y_int</span>
-    <span class="k">end</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Green X coordinate</span>
-    <span class="k">def</span> <span class="nf">green_x</span>
-      <span class="k">return</span> <span class="vi">@green_x</span> <span class="k">unless</span> <span class="vi">@green_x</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@green_x</span> <span class="o">=</span> <span class="p">(</span><span class="n">green_x_int</span> <span class="o">/</span> <span class="mi">1024</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span>
-      <span class="vi">@green_x</span>
-    <span class="k">end</span>
-    <span class="k">def</span> <span class="nf">red_x_int</span>
-      <span class="k">return</span> <span class="vi">@red_x_int</span> <span class="k">unless</span> <span class="vi">@red_x_int</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@red_x_int</span> <span class="o">=</span> <span class="p">((</span><span class="n">red_x_9_2</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">|</span> <span class="n">red_x_1_0</span><span class="p">)</span>
-      <span class="vi">@red_x_int</span>
-    <span class="k">end</span>
-    <span class="k">def</span> <span class="nf">red_y_int</span>
-      <span class="k">return</span> <span class="vi">@red_y_int</span> <span class="k">unless</span> <span class="vi">@red_y_int</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@red_y_int</span> <span class="o">=</span> <span class="p">((</span><span class="n">red_y_9_2</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">|</span> <span class="n">red_y_1_0</span><span class="p">)</span>
-      <span class="vi">@red_y_int</span>
-    <span class="k">end</span>
-    <span class="k">def</span> <span class="nf">blue_x_int</span>
-      <span class="k">return</span> <span class="vi">@blue_x_int</span> <span class="k">unless</span> <span class="vi">@blue_x_int</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@blue_x_int</span> <span class="o">=</span> <span class="p">((</span><span class="n">blue_x_9_2</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">|</span> <span class="n">blue_x_1_0</span><span class="p">)</span>
-      <span class="vi">@blue_x_int</span>
-    <span class="k">end</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Blue Y coordinate</span>
-    <span class="k">def</span> <span class="nf">blue_y</span>
-      <span class="k">return</span> <span class="vi">@blue_y</span> <span class="k">unless</span> <span class="vi">@blue_y</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@blue_y</span> <span class="o">=</span> <span class="p">(</span><span class="n">blue_y_int</span> <span class="o">/</span> <span class="mi">1024</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span>
-      <span class="vi">@blue_y</span>
-    <span class="k">end</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Green Y coordinate</span>
-    <span class="k">def</span> <span class="nf">green_y</span>
-      <span class="k">return</span> <span class="vi">@green_y</span> <span class="k">unless</span> <span class="vi">@green_y</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@green_y</span> <span class="o">=</span> <span class="p">(</span><span class="n">green_y_int</span> <span class="o">/</span> <span class="mi">1024</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span>
-      <span class="vi">@green_y</span>
-    <span class="k">end</span>
-    <span class="k">def</span> <span class="nf">blue_y_int</span>
-      <span class="k">return</span> <span class="vi">@blue_y_int</span> <span class="k">unless</span> <span class="vi">@blue_y_int</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@blue_y_int</span> <span class="o">=</span> <span class="p">((</span><span class="n">blue_y_9_2</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">|</span> <span class="n">blue_y_1_0</span><span class="p">)</span>
-      <span class="vi">@blue_y_int</span>
-    <span class="k">end</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Red X, bits 1..0</span>
-    <span class="kp">attr_reader</span> <span class="ss">:red_x_1_0</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Red Y, bits 1..0</span>
-    <span class="kp">attr_reader</span> <span class="ss">:red_y_1_0</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Green X, bits 1..0</span>
-    <span class="kp">attr_reader</span> <span class="ss">:green_x_1_0</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Green Y, bits 1..0</span>
-    <span class="kp">attr_reader</span> <span class="ss">:green_y_1_0</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Blue X, bits 1..0</span>
-    <span class="kp">attr_reader</span> <span class="ss">:blue_x_1_0</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Blue Y, bits 1..0</span>
-    <span class="kp">attr_reader</span> <span class="ss">:blue_y_1_0</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># White X, bits 1..0</span>
-    <span class="kp">attr_reader</span> <span class="ss">:white_x_1_0</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># White Y, bits 1..0</span>
-    <span class="kp">attr_reader</span> <span class="ss">:white_y_1_0</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Red X, bits 9..2</span>
-    <span class="kp">attr_reader</span> <span class="ss">:red_x_9_2</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Red Y, bits 9..2</span>
-    <span class="kp">attr_reader</span> <span class="ss">:red_y_9_2</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Green X, bits 9..2</span>
-    <span class="kp">attr_reader</span> <span class="ss">:green_x_9_2</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Green Y, bits 9..2</span>
-    <span class="kp">attr_reader</span> <span class="ss">:green_y_9_2</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Blue X, bits 9..2</span>
-    <span class="kp">attr_reader</span> <span class="ss">:blue_x_9_2</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Blue Y, bits 9..2</span>
-    <span class="kp">attr_reader</span> <span class="ss">:blue_y_9_2</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># White X, bits 9..2</span>
-    <span class="kp">attr_reader</span> <span class="ss">:white_x_9_2</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># White Y, bits 9..2</span>
-    <span class="kp">attr_reader</span> <span class="ss">:white_y_9_2</span>
-  <span class="k">end</span>
-  <span class="k">class</span> <span class="nc">EstTimingsInfo</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
-      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-      <span class="n">_read</span>
-    <span class="k">end</span>
-
-    <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@can_720x400px_70hz</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-      <span class="vi">@can_720x400px_88hz</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-      <span class="vi">@can_640x480px_60hz</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-      <span class="vi">@can_640x480px_67hz</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-      <span class="vi">@can_640x480px_72hz</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-      <span class="vi">@can_640x480px_75hz</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-      <span class="vi">@can_800x600px_56hz</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-      <span class="vi">@can_800x600px_60hz</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-      <span class="vi">@can_800x600px_72hz</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-      <span class="vi">@can_800x600px_75hz</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-      <span class="vi">@can_832x624px_75hz</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-      <span class="vi">@can_1024x768px_87hz_i</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-      <span class="vi">@can_1024x768px_60hz</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-      <span class="vi">@can_1024x768px_70hz</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-      <span class="vi">@can_1024x768px_75hz</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-      <span class="vi">@can_1280x1024px_75hz</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-      <span class="vi">@can_1152x870px_75hz</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-      <span class="vi">@reserved</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
-      <span class="nb">self</span>
-    <span class="k">end</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Supports 720 x 400 @ 70Hz</span>
-    <span class="kp">attr_reader</span> <span class="ss">:can_720x400px_70hz</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Supports 720 x 400 @ 88Hz</span>
-    <span class="kp">attr_reader</span> <span class="ss">:can_720x400px_88hz</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Supports 640 x 480 @ 60Hz</span>
-    <span class="kp">attr_reader</span> <span class="ss">:can_640x480px_60hz</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Supports 640 x 480 @ 67Hz</span>
-    <span class="kp">attr_reader</span> <span class="ss">:can_640x480px_67hz</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Supports 640 x 480 @ 72Hz</span>
-    <span class="kp">attr_reader</span> <span class="ss">:can_640x480px_72hz</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Supports 640 x 480 @ 75Hz</span>
-    <span class="kp">attr_reader</span> <span class="ss">:can_640x480px_75hz</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Supports 800 x 600 @ 56Hz</span>
-    <span class="kp">attr_reader</span> <span class="ss">:can_800x600px_56hz</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Supports 800 x 600 @ 60Hz</span>
-    <span class="kp">attr_reader</span> <span class="ss">:can_800x600px_60hz</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Supports 800 x 600 @ 72Hz</span>
-    <span class="kp">attr_reader</span> <span class="ss">:can_800x600px_72hz</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Supports 800 x 600 @ 75Hz</span>
-    <span class="kp">attr_reader</span> <span class="ss">:can_800x600px_75hz</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Supports 832 x 624 @ 75Hz</span>
-    <span class="kp">attr_reader</span> <span class="ss">:can_832x624px_75hz</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Supports 1024 x 768 @ 87Hz(I)</span>
-    <span class="kp">attr_reader</span> <span class="ss">:can_1024x768px_87hz_i</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Supports 1024 x 768 @ 60Hz</span>
-    <span class="kp">attr_reader</span> <span class="ss">:can_1024x768px_60hz</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Supports 1024 x 768 @ 70Hz</span>
-    <span class="kp">attr_reader</span> <span class="ss">:can_1024x768px_70hz</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Supports 1024 x 768 @ 75Hz</span>
-    <span class="kp">attr_reader</span> <span class="ss">:can_1024x768px_75hz</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Supports 1280 x 1024 @ 75Hz</span>
-    <span class="kp">attr_reader</span> <span class="ss">:can_1280x1024px_75hz</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Supports 1152 x 870 @ 75Hz</span>
-    <span class="kp">attr_reader</span> <span class="ss">:can_1152x870px_75hz</span>
-    <span class="kp">attr_reader</span> <span class="ss">:reserved</span>
-  <span class="k">end</span>
-  <span class="k">class</span> <span class="nc">StdTiming</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-
-    <span class="no">ASPECT_RATIOS</span> <span class="o">=</span> <span class="p">{</span>
-      <span class="mi">0</span> <span class="o">=&gt;</span> <span class="ss">:aspect_ratios_ratio_16_10</span><span class="p">,</span>
-      <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:aspect_ratios_ratio_4_3</span><span class="p">,</span>
-      <span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:aspect_ratios_ratio_5_4</span><span class="p">,</span>
-      <span class="mi">3</span> <span class="o">=&gt;</span> <span class="ss">:aspect_ratios_ratio_16_9</span><span class="p">,</span>
-    <span class="p">}</span>
-    <span class="no">I__ASPECT_RATIOS</span> <span class="o">=</span> <span class="no">ASPECT_RATIOS</span><span class="o">.</span><span class="n">invert</span>
-    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
-      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-      <span class="n">_read</span>
-    <span class="k">end</span>
-
-    <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@horiz_active_pixels_mod</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="vi">@aspect_ratio</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">ASPECT_RATIOS</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
-      <span class="vi">@refresh_rate_mod</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
-      <span class="nb">self</span>
-    <span class="k">end</span>
-    <span class="k">def</span> <span class="nf">bytes_lookahead</span>
-      <span class="k">return</span> <span class="vi">@bytes_lookahead</span> <span class="k">unless</span> <span class="vi">@bytes_lookahead</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
-      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-      <span class="vi">@bytes_lookahead</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-      <span class="vi">@bytes_lookahead</span>
-    <span class="k">end</span>
-    <span class="k">def</span> <span class="nf">is_used</span>
-      <span class="k">return</span> <span class="vi">@is_used</span> <span class="k">unless</span> <span class="vi">@is_used</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@is_used</span> <span class="o">=</span> <span class="n">bytes_lookahead</span> <span class="o">!=</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
-      <span class="vi">@is_used</span>
-    <span class="k">end</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Range of horizontal active pixels.</span>
-    <span class="k">def</span> <span class="nf">horiz_active_pixels</span>
-      <span class="k">return</span> <span class="vi">@horiz_active_pixels</span> <span class="k">unless</span> <span class="vi">@horiz_active_pixels</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="k">if</span> <span class="n">is_used</span>
-        <span class="vi">@horiz_active_pixels</span> <span class="o">=</span> <span class="p">((</span><span class="n">horiz_active_pixels_mod</span> <span class="o">+</span> <span class="mi">31</span><span class="p">)</span> <span class="o">*</span> <span class="mi">8</span><span class="p">)</span>
-      <span class="k">end</span>
-      <span class="vi">@horiz_active_pixels</span>
-    <span class="k">end</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Vertical refresh rate, Hz.</span>
-    <span class="k">def</span> <span class="nf">refresh_rate</span>
-      <span class="k">return</span> <span class="vi">@refresh_rate</span> <span class="k">unless</span> <span class="vi">@refresh_rate</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="k">if</span> <span class="n">is_used</span>
-        <span class="vi">@refresh_rate</span> <span class="o">=</span> <span class="p">(</span><span class="n">refresh_rate_mod</span> <span class="o">+</span> <span class="mi">60</span><span class="p">)</span>
-      <span class="k">end</span>
-      <span class="vi">@refresh_rate</span>
-    <span class="k">end</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Range of horizontal active pixels, written in modified form:</span>
-    <span class="c1"># `(horiz_active_pixels / 8) - 31`. This yields an effective</span>
-    <span class="c1"># range of 256..2288, with steps of 8 pixels.</span>
-    <span class="kp">attr_reader</span> <span class="ss">:horiz_active_pixels_mod</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Aspect ratio of the image. Can be used to calculate number</span>
-    <span class="c1"># of vertical pixels.</span>
-    <span class="kp">attr_reader</span> <span class="ss">:aspect_ratio</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># Refresh rate in Hz, written in modified form: `refresh_rate</span>
-    <span class="c1"># - 60`. This yields an effective range of 60..123 Hz.</span>
-    <span class="kp">attr_reader</span> <span class="ss">:refresh_rate_mod</span>
-  <span class="k">end</span>
-  <span class="k">def</span> <span class="nf">mfg_year</span>
-    <span class="k">return</span> <span class="vi">@mfg_year</span> <span class="k">unless</span> <span class="vi">@mfg_year</span><span class="o">.</span><span class="n">nil?</span>
-    <span class="vi">@mfg_year</span> <span class="o">=</span> <span class="p">(</span><span class="n">mfg_year_mod</span> <span class="o">+</span> <span class="mi">1990</span><span class="p">)</span>
-    <span class="vi">@mfg_year</span>
-  <span class="k">end</span>
-  <span class="k">def</span> <span class="nf">mfg_id_ch1</span>
-    <span class="k">return</span> <span class="vi">@mfg_id_ch1</span> <span class="k">unless</span> <span class="vi">@mfg_id_ch1</span><span class="o">.</span><span class="n">nil?</span>
-    <span class="vi">@mfg_id_ch1</span> <span class="o">=</span> <span class="p">((</span><span class="n">mfg_bytes</span> <span class="o">&amp;</span> <span class="mi">31744</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">10</span><span class="p">)</span>
-    <span class="vi">@mfg_id_ch1</span>
-  <span class="k">end</span>
-  <span class="k">def</span> <span class="nf">mfg_id_ch3</span>
-    <span class="k">return</span> <span class="vi">@mfg_id_ch3</span> <span class="k">unless</span> <span class="vi">@mfg_id_ch3</span><span class="o">.</span><span class="n">nil?</span>
-    <span class="vi">@mfg_id_ch3</span> <span class="o">=</span> <span class="p">(</span><span class="n">mfg_bytes</span> <span class="o">&amp;</span> <span class="mi">31</span><span class="p">)</span>
-    <span class="vi">@mfg_id_ch3</span>
-  <span class="k">end</span>
-  <span class="k">def</span> <span class="nf">gamma</span>
-    <span class="k">return</span> <span class="vi">@gamma</span> <span class="k">unless</span> <span class="vi">@gamma</span><span class="o">.</span><span class="n">nil?</span>
-    <span class="k">if</span> <span class="n">gamma_mod</span> <span class="o">!=</span> <span class="mi">255</span>
-      <span class="vi">@gamma</span> <span class="o">=</span> <span class="p">((</span><span class="n">gamma_mod</span> <span class="o">+</span> <span class="mi">100</span><span class="p">)</span> <span class="o">/</span> <span class="mi">100</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span>
-    <span class="k">end</span>
-    <span class="vi">@gamma</span>
-  <span class="k">end</span>
-  <span class="k">def</span> <span class="nf">mfg_str</span>
-    <span class="k">return</span> <span class="vi">@mfg_str</span> <span class="k">unless</span> <span class="vi">@mfg_str</span><span class="o">.</span><span class="n">nil?</span>
-    <span class="vi">@mfg_str</span> <span class="o">=</span> <span class="p">(</span><span class="o">[</span><span class="p">(</span><span class="n">mfg_id_ch1</span> <span class="o">+</span> <span class="mi">64</span><span class="p">),</span> <span class="p">(</span><span class="n">mfg_id_ch2</span> <span class="o">+</span> <span class="mi">64</span><span class="p">),</span> <span class="p">(</span><span class="n">mfg_id_ch3</span> <span class="o">+</span> <span class="mi">64</span><span class="p">)</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
-    <span class="vi">@mfg_str</span>
-  <span class="k">end</span>
-  <span class="k">def</span> <span class="nf">mfg_id_ch2</span>
-    <span class="k">return</span> <span class="vi">@mfg_id_ch2</span> <span class="k">unless</span> <span class="vi">@mfg_id_ch2</span><span class="o">.</span><span class="n">nil?</span>
-    <span class="vi">@mfg_id_ch2</span> <span class="o">=</span> <span class="p">((</span><span class="n">mfg_bytes</span> <span class="o">&amp;</span> <span class="mi">992</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">5</span><span class="p">)</span>
-    <span class="vi">@mfg_id_ch2</span>
-  <span class="k">end</span>
-  <span class="kp">attr_reader</span> <span class="ss">:magic</span>
-  <span class="kp">attr_reader</span> <span class="ss">:mfg_bytes</span>
-
-  <span class="c1">##</span>
-  <span class="c1"># Manufacturer product code</span>
-  <span class="kp">attr_reader</span> <span class="ss">:product_code</span>
-
-  <span class="c1">##</span>
-  <span class="c1"># Serial number</span>
-  <span class="kp">attr_reader</span> <span class="ss">:serial</span>
-
-  <span class="c1">##</span>
-  <span class="c1"># Week of manufacture. Week numbering is not consistent between manufacturers.</span>
-  <span class="kp">attr_reader</span> <span class="ss">:mfg_week</span>
-
-  <span class="c1">##</span>
-  <span class="c1"># Year of manufacture, less 1990. (1990-2245). If week=255, it is the model year instead.</span>
-  <span class="kp">attr_reader</span> <span class="ss">:mfg_year_mod</span>
-
-  <span class="c1">##</span>
-  <span class="c1"># EDID version, usually 1 (for 1.3)</span>
-  <span class="kp">attr_reader</span> <span class="ss">:edid_version_major</span>
-
-  <span class="c1">##</span>
-  <span class="c1"># EDID revision, usually 3 (for 1.3)</span>
-  <span class="kp">attr_reader</span> <span class="ss">:edid_version_minor</span>
-  <span class="kp">attr_reader</span> <span class="ss">:input_flags</span>
-
-  <span class="c1">##</span>
-  <span class="c1"># Maximum horizontal image size, in centimetres (max 292 cm/115 in at 16:9 aspect ratio)</span>
-  <span class="kp">attr_reader</span> <span class="ss">:screen_size_h</span>
-
-  <span class="c1">##</span>
-  <span class="c1"># Maximum vertical image size, in centimetres. If either byte is 0, undefined (e.g. projector)</span>
-  <span class="kp">attr_reader</span> <span class="ss">:screen_size_v</span>
-
-  <span class="c1">##</span>
-  <span class="c1"># Display gamma, datavalue = (gamma*100)-100 (range 1.00-3.54)</span>
-  <span class="kp">attr_reader</span> <span class="ss">:gamma_mod</span>
-  <span class="kp">attr_reader</span> <span class="ss">:features_flags</span>
-
-  <span class="c1">##</span>
-  <span class="c1"># Phosphor or filter chromaticity structure, which provides info on colorimetry and white point</span>
-  <span class="c1"># @see &#39;&#39; Standard, section 3.7</span>
-  <span class="kp">attr_reader</span> <span class="ss">:chromacity</span>
-
-  <span class="c1">##</span>
-  <span class="c1"># Block of bit flags that indicates support of so called</span>
-  <span class="c1"># &quot;established timings&quot;, which is a commonly used subset of VESA</span>
-  <span class="c1"># DMT (Discrete Monitor Timings) modes.</span>
-  <span class="c1"># @see &#39;&#39; Standard, section 3.8</span>
-  <span class="kp">attr_reader</span> <span class="ss">:est_timings</span>
-
-  <span class="c1">##</span>
-  <span class="c1"># Array of descriptions of so called &quot;standard timings&quot;, which are</span>
-  <span class="c1"># used to specify up to 8 additional timings not included in</span>
-  <span class="c1"># &quot;established timings&quot;.</span>
-  <span class="kp">attr_reader</span> <span class="ss">:std_timings</span>
-  <span class="kp">attr_reader</span> <span class="ss">:_raw_std_timings</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Edid</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">    </span><span class="n">_read</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">    </span><span class="vi">@magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+<span class="w">    </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span><span class="w"> </span><span class="n">magic</span><span class="p">,</span><span class="w"> </span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/seq/0&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">magic</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="vi">@mfg_bytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+<span class="w">    </span><span class="vi">@product_code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+<span class="w">    </span><span class="vi">@serial</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">    </span><span class="vi">@mfg_week</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">    </span><span class="vi">@mfg_year_mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">    </span><span class="vi">@edid_version_major</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">    </span><span class="vi">@edid_version_minor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">    </span><span class="vi">@input_flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">    </span><span class="vi">@screen_size_h</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">    </span><span class="vi">@screen_size_v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">    </span><span class="vi">@gamma_mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">    </span><span class="vi">@features_flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">    </span><span class="vi">@chromacity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">ChromacityInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">    </span><span class="vi">@est_timings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">EstTimingsInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">    </span><span class="vi">@_raw_std_timings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
+<span class="w">    </span><span class="vi">@std_timings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
+<span class="w">    </span><span class="p">(</span><span class="mi">8</span><span class="p">)</span><span class="o">.</span><span class="n">times</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">|</span><span class="n">i</span><span class="o">|</span>
+<span class="w">      </span><span class="vi">@_raw_std_timings</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_io__raw_std_timings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_std_timings</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@std_timings</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="no">StdTiming</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_std_timings</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nb">self</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># Chromaticity information: colorimetry and white point</span>
+<span class="w">  </span><span class="c1"># coordinates. All coordinates are stored as fixed precision</span>
+<span class="w">  </span><span class="c1"># 10-bit numbers, bits are shuffled for compactness.</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">ChromacityInfo</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@red_x_1_0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@red_y_1_0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@green_x_1_0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@green_y_1_0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@blue_x_1_0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@blue_y_1_0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@white_x_1_0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@white_y_1_0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@_io</span><span class="o">.</span><span class="n">align_to_byte</span>
+<span class="w">      </span><span class="vi">@red_x_9_2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@red_y_9_2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@green_x_9_2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@green_y_9_2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@blue_x_9_2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@blue_y_9_2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@white_x_9_2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@white_y_9_2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">green_x_int</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@green_x_int</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@green_x_int</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@green_x_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">green_x_9_2</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">green_x_1_0</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@green_x_int</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Red Y coordinate</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">red_y</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@red_y</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@red_y</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@red_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">red_y_int</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1024</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@red_y</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">green_y_int</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@green_y_int</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@green_y_int</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@green_y_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">green_y_9_2</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">green_y_1_0</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@green_y_int</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># White Y coordinate</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">white_y</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@white_y</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@white_y</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@white_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">white_y_int</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1024</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@white_y</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Red X coordinate</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">red_x</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@red_x</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@red_x</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@red_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">red_x_int</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1024</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@red_x</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># White X coordinate</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">white_x</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@white_x</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@white_x</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@white_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">white_x_int</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1024</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@white_x</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Blue X coordinate</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">blue_x</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@blue_x</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@blue_x</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@blue_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">blue_x_int</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1024</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@blue_x</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">white_x_int</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@white_x_int</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@white_x_int</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@white_x_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">white_x_9_2</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">white_x_1_0</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@white_x_int</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">white_y_int</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@white_y_int</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@white_y_int</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@white_y_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">white_y_9_2</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">white_y_1_0</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@white_y_int</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Green X coordinate</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">green_x</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@green_x</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@green_x</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@green_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">green_x_int</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1024</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@green_x</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">red_x_int</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@red_x_int</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@red_x_int</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@red_x_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">red_x_9_2</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">red_x_1_0</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@red_x_int</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">red_y_int</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@red_y_int</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@red_y_int</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@red_y_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">red_y_9_2</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">red_y_1_0</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@red_y_int</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">blue_x_int</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@blue_x_int</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@blue_x_int</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@blue_x_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">blue_x_9_2</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">blue_x_1_0</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@blue_x_int</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Blue Y coordinate</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">blue_y</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@blue_y</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@blue_y</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@blue_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">blue_y_int</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1024</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@blue_y</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Green Y coordinate</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">green_y</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@green_y</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@green_y</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@green_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">green_y_int</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1024</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@green_y</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">blue_y_int</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@blue_y_int</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@blue_y_int</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@blue_y_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">blue_y_9_2</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">blue_y_1_0</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@blue_y_int</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Red X, bits 1..0</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:red_x_1_0</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Red Y, bits 1..0</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:red_y_1_0</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Green X, bits 1..0</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:green_x_1_0</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Green Y, bits 1..0</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:green_y_1_0</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Blue X, bits 1..0</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:blue_x_1_0</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Blue Y, bits 1..0</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:blue_y_1_0</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># White X, bits 1..0</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:white_x_1_0</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># White Y, bits 1..0</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:white_y_1_0</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Red X, bits 9..2</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:red_x_9_2</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Red Y, bits 9..2</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:red_y_9_2</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Green X, bits 9..2</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:green_x_9_2</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Green Y, bits 9..2</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:green_y_9_2</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Blue X, bits 9..2</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:blue_x_9_2</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Blue Y, bits 9..2</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:blue_y_9_2</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># White X, bits 9..2</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:white_x_9_2</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># White Y, bits 9..2</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:white_y_9_2</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">EstTimingsInfo</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@can_720x400px_70hz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="vi">@can_720x400px_88hz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="vi">@can_640x480px_60hz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="vi">@can_640x480px_67hz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="vi">@can_640x480px_72hz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="vi">@can_640x480px_75hz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="vi">@can_800x600px_56hz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="vi">@can_800x600px_60hz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="vi">@can_800x600px_72hz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="vi">@can_800x600px_75hz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="vi">@can_832x624px_75hz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="vi">@can_1024x768px_87hz_i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="vi">@can_1024x768px_60hz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="vi">@can_1024x768px_70hz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="vi">@can_1024x768px_75hz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="vi">@can_1280x1024px_75hz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="vi">@can_1152x870px_75hz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="vi">@reserved</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Supports 720 x 400 @ 70Hz</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:can_720x400px_70hz</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Supports 720 x 400 @ 88Hz</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:can_720x400px_88hz</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Supports 640 x 480 @ 60Hz</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:can_640x480px_60hz</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Supports 640 x 480 @ 67Hz</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:can_640x480px_67hz</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Supports 640 x 480 @ 72Hz</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:can_640x480px_72hz</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Supports 640 x 480 @ 75Hz</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:can_640x480px_75hz</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Supports 800 x 600 @ 56Hz</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:can_800x600px_56hz</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Supports 800 x 600 @ 60Hz</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:can_800x600px_60hz</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Supports 800 x 600 @ 72Hz</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:can_800x600px_72hz</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Supports 800 x 600 @ 75Hz</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:can_800x600px_75hz</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Supports 832 x 624 @ 75Hz</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:can_832x624px_75hz</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Supports 1024 x 768 @ 87Hz(I)</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:can_1024x768px_87hz_i</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Supports 1024 x 768 @ 60Hz</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:can_1024x768px_60hz</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Supports 1024 x 768 @ 70Hz</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:can_1024x768px_70hz</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Supports 1024 x 768 @ 75Hz</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:can_1024x768px_75hz</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Supports 1280 x 1024 @ 75Hz</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:can_1280x1024px_75hz</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Supports 1152 x 870 @ 75Hz</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:can_1152x870px_75hz</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:reserved</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">StdTiming</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+
+<span class="w">    </span><span class="no">ASPECT_RATIOS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="mi">0</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:aspect_ratios_ratio_16_10</span><span class="p">,</span>
+<span class="w">      </span><span class="mi">1</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:aspect_ratios_ratio_4_3</span><span class="p">,</span>
+<span class="w">      </span><span class="mi">2</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:aspect_ratios_ratio_5_4</span><span class="p">,</span>
+<span class="w">      </span><span class="mi">3</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:aspect_ratios_ratio_16_9</span><span class="p">,</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="no">I__ASPECT_RATIOS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">ASPECT_RATIOS</span><span class="o">.</span><span class="n">invert</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@horiz_active_pixels_mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@aspect_ratio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">ASPECT_RATIOS</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="w">      </span><span class="vi">@refresh_rate_mod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">bytes_lookahead</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@bytes_lookahead</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@bytes_lookahead</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+<span class="w">      </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@bytes_lookahead</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@bytes_lookahead</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">is_used</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@is_used</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@is_used</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@is_used</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bytes_lookahead</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="o">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@is_used</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Range of horizontal active pixels.</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">horiz_active_pixels</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@horiz_active_pixels</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@horiz_active_pixels</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="n">is_used</span>
+<span class="w">        </span><span class="vi">@horiz_active_pixels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">horiz_active_pixels_mod</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">31</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">8</span><span class="p">)</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="vi">@horiz_active_pixels</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Vertical refresh rate, Hz.</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">refresh_rate</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@refresh_rate</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@refresh_rate</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="n">is_used</span>
+<span class="w">        </span><span class="vi">@refresh_rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">refresh_rate_mod</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">60</span><span class="p">)</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="vi">@refresh_rate</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Range of horizontal active pixels, written in modified form:</span>
+<span class="w">    </span><span class="c1"># `(horiz_active_pixels / 8) - 31`. This yields an effective</span>
+<span class="w">    </span><span class="c1"># range of 256..2288, with steps of 8 pixels.</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:horiz_active_pixels_mod</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Aspect ratio of the image. Can be used to calculate number</span>
+<span class="w">    </span><span class="c1"># of vertical pixels.</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:aspect_ratio</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Refresh rate in Hz, written in modified form: `refresh_rate</span>
+<span class="w">    </span><span class="c1"># - 60`. This yields an effective range of 60..123 Hz.</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:refresh_rate_mod</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">mfg_year</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="vi">@mfg_year</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@mfg_year</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">    </span><span class="vi">@mfg_year</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">mfg_year_mod</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1990</span><span class="p">)</span>
+<span class="w">    </span><span class="vi">@mfg_year</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">mfg_id_ch1</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="vi">@mfg_id_ch1</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@mfg_id_ch1</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">    </span><span class="vi">@mfg_id_ch1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">mfg_bytes</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">31744</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span>
+<span class="w">    </span><span class="vi">@mfg_id_ch1</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">mfg_id_ch3</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="vi">@mfg_id_ch3</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@mfg_id_ch3</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">    </span><span class="vi">@mfg_id_ch3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">mfg_bytes</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">31</span><span class="p">)</span>
+<span class="w">    </span><span class="vi">@mfg_id_ch3</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">gamma</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="vi">@gamma</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@gamma</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">gamma_mod</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">255</span>
+<span class="w">      </span><span class="vi">@gamma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">gamma_mod</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">100</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="vi">@gamma</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">mfg_str</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="vi">@mfg_str</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@mfg_str</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">    </span><span class="vi">@mfg_str</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="o">[</span><span class="p">(</span><span class="n">mfg_id_ch1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">64</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="n">mfg_id_ch2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">64</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="n">mfg_id_ch3</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">64</span><span class="p">)</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="vi">@mfg_str</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">mfg_id_ch2</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="vi">@mfg_id_ch2</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@mfg_id_ch2</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">    </span><span class="vi">@mfg_id_ch2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">mfg_bytes</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">992</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+<span class="w">    </span><span class="vi">@mfg_id_ch2</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:magic</span>
+<span class="w">  </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:mfg_bytes</span>
+
+<span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># Manufacturer product code</span>
+<span class="w">  </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:product_code</span>
+
+<span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># Serial number</span>
+<span class="w">  </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:serial</span>
+
+<span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># Week of manufacture. Week numbering is not consistent between manufacturers.</span>
+<span class="w">  </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:mfg_week</span>
+
+<span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># Year of manufacture, less 1990. (1990-2245). If week=255, it is the model year instead.</span>
+<span class="w">  </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:mfg_year_mod</span>
+
+<span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># EDID version, usually 1 (for 1.3)</span>
+<span class="w">  </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:edid_version_major</span>
+
+<span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># EDID revision, usually 3 (for 1.3)</span>
+<span class="w">  </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:edid_version_minor</span>
+<span class="w">  </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:input_flags</span>
+
+<span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># Maximum horizontal image size, in centimetres (max 292 cm/115 in at 16:9 aspect ratio)</span>
+<span class="w">  </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:screen_size_h</span>
+
+<span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># Maximum vertical image size, in centimetres. If either byte is 0, undefined (e.g. projector)</span>
+<span class="w">  </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:screen_size_v</span>
+
+<span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># Display gamma, datavalue = (gamma*100)-100 (range 1.00-3.54)</span>
+<span class="w">  </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:gamma_mod</span>
+<span class="w">  </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:features_flags</span>
+
+<span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># Phosphor or filter chromaticity structure, which provides info on colorimetry and white point</span>
+<span class="w">  </span><span class="c1"># @see &#39;&#39; Standard, section 3.7</span>
+<span class="w">  </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:chromacity</span>
+
+<span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># Block of bit flags that indicates support of so called</span>
+<span class="w">  </span><span class="c1"># &quot;established timings&quot;, which is a commonly used subset of VESA</span>
+<span class="w">  </span><span class="c1"># DMT (Discrete Monitor Timings) modes.</span>
+<span class="w">  </span><span class="c1"># @see &#39;&#39; Standard, section 3.8</span>
+<span class="w">  </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:est_timings</span>
+
+<span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># Array of descriptions of so called &quot;standard timings&quot;, which are</span>
+<span class="w">  </span><span class="c1"># used to specify up to 8 additional timings not included in</span>
+<span class="w">  </span><span class="c1"># &quot;established timings&quot;.</span>
+<span class="w">  </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:std_timings</span>
+<span class="w">  </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:_raw_std_timings</span>
 <span class="k">end</span>
 </pre></div>
 

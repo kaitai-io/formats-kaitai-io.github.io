@@ -256,23 +256,23 @@ and build them along with your project.</p>
         </ul>
         <div class="tab-content" style="margin-top: 6px">
             <div role="tabpanel" class="tab-pane active" id="example-local-file">
-<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;fstream&gt;</span><span class="cp"></span>
+<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;fstream&gt;</span>
 
-<span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="w"> </span><span class="nf">is</span><span class="p">(</span><span class="s">&quot;path/to/local/file.pak&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="o">::</span><span class="n">binary</span><span class="p">);</span><span class="w"></span>
+<span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="w"> </span><span class="n">is</span><span class="p">(</span><span class="s">&quot;path/to/local/file.pak&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="o">::</span><span class="n">binary</span><span class="p">);</span>
 </pre></div>
             </div>
             <div role="tabpanel" class="tab-pane" id="example-std-string">
-<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sstream&gt;</span><span class="cp"></span>
+<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sstream&gt;</span>
 
-<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span><span class="w"> </span><span class="nf">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span><span class="w"></span>
+<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span><span class="w"> </span><span class="nf">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
 </pre></div>
             </div>
             <div role="tabpanel" class="tab-pane" id="example-char-ptr">
-<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sstream&gt;</span><span class="cp"></span>
+<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sstream&gt;</span>
 
-<span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">buf</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">};</span><span class="w"></span>
-<span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">str</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="w"> </span><span class="n">buf</span><span class="p">);</span><span class="w"></span>
-<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span><span class="w"> </span><span class="nf">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span><span class="w"></span>
+<span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">buf</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">};</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">str</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="w"> </span><span class="n">buf</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">istringstream</span><span class="w"> </span><span class="nf">is</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
 </pre></div>
             </div>
         </div>
@@ -281,14 +281,14 @@ and build them along with your project.</p>
 
     <li>We need to wrap our input stream into Kaitai stream:
 
-<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/kaitaistream.h&quot;</span><span class="cp"></span>
+<div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/kaitaistream.h&quot;</span>
 
-<span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="w"> </span><span class="nf">ks</span><span class="p">(</span><span class="o">&amp;</span><span class="n">is</span><span class="p">);</span><span class="w"></span>
+<span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="w"> </span><span class="nf">ks</span><span class="p">(</span><span class="o">&amp;</span><span class="n">is</span><span class="p">);</span>
 </pre></div>
     </li>
 
     <li>And finally, we can invoke the parsing:
-<div class="highlight"><pre><span></span><span class="n">chrome_pak_t</span><span class="w"> </span><span class="nf">data</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ks</span><span class="p">);</span><span class="w"></span>
+<div class="highlight"><pre><span></span><span class="n">chrome_pak_t</span><span class="w"> </span><span class="nf">data</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ks</span><span class="p">);</span>
 </pre></div>
     </li>
 </ol>
@@ -328,10 +328,10 @@ and build them along with your project.</p>
 
 <span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span><span class="cp"></span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;memory&gt;</span><span class="cp"></span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdint.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;memory&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span>
 
 <span class="cp">#if KAITAI_STRUCT_VERSION &lt; 9000L</span>
 <span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required&quot;</span>
@@ -343,198 +343,198 @@ and build them along with your project.</p>
 <span class="cm"> * \sa https://web.archive.org/web/20220126211447/https://dev.chromium.org/developers/design-documents/linuxresourcesandlocalizedstrings Source</span>
 <span class="cm"> * \sa https://chromium.googlesource.com/chromium/src/tools/grit/+/3c36f27/grit/format/data_pack.py Source</span>
 <span class="cm"> * \sa https://chromium.googlesource.com/chromium/src/tools/grit/+/8a23eae/grit/format/data_pack.py Source</span>
-<span class="cm"> */</span><span class="w"></span>
+<span class="cm"> */</span>
 
-<span class="k">class</span> <span class="nc">chrome_pak_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="k">class</span><span class="w"> </span><span class="nc">chrome_pak_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
 
-<span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="k">class</span> <span class="nc">header_v5_part_t</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="k">class</span> <span class="nc">resource_t</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="k">class</span> <span class="nc">alias_t</span><span class="p">;</span><span class="w"></span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">header_v5_part_t</span><span class="p">;</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">resource_t</span><span class="p">;</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">alias_t</span><span class="p">;</span>
 
-<span class="w">    </span><span class="k">enum</span> <span class="nc">encodings_t</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">ENCODINGS_BINARY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"></span>
-<span class="w">        </span><span class="n">ENCODINGS_UTF8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"></span>
-<span class="w">        </span><span class="n">ENCODINGS_UTF16</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="w"></span>
-<span class="w">    </span><span class="p">};</span><span class="w"></span>
+<span class="w">    </span><span class="k">enum</span><span class="w"> </span><span class="nc">encodings_t</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">ENCODINGS_BINARY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ENCODINGS_UTF8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ENCODINGS_UTF16</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">    </span><span class="p">};</span>
 
-<span class="w">    </span><span class="n">chrome_pak_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="n">chrome_pak_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
 
-<span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span><span class="w"></span>
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
 
-<span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="o">~</span><span class="n">chrome_pak_t</span><span class="p">();</span><span class="w"></span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="o">~</span><span class="n">chrome_pak_t</span><span class="p">();</span>
 
-<span class="w">    </span><span class="k">class</span> <span class="nc">header_v5_part_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">header_v5_part_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
 
-<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
 
-<span class="w">        </span><span class="n">header_v5_part_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="n">header_v5_part_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
 
-<span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
-<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span><span class="w"></span>
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
 
-<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="o">~</span><span class="n">header_v5_part_t</span><span class="p">();</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="o">~</span><span class="n">header_v5_part_t</span><span class="p">();</span>
 
-<span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_encoding_padding</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_num_resources</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_num_aliases</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_encoding_padding</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_num_resources</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_num_aliases</span><span class="p">;</span>
+<span class="w">        </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">        </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
 
-<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">encoding_padding</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_encoding_padding</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">num_resources</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_num_resources</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">num_aliases</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_num_aliases</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="p">};</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">encoding_padding</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_encoding_padding</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">num_resources</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_num_resources</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">num_aliases</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_num_aliases</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
 
-<span class="w">    </span><span class="k">class</span> <span class="nc">resource_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">resource_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
 
-<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
 
-<span class="w">        </span><span class="n">resource_t</span><span class="p">(</span><span class="kt">int32_t</span><span class="w"> </span><span class="n">p_idx</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">p_has_body</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="n">resource_t</span><span class="p">(</span><span class="kt">int32_t</span><span class="w"> </span><span class="n">p_idx</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">p_has_body</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
 
-<span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
-<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span><span class="w"></span>
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
 
-<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="o">~</span><span class="n">resource_t</span><span class="p">();</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="o">~</span><span class="n">resource_t</span><span class="p">();</span>
 
-<span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_len_body</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">m_len_body</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_len_body</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_len_body</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">m_len_body</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_len_body</span><span class="p">;</span>
 
-<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_len_body</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">len_body</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_len_body</span><span class="p">;</span><span class="w"> </span><span class="p">};</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_len_body</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">len_body</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_len_body</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
 
-<span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
 
-<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
-
-<span class="w">        </span><span class="cm">/**</span>
-<span class="cm">         * MUST NOT be accessed until the next `resource` is parsed</span>
-<span class="cm">         */</span><span class="w"></span>
-<span class="w">        </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">len_body</span><span class="p">();</span><span class="w"></span>
-
-<span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_body</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_body</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_body</span><span class="p">;</span><span class="w"></span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_body</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">body</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_body</span><span class="p">;</span><span class="w"> </span><span class="p">};</span><span class="w"></span>
-
-<span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
 
 <span class="w">        </span><span class="cm">/**</span>
 <span class="cm">         * MUST NOT be accessed until the next `resource` is parsed</span>
-<span class="cm">         */</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">body</span><span class="p">();</span><span class="w"></span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">len_body</span><span class="p">();</span>
 
-<span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_id</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_ofs_body</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">m_idx</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">m_has_body</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_body</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_body</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_body</span><span class="p">;</span>
 
-<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">id</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">ofs_body</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_ofs_body</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">idx</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_idx</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">has_body</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_has_body</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="p">};</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_body</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">body</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_body</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
 
-<span class="w">    </span><span class="k">class</span> <span class="nc">alias_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
 
-<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
 
-<span class="w">        </span><span class="n">alias_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * MUST NOT be accessed until the next `resource` is parsed</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">body</span><span class="p">();</span>
 
-<span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
-<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span><span class="w"></span>
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_id</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_ofs_body</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">m_idx</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">m_has_body</span><span class="p">;</span>
+<span class="w">        </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">        </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
 
-<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="o">~</span><span class="n">alias_t</span><span class="p">();</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">id</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">ofs_body</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_ofs_body</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">idx</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_idx</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">has_body</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_has_body</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
 
-<span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_resource</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">resource_t</span><span class="o">*</span><span class="w"> </span><span class="n">m_resource</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">alias_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
 
-<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="n">resource_t</span><span class="o">*</span><span class="w"> </span><span class="n">resource</span><span class="p">();</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
 
-<span class="w">    </span><span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_id</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_resource_idx</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="n">alias_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
 
-<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">id</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">resource_idx</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_resource_idx</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">        </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="p">};</span><span class="w"></span>
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
 
-<span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_num_resources</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_num_resources</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="o">~</span><span class="n">alias_t</span><span class="p">();</span>
 
-<span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">num_resources</span><span class="p">();</span><span class="w"></span>
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_resource</span><span class="p">;</span>
+<span class="w">        </span><span class="n">resource_t</span><span class="o">*</span><span class="w"> </span><span class="n">m_resource</span><span class="p">;</span>
 
-<span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_num_aliases</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_num_aliases</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="n">resource_t</span><span class="o">*</span><span class="w"> </span><span class="n">resource</span><span class="p">();</span>
 
-<span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">num_aliases</span><span class="p">();</span><span class="w"></span>
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_id</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_resource_idx</span><span class="p">;</span>
+<span class="w">        </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">        </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
 
-<span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_version</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_num_resources_v4</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_num_resources_v4</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">id</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">resource_idx</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_resource_idx</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
 
-<span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_num_resources_v4</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">num_resources_v4</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_num_resources_v4</span><span class="p">;</span><span class="w"> </span><span class="p">};</span><span class="w"></span>
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_num_resources</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_num_resources</span><span class="p">;</span>
 
-<span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="n">encodings_t</span><span class="w"> </span><span class="n">m_encoding</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">header_v5_part_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_v5_part</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_v5_part</span><span class="p">;</span><span class="w"></span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">num_resources</span><span class="p">();</span>
 
-<span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_v5_part</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">v5_part</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_v5_part</span><span class="p">;</span><span class="w"> </span><span class="p">};</span><span class="w"></span>
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_num_aliases</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_num_aliases</span><span class="p">;</span>
 
-<span class="k">private</span><span class="o">:</span><span class="w"></span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">resource_t</span><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">m_resources</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">alias_t</span><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">m_aliases</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"></span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">num_aliases</span><span class="p">();</span>
 
-<span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_version</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_num_resources_v4</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_num_resources_v4</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_num_resources_v4</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">num_resources_v4</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_num_resources_v4</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="n">encodings_t</span><span class="w"> </span><span class="n">m_encoding</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">header_v5_part_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_v5_part</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_v5_part</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_v5_part</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">v5_part</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_v5_part</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">resource_t</span><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">m_resources</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">alias_t</span><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">m_aliases</span><span class="p">;</span>
+<span class="w">    </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
 
 <span class="w">    </span><span class="cm">/**</span>
 <span class="cm">     * only versions 4 and 5 are supported</span>
-<span class="cm">     */</span><span class="w"></span>
-<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">version</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_version</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">num_resources_v4</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_num_resources_v4</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">version</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_version</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">num_resources_v4</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_num_resources_v4</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
 <span class="w">    </span><span class="cm">/**</span>
 <span class="cm">     * Character encoding of all text resources in the PAK file. Note that</span>
@@ -546,20 +546,20 @@ and build them along with your project.</p>
 <span class="cm">     * hardcoded in Python scripts from the GRIT repository that generate .pak</span>
 <span class="cm">     * files (for example</span>
 <span class="cm">     * [`pak_util.py:79`](https://chromium.googlesource.com/chromium/src/tools/grit/+/8a23eae/pak_util.py#79)).</span>
-<span class="cm">     */</span><span class="w"></span>
-<span class="w">    </span><span class="n">encodings_t</span><span class="w"> </span><span class="n">encoding</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_encoding</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="n">header_v5_part_t</span><span class="o">*</span><span class="w"> </span><span class="n">v5_part</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_v5_part</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="n">encodings_t</span><span class="w"> </span><span class="n">encoding</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_encoding</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">header_v5_part_t</span><span class="o">*</span><span class="w"> </span><span class="n">v5_part</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_v5_part</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
 
 <span class="w">    </span><span class="cm">/**</span>
 <span class="cm">     * The length is calculated by looking at the offset of</span>
 <span class="cm">     * the next item, so an extra entry is stored with id 0</span>
 <span class="cm">     * and offset pointing to the end of the resources.</span>
-<span class="cm">     */</span><span class="w"></span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">resource_t</span><span class="o">&gt;&gt;*</span><span class="w"> </span><span class="n">resources</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_resources</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">alias_t</span><span class="o">&gt;&gt;*</span><span class="w"> </span><span class="n">aliases</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_aliases</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
-<span class="p">};</span><span class="w"></span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">resource_t</span><span class="o">&gt;&gt;*</span><span class="w"> </span><span class="n">resources</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_resources</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">alias_t</span><span class="o">&gt;&gt;*</span><span class="w"> </span><span class="n">aliases</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_aliases</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">};</span>
 </pre></div>
 
         </div>
@@ -578,174 +578,174 @@ and build them along with your project.</p>
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;chrome_pak.h&quot;</span><span class="cp"></span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/exceptions.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;chrome_pak.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/exceptions.h&quot;</span>
 
-<span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">chrome_pak_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_v5_part</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_resources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_aliases</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">f_num_resources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">f_num_aliases</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">chrome_pak_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_v5_part</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_resources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_aliases</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_num_resources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_num_aliases</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-<span class="kt">void</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="n">version</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">version</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">5</span><span class="p">))</span><span class="w"> </span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_any_of_error</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">version</span><span class="p">(),</span><span class="w"> </span><span class="n">_io</span><span class="p">(),</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/seq/0&quot;</span><span class="p">));</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="n">n_num_resources_v4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">version</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">n_num_resources_v4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">m_num_resources_v4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_encoding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">encodings_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span><span class="w"></span>
-<span class="w">    </span><span class="n">n_v5_part</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">version</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">n_v5_part</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">m_v5_part</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">header_v5_part_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">header_v5_part_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_resources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">resource_t</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">resource_t</span><span class="o">&gt;&gt;</span><span class="p">());</span><span class="w"></span>
-<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">l_resources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">num_resources</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">l_resources</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">m_resources</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">resource_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">resource_t</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">num_resources</span><span class="p">(),</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">))));</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_aliases</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">alias_t</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">alias_t</span><span class="o">&gt;&gt;</span><span class="p">());</span><span class="w"></span>
-<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">l_aliases</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">num_aliases</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">l_aliases</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">m_aliases</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">alias_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">alias_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">))));</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">void</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="n">version</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">version</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">5</span><span class="p">))</span><span class="w"> </span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_any_of_error</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">version</span><span class="p">(),</span><span class="w"> </span><span class="n">_io</span><span class="p">(),</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/seq/0&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">n_num_resources_v4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">version</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">n_num_resources_v4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m_num_resources_v4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">m_encoding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">encodings_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
+<span class="w">    </span><span class="n">n_v5_part</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">version</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">n_v5_part</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m_v5_part</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">header_v5_part_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">header_v5_part_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">m_resources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">resource_t</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">resource_t</span><span class="o">&gt;&gt;</span><span class="p">());</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">l_resources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">num_resources</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">l_resources</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">m_resources</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">resource_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">resource_t</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">num_resources</span><span class="p">(),</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">))));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">m_aliases</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">alias_t</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">alias_t</span><span class="o">&gt;&gt;</span><span class="p">());</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">l_aliases</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">num_aliases</span><span class="p">();</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">l_aliases</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">m_aliases</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">alias_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">alias_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">))));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 
-<span class="n">chrome_pak_t</span><span class="o">::~</span><span class="n">chrome_pak_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="n">chrome_pak_t</span><span class="o">::~</span><span class="n">chrome_pak_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
 
-<span class="kt">void</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">n_num_resources_v4</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">n_v5_part</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">void</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">n_num_resources_v4</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">n_v5_part</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 
-<span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">header_v5_part_t</span><span class="o">::</span><span class="n">header_v5_part_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">header_v5_part_t</span><span class="o">::</span><span class="n">header_v5_part_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-<span class="kt">void</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">header_v5_part_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_encoding_padding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_num_resources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_num_aliases</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">void</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">header_v5_part_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_encoding_padding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+<span class="w">    </span><span class="n">m_num_resources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_num_aliases</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="p">}</span>
 
-<span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">header_v5_part_t</span><span class="o">::~</span><span class="n">header_v5_part_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">header_v5_part_t</span><span class="o">::~</span><span class="n">header_v5_part_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
 
-<span class="kt">void</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">header_v5_part_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">void</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">header_v5_part_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
 
-<span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">resource_t</span><span class="o">::</span><span class="n">resource_t</span><span class="p">(</span><span class="kt">int32_t</span><span class="w"> </span><span class="n">p_idx</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">p_has_body</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p_idx</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_has_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p_has_body</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">f_len_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">f_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">resource_t</span><span class="o">::</span><span class="n">resource_t</span><span class="p">(</span><span class="kt">int32_t</span><span class="w"> </span><span class="n">p_idx</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">p_has_body</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p_idx</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_has_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p_has_body</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_len_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-<span class="kt">void</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">resource_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_ofs_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">void</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">resource_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_ofs_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="p">}</span>
 
-<span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">resource_t</span><span class="o">::~</span><span class="n">resource_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">resource_t</span><span class="o">::~</span><span class="n">resource_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
 
-<span class="kt">void</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">resource_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_body</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">n_body</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">void</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">resource_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_body</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">n_body</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 
-<span class="kt">int32_t</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">resource_t</span><span class="o">::</span><span class="n">len_body</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_len_body</span><span class="p">)</span><span class="w"></span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_len_body</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">n_len_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">has_body</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">n_len_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">m_len_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">resources</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">at</span><span class="p">((</span><span class="n">idx</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span><span class="o">-&gt;</span><span class="n">ofs_body</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">ofs_body</span><span class="p">());</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="n">f_len_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_len_body</span><span class="p">;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">int32_t</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">resource_t</span><span class="o">::</span><span class="n">len_body</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_len_body</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_len_body</span><span class="p">;</span>
+<span class="w">    </span><span class="n">n_len_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">has_body</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">n_len_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m_len_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">resources</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">at</span><span class="p">((</span><span class="n">idx</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span><span class="o">-&gt;</span><span class="n">ofs_body</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">ofs_body</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">f_len_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_len_body</span><span class="p">;</span>
+<span class="p">}</span>
 
-<span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">resource_t</span><span class="o">::</span><span class="n">body</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_body</span><span class="p">)</span><span class="w"></span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_body</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">n_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">has_body</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">n_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">streampos</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span><span class="w"></span>
-<span class="w">        </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_body</span><span class="p">());</span><span class="w"></span>
-<span class="w">        </span><span class="n">m_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_body</span><span class="p">());</span><span class="w"></span>
-<span class="w">        </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span><span class="w"></span>
-<span class="w">        </span><span class="n">f_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_body</span><span class="p">;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">resource_t</span><span class="o">::</span><span class="n">body</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_body</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_body</span><span class="p">;</span>
+<span class="w">    </span><span class="n">n_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">has_body</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">n_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">streampos</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+<span class="w">        </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_body</span><span class="p">());</span>
+<span class="w">        </span><span class="n">m_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_body</span><span class="p">());</span>
+<span class="w">        </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+<span class="w">        </span><span class="n">f_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_body</span><span class="p">;</span>
+<span class="p">}</span>
 
-<span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">alias_t</span><span class="o">::</span><span class="n">alias_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">f_resource</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">_read</span><span class="p">();</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">alias_t</span><span class="o">::</span><span class="n">alias_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_resource</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-<span class="kt">void</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">alias_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_resource_idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">resource_idx</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="p">(</span><span class="n">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">num_resources</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_greater_than_error</span><span class="o">&lt;</span><span class="kt">uint16_t</span><span class="o">&gt;</span><span class="p">((</span><span class="n">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">num_resources</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">resource_idx</span><span class="p">(),</span><span class="w"> </span><span class="n">_io</span><span class="p">(),</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/alias/seq/1&quot;</span><span class="p">));</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">void</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">alias_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_resource_idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">resource_idx</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="p">(</span><span class="n">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">num_resources</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_greater_than_error</span><span class="o">&lt;</span><span class="kt">uint16_t</span><span class="o">&gt;</span><span class="p">((</span><span class="n">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">num_resources</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">resource_idx</span><span class="p">(),</span><span class="w"> </span><span class="n">_io</span><span class="p">(),</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/alias/seq/1&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 
-<span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">alias_t</span><span class="o">::~</span><span class="n">alias_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">alias_t</span><span class="o">::~</span><span class="n">alias_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
 
-<span class="kt">void</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">alias_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">void</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">alias_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
 
-<span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">resource_t</span><span class="o">*</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">alias_t</span><span class="o">::</span><span class="n">resource</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_resource</span><span class="p">)</span><span class="w"></span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_resource</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_resource</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">resources</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">at</span><span class="p">(</span><span class="n">resource_idx</span><span class="p">());</span><span class="w"></span>
-<span class="w">    </span><span class="n">f_resource</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_resource</span><span class="p">;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">resource_t</span><span class="o">*</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">alias_t</span><span class="o">::</span><span class="n">resource</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_resource</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_resource</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_resource</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">resources</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">at</span><span class="p">(</span><span class="n">resource_idx</span><span class="p">());</span>
+<span class="w">    </span><span class="n">f_resource</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_resource</span><span class="p">;</span>
+<span class="p">}</span>
 
-<span class="kt">uint32_t</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">num_resources</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_num_resources</span><span class="p">)</span><span class="w"></span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_num_resources</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_num_resources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">version</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="n">v5_part</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">num_resources</span><span class="p">())</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="n">num_resources_v4</span><span class="p">()));</span><span class="w"></span>
-<span class="w">    </span><span class="n">f_num_resources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_num_resources</span><span class="p">;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">uint32_t</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">num_resources</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_num_resources</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_num_resources</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_num_resources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">version</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="n">v5_part</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">num_resources</span><span class="p">())</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="n">num_resources_v4</span><span class="p">()));</span>
+<span class="w">    </span><span class="n">f_num_resources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_num_resources</span><span class="p">;</span>
+<span class="p">}</span>
 
-<span class="kt">uint16_t</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">num_aliases</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_num_aliases</span><span class="p">)</span><span class="w"></span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_num_aliases</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="n">m_num_aliases</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">version</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="n">v5_part</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">num_aliases</span><span class="p">())</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">));</span><span class="w"></span>
-<span class="w">    </span><span class="n">f_num_aliases</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_num_aliases</span><span class="p">;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="kt">uint16_t</span><span class="w"> </span><span class="n">chrome_pak_t</span><span class="o">::</span><span class="n">num_aliases</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_num_aliases</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_num_aliases</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_num_aliases</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">version</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="n">v5_part</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">num_aliases</span><span class="p">())</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+<span class="w">    </span><span class="n">f_num_aliases</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_num_aliases</span><span class="p">;</span>
+<span class="p">}</span>
 </pre></div>
 
         </div>

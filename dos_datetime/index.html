@@ -288,110 +288,110 @@ setting of the computer at the time it created the ZIP.</p>
         <h2>Format specification in Kaitai Struct YAML</h2>
 
         <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
-  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dos_datetime</span>
-  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MS-DOS datetime</span>
-  <span class="nt">xref</span><span class="p">:</span>
-    <span class="nt">justsolve</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MS-DOS_date/time</span>
-  <span class="nt">tags</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">dos</span>
-  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
-  <span class="nt">ks-version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.9</span>
-  <span class="nt">bit-endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
-<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-  <span class="no">MS-DOS date and time are packed 16-bit values that specify local date/time.</span>
-  <span class="no">The time is always stored in the current UTC time offset set on the computer</span>
-  <span class="no">which created the file. Note that the daylight saving time (DST) shifts</span>
-  <span class="no">also change the UTC time offset.</span>
+<span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dos_datetime</span>
+<span class="w">  </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MS-DOS datetime</span>
+<span class="w">  </span><span class="nt">xref</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">justsolve</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MS-DOS_date/time</span>
+<span class="w">  </span><span class="nt">tags</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dos</span>
+<span class="w">  </span><span class="nt">license</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+<span class="w">  </span><span class="nt">ks-version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.9</span>
+<span class="w">  </span><span class="nt">bit-endian</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">le</span>
+<span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">  </span><span class="no">MS-DOS date and time are packed 16-bit values that specify local date/time.</span>
+<span class="w">  </span><span class="no">The time is always stored in the current UTC time offset set on the computer</span>
+<span class="w">  </span><span class="no">which created the file. Note that the daylight saving time (DST) shifts</span>
+<span class="w">  </span><span class="no">also change the UTC time offset.</span>
 
-  <span class="no">For example, if you pack two files A and B into a ZIP archive, file A last modified</span>
-  <span class="no">at 2020-03-29 00:59 UTC+00:00 (GMT) and file B at 2020-03-29 02:00 UTC+01:00 (BST),</span>
-  <span class="no">the file modification times saved in MS-DOS format in the ZIP file will vary depending</span>
-  <span class="no">on whether the computer packing the files is set to GMT or BST at the time of ZIP creation.</span>
+<span class="w">  </span><span class="no">For example, if you pack two files A and B into a ZIP archive, file A last modified</span>
+<span class="w">  </span><span class="no">at 2020-03-29 00:59 UTC+00:00 (GMT) and file B at 2020-03-29 02:00 UTC+01:00 (BST),</span>
+<span class="w">  </span><span class="no">the file modification times saved in MS-DOS format in the ZIP file will vary depending</span>
+<span class="w">  </span><span class="no">on whether the computer packing the files is set to GMT or BST at the time of ZIP creation.</span>
 
-    <span class="no">- If set to GMT:</span>
-        <span class="no">- file A: 2020-03-29 00:59 (UTC+00:00)</span>
-        <span class="no">- file B: 2020-03-29 01:00 (UTC+00:00)</span>
-    <span class="no">- If set to BST:</span>
-        <span class="no">- file A: 2020-03-29 01:59 (UTC+01:00)</span>
-        <span class="no">- file B: 2020-03-29 02:00 (UTC+01:00)</span>
+<span class="w">    </span><span class="no">- If set to GMT:</span>
+<span class="w">        </span><span class="no">- file A: 2020-03-29 00:59 (UTC+00:00)</span>
+<span class="w">        </span><span class="no">- file B: 2020-03-29 01:00 (UTC+00:00)</span>
+<span class="w">    </span><span class="no">- If set to BST:</span>
+<span class="w">        </span><span class="no">- file A: 2020-03-29 01:59 (UTC+01:00)</span>
+<span class="w">        </span><span class="no">- file B: 2020-03-29 02:00 (UTC+01:00)</span>
 
-  <span class="no">It follows that you are unable to determine the actual last modified time</span>
-  <span class="no">of any file stored in the ZIP archive, if you don&#39;t know the locale time</span>
-  <span class="no">setting of the computer at the time it created the ZIP.</span>
+<span class="w">  </span><span class="no">It follows that you are unable to determine the actual last modified time</span>
+<span class="w">  </span><span class="no">of any file stored in the ZIP archive, if you don&#39;t know the locale time</span>
+<span class="w">  </span><span class="no">setting of the computer at the time it created the ZIP.</span>
 
-  <span class="no">This format is used in some data formats from the MS-DOS era, for example:</span>
+<span class="w">  </span><span class="no">This format is used in some data formats from the MS-DOS era, for example:</span>
 
-    <span class="no">- [zip](/zip/)</span>
-    <span class="no">- [rar](/rar/)</span>
-    <span class="no">- [vfat](/vfat/) (FAT12)</span>
-    <span class="no">- [lzh](/lzh/)</span>
-    <span class="no">- [cab](http://justsolve.archiveteam.org/wiki/Cabinet)</span>
+<span class="w">    </span><span class="no">- [zip](/zip/)</span>
+<span class="w">    </span><span class="no">- [rar](/rar/)</span>
+<span class="w">    </span><span class="no">- [vfat](/vfat/) (FAT12)</span>
+<span class="w">    </span><span class="no">- [lzh](/lzh/)</span>
+<span class="w">    </span><span class="no">- [cab](http://justsolve.archiveteam.org/wiki/Cabinet)</span>
 
 <span class="nt">doc-ref</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://learn.microsoft.com/en-us/windows/win32/sysinfo/ms-dos-date-and-time</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-dosdatetimetofiletime</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/reactos/reactos/blob/c6b64448ce4/dll/win32/kernel32/client/time.c#L82-L87 DosDateTimeToFileTime</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://download.microsoft.com/download/0/8/4/084c452b-b772-4fe5-89bb-a0cbf082286a/fatgen103.doc page 25/34</span>
-<span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{date}</span><span class="nv"> </span><span class="s">{time}&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://learn.microsoft.com/en-us/windows/win32/sysinfo/ms-dos-date-and-time</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-dosdatetimetofiletime</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/reactos/reactos/blob/c6b64448ce4/dll/win32/kernel32/client/time.c#L82-L87 DosDateTimeToFileTime</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://download.microsoft.com/download/0/8/4/084c452b-b772-4fe5-89bb-a0cbf082286a/fatgen103.doc page 25/34</span>
+<span class="nt">-webide-representation</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{date}</span><span class="nv"> </span><span class="s">{time}&quot;</span>
 <span class="nt">seq</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">time</span>
-    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">time</span>
-  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">date</span>
-    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">date</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">time</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">time</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">date</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">date</span>
 <span class="nt">types</span><span class="p">:</span>
-  <span class="nt">time</span><span class="p">:</span>
-    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{padded_hour}:{padded_minute}:{padded_second}&quot;</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">second_div_2</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b5</span>
-        <span class="nt">valid</span><span class="p">:</span>
-          <span class="nt">max</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">29</span> <span class="c1"># 0-58 seconds</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">minute</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b6</span>
-        <span class="nt">valid</span><span class="p">:</span>
-          <span class="nt">max</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">59</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hour</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b5</span>
-        <span class="nt">valid</span><span class="p">:</span>
-          <span class="nt">max</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">23</span>
-    <span class="nt">instances</span><span class="p">:</span>
-      <span class="nt">second</span><span class="p">:</span>
-        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2 * second_div_2</span>
-      <span class="nt">padded_second</span><span class="p">:</span>
-        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;(second</span><span class="nv"> </span><span class="s">&lt;=</span><span class="nv"> </span><span class="s">9</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">&quot;0&quot;</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">&quot;&quot;)</span><span class="nv"> </span><span class="s">+</span><span class="nv"> </span><span class="s">second.to_s&#39;</span>
-      <span class="nt">padded_minute</span><span class="p">:</span>
-        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;(minute</span><span class="nv"> </span><span class="s">&lt;=</span><span class="nv"> </span><span class="s">9</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">&quot;0&quot;</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">&quot;&quot;)</span><span class="nv"> </span><span class="s">+</span><span class="nv"> </span><span class="s">minute.to_s&#39;</span>
-      <span class="nt">padded_hour</span><span class="p">:</span>
-        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;(hour</span><span class="nv"> </span><span class="s">&lt;=</span><span class="nv"> </span><span class="s">9</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">&quot;0&quot;</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">&quot;&quot;)</span><span class="nv"> </span><span class="s">+</span><span class="nv"> </span><span class="s">hour.to_s&#39;</span>
-  <span class="nt">date</span><span class="p">:</span>
-    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{padded_year}-{padded_month}-{padded_day}&quot;</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">day</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b5</span>
-        <span class="nt">valid</span><span class="p">:</span>
-          <span class="nt">min</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">month</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b4</span>
-        <span class="nt">valid</span><span class="p">:</span>
-          <span class="nt">min</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
-          <span class="nt">max</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">12</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">year_minus_1980</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b7</span>
-    <span class="nt">instances</span><span class="p">:</span>
-      <span class="nt">year</span><span class="p">:</span>
-        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1980 + year_minus_1980</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">only years from 1980 to 2107 (1980 + 127) can be represented</span>
-      <span class="nt">padded_day</span><span class="p">:</span>
-        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;(day</span><span class="nv"> </span><span class="s">&lt;=</span><span class="nv"> </span><span class="s">9</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">&quot;0&quot;</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">&quot;&quot;)</span><span class="nv"> </span><span class="s">+</span><span class="nv"> </span><span class="s">day.to_s&#39;</span>
-      <span class="nt">padded_month</span><span class="p">:</span>
-        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;(month</span><span class="nv"> </span><span class="s">&lt;=</span><span class="nv"> </span><span class="s">9</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">&quot;0&quot;</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">&quot;&quot;)</span><span class="nv"> </span><span class="s">+</span><span class="nv"> </span><span class="s">month.to_s&#39;</span>
-      <span class="nt">padded_year</span><span class="p">:</span>
-        <span class="nt">value</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-          <span class="no">(year &lt;= 999 ? &quot;0&quot; +</span>
-            <span class="no">(year &lt;= 99 ? &quot;0&quot; +</span>
-              <span class="no">(year &lt;= 9 ? &quot;0&quot; : &quot;&quot;)</span>
-            <span class="no">: &quot;&quot;)</span>
-          <span class="no">: &quot;&quot;) + year.to_s</span>
+<span class="w">  </span><span class="nt">time</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">-webide-representation</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{padded_hour}:{padded_minute}:{padded_second}&quot;</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">second_div_2</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b5</span>
+<span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">max</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">29</span><span class="w"> </span><span class="c1"># 0-58 seconds</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">minute</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b6</span>
+<span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">max</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">59</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hour</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b5</span>
+<span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">max</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">23</span>
+<span class="w">    </span><span class="nt">instances</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">second</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2 * second_div_2</span>
+<span class="w">      </span><span class="nt">padded_second</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;(second</span><span class="nv"> </span><span class="s">&lt;=</span><span class="nv"> </span><span class="s">9</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">&quot;0&quot;</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">&quot;&quot;)</span><span class="nv"> </span><span class="s">+</span><span class="nv"> </span><span class="s">second.to_s&#39;</span>
+<span class="w">      </span><span class="nt">padded_minute</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;(minute</span><span class="nv"> </span><span class="s">&lt;=</span><span class="nv"> </span><span class="s">9</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">&quot;0&quot;</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">&quot;&quot;)</span><span class="nv"> </span><span class="s">+</span><span class="nv"> </span><span class="s">minute.to_s&#39;</span>
+<span class="w">      </span><span class="nt">padded_hour</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;(hour</span><span class="nv"> </span><span class="s">&lt;=</span><span class="nv"> </span><span class="s">9</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">&quot;0&quot;</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">&quot;&quot;)</span><span class="nv"> </span><span class="s">+</span><span class="nv"> </span><span class="s">hour.to_s&#39;</span>
+<span class="w">  </span><span class="nt">date</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">-webide-representation</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{padded_year}-{padded_month}-{padded_day}&quot;</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">day</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b5</span>
+<span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">min</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">month</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b4</span>
+<span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">min</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">          </span><span class="nt">max</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">year_minus_1980</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b7</span>
+<span class="w">    </span><span class="nt">instances</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">year</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1980 + year_minus_1980</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">only years from 1980 to 2107 (1980 + 127) can be represented</span>
+<span class="w">      </span><span class="nt">padded_day</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;(day</span><span class="nv"> </span><span class="s">&lt;=</span><span class="nv"> </span><span class="s">9</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">&quot;0&quot;</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">&quot;&quot;)</span><span class="nv"> </span><span class="s">+</span><span class="nv"> </span><span class="s">day.to_s&#39;</span>
+<span class="w">      </span><span class="nt">padded_month</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;(month</span><span class="nv"> </span><span class="s">&lt;=</span><span class="nv"> </span><span class="s">9</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">&quot;0&quot;</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">&quot;&quot;)</span><span class="nv"> </span><span class="s">+</span><span class="nv"> </span><span class="s">month.to_s&#39;</span>
+<span class="w">      </span><span class="nt">padded_year</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">(year &lt;= 999 ? &quot;0&quot; +</span>
+<span class="w">            </span><span class="no">(year &lt;= 99 ? &quot;0&quot; +</span>
+<span class="w">              </span><span class="no">(year &lt;= 9 ? &quot;0&quot; : &quot;&quot;)</span>
+<span class="w">            </span><span class="no">: &quot;&quot;)</span>
+<span class="w">          </span><span class="no">: &quot;&quot;) + year.to_s</span>
 </pre></div>
     </div>
 </section>

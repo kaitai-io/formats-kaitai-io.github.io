@@ -291,19 +291,19 @@ can also be found there.</p>
 
 
 
-<div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="n">AvantesRoh60</span><span class="p">.</span><span class="n">FromFile</span><span class="p">(</span><span class="s">&quot;path/to/local/file.roh&quot;</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><span class="kt">var</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AvantesRoh60</span><span class="p">.</span><span class="n">FromFile</span><span class="p">(</span><span class="s">&quot;path/to/local/file.roh&quot;</span><span class="p">);</span>
 </pre></div>
 
 <p>Or parse structure from a byte array:</p>
 
-<div class="highlight"><pre><span></span><span class="kt">byte</span><span class="p">[]</span> <span class="n">someArray</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
-<span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">AvantesRoh60</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">someArray</span><span class="p">));</span>
+<div class="highlight"><pre><span></span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">someArray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">};</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">AvantesRoh60</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">someArray</span><span class="p">));</span>
 </pre></div>
 
 <p>After that, one can get various attributes from the structure by accessing properties like:</p>
 
 
-<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">Unknown1</span> <span class="c1">// =&gt; get unknown1</span>
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">Unknown1</span><span class="w"> </span><span class="c1">// =&gt; get unknown1</span>
 </pre></div>
 
     </div>
@@ -333,114 +333,114 @@ can also be found there.</p>
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">System.Collections.Generic</span><span class="p">;</span>
 
-<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">Kaitai</span>
 <span class="p">{</span>
 
-    <span class="c1">/// &lt;summary&gt;</span>
-    <span class="c1">/// Avantes USB spectrometers are supplied with a Windows binary which</span>
-    <span class="c1">/// generates one ROH and one RCM file when the user clicks &amp;quot;Save</span>
-    <span class="c1">/// experiment&amp;quot;. In the version of 6.0, the ROH file contains a header</span>
-    <span class="c1">/// of 22 four-byte floats, then the spectrum as a float array and a</span>
-    <span class="c1">/// footer of 3 floats. The first and last pixel numbers are specified in the</span>
-    <span class="c1">/// header and determine the (length+1) of the spectral data. In the tested</span>
-    <span class="c1">/// files, the length is (2032-211-1)=1820 pixels, but Kaitai determines this</span>
-    <span class="c1">/// automatically anyway.</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// The wavelength calibration is stored as a polynomial with coefficients</span>
-    <span class="c1">/// of &#39;wlintercept&#39;, &#39;wlx1&#39;, ... &#39;wlx4&#39;, the argument of which is the</span>
-    <span class="c1">/// (pixel number + 1), as found out by comparing with the original</span>
-    <span class="c1">/// Avantes converted data files. There is no intensity calibration saved,</span>
-    <span class="c1">/// but it is recommended to do it in your program - the CCD in the spectrometer</span>
-    <span class="c1">/// is so uneven that one should prepare exact pixel-to-pixel calibration curves</span>
-    <span class="c1">/// to get reasonable spectral results.</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// The rest of the header floats is not known to the author. Note that the</span>
-    <span class="c1">/// newer version of Avantes software has a different format, see also</span>
-    <span class="c1">/// &amp;lt;https://www.mathworks.com/matlabcentral/fileexchange/37103-avantes-to-matlab&amp;gt;</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// The RCM file contains the user-specified comment, so it may be useful</span>
-    <span class="c1">/// for automatic conversion of data. You may wish to divide the spectra by</span>
-    <span class="c1">/// the integration time before comparing them.</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// Written and tested by Filip Dominec, 2017-2018</span>
-    <span class="c1">/// &lt;/summary&gt;</span>
-    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">AvantesRoh60</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">{</span>
-        <span class="k">public</span> <span class="k">static</span> <span class="n">AvantesRoh60</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">return</span> <span class="k">new</span> <span class="nf">AvantesRoh60</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-        <span class="p">}</span>
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Avantes USB spectrometers are supplied with a Windows binary which</span>
+<span class="w">    </span><span class="c1">/// generates one ROH and one RCM file when the user clicks &amp;quot;Save</span>
+<span class="w">    </span><span class="c1">/// experiment&amp;quot;. In the version of 6.0, the ROH file contains a header</span>
+<span class="w">    </span><span class="c1">/// of 22 four-byte floats, then the spectrum as a float array and a</span>
+<span class="w">    </span><span class="c1">/// footer of 3 floats. The first and last pixel numbers are specified in the</span>
+<span class="w">    </span><span class="c1">/// header and determine the (length+1) of the spectral data. In the tested</span>
+<span class="w">    </span><span class="c1">/// files, the length is (2032-211-1)=1820 pixels, but Kaitai determines this</span>
+<span class="w">    </span><span class="c1">/// automatically anyway.</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// The wavelength calibration is stored as a polynomial with coefficients</span>
+<span class="w">    </span><span class="c1">/// of &#39;wlintercept&#39;, &#39;wlx1&#39;, ... &#39;wlx4&#39;, the argument of which is the</span>
+<span class="w">    </span><span class="c1">/// (pixel number + 1), as found out by comparing with the original</span>
+<span class="w">    </span><span class="c1">/// Avantes converted data files. There is no intensity calibration saved,</span>
+<span class="w">    </span><span class="c1">/// but it is recommended to do it in your program - the CCD in the spectrometer</span>
+<span class="w">    </span><span class="c1">/// is so uneven that one should prepare exact pixel-to-pixel calibration curves</span>
+<span class="w">    </span><span class="c1">/// to get reasonable spectral results.</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// The rest of the header floats is not known to the author. Note that the</span>
+<span class="w">    </span><span class="c1">/// newer version of Avantes software has a different format, see also</span>
+<span class="w">    </span><span class="c1">/// &amp;lt;https://www.mathworks.com/matlabcentral/fileexchange/37103-avantes-to-matlab&amp;gt;</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// The RCM file contains the user-specified comment, so it may be useful</span>
+<span class="w">    </span><span class="c1">/// for automatic conversion of data. You may wish to divide the spectra by</span>
+<span class="w">    </span><span class="c1">/// the integration time before comparing them.</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// Written and tested by Filip Dominec, 2017-2018</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">AvantesRoh60</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">AvantesRoh60</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">AvantesRoh60</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
 
-        <span class="k">public</span> <span class="nf">AvantesRoh60</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">AvantesRoh60</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
-            <span class="n">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-        <span class="p">{</span>
-            <span class="n">_unknown1</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
-            <span class="n">_wlintercept</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
-            <span class="n">_wlx1</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
-            <span class="n">_wlx2</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
-            <span class="n">_wlx3</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
-            <span class="n">_wlx4</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
-            <span class="n">_unknown2</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">float</span><span class="p">&gt;();</span>
-            <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="m">9</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
-            <span class="p">{</span>
-                <span class="n">_unknown2</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">());</span>
-            <span class="p">}</span>
-            <span class="n">_ipixfirst</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
-            <span class="n">_ipixlast</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
-            <span class="n">_unknown3</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">float</span><span class="p">&gt;();</span>
-            <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="m">4</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
-            <span class="p">{</span>
-                <span class="n">_unknown3</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">());</span>
-            <span class="p">}</span>
-            <span class="n">_spectrum</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">float</span><span class="p">&gt;();</span>
-            <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="p">(((</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="n">Ipixlast</span><span class="p">)</span> <span class="p">-</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="n">Ipixfirst</span><span class="p">))</span> <span class="p">-</span> <span class="m">1</span><span class="p">);</span> <span class="n">i</span><span class="p">++)</span>
-            <span class="p">{</span>
-                <span class="n">_spectrum</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">());</span>
-            <span class="p">}</span>
-            <span class="n">_integrationMs</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
-            <span class="n">_averaging</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
-            <span class="n">_pixelSmoothing</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="kt">float</span> <span class="n">_unknown1</span><span class="p">;</span>
-        <span class="k">private</span> <span class="kt">float</span> <span class="n">_wlintercept</span><span class="p">;</span>
-        <span class="k">private</span> <span class="kt">float</span> <span class="n">_wlx1</span><span class="p">;</span>
-        <span class="k">private</span> <span class="kt">float</span> <span class="n">_wlx2</span><span class="p">;</span>
-        <span class="k">private</span> <span class="kt">float</span> <span class="n">_wlx3</span><span class="p">;</span>
-        <span class="k">private</span> <span class="kt">float</span> <span class="n">_wlx4</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">float</span><span class="p">&gt;</span> <span class="n">_unknown2</span><span class="p">;</span>
-        <span class="k">private</span> <span class="kt">float</span> <span class="n">_ipixfirst</span><span class="p">;</span>
-        <span class="k">private</span> <span class="kt">float</span> <span class="n">_ipixlast</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">float</span><span class="p">&gt;</span> <span class="n">_unknown3</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">float</span><span class="p">&gt;</span> <span class="n">_spectrum</span><span class="p">;</span>
-        <span class="k">private</span> <span class="kt">float</span> <span class="n">_integrationMs</span><span class="p">;</span>
-        <span class="k">private</span> <span class="kt">float</span> <span class="n">_averaging</span><span class="p">;</span>
-        <span class="k">private</span> <span class="kt">float</span> <span class="n">_pixelSmoothing</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">AvantesRoh60</span> <span class="n">m_root</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
-        <span class="k">public</span> <span class="kt">float</span> <span class="n">Unknown1</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_unknown1</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="kt">float</span> <span class="n">Wlintercept</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_wlintercept</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="kt">float</span> <span class="n">Wlx1</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_wlx1</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="kt">float</span> <span class="n">Wlx2</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_wlx2</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="kt">float</span> <span class="n">Wlx3</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_wlx3</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="kt">float</span> <span class="n">Wlx4</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_wlx4</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">float</span><span class="p">&gt;</span> <span class="n">Unknown2</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_unknown2</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="kt">float</span> <span class="n">Ipixfirst</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ipixfirst</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="kt">float</span> <span class="n">Ipixlast</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ipixlast</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">float</span><span class="p">&gt;</span> <span class="n">Unknown3</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_unknown3</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">float</span><span class="p">&gt;</span> <span class="n">Spectrum</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_spectrum</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="kt">float</span> <span class="n">IntegrationMs</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_integrationMs</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="kt">float</span> <span class="n">Averaging</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_averaging</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="kt">float</span> <span class="n">PixelSmoothing</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_pixelSmoothing</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">AvantesRoh60</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-    <span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="nf">AvantesRoh60</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">AvantesRoh60</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">            </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">            </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">_unknown1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
+<span class="w">            </span><span class="n">_wlintercept</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
+<span class="w">            </span><span class="n">_wlx1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
+<span class="w">            </span><span class="n">_wlx2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
+<span class="w">            </span><span class="n">_wlx3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
+<span class="w">            </span><span class="n">_wlx4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
+<span class="w">            </span><span class="n">_unknown2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">9</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_unknown2</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">());</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">_ipixfirst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
+<span class="w">            </span><span class="n">_ipixlast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
+<span class="w">            </span><span class="n">_unknown3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">4</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_unknown3</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">());</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">_spectrum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="p">(((</span><span class="kt">long</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">Ipixlast</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="kt">long</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">Ipixfirst</span><span class="p">))</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">1</span><span class="p">);</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_spectrum</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">());</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">_integrationMs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
+<span class="w">            </span><span class="n">_averaging</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
+<span class="w">            </span><span class="n">_pixelSmoothing</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">_unknown1</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">_wlintercept</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">_wlx1</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">_wlx2</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">_wlx3</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">_wlx4</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_unknown2</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">_ipixfirst</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">_ipixlast</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_unknown3</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_spectrum</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">_integrationMs</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">_averaging</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">_pixelSmoothing</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">AvantesRoh60</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">Unknown1</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_unknown1</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">Wlintercept</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_wlintercept</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">Wlx1</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_wlx1</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">Wlx2</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_wlx2</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">Wlx3</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_wlx3</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">Wlx4</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_wlx4</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Unknown2</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_unknown2</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">Ipixfirst</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_ipixfirst</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">Ipixlast</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_ipixlast</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Unknown3</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_unknown3</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Spectrum</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_spectrum</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">IntegrationMs</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_integrationMs</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">Averaging</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_averaging</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">PixelSmoothing</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_pixelSmoothing</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">AvantesRoh60</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 

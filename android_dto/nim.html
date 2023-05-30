@@ -250,184 +250,184 @@ partition images and decompile them with dtc (device tree compiler).</p>
         </div>
 
         <div class="row">
-            <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">kaitai_struct_nim_runtime</span>
-<span class="kn">import</span> <span class="n">options</span>
+            <div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="n">kaitai_struct_nim_runtime</span>
+<span class="kn">import</span><span class="w"> </span><span class="n">options</span>
 
 <span class="k">type</span>
-  <span class="n">AndroidDto</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">header</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">AndroidDto_DtTableHeader</span>
-    <span class="p">`</span><span class="n">entries</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">AndroidDto_DtTableEntry</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-  <span class="n">AndroidDto_DtTableHeader</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">totalSize</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">headerSize</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">dtEntrySize</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">dtEntryCount</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">dtEntriesOffset</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">pageSize</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">version</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">AndroidDto</span>
-  <span class="n">AndroidDto_DtTableEntry</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">dtSize</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">dtOffset</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">id</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">rev</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">custom</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">uint32</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">AndroidDto</span>
-    <span class="p">`</span><span class="n">bodyInst</span><span class="p">`:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">bodyInstFlag</span><span class="p">`:</span> <span class="kt">bool</span>
+<span class="w">  </span><span class="n">AndroidDto</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">header</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">AndroidDto_DtTableHeader</span>
+<span class="w">    </span><span class="p">`</span><span class="n">entries</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">AndroidDto_DtTableEntry</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">  </span><span class="n">AndroidDto_DtTableHeader</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">totalSize</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">headerSize</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">dtEntrySize</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">dtEntryCount</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">dtEntriesOffset</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">pageSize</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">version</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">AndroidDto</span>
+<span class="w">  </span><span class="n">AndroidDto_DtTableEntry</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">dtSize</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">dtOffset</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">id</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">rev</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">custom</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">uint32</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">AndroidDto</span>
+<span class="w">    </span><span class="p">`</span><span class="n">bodyInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">bodyInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
 
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AndroidDto], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): AndroidDto</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AndroidDto_DtTableHeader], io: KaitaiStream, root: KaitaiStruct, parent: AndroidDto): AndroidDto_DtTableHeader</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AndroidDto_DtTableEntry], io: KaitaiStream, root: KaitaiStruct, parent: AndroidDto): AndroidDto_DtTableEntry</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AndroidDto], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): AndroidDto</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AndroidDto_DtTableHeader], io: KaitaiStream, root: KaitaiStruct, parent: AndroidDto): AndroidDto_DtTableHeader</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AndroidDto_DtTableEntry], io: KaitaiStream, root: KaitaiStruct, parent: AndroidDto): AndroidDto_DtTableEntry</span>
 
-<span class="k">proc </span><span class="nf">body</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">AndroidDto_DtTableEntry</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">body</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">AndroidDto_DtTableEntry</span><span class="p">):</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
 
 
 <span class="sd">##[</span>
-<span class="n">Format</span> <span class="k">for</span> <span class="n">Android</span> <span class="n">DTB</span><span class="o">/</span><span class="n">DTBO</span> <span class="n">partitions</span><span class="p">.</span> <span class="n">It</span><span class="sc">&#39;s kind of archive with</span>
-<span class="n">dtb</span><span class="o">/</span><span class="n">dtbo</span> <span class="n">files</span><span class="p">.</span> <span class="n">Used</span> <span class="n">only</span> <span class="k">when</span> <span class="n">there</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">separate</span> <span class="n">unique</span> <span class="n">partition</span>
-<span class="p">(</span><span class="n">dtb</span><span class="p">,</span> <span class="n">dtbo</span><span class="p">)</span> <span class="n">on</span> <span class="n">an</span> <span class="n">android</span> <span class="n">device</span> <span class="n">to</span> <span class="n">organize</span> <span class="n">device</span> <span class="n">tree</span> <span class="n">files</span><span class="p">.</span>
-<span class="n">The</span> <span class="n">format</span> <span class="n">consists</span> <span class="k">of</span> <span class="n">a</span> <span class="n">header</span> <span class="n">with</span> <span class="n">info</span> <span class="n">about</span> <span class="n">size</span> <span class="ow">and</span> <span class="n">number</span>
-<span class="k">of</span> <span class="n">device</span> <span class="n">tree</span> <span class="n">entries</span> <span class="ow">and</span> <span class="n">the</span> <span class="n">entries</span> <span class="n">themselves</span><span class="p">.</span> <span class="n">This</span> <span class="n">format</span>
-<span class="n">description</span> <span class="n">could</span> <span class="n">be</span> <span class="n">used</span> <span class="n">to</span> <span class="n">extract</span> <span class="n">device</span> <span class="n">tree</span> <span class="n">entries</span> <span class="kn">from</span> <span class="n">a</span>
-<span class="n">partition</span> <span class="n">images</span> <span class="ow">and</span> <span class="n">decompile</span> <span class="n">them</span> <span class="n">with</span> <span class="n">dtc</span> <span class="p">(</span><span class="n">device</span> <span class="n">tree</span> <span class="n">compiler</span><span class="p">).</span>
+<span class="sd">Format for Android DTB/DTBO partitions. It&#39;s kind of archive with</span>
+<span class="sd">dtb/dtbo files. Used only when there is a separate unique partition</span>
+<span class="sd">(dtb, dtbo) on an android device to organize device tree files.</span>
+<span class="sd">The format consists of a header with info about size and number</span>
+<span class="sd">of device tree entries and the entries themselves. This format</span>
+<span class="sd">description could be used to extract device tree entries from a</span>
+<span class="sd">partition images and decompile them with dtc (device tree compiler).</span>
 
-<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://source.android.com/docs/core/architecture/dto/partitions&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
-<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://android.googlesource.com/platform/system/libufdt/+/refs/tags/android-10.0.0_r47&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
-<span class="o">]</span><span class="sd">##</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AndroidDto], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): AndroidDto =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">AndroidDto</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">AndroidDto</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">AndroidDto</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="sd">@see &lt;a href=&quot;https://source.android.com/docs/core/architecture/dto/partitions&quot;&gt;Source&lt;/a&gt;</span>
+<span class="sd">@see &lt;a href=&quot;https://android.googlesource.com/platform/system/libufdt/+/refs/tags/android-10.0.0_r47&quot;&gt;Source&lt;/a&gt;</span>
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AndroidDto], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): AndroidDto =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">AndroidDto</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">AndroidDto</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">AndroidDto</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
-  <span class="k">let</span> <span class="n">headerExpr</span> <span class="o">=</span> <span class="n">AndroidDto_DtTableHeader</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">headerExpr</span>
-  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">dtEntryCount</span><span class="p">):</span>
-    <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">AndroidDto_DtTableEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-    <span class="n">this</span><span class="p">.</span><span class="n">entries</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">headerExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AndroidDto_DtTableHeader</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">headerExpr</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">..</span><span class="o">&lt;</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">dtEntryCount</span><span class="p">):</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AndroidDto_DtTableEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">entries</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
 
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AndroidDto], filename: string): AndroidDto =</span>
-  <span class="n">AndroidDto</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AndroidDto], filename: string): AndroidDto =</span>
+<span class="w">  </span><span class="n">AndroidDto</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AndroidDto_DtTableHeader], io: KaitaiStream, root: KaitaiStruct, parent: AndroidDto): AndroidDto_DtTableHeader =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">AndroidDto_DtTableHeader</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">AndroidDto</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">AndroidDto</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AndroidDto_DtTableHeader], io: KaitaiStream, root: KaitaiStruct, parent: AndroidDto): AndroidDto_DtTableHeader =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">AndroidDto_DtTableHeader</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">AndroidDto</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">AndroidDto</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
-  <span class="k">let</span> <span class="n">magicExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">magicExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">magicExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">magicExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">includes</span> <span class="n">dt_table_header</span> <span class="o">+</span> <span class="n">all</span> <span class="n">dt_table_entry</span> <span class="ow">and</span> <span class="n">all</span> <span class="n">dtb</span><span class="o">/</span><span class="n">dtbo</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">totalSizeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">totalSize</span> <span class="o">=</span> <span class="n">totalSizeExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  includes dt_table_header + all dt_table_entry and all dtb/dtbo</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">totalSizeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">totalSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">totalSizeExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">sizeof</span><span class="p">(</span><span class="n">dt_table_header</span><span class="p">)</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">headerSizeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">headerSize</span> <span class="o">=</span> <span class="n">headerSizeExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  sizeof(dt_table_header)</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">headerSizeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">headerSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">headerSizeExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">sizeof</span><span class="p">(</span><span class="n">dt_table_entry</span><span class="p">)</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">dtEntrySizeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">dtEntrySize</span> <span class="o">=</span> <span class="n">dtEntrySizeExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  sizeof(dt_table_entry)</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">dtEntrySizeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">dtEntrySize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dtEntrySizeExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">number</span> <span class="k">of</span> <span class="n">dt_table_entry</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">dtEntryCountExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">dtEntryCount</span> <span class="o">=</span> <span class="n">dtEntryCountExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  number of dt_table_entry</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">dtEntryCountExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">dtEntryCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dtEntryCountExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">offset</span> <span class="n">to</span> <span class="n">the</span> <span class="n">first</span> <span class="n">dt_table_entry</span> <span class="kn">from</span> <span class="n">head</span> <span class="k">of</span> <span class="n">dt_table_header</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">dtEntriesOffsetExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">dtEntriesOffset</span> <span class="o">=</span> <span class="n">dtEntriesOffsetExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  offset to the first dt_table_entry from head of dt_table_header</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">dtEntriesOffsetExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">dtEntriesOffset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dtEntriesOffsetExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">flash</span> <span class="n">page</span> <span class="n">size</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">pageSizeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">pageSize</span> <span class="o">=</span> <span class="n">pageSizeExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  flash page size</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">pageSizeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">pageSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pageSizeExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">DTBO</span> <span class="n">image</span> <span class="n">version</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">versionExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">versionExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  DTBO image version</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">versionExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">versionExpr</span>
 
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AndroidDto_DtTableHeader], filename: string): AndroidDto_DtTableHeader =</span>
-  <span class="n">AndroidDto_DtTableHeader</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AndroidDto_DtTableHeader], filename: string): AndroidDto_DtTableHeader =</span>
+<span class="w">  </span><span class="n">AndroidDto_DtTableHeader</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AndroidDto_DtTableEntry], io: KaitaiStream, root: KaitaiStruct, parent: AndroidDto): AndroidDto_DtTableEntry =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">AndroidDto_DtTableEntry</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">AndroidDto</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">AndroidDto</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AndroidDto_DtTableEntry], io: KaitaiStream, root: KaitaiStruct, parent: AndroidDto): AndroidDto_DtTableEntry =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">AndroidDto_DtTableEntry</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">AndroidDto</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">AndroidDto</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
 
-  <span class="sd">##[</span>
-  <span class="n">size</span> <span class="k">of</span> <span class="n">this</span> <span class="n">entry</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">dtSizeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">dtSize</span> <span class="o">=</span> <span class="n">dtSizeExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  size of this entry</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">dtSizeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">dtSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dtSizeExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">offset</span> <span class="kn">from</span> <span class="n">head</span> <span class="k">of</span> <span class="n">dt_table_header</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">dtOffsetExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">dtOffset</span> <span class="o">=</span> <span class="n">dtOffsetExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  offset from head of dt_table_header</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">dtOffsetExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">dtOffset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dtOffsetExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">optional</span><span class="p">,</span> <span class="n">must</span> <span class="n">be</span> <span class="n">zero</span> <span class="k">if</span> <span class="n">unused</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">idExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">idExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  optional, must be zero if unused</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">idExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">idExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">optional</span><span class="p">,</span> <span class="n">must</span> <span class="n">be</span> <span class="n">zero</span> <span class="k">if</span> <span class="n">unused</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">revExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">rev</span> <span class="o">=</span> <span class="n">revExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  optional, must be zero if unused</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">revExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">rev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">revExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">optional</span><span class="p">,</span> <span class="n">must</span> <span class="n">be</span> <span class="n">zero</span> <span class="k">if</span> <span class="n">unused</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
-    <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
-    <span class="n">this</span><span class="p">.</span><span class="n">custom</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  optional, must be zero if unused</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">..</span><span class="o">&lt;</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">custom</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
 
-<span class="k">proc </span><span class="nf">body</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">AndroidDto_DtTableEntry</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span> <span class="o">=</span> 
+<span class="k">proc</span><span class="w"> </span><span class="nf">body</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">AndroidDto_DtTableEntry</span><span class="p">):</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
 
-  <span class="sd">##[</span>
-  <span class="n">DTB</span><span class="o">/</span><span class="n">DTBO</span> <span class="n">file</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInstFlag</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
-  <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">AndroidDto</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
-  <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
-  <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">dtOffset</span><span class="p">))</span>
-  <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">dtSize</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">=</span> <span class="n">bodyInstExpr</span>
-  <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">bodyInstFlag</span> <span class="o">=</span> <span class="kp">true</span>
-  <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  DTB/DTBO file</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">bodyInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AndroidDto</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
+<span class="w">  </span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">dtOffset</span><span class="p">))</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">bodyInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">dtSize</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bodyInstExpr</span>
+<span class="w">  </span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">bodyInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
 
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AndroidDto_DtTableEntry], filename: string): AndroidDto_DtTableEntry =</span>
-  <span class="n">AndroidDto_DtTableEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AndroidDto_DtTableEntry], filename: string): AndroidDto_DtTableEntry =</span>
+<span class="w">  </span><span class="n">AndroidDto_DtTableEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 </pre></div>
 
         </div>

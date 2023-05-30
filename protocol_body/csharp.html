@@ -252,19 +252,19 @@ can also be found there.</p>
 
 
 
-<div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="n">ProtocolBody</span><span class="p">.</span><span class="n">FromFile</span><span class="p">(</span><span class="s">&quot;path/to/local/file.protocol_body&quot;</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><span class="kt">var</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ProtocolBody</span><span class="p">.</span><span class="n">FromFile</span><span class="p">(</span><span class="s">&quot;path/to/local/file.protocol_body&quot;</span><span class="p">);</span>
 </pre></div>
 
 <p>Or parse structure from a byte array:</p>
 
-<div class="highlight"><pre><span></span><span class="kt">byte</span><span class="p">[]</span> <span class="n">someArray</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
-<span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ProtocolBody</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">someArray</span><span class="p">));</span>
+<div class="highlight"><pre><span></span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">someArray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">};</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ProtocolBody</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">someArray</span><span class="p">));</span>
 </pre></div>
 
 <p>After that, one can get various attributes from the structure by accessing properties like:</p>
 
 
-<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">Body</span> <span class="c1">// =&gt; get body</span>
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">Body</span><span class="w"> </span><span class="c1">// =&gt; get body</span>
 </pre></div>
 
     </div>
@@ -296,301 +296,301 @@ can also be found there.</p>
 
 
 
-<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">Kaitai</span>
 <span class="p">{</span>
 
-    <span class="c1">/// &lt;summary&gt;</span>
-    <span class="c1">/// Protocol body represents particular payload on transport level (OSI</span>
-    <span class="c1">/// layer 4).</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// Typically this payload in encapsulated into network level (OSI layer</span>
-    <span class="c1">/// 3) packet, which includes &amp;quot;protocol number&amp;quot; field that would be used</span>
-    <span class="c1">/// to decide what&#39;s inside the payload and how to parse it. Thanks to</span>
-    <span class="c1">/// IANA&#39;s standardization effort, multiple network level use the same</span>
-    <span class="c1">/// IDs for these payloads named &amp;quot;protocol numbers&amp;quot;.</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// This is effectively a &amp;quot;router&amp;quot; type: it expects to get protocol</span>
-    <span class="c1">/// number as a parameter, and then invokes relevant type parser based</span>
-    <span class="c1">/// on that parameter.</span>
-    <span class="c1">/// &lt;/summary&gt;</span>
-    <span class="c1">/// &lt;remarks&gt;</span>
-    <span class="c1">/// Reference: &lt;a href=&quot;https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml&quot;&gt;Source&lt;/a&gt;</span>
-    <span class="c1">/// &lt;/remarks&gt;</span>
-    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">ProtocolBody</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">{</span>
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// Protocol body represents particular payload on transport level (OSI</span>
+<span class="w">    </span><span class="c1">/// layer 4).</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// Typically this payload in encapsulated into network level (OSI layer</span>
+<span class="w">    </span><span class="c1">/// 3) packet, which includes &amp;quot;protocol number&amp;quot; field that would be used</span>
+<span class="w">    </span><span class="c1">/// to decide what&#39;s inside the payload and how to parse it. Thanks to</span>
+<span class="w">    </span><span class="c1">/// IANA&#39;s standardization effort, multiple network level use the same</span>
+<span class="w">    </span><span class="c1">/// IDs for these payloads named &amp;quot;protocol numbers&amp;quot;.</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// This is effectively a &amp;quot;router&amp;quot; type: it expects to get protocol</span>
+<span class="w">    </span><span class="c1">/// number as a parameter, and then invokes relevant type parser based</span>
+<span class="w">    </span><span class="c1">/// on that parameter.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ProtocolBody</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">{</span>
 
-        <span class="k">public</span> <span class="k">enum</span> <span class="n">ProtocolEnum</span>
-        <span class="p">{</span>
-            <span class="n">Hopopt</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
-            <span class="n">Icmp</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
-            <span class="n">Igmp</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
-            <span class="n">Ggp</span> <span class="p">=</span> <span class="m">3</span><span class="p">,</span>
-            <span class="n">Ipv4</span> <span class="p">=</span> <span class="m">4</span><span class="p">,</span>
-            <span class="n">St</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span>
-            <span class="n">Tcp</span> <span class="p">=</span> <span class="m">6</span><span class="p">,</span>
-            <span class="n">Cbt</span> <span class="p">=</span> <span class="m">7</span><span class="p">,</span>
-            <span class="n">Egp</span> <span class="p">=</span> <span class="m">8</span><span class="p">,</span>
-            <span class="n">Igp</span> <span class="p">=</span> <span class="m">9</span><span class="p">,</span>
-            <span class="n">BbnRccMon</span> <span class="p">=</span> <span class="m">10</span><span class="p">,</span>
-            <span class="n">NvpIi</span> <span class="p">=</span> <span class="m">11</span><span class="p">,</span>
-            <span class="n">Pup</span> <span class="p">=</span> <span class="m">12</span><span class="p">,</span>
-            <span class="n">Argus</span> <span class="p">=</span> <span class="m">13</span><span class="p">,</span>
-            <span class="n">Emcon</span> <span class="p">=</span> <span class="m">14</span><span class="p">,</span>
-            <span class="n">Xnet</span> <span class="p">=</span> <span class="m">15</span><span class="p">,</span>
-            <span class="n">Chaos</span> <span class="p">=</span> <span class="m">16</span><span class="p">,</span>
-            <span class="n">Udp</span> <span class="p">=</span> <span class="m">17</span><span class="p">,</span>
-            <span class="n">Mux</span> <span class="p">=</span> <span class="m">18</span><span class="p">,</span>
-            <span class="n">DcnMeas</span> <span class="p">=</span> <span class="m">19</span><span class="p">,</span>
-            <span class="n">Hmp</span> <span class="p">=</span> <span class="m">20</span><span class="p">,</span>
-            <span class="n">Prm</span> <span class="p">=</span> <span class="m">21</span><span class="p">,</span>
-            <span class="n">XnsIdp</span> <span class="p">=</span> <span class="m">22</span><span class="p">,</span>
-            <span class="n">Trunk1</span> <span class="p">=</span> <span class="m">23</span><span class="p">,</span>
-            <span class="n">Trunk2</span> <span class="p">=</span> <span class="m">24</span><span class="p">,</span>
-            <span class="n">Leaf1</span> <span class="p">=</span> <span class="m">25</span><span class="p">,</span>
-            <span class="n">Leaf2</span> <span class="p">=</span> <span class="m">26</span><span class="p">,</span>
-            <span class="n">Rdp</span> <span class="p">=</span> <span class="m">27</span><span class="p">,</span>
-            <span class="n">Irtp</span> <span class="p">=</span> <span class="m">28</span><span class="p">,</span>
-            <span class="n">IsoTp4</span> <span class="p">=</span> <span class="m">29</span><span class="p">,</span>
-            <span class="n">Netblt</span> <span class="p">=</span> <span class="m">30</span><span class="p">,</span>
-            <span class="n">MfeNsp</span> <span class="p">=</span> <span class="m">31</span><span class="p">,</span>
-            <span class="n">MeritInp</span> <span class="p">=</span> <span class="m">32</span><span class="p">,</span>
-            <span class="n">Dccp</span> <span class="p">=</span> <span class="m">33</span><span class="p">,</span>
-            <span class="n">X3pc</span> <span class="p">=</span> <span class="m">34</span><span class="p">,</span>
-            <span class="n">Idpr</span> <span class="p">=</span> <span class="m">35</span><span class="p">,</span>
-            <span class="n">Xtp</span> <span class="p">=</span> <span class="m">36</span><span class="p">,</span>
-            <span class="n">Ddp</span> <span class="p">=</span> <span class="m">37</span><span class="p">,</span>
-            <span class="n">IdprCmtp</span> <span class="p">=</span> <span class="m">38</span><span class="p">,</span>
-            <span class="n">TpPlusPlus</span> <span class="p">=</span> <span class="m">39</span><span class="p">,</span>
-            <span class="n">Il</span> <span class="p">=</span> <span class="m">40</span><span class="p">,</span>
-            <span class="n">Ipv6</span> <span class="p">=</span> <span class="m">41</span><span class="p">,</span>
-            <span class="n">Sdrp</span> <span class="p">=</span> <span class="m">42</span><span class="p">,</span>
-            <span class="n">Ipv6Route</span> <span class="p">=</span> <span class="m">43</span><span class="p">,</span>
-            <span class="n">Ipv6Frag</span> <span class="p">=</span> <span class="m">44</span><span class="p">,</span>
-            <span class="n">Idrp</span> <span class="p">=</span> <span class="m">45</span><span class="p">,</span>
-            <span class="n">Rsvp</span> <span class="p">=</span> <span class="m">46</span><span class="p">,</span>
-            <span class="n">Gre</span> <span class="p">=</span> <span class="m">47</span><span class="p">,</span>
-            <span class="n">Dsr</span> <span class="p">=</span> <span class="m">48</span><span class="p">,</span>
-            <span class="n">Bna</span> <span class="p">=</span> <span class="m">49</span><span class="p">,</span>
-            <span class="n">Esp</span> <span class="p">=</span> <span class="m">50</span><span class="p">,</span>
-            <span class="n">Ah</span> <span class="p">=</span> <span class="m">51</span><span class="p">,</span>
-            <span class="n">INlsp</span> <span class="p">=</span> <span class="m">52</span><span class="p">,</span>
-            <span class="n">Swipe</span> <span class="p">=</span> <span class="m">53</span><span class="p">,</span>
-            <span class="n">Narp</span> <span class="p">=</span> <span class="m">54</span><span class="p">,</span>
-            <span class="n">Mobile</span> <span class="p">=</span> <span class="m">55</span><span class="p">,</span>
-            <span class="n">Tlsp</span> <span class="p">=</span> <span class="m">56</span><span class="p">,</span>
-            <span class="n">Skip</span> <span class="p">=</span> <span class="m">57</span><span class="p">,</span>
-            <span class="n">Ipv6Icmp</span> <span class="p">=</span> <span class="m">58</span><span class="p">,</span>
-            <span class="n">Ipv6Nonxt</span> <span class="p">=</span> <span class="m">59</span><span class="p">,</span>
-            <span class="n">Ipv6Opts</span> <span class="p">=</span> <span class="m">60</span><span class="p">,</span>
-            <span class="n">AnyHostInternalProtocol</span> <span class="p">=</span> <span class="m">61</span><span class="p">,</span>
-            <span class="n">Cftp</span> <span class="p">=</span> <span class="m">62</span><span class="p">,</span>
-            <span class="n">AnyLocalNetwork</span> <span class="p">=</span> <span class="m">63</span><span class="p">,</span>
-            <span class="n">SatExpak</span> <span class="p">=</span> <span class="m">64</span><span class="p">,</span>
-            <span class="n">Kryptolan</span> <span class="p">=</span> <span class="m">65</span><span class="p">,</span>
-            <span class="n">Rvd</span> <span class="p">=</span> <span class="m">66</span><span class="p">,</span>
-            <span class="n">Ippc</span> <span class="p">=</span> <span class="m">67</span><span class="p">,</span>
-            <span class="n">AnyDistributedFileSystem</span> <span class="p">=</span> <span class="m">68</span><span class="p">,</span>
-            <span class="n">SatMon</span> <span class="p">=</span> <span class="m">69</span><span class="p">,</span>
-            <span class="n">Visa</span> <span class="p">=</span> <span class="m">70</span><span class="p">,</span>
-            <span class="n">Ipcv</span> <span class="p">=</span> <span class="m">71</span><span class="p">,</span>
-            <span class="n">Cpnx</span> <span class="p">=</span> <span class="m">72</span><span class="p">,</span>
-            <span class="n">Cphb</span> <span class="p">=</span> <span class="m">73</span><span class="p">,</span>
-            <span class="n">Wsn</span> <span class="p">=</span> <span class="m">74</span><span class="p">,</span>
-            <span class="n">Pvp</span> <span class="p">=</span> <span class="m">75</span><span class="p">,</span>
-            <span class="n">BrSatMon</span> <span class="p">=</span> <span class="m">76</span><span class="p">,</span>
-            <span class="n">SunNd</span> <span class="p">=</span> <span class="m">77</span><span class="p">,</span>
-            <span class="n">WbMon</span> <span class="p">=</span> <span class="m">78</span><span class="p">,</span>
-            <span class="n">WbExpak</span> <span class="p">=</span> <span class="m">79</span><span class="p">,</span>
-            <span class="n">IsoIp</span> <span class="p">=</span> <span class="m">80</span><span class="p">,</span>
-            <span class="n">Vmtp</span> <span class="p">=</span> <span class="m">81</span><span class="p">,</span>
-            <span class="n">SecureVmtp</span> <span class="p">=</span> <span class="m">82</span><span class="p">,</span>
-            <span class="n">Vines</span> <span class="p">=</span> <span class="m">83</span><span class="p">,</span>
-            <span class="n">TtpOrIptm</span> <span class="p">=</span> <span class="m">84</span><span class="p">,</span>
-            <span class="n">NsfnetIgp</span> <span class="p">=</span> <span class="m">85</span><span class="p">,</span>
-            <span class="n">Dgp</span> <span class="p">=</span> <span class="m">86</span><span class="p">,</span>
-            <span class="n">Tcf</span> <span class="p">=</span> <span class="m">87</span><span class="p">,</span>
-            <span class="n">Eigrp</span> <span class="p">=</span> <span class="m">88</span><span class="p">,</span>
-            <span class="n">Ospfigp</span> <span class="p">=</span> <span class="m">89</span><span class="p">,</span>
-            <span class="n">SpriteRpc</span> <span class="p">=</span> <span class="m">90</span><span class="p">,</span>
-            <span class="n">Larp</span> <span class="p">=</span> <span class="m">91</span><span class="p">,</span>
-            <span class="n">Mtp</span> <span class="p">=</span> <span class="m">92</span><span class="p">,</span>
-            <span class="n">Ax25</span> <span class="p">=</span> <span class="m">93</span><span class="p">,</span>
-            <span class="n">Ipip</span> <span class="p">=</span> <span class="m">94</span><span class="p">,</span>
-            <span class="n">Micp</span> <span class="p">=</span> <span class="m">95</span><span class="p">,</span>
-            <span class="n">SccSp</span> <span class="p">=</span> <span class="m">96</span><span class="p">,</span>
-            <span class="n">Etherip</span> <span class="p">=</span> <span class="m">97</span><span class="p">,</span>
-            <span class="n">Encap</span> <span class="p">=</span> <span class="m">98</span><span class="p">,</span>
-            <span class="n">AnyPrivateEncryptionScheme</span> <span class="p">=</span> <span class="m">99</span><span class="p">,</span>
-            <span class="n">Gmtp</span> <span class="p">=</span> <span class="m">100</span><span class="p">,</span>
-            <span class="n">Ifmp</span> <span class="p">=</span> <span class="m">101</span><span class="p">,</span>
-            <span class="n">Pnni</span> <span class="p">=</span> <span class="m">102</span><span class="p">,</span>
-            <span class="n">Pim</span> <span class="p">=</span> <span class="m">103</span><span class="p">,</span>
-            <span class="n">Aris</span> <span class="p">=</span> <span class="m">104</span><span class="p">,</span>
-            <span class="n">Scps</span> <span class="p">=</span> <span class="m">105</span><span class="p">,</span>
-            <span class="n">Qnx</span> <span class="p">=</span> <span class="m">106</span><span class="p">,</span>
-            <span class="n">AN</span> <span class="p">=</span> <span class="m">107</span><span class="p">,</span>
-            <span class="n">Ipcomp</span> <span class="p">=</span> <span class="m">108</span><span class="p">,</span>
-            <span class="n">Snp</span> <span class="p">=</span> <span class="m">109</span><span class="p">,</span>
-            <span class="n">CompaqPeer</span> <span class="p">=</span> <span class="m">110</span><span class="p">,</span>
-            <span class="n">IpxInIp</span> <span class="p">=</span> <span class="m">111</span><span class="p">,</span>
-            <span class="n">Vrrp</span> <span class="p">=</span> <span class="m">112</span><span class="p">,</span>
-            <span class="n">Pgm</span> <span class="p">=</span> <span class="m">113</span><span class="p">,</span>
-            <span class="n">Any0Hop</span> <span class="p">=</span> <span class="m">114</span><span class="p">,</span>
-            <span class="n">L2tp</span> <span class="p">=</span> <span class="m">115</span><span class="p">,</span>
-            <span class="n">Ddx</span> <span class="p">=</span> <span class="m">116</span><span class="p">,</span>
-            <span class="n">Iatp</span> <span class="p">=</span> <span class="m">117</span><span class="p">,</span>
-            <span class="n">Stp</span> <span class="p">=</span> <span class="m">118</span><span class="p">,</span>
-            <span class="n">Srp</span> <span class="p">=</span> <span class="m">119</span><span class="p">,</span>
-            <span class="n">Uti</span> <span class="p">=</span> <span class="m">120</span><span class="p">,</span>
-            <span class="n">Smp</span> <span class="p">=</span> <span class="m">121</span><span class="p">,</span>
-            <span class="n">Sm</span> <span class="p">=</span> <span class="m">122</span><span class="p">,</span>
-            <span class="n">Ptp</span> <span class="p">=</span> <span class="m">123</span><span class="p">,</span>
-            <span class="n">IsisOverIpv4</span> <span class="p">=</span> <span class="m">124</span><span class="p">,</span>
-            <span class="n">Fire</span> <span class="p">=</span> <span class="m">125</span><span class="p">,</span>
-            <span class="n">Crtp</span> <span class="p">=</span> <span class="m">126</span><span class="p">,</span>
-            <span class="n">Crudp</span> <span class="p">=</span> <span class="m">127</span><span class="p">,</span>
-            <span class="n">Sscopmce</span> <span class="p">=</span> <span class="m">128</span><span class="p">,</span>
-            <span class="n">Iplt</span> <span class="p">=</span> <span class="m">129</span><span class="p">,</span>
-            <span class="n">Sps</span> <span class="p">=</span> <span class="m">130</span><span class="p">,</span>
-            <span class="n">Pipe</span> <span class="p">=</span> <span class="m">131</span><span class="p">,</span>
-            <span class="n">Sctp</span> <span class="p">=</span> <span class="m">132</span><span class="p">,</span>
-            <span class="n">Fc</span> <span class="p">=</span> <span class="m">133</span><span class="p">,</span>
-            <span class="n">RsvpE2eIgnore</span> <span class="p">=</span> <span class="m">134</span><span class="p">,</span>
-            <span class="n">MobilityHeader</span> <span class="p">=</span> <span class="m">135</span><span class="p">,</span>
-            <span class="n">Udplite</span> <span class="p">=</span> <span class="m">136</span><span class="p">,</span>
-            <span class="n">MplsInIp</span> <span class="p">=</span> <span class="m">137</span><span class="p">,</span>
-            <span class="n">Manet</span> <span class="p">=</span> <span class="m">138</span><span class="p">,</span>
-            <span class="n">Hip</span> <span class="p">=</span> <span class="m">139</span><span class="p">,</span>
-            <span class="n">Shim6</span> <span class="p">=</span> <span class="m">140</span><span class="p">,</span>
-            <span class="n">Wesp</span> <span class="p">=</span> <span class="m">141</span><span class="p">,</span>
-            <span class="n">Rohc</span> <span class="p">=</span> <span class="m">142</span><span class="p">,</span>
-            <span class="n">Reserved255</span> <span class="p">=</span> <span class="m">255</span><span class="p">,</span>
-        <span class="p">}</span>
-        <span class="k">public</span> <span class="nf">ProtocolBody</span><span class="p">(</span><span class="kt">byte</span> <span class="n">p_protocolNum</span><span class="p">,</span> <span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">ProtocolBody</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
-            <span class="n">_protocolNum</span> <span class="p">=</span> <span class="n">p_protocolNum</span><span class="p">;</span>
-            <span class="n">f_protocol</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-            <span class="n">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-        <span class="p">{</span>
-            <span class="k">switch</span> <span class="p">(</span><span class="n">Protocol</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">case</span> <span class="n">ProtocolEnum</span><span class="p">.</span><span class="n">Ipv6Nonxt</span><span class="p">:</span> <span class="p">{</span>
-                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoNextHeader</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">ProtocolEnum</span><span class="p">.</span><span class="n">Ipv4</span><span class="p">:</span> <span class="p">{</span>
-                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Ipv4Packet</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">ProtocolEnum</span><span class="p">.</span><span class="n">Udp</span><span class="p">:</span> <span class="p">{</span>
-                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">UdpDatagram</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">ProtocolEnum</span><span class="p">.</span><span class="n">Icmp</span><span class="p">:</span> <span class="p">{</span>
-                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">IcmpPacket</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">ProtocolEnum</span><span class="p">.</span><span class="n">Hopopt</span><span class="p">:</span> <span class="p">{</span>
-                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">OptionHopByHop</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">ProtocolEnum</span><span class="p">.</span><span class="n">Ipv6</span><span class="p">:</span> <span class="p">{</span>
-                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Ipv6Packet</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">ProtocolEnum</span><span class="p">.</span><span class="n">Tcp</span><span class="p">:</span> <span class="p">{</span>
-                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TcpSegment</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="n">ProtocolEnum</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Hopopt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Icmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Igmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Ggp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Ipv4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">,</span>
+<span class="w">            </span><span class="n">St</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Tcp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">6</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Cbt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">7</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Egp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">8</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Igp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">9</span><span class="p">,</span>
+<span class="w">            </span><span class="n">BbnRccMon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span>
+<span class="w">            </span><span class="n">NvpIi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">11</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Pup</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">12</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Argus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">13</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Emcon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">14</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Xnet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">15</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Chaos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">16</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Udp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">17</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Mux</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">18</span><span class="p">,</span>
+<span class="w">            </span><span class="n">DcnMeas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">19</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Hmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">20</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Prm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">21</span><span class="p">,</span>
+<span class="w">            </span><span class="n">XnsIdp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">22</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Trunk1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">23</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Trunk2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">24</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Leaf1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">25</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Leaf2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">26</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Rdp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">27</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Irtp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">28</span><span class="p">,</span>
+<span class="w">            </span><span class="n">IsoTp4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">29</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Netblt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">30</span><span class="p">,</span>
+<span class="w">            </span><span class="n">MfeNsp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">31</span><span class="p">,</span>
+<span class="w">            </span><span class="n">MeritInp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">32</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Dccp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">33</span><span class="p">,</span>
+<span class="w">            </span><span class="n">X3pc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">34</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Idpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">35</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Xtp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">36</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Ddp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">37</span><span class="p">,</span>
+<span class="w">            </span><span class="n">IdprCmtp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">38</span><span class="p">,</span>
+<span class="w">            </span><span class="n">TpPlusPlus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">39</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Il</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">40</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Ipv6</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">41</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Sdrp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">42</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Ipv6Route</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">43</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Ipv6Frag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">44</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Idrp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">45</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Rsvp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">46</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Gre</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">47</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Dsr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">48</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Bna</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">49</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Esp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">50</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Ah</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">51</span><span class="p">,</span>
+<span class="w">            </span><span class="n">INlsp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">52</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Swipe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">53</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Narp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">54</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Mobile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">55</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Tlsp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">56</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Skip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">57</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Ipv6Icmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">58</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Ipv6Nonxt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">59</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Ipv6Opts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">60</span><span class="p">,</span>
+<span class="w">            </span><span class="n">AnyHostInternalProtocol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">61</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Cftp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">62</span><span class="p">,</span>
+<span class="w">            </span><span class="n">AnyLocalNetwork</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">63</span><span class="p">,</span>
+<span class="w">            </span><span class="n">SatExpak</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">64</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Kryptolan</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">65</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Rvd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">66</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Ippc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">67</span><span class="p">,</span>
+<span class="w">            </span><span class="n">AnyDistributedFileSystem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">68</span><span class="p">,</span>
+<span class="w">            </span><span class="n">SatMon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">69</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Visa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">70</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Ipcv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">71</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Cpnx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">72</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Cphb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">73</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Wsn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">74</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Pvp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">75</span><span class="p">,</span>
+<span class="w">            </span><span class="n">BrSatMon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">76</span><span class="p">,</span>
+<span class="w">            </span><span class="n">SunNd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">77</span><span class="p">,</span>
+<span class="w">            </span><span class="n">WbMon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">78</span><span class="p">,</span>
+<span class="w">            </span><span class="n">WbExpak</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">79</span><span class="p">,</span>
+<span class="w">            </span><span class="n">IsoIp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">80</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Vmtp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">81</span><span class="p">,</span>
+<span class="w">            </span><span class="n">SecureVmtp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">82</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Vines</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">83</span><span class="p">,</span>
+<span class="w">            </span><span class="n">TtpOrIptm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">84</span><span class="p">,</span>
+<span class="w">            </span><span class="n">NsfnetIgp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">85</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Dgp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">86</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Tcf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">87</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Eigrp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">88</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Ospfigp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">89</span><span class="p">,</span>
+<span class="w">            </span><span class="n">SpriteRpc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">90</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Larp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">91</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Mtp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">92</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Ax25</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">93</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Ipip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">94</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Micp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">95</span><span class="p">,</span>
+<span class="w">            </span><span class="n">SccSp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">96</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Etherip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">97</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Encap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">98</span><span class="p">,</span>
+<span class="w">            </span><span class="n">AnyPrivateEncryptionScheme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">99</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Gmtp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">100</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Ifmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">101</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Pnni</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">102</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Pim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">103</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Aris</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">104</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Scps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">105</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Qnx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">106</span><span class="p">,</span>
+<span class="w">            </span><span class="n">AN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">107</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Ipcomp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">108</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Snp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">109</span><span class="p">,</span>
+<span class="w">            </span><span class="n">CompaqPeer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">110</span><span class="p">,</span>
+<span class="w">            </span><span class="n">IpxInIp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">111</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Vrrp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">112</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Pgm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">113</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Any0Hop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">114</span><span class="p">,</span>
+<span class="w">            </span><span class="n">L2tp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">115</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Ddx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">116</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Iatp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">117</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Stp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">118</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Srp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">119</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Uti</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">120</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Smp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">121</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Sm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">122</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Ptp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">123</span><span class="p">,</span>
+<span class="w">            </span><span class="n">IsisOverIpv4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">124</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Fire</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">125</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Crtp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">126</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Crudp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">127</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Sscopmce</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">128</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Iplt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">129</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Sps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">130</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Pipe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">131</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Sctp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">132</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Fc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">133</span><span class="p">,</span>
+<span class="w">            </span><span class="n">RsvpE2eIgnore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">134</span><span class="p">,</span>
+<span class="w">            </span><span class="n">MobilityHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">135</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Udplite</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">136</span><span class="p">,</span>
+<span class="w">            </span><span class="n">MplsInIp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">137</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Manet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">138</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Hip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">139</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Shim6</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">140</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Wesp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">141</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Rohc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">142</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Reserved255</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">255</span><span class="p">,</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="nf">ProtocolBody</span><span class="p">(</span><span class="kt">byte</span><span class="w"> </span><span class="n">p_protocolNum</span><span class="p">,</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">ProtocolBody</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">            </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">            </span><span class="n">_protocolNum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p_protocolNum</span><span class="p">;</span>
+<span class="w">            </span><span class="n">f_protocol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">            </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">Protocol</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="n">ProtocolEnum</span><span class="p">.</span><span class="n">Ipv6Nonxt</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">NoNextHeader</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="n">ProtocolEnum</span><span class="p">.</span><span class="n">Ipv4</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Ipv4Packet</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="n">ProtocolEnum</span><span class="p">.</span><span class="n">Udp</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">UdpDatagram</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="n">ProtocolEnum</span><span class="p">.</span><span class="n">Icmp</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">IcmpPacket</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="n">ProtocolEnum</span><span class="p">.</span><span class="n">Hopopt</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">OptionHopByHop</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="n">ProtocolEnum</span><span class="p">.</span><span class="n">Ipv6</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Ipv6Packet</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="n">ProtocolEnum</span><span class="p">.</span><span class="n">Tcp</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">TcpSegment</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
 
-        <span class="c1">/// &lt;summary&gt;</span>
-        <span class="c1">/// Dummy type for IPv6 &amp;quot;no next header&amp;quot; type, which signifies end of headers chain.</span>
-        <span class="c1">/// &lt;/summary&gt;</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">NoNextHeader</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">NoNextHeader</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">NoNextHeader</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">        </span><span class="c1">/// Dummy type for IPv6 &amp;quot;no next header&amp;quot; type, which signifies end of headers chain.</span>
+<span class="w">        </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">NoNextHeader</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">NoNextHeader</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">NoNextHeader</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">NoNextHeader</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">ProtocolBody</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">ProtocolBody</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="n">ProtocolBody</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">ProtocolBody</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">public</span> <span class="n">ProtocolBody</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">ProtocolBody</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">OptionHopByHop</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">OptionHopByHop</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">OptionHopByHop</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">NoNextHeader</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">ProtocolBody</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">ProtocolBody</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">ProtocolBody</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">ProtocolBody</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">ProtocolBody</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">ProtocolBody</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">OptionHopByHop</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">OptionHopByHop</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">OptionHopByHop</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">OptionHopByHop</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">ProtocolBody</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">ProtocolBody</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_nextHeaderType</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
-                <span class="n">_hdrExtLen</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
-                <span class="n">_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">HdrExtLen</span> <span class="p">-</span> <span class="m">1</span><span class="p">));</span>
-                <span class="n">_nextHeader</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ProtocolBody</span><span class="p">(</span><span class="n">NextHeaderType</span><span class="p">,</span> <span class="n">m_io</span><span class="p">);</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_nextHeaderType</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_hdrExtLen</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_body</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">ProtocolBody</span> <span class="n">_nextHeader</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">ProtocolBody</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">ProtocolBody</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">byte</span> <span class="n">NextHeaderType</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_nextHeaderType</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">byte</span> <span class="n">HdrExtLen</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_hdrExtLen</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Body</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_body</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">ProtocolBody</span> <span class="n">NextHeader</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_nextHeader</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">ProtocolBody</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">ProtocolBody</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_protocol</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">ProtocolEnum</span> <span class="n">_protocol</span><span class="p">;</span>
-        <span class="k">public</span> <span class="n">ProtocolEnum</span> <span class="n">Protocol</span>
-        <span class="p">{</span>
-            <span class="k">get</span>
-            <span class="p">{</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">f_protocol</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="n">_protocol</span><span class="p">;</span>
-                <span class="n">_protocol</span> <span class="p">=</span> <span class="p">(</span><span class="n">ProtocolEnum</span><span class="p">)</span> <span class="p">(((</span><span class="n">ProtocolEnum</span><span class="p">)</span> <span class="n">ProtocolNum</span><span class="p">));</span>
-                <span class="n">f_protocol</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                <span class="k">return</span> <span class="n">_protocol</span><span class="p">;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">_body</span><span class="p">;</span>
-        <span class="k">private</span> <span class="kt">byte</span> <span class="n">_protocolNum</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">ProtocolBody</span> <span class="n">m_root</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
-        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">Body</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_body</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">OptionHopByHop</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">ProtocolBody</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">ProtocolBody</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_nextHeaderType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_hdrExtLen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">HdrExtLen</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">1</span><span class="p">));</span>
+<span class="w">                </span><span class="n">_nextHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ProtocolBody</span><span class="p">(</span><span class="n">NextHeaderType</span><span class="p">,</span><span class="w"> </span><span class="n">m_io</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">_nextHeaderType</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">_hdrExtLen</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_body</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">ProtocolBody</span><span class="w"> </span><span class="n">_nextHeader</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">ProtocolBody</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">ProtocolBody</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">NextHeaderType</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_nextHeaderType</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">HdrExtLen</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_hdrExtLen</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Body</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_body</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">ProtocolBody</span><span class="w"> </span><span class="n">NextHeader</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_nextHeader</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">ProtocolBody</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">ProtocolBody</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_protocol</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">ProtocolEnum</span><span class="w"> </span><span class="n">_protocol</span><span class="p">;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">ProtocolEnum</span><span class="w"> </span><span class="n">Protocol</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">get</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_protocol</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_protocol</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_protocol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">ProtocolEnum</span><span class="p">)</span><span class="w"> </span><span class="p">(((</span><span class="n">ProtocolEnum</span><span class="p">)</span><span class="w"> </span><span class="n">ProtocolNum</span><span class="p">));</span>
+<span class="w">                </span><span class="n">f_protocol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">_protocol</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">_body</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">_protocolNum</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">ProtocolBody</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">Body</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_body</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 
-        <span class="c1">/// &lt;summary&gt;</span>
-        <span class="c1">/// Protocol number as an integer.</span>
-        <span class="c1">/// &lt;/summary&gt;</span>
-        <span class="k">public</span> <span class="kt">byte</span> <span class="n">ProtocolNum</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_protocolNum</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">ProtocolBody</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-    <span class="p">}</span>
+<span class="w">        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">        </span><span class="c1">/// Protocol number as an integer.</span>
+<span class="w">        </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">ProtocolNum</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_protocolNum</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">ProtocolBody</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 

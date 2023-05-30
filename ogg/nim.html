@@ -275,186 +275,186 @@ decoding the stream contents from that one.</p>
         </div>
 
         <div class="row">
-            <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">kaitai_struct_nim_runtime</span>
-<span class="kn">import</span> <span class="n">options</span>
+            <div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="n">kaitai_struct_nim_runtime</span>
+<span class="kn">import</span><span class="w"> </span><span class="n">options</span>
 
 <span class="k">type</span>
-  <span class="n">Ogg</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">pages</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">Ogg_Page</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-  <span class="n">Ogg_Page</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">syncCode</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">version</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">reserved1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
-    <span class="p">`</span><span class="n">isEndOfStream</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">isBeginningOfStream</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">isContinuation</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">granulePos</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
-    <span class="p">`</span><span class="n">bitstreamSerial</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">pageSeqNum</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">crc32</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">numSegments</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
-    <span class="p">`</span><span class="n">lenSegments</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">uint8</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">segments</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]]</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ogg</span>
+<span class="w">  </span><span class="n">Ogg</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">pages</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">Ogg_Page</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">  </span><span class="n">Ogg_Page</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">syncCode</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">version</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">reserved1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint64</span>
+<span class="w">    </span><span class="p">`</span><span class="n">isEndOfStream</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">isBeginningOfStream</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">isContinuation</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">granulePos</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint64</span>
+<span class="w">    </span><span class="p">`</span><span class="n">bitstreamSerial</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">pageSeqNum</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">crc32</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">numSegments</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lenSegments</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">uint8</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">segments</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Ogg</span>
 
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ogg], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Ogg</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ogg_Page], io: KaitaiStream, root: KaitaiStruct, parent: Ogg): Ogg_Page</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ogg], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Ogg</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ogg_Page], io: KaitaiStream, root: KaitaiStruct, parent: Ogg): Ogg_Page</span>
 
-
-
-<span class="sd">##[</span>
-<span class="n">Ogg</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">popular</span> <span class="n">media</span> <span class="n">container</span> <span class="n">format</span><span class="p">,</span> <span class="n">which</span> <span class="n">provides</span> <span class="n">basic</span>
-<span class="n">streaming</span> <span class="o">/</span> <span class="n">buffering</span> <span class="n">mechanisms</span> <span class="ow">and</span> <span class="ow">is</span> <span class="n">content</span><span class="o">-</span><span class="n">agnostic</span><span class="p">.</span> <span class="n">Most</span>
-<span class="n">popular</span> <span class="n">codecs</span> <span class="n">that</span> <span class="n">are</span> <span class="n">used</span> <span class="n">within</span> <span class="n">Ogg</span> <span class="n">streams</span> <span class="n">are</span> <span class="n">Vorbis</span> <span class="p">(</span><span class="n">thus</span>
-<span class="n">making</span> <span class="n">Ogg</span><span class="o">/</span><span class="n">Vorbis</span> <span class="n">streams</span><span class="p">)</span> <span class="ow">and</span> <span class="n">Theora</span> <span class="p">(</span><span class="n">Ogg</span><span class="o">/</span><span class="n">Theora</span><span class="p">).</span>
-
-<span class="n">Ogg</span> <span class="n">stream</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">sequence</span> <span class="n">Ogg</span> <span class="n">pages</span><span class="p">.</span> <span class="n">They</span> <span class="n">can</span> <span class="n">be</span> <span class="n">read</span> <span class="n">sequentially</span><span class="p">,</span>
-<span class="ow">or</span> <span class="n">one</span> <span class="n">can</span> <span class="n">jump</span> <span class="n">into</span> <span class="n">arbitrary</span> <span class="n">stream</span> <span class="n">location</span> <span class="ow">and</span> <span class="n">scan</span> <span class="k">for</span> <span class="s">&quot;OggS&quot;</span>
-<span class="n">sync</span> <span class="n">code</span> <span class="n">to</span> <span class="n">find</span> <span class="n">the</span> <span class="n">beginning</span> <span class="k">of</span> <span class="n">a</span> <span class="n">new</span> <span class="n">Ogg</span> <span class="n">page</span> <span class="ow">and</span> <span class="k">continue</span>
-<span class="n">decoding</span> <span class="n">the</span> <span class="n">stream</span> <span class="n">contents</span> <span class="kn">from</span> <span class="n">that</span> <span class="n">one</span><span class="p">.</span>
-
-<span class="o">]</span><span class="sd">##</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ogg], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Ogg =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Ogg</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Ogg</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Ogg</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
-
-  <span class="k">block</span><span class="p">:</span>
-    <span class="kd">var</span> <span class="n">i</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="k">while</span> <span class="ow">not</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">:</span>
-      <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">Ogg_Page</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">pages</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
-      <span class="n">inc</span> <span class="n">i</span>
-
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ogg], filename: string): Ogg =</span>
-  <span class="n">Ogg</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
 
 
 <span class="sd">##[</span>
-<span class="n">Ogg</span> <span class="n">page</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">basic</span> <span class="n">unit</span> <span class="k">of</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">an</span> <span class="n">Ogg</span> <span class="n">bitstream</span><span class="p">,</span> <span class="n">usually</span>
-<span class="n">it</span><span class="sc">&#39;s around 4-8 KB, with a maximum size of 65307 bytes.</span>
+<span class="sd">Ogg is a popular media container format, which provides basic</span>
+<span class="sd">streaming / buffering mechanisms and is content-agnostic. Most</span>
+<span class="sd">popular codecs that are used within Ogg streams are Vorbis (thus</span>
+<span class="sd">making Ogg/Vorbis streams) and Theora (Ogg/Theora).</span>
 
-<span class="o">]</span><span class="sd">##</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ogg_Page], io: KaitaiStream, root: KaitaiStruct, parent: Ogg): Ogg_Page =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Ogg_Page</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Ogg</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Ogg</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="sd">Ogg stream is a sequence Ogg pages. They can be read sequentially,</span>
+<span class="sd">or one can jump into arbitrary stream location and scan for &quot;OggS&quot;</span>
+<span class="sd">sync code to find the beginning of a new Ogg page and continue</span>
+<span class="sd">decoding the stream contents from that one.</span>
 
-  <span class="k">let</span> <span class="n">syncCodeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">syncCode</span> <span class="o">=</span> <span class="n">syncCodeExpr</span>
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ogg], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Ogg =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Ogg</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Ogg</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Ogg</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Version</span> <span class="k">of</span> <span class="n">the</span> <span class="n">Ogg</span> <span class="n">bitstream</span> <span class="n">format</span><span class="p">.</span> <span class="n">Currently</span> <span class="n">must</span> <span class="n">be</span> <span class="mf">0.</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">versionExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">versionExpr</span>
-  <span class="k">let</span> <span class="n">reserved1Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">reserved1</span> <span class="o">=</span> <span class="n">reserved1Expr</span>
+<span class="w">  </span><span class="k">block</span><span class="p">:</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="n">i</span><span class="p">:</span><span class="w"> </span><span class="nb">int</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Ogg_Page</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">pages</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+<span class="w">      </span><span class="n">inc</span><span class="w"> </span><span class="n">i</span>
 
-  <span class="sd">##[</span>
-  <span class="n">EOS</span> <span class="p">(</span><span class="k">End</span> <span class="k">Of</span> <span class="n">Stream</span><span class="p">)</span> <span class="n">mark</span><span class="p">.</span> <span class="n">This</span> <span class="n">page</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">last</span> <span class="n">page</span> <span class="ow">in</span> <span class="n">the</span>
-<span class="n">logical</span> <span class="n">bitstream</span><span class="p">.</span> <span class="n">The</span> <span class="n">EOS</span> <span class="n">flag</span> <span class="n">must</span> <span class="n">be</span> <span class="kt">set</span> <span class="n">on</span> <span class="n">the</span> <span class="n">final</span> <span class="n">page</span> <span class="k">of</span>
-<span class="n">every</span> <span class="n">logical</span> <span class="n">bitstream</span><span class="p">,</span> <span class="ow">and</span> <span class="n">must</span> <span class="ow">not</span> <span class="n">be</span> <span class="kt">set</span> <span class="n">on</span> <span class="n">any</span> <span class="n">other</span> <span class="n">page</span><span class="p">.</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ogg], filename: string): Ogg =</span>
+<span class="w">  </span><span class="n">Ogg</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">isEndOfStreamExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">isEndOfStream</span> <span class="o">=</span> <span class="n">isEndOfStreamExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">BOS</span> <span class="p">(</span><span class="n">Beginning</span> <span class="k">Of</span> <span class="n">Stream</span><span class="p">)</span> <span class="n">mark</span><span class="p">.</span> <span class="n">This</span> <span class="n">page</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">first</span> <span class="n">page</span> <span class="ow">in</span>
-<span class="n">the</span> <span class="n">logical</span> <span class="n">bitstream</span><span class="p">.</span> <span class="n">The</span> <span class="n">BOS</span> <span class="n">flag</span> <span class="n">must</span> <span class="n">be</span> <span class="kt">set</span> <span class="n">on</span> <span class="n">the</span> <span class="n">first</span>
-<span class="n">page</span> <span class="k">of</span> <span class="n">every</span> <span class="n">logical</span> <span class="n">bitstream</span><span class="p">,</span> <span class="ow">and</span> <span class="n">must</span> <span class="ow">not</span> <span class="n">be</span> <span class="kt">set</span> <span class="n">on</span> <span class="n">any</span>
-<span class="n">other</span> <span class="n">page</span><span class="p">.</span>
+<span class="sd">##[</span>
+<span class="sd">Ogg page is a basic unit of data in an Ogg bitstream, usually</span>
+<span class="sd">it&#39;s around 4-8 KB, with a maximum size of 65307 bytes.</span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">isBeginningOfStreamExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">isBeginningOfStream</span> <span class="o">=</span> <span class="n">isBeginningOfStreamExpr</span>
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ogg_Page], io: KaitaiStream, root: KaitaiStruct, parent: Ogg): Ogg_Page =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Ogg_Page</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Ogg</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Ogg</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
-  <span class="sd">##[</span>
-  <span class="n">The</span> <span class="n">first</span> <span class="n">packet</span> <span class="n">on</span> <span class="n">this</span> <span class="n">page</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">continuation</span> <span class="k">of</span> <span class="n">the</span> <span class="n">previous</span>
-<span class="n">packet</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">logical</span> <span class="n">bitstream</span><span class="p">.</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">syncCodeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">syncCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">syncCodeExpr</span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">isContinuationExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">isContinuation</span> <span class="o">=</span> <span class="n">isContinuationExpr</span>
-  <span class="n">alignToByte</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">)</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Version of the Ogg bitstream format. Currently must be 0.</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">versionExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">versionExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">reserved1Expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">reserved1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">reserved1Expr</span>
 
-  <span class="sd">##[</span>
-  <span class="s">&quot;Granule position&quot;</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">time</span> <span class="n">marker</span> <span class="ow">in</span> <span class="n">Ogg</span> <span class="n">files</span><span class="p">.</span> <span class="n">It</span> <span class="ow">is</span> <span class="n">an</span>
-<span class="n">abstract</span> <span class="n">value</span><span class="p">,</span> <span class="n">whose</span> <span class="n">meaning</span> <span class="ow">is</span> <span class="n">determined</span> <span class="n">by</span> <span class="n">the</span> <span class="n">codec</span><span class="p">.</span> <span class="n">It</span>
-<span class="n">may</span><span class="p">,</span> <span class="k">for</span> <span class="n">example</span><span class="p">,</span> <span class="n">be</span> <span class="n">a</span> <span class="n">count</span> <span class="k">of</span> <span class="n">the</span> <span class="n">number</span> <span class="k">of</span> <span class="n">samples</span><span class="p">,</span> <span class="n">the</span>
-<span class="n">number</span> <span class="k">of</span> <span class="n">frames</span> <span class="ow">or</span> <span class="n">a</span> <span class="n">more</span> <span class="n">complex</span> <span class="n">scheme</span><span class="p">.</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  EOS (End Of Stream) mark. This page is the last page in the</span>
+<span class="sd">logical bitstream. The EOS flag must be set on the final page of</span>
+<span class="sd">every logical bitstream, and must not be set on any other page.</span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">granulePosExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU8le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">granulePos</span> <span class="o">=</span> <span class="n">granulePosExpr</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">isEndOfStreamExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">isEndOfStream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">isEndOfStreamExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Serial</span> <span class="n">number</span> <span class="n">that</span> <span class="n">identifies</span> <span class="n">a</span> <span class="n">page</span> <span class="k">as</span> <span class="n">belonging</span> <span class="n">to</span> <span class="n">a</span>
-<span class="n">particular</span> <span class="n">logical</span> <span class="n">bitstream</span><span class="p">.</span> <span class="n">Each</span> <span class="n">logical</span> <span class="n">bitstream</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">file</span>
-<span class="n">has</span> <span class="n">a</span> <span class="n">unique</span> <span class="n">value</span><span class="p">,</span> <span class="ow">and</span> <span class="n">this</span> <span class="n">field</span> <span class="n">allows</span> <span class="n">implementations</span> <span class="n">to</span>
-<span class="n">deliver</span> <span class="n">the</span> <span class="n">pages</span> <span class="n">to</span> <span class="n">the</span> <span class="n">appropriate</span> <span class="n">decoder</span><span class="p">.</span> <span class="ow">In</span> <span class="n">a</span> <span class="n">typical</span>
-<span class="n">Vorbis</span> <span class="ow">and</span> <span class="n">Theora</span> <span class="n">file</span><span class="p">,</span> <span class="n">one</span> <span class="n">stream</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">audio</span> <span class="p">(</span><span class="n">Vorbis</span><span class="p">),</span> <span class="ow">and</span>
-<span class="n">the</span> <span class="n">other</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">video</span> <span class="p">(</span><span class="n">Theora</span><span class="p">).</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  BOS (Beginning Of Stream) mark. This page is the first page in</span>
+<span class="sd">the logical bitstream. The BOS flag must be set on the first</span>
+<span class="sd">page of every logical bitstream, and must not be set on any</span>
+<span class="sd">other page.</span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">bitstreamSerialExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">bitstreamSerial</span> <span class="o">=</span> <span class="n">bitstreamSerialExpr</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">isBeginningOfStreamExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">isBeginningOfStream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">isBeginningOfStreamExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Sequential</span> <span class="n">number</span> <span class="k">of</span> <span class="n">page</span><span class="p">,</span> <span class="n">guaranteed</span> <span class="n">to</span> <span class="n">be</span> <span class="n">monotonically</span>
-<span class="n">increasing</span> <span class="k">for</span> <span class="n">each</span> <span class="n">logical</span> <span class="n">bitstream</span><span class="p">.</span> <span class="n">The</span> <span class="n">first</span> <span class="n">page</span> <span class="ow">is</span> <span class="mi">0</span><span class="p">,</span> <span class="n">the</span>
-<span class="n">second</span> <span class="mi">1</span><span class="p">,</span> <span class="n">etc</span><span class="p">.</span> <span class="n">This</span> <span class="n">allows</span> <span class="n">implementations</span> <span class="n">to</span> <span class="n">detect</span> <span class="k">when</span> <span class="n">data</span>
-<span class="n">has</span> <span class="n">been</span> <span class="n">lost</span><span class="p">.</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The first packet on this page is a continuation of the previous</span>
+<span class="sd">packet in the logical bitstream.</span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">pageSeqNumExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">pageSeqNum</span> <span class="o">=</span> <span class="n">pageSeqNumExpr</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">isContinuationExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">isContinuation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">isContinuationExpr</span>
+<span class="w">  </span><span class="n">alignToByte</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">)</span>
 
-  <span class="sd">##[</span>
-  <span class="n">This</span> <span class="n">field</span> <span class="n">provides</span> <span class="n">a</span> <span class="n">CRC32</span> <span class="n">checksum</span> <span class="k">of</span> <span class="n">the</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">entire</span>
-<span class="n">page</span> <span class="p">(</span><span class="n">including</span> <span class="n">the</span> <span class="n">page</span> <span class="n">header</span><span class="p">,</span> <span class="n">calculated</span> <span class="n">with</span> <span class="n">the</span> <span class="n">checksum</span>
-<span class="n">field</span> <span class="kt">set</span> <span class="n">to</span> <span class="mi">0</span><span class="p">).</span> <span class="n">This</span> <span class="n">allows</span> <span class="n">verification</span> <span class="n">that</span> <span class="n">the</span> <span class="n">data</span> <span class="n">has</span> <span class="ow">not</span>
-<span class="n">been</span> <span class="n">corrupted</span> <span class="n">since</span> <span class="n">it</span> <span class="n">was</span> <span class="n">created</span><span class="p">.</span> <span class="n">Pages</span> <span class="n">that</span> <span class="n">fail</span> <span class="n">the</span>
-<span class="n">checksum</span> <span class="n">should</span> <span class="n">be</span> <span class="n">discarded</span><span class="p">.</span> <span class="n">The</span> <span class="n">checksum</span> <span class="ow">is</span> <span class="n">generated</span> <span class="k">using</span> <span class="n">a</span>
-<span class="n">polynomial</span> <span class="n">value</span> <span class="k">of</span> <span class="mh">0x04C11DB7</span><span class="p">.</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  &quot;Granule position&quot; is the time marker in Ogg files. It is an</span>
+<span class="sd">abstract value, whose meaning is determined by the codec. It</span>
+<span class="sd">may, for example, be a count of the number of samples, the</span>
+<span class="sd">number of frames or a more complex scheme.</span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">crc32Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">crc32</span> <span class="o">=</span> <span class="n">crc32Expr</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">granulePosExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU8le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">granulePos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">granulePosExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">The</span> <span class="n">number</span> <span class="k">of</span> <span class="n">segments</span> <span class="n">that</span> <span class="n">exist</span> <span class="ow">in</span> <span class="n">this</span> <span class="n">page</span><span class="p">.</span> <span class="n">There</span> <span class="n">can</span> <span class="n">be</span> <span class="n">a</span>
-<span class="n">maximum</span> <span class="k">of</span> <span class="mi">255</span> <span class="n">segments</span> <span class="ow">in</span> <span class="n">any</span> <span class="n">one</span> <span class="n">page</span><span class="p">.</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Serial number that identifies a page as belonging to a</span>
+<span class="sd">particular logical bitstream. Each logical bitstream in a file</span>
+<span class="sd">has a unique value, and this field allows implementations to</span>
+<span class="sd">deliver the pages to the appropriate decoder. In a typical</span>
+<span class="sd">Vorbis and Theora file, one stream is the audio (Vorbis), and</span>
+<span class="sd">the other is the video (Theora).</span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">numSegmentsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">numSegments</span> <span class="o">=</span> <span class="n">numSegmentsExpr</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">bitstreamSerialExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">bitstreamSerial</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bitstreamSerialExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Table</span> <span class="k">of</span> <span class="n">lengths</span> <span class="k">of</span> <span class="n">segments</span><span class="p">.</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Sequential number of page, guaranteed to be monotonically</span>
+<span class="sd">increasing for each logical bitstream. The first page is 0, the</span>
+<span class="sd">second 1, etc. This allows implementations to detect when data</span>
+<span class="sd">has been lost.</span>
 
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">numSegments</span><span class="p">):</span>
-    <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-    <span class="n">this</span><span class="p">.</span><span class="n">lenSegments</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">pageSeqNumExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">pageSeqNum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pageSeqNumExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Segment</span> <span class="n">content</span> <span class="n">bytes</span> <span class="n">make</span> <span class="n">up</span> <span class="n">the</span> <span class="n">rest</span> <span class="k">of</span> <span class="n">the</span> <span class="n">Ogg</span> <span class="n">page</span><span class="p">.</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">numSegments</span><span class="p">):</span>
-    <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenSegments</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">))</span>
-    <span class="n">this</span><span class="p">.</span><span class="n">segments</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  This field provides a CRC32 checksum of the data in the entire</span>
+<span class="sd">page (including the page header, calculated with the checksum</span>
+<span class="sd">field set to 0). This allows verification that the data has not</span>
+<span class="sd">been corrupted since it was created. Pages that fail the</span>
+<span class="sd">checksum should be discarded. The checksum is generated using a</span>
+<span class="sd">polynomial value of 0x04C11DB7.</span>
 
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ogg_Page], filename: string): Ogg_Page =</span>
-  <span class="n">Ogg_Page</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">crc32Expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">crc32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">crc32Expr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The number of segments that exist in this page. There can be a</span>
+<span class="sd">maximum of 255 segments in any one page.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">numSegmentsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">numSegments</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">numSegmentsExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Table of lengths of segments.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">..</span><span class="o">&lt;</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">numSegments</span><span class="p">):</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">lenSegments</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Segment content bytes make up the rest of the Ogg page.</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">..</span><span class="o">&lt;</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">numSegments</span><span class="p">):</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenSegments</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">))</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">segments</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ogg_Page], filename: string): Ogg_Page =</span>
+<span class="w">  </span><span class="n">Ogg_Page</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 </pre></div>
 
         </div>

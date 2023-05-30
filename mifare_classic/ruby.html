@@ -276,19 +276,19 @@ section#format-index .row {
 
 
 
-<div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="no">MifareClassic</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;path/to/local/file.mfd&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">MifareClassic</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;path/to/local/file.mfd&quot;</span><span class="p">)</span>
 </pre></div>
 
 <p>Or parse structure from a string of bytes:</p>
 
-<div class="highlight"><pre><span></span><span class="n">bytes</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\x00\x01\x02</span><span class="s2">...&quot;</span>
-<span class="n">data</span> <span class="o">=</span> <span class="no">MifareClassic</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">bytes</span><span class="p">))</span>
+<div class="highlight"><pre><span></span><span class="n">bytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\x00\x01\x02</span><span class="s2">...&quot;</span>
+<span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">MifareClassic</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">bytes</span><span class="p">))</span>
 </pre></div>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
 
-<div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">sectors</span> <span class="c1"># =&gt; get sectors</span>
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">sectors</span><span class="w"> </span><span class="c1"># =&gt; get sectors</span>
 </pre></div>
 
     </div>
@@ -318,10 +318,10 @@ section#format-index .row {
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
+<span class="nb">require</span><span class="w"> </span><span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.9&#39;</span><span class="p">)</span>
-  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">unless</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.9&#39;</span><span class="p">)</span>
+<span class="w">  </span><span class="k">raise</span><span class="w"> </span><span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="k">end</span>
 
 
@@ -331,490 +331,490 @@ section#format-index .row {
 <span class="c1"># @see https://github.com/nfc-tools/libnfc</span>
 <span class="c1">#   https://www.nxp.com/docs/en/data-sheet/MF1S70YYX_V1.pdf</span>
 <span class="c1">#    Source</span>
-<span class="k">class</span> <span class="nc">MifareClassic</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
-    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-    <span class="n">_read</span>
-  <span class="k">end</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MifareClassic</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">    </span><span class="n">_read</span>
+<span class="w">  </span><span class="k">end</span>
 
-  <span class="k">def</span> <span class="n">_read</span>
-    <span class="vi">@_raw_sectors</span> <span class="o">=</span> <span class="o">[]</span>
-    <span class="vi">@sectors</span> <span class="o">=</span> <span class="o">[]</span>
-    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
-      <span class="vi">@_raw_sectors</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((((</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">32</span> <span class="o">?</span> <span class="mi">4</span> <span class="p">:</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="mi">16</span><span class="p">))</span>
-      <span class="n">_io__raw_sectors</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_sectors</span><span class="o">.</span><span class="n">last</span><span class="p">)</span>
-      <span class="vi">@sectors</span> <span class="o">&lt;&lt;</span> <span class="no">Sector</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_sectors</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">,</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
-      <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="k">end</span>
-    <span class="nb">self</span>
-  <span class="k">end</span>
-  <span class="k">class</span> <span class="nc">Key</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
-      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-      <span class="n">_read</span>
-    <span class="k">end</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">    </span><span class="vi">@_raw_sectors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
+<span class="w">    </span><span class="vi">@sectors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
+<span class="w">    </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
+<span class="w">      </span><span class="vi">@_raw_sectors</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((((</span><span class="n">i</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">32</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">16</span><span class="p">))</span>
+<span class="w">      </span><span class="n">_io__raw_sectors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_sectors</span><span class="o">.</span><span class="n">last</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@sectors</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="no">Sector</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_sectors</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">      </span><span class="n">i</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="nb">self</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">Key</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
 
-    <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@key</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
-      <span class="nb">self</span>
-    <span class="k">end</span>
-    <span class="kp">attr_reader</span> <span class="ss">:key</span>
-  <span class="k">end</span>
-  <span class="k">class</span> <span class="nc">Sector</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">,</span> <span class="n">has_manufacturer</span><span class="p">)</span>
-      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-      <span class="vi">@has_manufacturer</span> <span class="o">=</span> <span class="n">has_manufacturer</span>
-      <span class="n">_read</span>
-    <span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:key</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">Sector</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="n">has_manufacturer</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@has_manufacturer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">has_manufacturer</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
 
-    <span class="k">def</span> <span class="n">_read</span>
-      <span class="k">if</span> <span class="n">has_manufacturer</span>
-        <span class="vi">@manufacturer</span> <span class="o">=</span> <span class="no">Manufacturer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">end</span>
-      <span class="vi">@_raw_data_filler</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="n">_io</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="n">_io</span><span class="o">.</span><span class="n">pos</span><span class="p">)</span> <span class="o">-</span> <span class="mi">16</span><span class="p">))</span>
-      <span class="n">_io__raw_data_filler</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_data_filler</span><span class="p">)</span>
-      <span class="vi">@data_filler</span> <span class="o">=</span> <span class="no">Filler</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_data_filler</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="vi">@trailer</span> <span class="o">=</span> <span class="no">Trailer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="nb">self</span>
-    <span class="k">end</span>
-    <span class="k">class</span> <span class="nc">Values</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-      <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
-        <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-        <span class="n">_read</span>
-      <span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="n">has_manufacturer</span>
+<span class="w">        </span><span class="vi">@manufacturer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Manufacturer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="vi">@_raw_data_filler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="n">_io</span><span class="o">.</span><span class="n">size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">_io</span><span class="o">.</span><span class="n">pos</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">16</span><span class="p">))</span>
+<span class="w">      </span><span class="n">_io__raw_data_filler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_data_filler</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@data_filler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Filler</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_data_filler</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@trailer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Trailer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">Values</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">        </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">        </span><span class="n">_read</span>
+<span class="w">      </span><span class="k">end</span>
 
-      <span class="k">def</span> <span class="n">_read</span>
-        <span class="vi">@values</span> <span class="o">=</span> <span class="o">[]</span>
-        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
-          <span class="vi">@values</span> <span class="o">&lt;&lt;</span> <span class="no">ValueBlock</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-          <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">end</span>
-        <span class="nb">self</span>
-      <span class="k">end</span>
-      <span class="k">class</span> <span class="nc">ValueBlock</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-        <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
-          <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-          <span class="n">_read</span>
-        <span class="k">end</span>
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">        </span><span class="vi">@values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
+<span class="w">        </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
+<span class="w">          </span><span class="vi">@values</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="no">ValueBlock</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">          </span><span class="n">i</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">        </span><span class="nb">self</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="k">class</span><span class="w"> </span><span class="nc">ValueBlock</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">          </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">          </span><span class="n">_read</span>
+<span class="w">        </span><span class="k">end</span>
 
-        <span class="k">def</span> <span class="n">_read</span>
-          <span class="vi">@valuez</span> <span class="o">=</span> <span class="o">[]</span>
-          <span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-            <span class="vi">@valuez</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-          <span class="p">}</span>
-          <span class="vi">@addrz</span> <span class="o">=</span> <span class="o">[]</span>
-          <span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-            <span class="vi">@addrz</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-          <span class="p">}</span>
-          <span class="nb">self</span>
-        <span class="k">end</span>
-        <span class="k">def</span> <span class="nf">addr</span>
-          <span class="k">return</span> <span class="vi">@addr</span> <span class="k">unless</span> <span class="vi">@addr</span><span class="o">.</span><span class="n">nil?</span>
-          <span class="k">if</span> <span class="n">valid</span>
-            <span class="vi">@addr</span> <span class="o">=</span> <span class="n">addrz</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
-          <span class="k">end</span>
-          <span class="vi">@addr</span>
-        <span class="k">end</span>
-        <span class="k">def</span> <span class="nf">addr_valid</span>
-          <span class="k">return</span> <span class="vi">@addr_valid</span> <span class="k">unless</span> <span class="vi">@addr_valid</span><span class="o">.</span><span class="n">nil?</span>
-          <span class="vi">@addr_valid</span> <span class="o">=</span>  <span class="p">((</span><span class="n">addrz</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">==</span> <span class="o">~</span><span class="p">(</span><span class="n">addrz</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="p">))</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">addrz</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">==</span> <span class="n">addrz</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">addrz</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">==</span> <span class="n">addrz</span><span class="o">[</span><span class="mi">3</span><span class="o">]</span><span class="p">))</span> 
-          <span class="vi">@addr_valid</span>
-        <span class="k">end</span>
-        <span class="k">def</span> <span class="nf">valid</span>
-          <span class="k">return</span> <span class="vi">@valid</span> <span class="k">unless</span> <span class="vi">@valid</span><span class="o">.</span><span class="n">nil?</span>
-          <span class="vi">@valid</span> <span class="o">=</span>  <span class="p">((</span><span class="n">value_valid</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">addr_valid</span><span class="p">))</span> 
-          <span class="vi">@valid</span>
-        <span class="k">end</span>
-        <span class="k">def</span> <span class="nf">value_valid</span>
-          <span class="k">return</span> <span class="vi">@value_valid</span> <span class="k">unless</span> <span class="vi">@value_valid</span><span class="o">.</span><span class="n">nil?</span>
-          <span class="vi">@value_valid</span> <span class="o">=</span>  <span class="p">((</span><span class="n">valuez</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">==</span> <span class="o">~</span><span class="p">(</span><span class="n">valuez</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="p">))</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">valuez</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">==</span> <span class="n">valuez</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span><span class="p">))</span> 
-          <span class="vi">@value_valid</span>
-        <span class="k">end</span>
-        <span class="k">def</span> <span class="nf">value</span>
-          <span class="k">return</span> <span class="vi">@value</span> <span class="k">unless</span> <span class="vi">@value</span><span class="o">.</span><span class="n">nil?</span>
-          <span class="k">if</span> <span class="n">valid</span>
-            <span class="vi">@value</span> <span class="o">=</span> <span class="n">valuez</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
-          <span class="k">end</span>
-          <span class="vi">@value</span>
-        <span class="k">end</span>
-        <span class="kp">attr_reader</span> <span class="ss">:valuez</span>
-        <span class="kp">attr_reader</span> <span class="ss">:addrz</span>
-      <span class="k">end</span>
-      <span class="kp">attr_reader</span> <span class="ss">:values</span>
-    <span class="k">end</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">          </span><span class="vi">@valuez</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
+<span class="w">          </span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">times</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">|</span><span class="n">i</span><span class="o">|</span>
+<span class="w">            </span><span class="vi">@valuez</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">          </span><span class="vi">@addrz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
+<span class="w">          </span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">times</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">|</span><span class="n">i</span><span class="o">|</span>
+<span class="w">            </span><span class="vi">@addrz</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">          </span><span class="nb">self</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">addr</span>
+<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="vi">@addr</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@addr</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">          </span><span class="k">if</span><span class="w"> </span><span class="n">valid</span>
+<span class="w">            </span><span class="vi">@addr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">addrz</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
+<span class="w">          </span><span class="k">end</span>
+<span class="w">          </span><span class="vi">@addr</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">addr_valid</span>
+<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="vi">@addr_valid</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@addr_valid</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">          </span><span class="vi">@addr_valid</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="p">((</span><span class="n">addrz</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">~</span><span class="p">(</span><span class="n">addrz</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="p">))</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">addrz</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">addrz</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">addrz</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">addrz</span><span class="o">[</span><span class="mi">3</span><span class="o">]</span><span class="p">))</span><span class="w"> </span>
+<span class="w">          </span><span class="vi">@addr_valid</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">valid</span>
+<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="vi">@valid</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@valid</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">          </span><span class="vi">@valid</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="p">((</span><span class="n">value_valid</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">addr_valid</span><span class="p">))</span><span class="w"> </span>
+<span class="w">          </span><span class="vi">@valid</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">value_valid</span>
+<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="vi">@value_valid</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@value_valid</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">          </span><span class="vi">@value_valid</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="p">((</span><span class="n">valuez</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">~</span><span class="p">(</span><span class="n">valuez</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="p">))</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">valuez</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">valuez</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span><span class="p">))</span><span class="w"> </span>
+<span class="w">          </span><span class="vi">@value_valid</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">value</span>
+<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="vi">@value</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@value</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">          </span><span class="k">if</span><span class="w"> </span><span class="n">valid</span>
+<span class="w">            </span><span class="vi">@value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">valuez</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>
+<span class="w">          </span><span class="k">end</span>
+<span class="w">          </span><span class="vi">@value</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">        </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:valuez</span>
+<span class="w">        </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:addrz</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:values</span>
+<span class="w">    </span><span class="k">end</span>
 
-    <span class="c1">##</span>
-    <span class="c1"># only to create _io</span>
-    <span class="k">class</span> <span class="nc">Filler</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-      <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
-        <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-        <span class="n">_read</span>
-      <span class="k">end</span>
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># only to create _io</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">Filler</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">        </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">        </span><span class="n">_read</span>
+<span class="w">      </span><span class="k">end</span>
 
-      <span class="k">def</span> <span class="n">_read</span>
-        <span class="vi">@data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">_io</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
-        <span class="nb">self</span>
-      <span class="k">end</span>
-      <span class="kp">attr_reader</span> <span class="ss">:data</span>
-    <span class="k">end</span>
-    <span class="k">def</span> <span class="nf">block_size</span>
-      <span class="k">return</span> <span class="vi">@block_size</span> <span class="k">unless</span> <span class="vi">@block_size</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@block_size</span> <span class="o">=</span> <span class="mi">16</span>
-      <span class="vi">@block_size</span>
-    <span class="k">end</span>
-    <span class="k">def</span> <span class="nf">data</span>
-      <span class="k">return</span> <span class="vi">@data</span> <span class="k">unless</span> <span class="vi">@data</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@data</span> <span class="o">=</span> <span class="n">data_filler</span><span class="o">.</span><span class="n">data</span>
-      <span class="vi">@data</span>
-    <span class="k">end</span>
-    <span class="k">def</span> <span class="nf">blocks</span>
-      <span class="k">return</span> <span class="vi">@blocks</span> <span class="k">unless</span> <span class="vi">@blocks</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="n">io</span> <span class="o">=</span> <span class="n">data_filler</span><span class="o">.</span><span class="n">_io</span>
-      <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span>
-      <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-      <span class="vi">@blocks</span> <span class="o">=</span> <span class="o">[]</span>
-      <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-      <span class="k">while</span> <span class="ow">not</span> <span class="n">io</span><span class="o">.</span><span class="n">eof?</span>
-        <span class="vi">@blocks</span> <span class="o">&lt;&lt;</span> <span class="n">io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">block_size</span><span class="p">)</span>
-        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
-      <span class="k">end</span>
-      <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-      <span class="vi">@blocks</span>
-    <span class="k">end</span>
-    <span class="k">def</span> <span class="nf">values</span>
-      <span class="k">return</span> <span class="vi">@values</span> <span class="k">unless</span> <span class="vi">@values</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="n">io</span> <span class="o">=</span> <span class="n">data_filler</span><span class="o">.</span><span class="n">_io</span>
-      <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span>
-      <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-      <span class="vi">@values</span> <span class="o">=</span> <span class="no">Values</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-      <span class="vi">@values</span>
-    <span class="k">end</span>
-    <span class="kp">attr_reader</span> <span class="ss">:manufacturer</span>
-    <span class="kp">attr_reader</span> <span class="ss">:data_filler</span>
-    <span class="kp">attr_reader</span> <span class="ss">:trailer</span>
-    <span class="kp">attr_reader</span> <span class="ss">:has_manufacturer</span>
-    <span class="kp">attr_reader</span> <span class="ss">:_raw_data_filler</span>
-  <span class="k">end</span>
-  <span class="k">class</span> <span class="nc">Manufacturer</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
-      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-      <span class="n">_read</span>
-    <span class="k">end</span>
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">        </span><span class="vi">@data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">_io</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+<span class="w">        </span><span class="nb">self</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:data</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">block_size</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@block_size</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@block_size</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@block_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">16</span>
+<span class="w">      </span><span class="vi">@block_size</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">data</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@data</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@data</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data_filler</span><span class="o">.</span><span class="n">data</span>
+<span class="w">      </span><span class="vi">@data</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">blocks</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@blocks</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@blocks</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data_filler</span><span class="o">.</span><span class="n">_io</span>
+<span class="w">      </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span><span class="o">.</span><span class="n">pos</span>
+<span class="w">      </span><span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
+<span class="w">      </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="k">while</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">io</span><span class="o">.</span><span class="n">eof?</span>
+<span class="w">        </span><span class="vi">@blocks</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">block_size</span><span class="p">)</span>
+<span class="w">        </span><span class="n">i</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@blocks</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">values</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@values</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@values</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data_filler</span><span class="o">.</span><span class="n">_io</span>
+<span class="w">      </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span><span class="o">.</span><span class="n">pos</span>
+<span class="w">      </span><span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Values</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@values</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:manufacturer</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:data_filler</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:trailer</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:has_manufacturer</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:_raw_data_filler</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">Manufacturer</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
 
-    <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@nuid</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-      <span class="vi">@bcc</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="vi">@sak</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="vi">@atqa</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-      <span class="vi">@manufacturer</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
-      <span class="nb">self</span>
-    <span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@nuid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">      </span><span class="vi">@bcc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@sak</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@atqa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+<span class="w">      </span><span class="vi">@manufacturer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
 
-    <span class="c1">##</span>
-    <span class="c1"># beware for 7bytes UID it goes over next fields</span>
-    <span class="kp">attr_reader</span> <span class="ss">:nuid</span>
-    <span class="kp">attr_reader</span> <span class="ss">:bcc</span>
-    <span class="kp">attr_reader</span> <span class="ss">:sak</span>
-    <span class="kp">attr_reader</span> <span class="ss">:atqa</span>
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># beware for 7bytes UID it goes over next fields</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:nuid</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:bcc</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:sak</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:atqa</span>
 
-    <span class="c1">##</span>
-    <span class="c1"># may contain manufacture date as BCD</span>
-    <span class="kp">attr_reader</span> <span class="ss">:manufacturer</span>
-  <span class="k">end</span>
-  <span class="k">class</span> <span class="nc">Trailer</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
-      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-      <span class="n">_read</span>
-    <span class="k">end</span>
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># may contain manufacture date as BCD</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:manufacturer</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">Trailer</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
 
-    <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@key_a</span> <span class="o">=</span> <span class="no">Key</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="vi">@_raw_access_bits</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-      <span class="n">_io__raw_access_bits</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_access_bits</span><span class="p">)</span>
-      <span class="vi">@access_bits</span> <span class="o">=</span> <span class="no">AccessConditions</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_access_bits</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="vi">@user_byte</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="vi">@key_b</span> <span class="o">=</span> <span class="no">Key</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="nb">self</span>
-    <span class="k">end</span>
-    <span class="k">class</span> <span class="nc">AccessConditions</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-      <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
-        <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-        <span class="n">_read</span>
-      <span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@key_a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Key</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@_raw_access_bits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_io__raw_access_bits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_access_bits</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@access_bits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">AccessConditions</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_access_bits</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@user_byte</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@key_b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Key</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">AccessConditions</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">        </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">        </span><span class="n">_read</span>
+<span class="w">      </span><span class="k">end</span>
 
-      <span class="k">def</span> <span class="n">_read</span>
-        <span class="vi">@raw_chunks</span> <span class="o">=</span> <span class="o">[]</span>
-        <span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">ac_count_of_chunks</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@raw_chunks</span> <span class="o">&lt;&lt;</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-        <span class="p">}</span>
-        <span class="nb">self</span>
-      <span class="k">end</span>
-      <span class="k">class</span> <span class="nc">TrailerAc</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-        <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">,</span> <span class="n">ac</span><span class="p">)</span>
-          <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-          <span class="vi">@ac</span> <span class="o">=</span> <span class="n">ac</span>
-          <span class="n">_read</span>
-        <span class="k">end</span>
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">        </span><span class="vi">@raw_chunks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
+<span class="w">        </span><span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">ac_count_of_chunks</span><span class="p">)</span><span class="o">.</span><span class="n">times</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">|</span><span class="n">i</span><span class="o">|</span>
+<span class="w">          </span><span class="vi">@raw_chunks</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="nb">self</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="k">class</span><span class="w"> </span><span class="nc">TrailerAc</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="n">ac</span><span class="p">)</span>
+<span class="w">          </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">          </span><span class="vi">@ac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ac</span>
+<span class="w">          </span><span class="n">_read</span>
+<span class="w">        </span><span class="k">end</span>
 
-        <span class="k">def</span> <span class="n">_read</span>
-          <span class="nb">self</span>
-        <span class="k">end</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">          </span><span class="nb">self</span>
+<span class="w">        </span><span class="k">end</span>
 
-        <span class="c1">##</span>
-        <span class="c1"># key A is required</span>
-        <span class="k">def</span> <span class="nf">can_read_key_b</span>
-          <span class="k">return</span> <span class="vi">@can_read_key_b</span> <span class="k">unless</span> <span class="vi">@can_read_key_b</span><span class="o">.</span><span class="n">nil?</span>
-          <span class="vi">@can_read_key_b</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="n">inv_shift_val</span> <span class="o">&lt;=</span> <span class="mi">2</span>
-          <span class="vi">@can_read_key_b</span>
-        <span class="k">end</span>
-        <span class="k">def</span> <span class="nf">can_write_keys</span>
-          <span class="k">return</span> <span class="vi">@can_write_keys</span> <span class="k">unless</span> <span class="vi">@can_write_keys</span><span class="o">.</span><span class="n">nil?</span>
-          <span class="vi">@can_write_keys</span> <span class="o">=</span>  <span class="p">((((</span><span class="n">ac</span><span class="o">.</span><span class="n">inv_shift_val</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">3</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">inv_shift_val</span> <span class="o">&lt;</span> <span class="mi">6</span><span class="p">))</span> 
-          <span class="vi">@can_write_keys</span>
-        <span class="k">end</span>
-        <span class="k">def</span> <span class="nf">can_write_access_bits</span>
-          <span class="k">return</span> <span class="vi">@can_write_access_bits</span> <span class="k">unless</span> <span class="vi">@can_write_access_bits</span><span class="o">.</span><span class="n">nil?</span>
-          <span class="vi">@can_write_access_bits</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="n">bits</span><span class="o">[</span><span class="mi">2</span><span class="o">].</span><span class="n">b</span>
-          <span class="vi">@can_write_access_bits</span>
-        <span class="k">end</span>
-        <span class="k">def</span> <span class="nf">key_b_controls_write</span>
-          <span class="k">return</span> <span class="vi">@key_b_controls_write</span> <span class="k">unless</span> <span class="vi">@key_b_controls_write</span><span class="o">.</span><span class="n">nil?</span>
-          <span class="vi">@key_b_controls_write</span> <span class="o">=</span> <span class="o">!</span><span class="p">(</span><span class="n">can_read_key_b</span><span class="p">)</span>
-          <span class="vi">@key_b_controls_write</span>
-        <span class="k">end</span>
-        <span class="kp">attr_reader</span> <span class="ss">:ac</span>
-      <span class="k">end</span>
-      <span class="k">class</span> <span class="nc">ChunkBitRemap</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-        <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">,</span> <span class="n">bit_no</span><span class="p">)</span>
-          <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-          <span class="vi">@bit_no</span> <span class="o">=</span> <span class="n">bit_no</span>
-          <span class="n">_read</span>
-        <span class="k">end</span>
+<span class="w">        </span><span class="c1">##</span>
+<span class="w">        </span><span class="c1"># key A is required</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">can_read_key_b</span>
+<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="vi">@can_read_key_b</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@can_read_key_b</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">          </span><span class="vi">@can_read_key_b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ac</span><span class="o">.</span><span class="n">inv_shift_val</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">          </span><span class="vi">@can_read_key_b</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">can_write_keys</span>
+<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="vi">@can_write_keys</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@can_write_keys</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">          </span><span class="vi">@can_write_keys</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="p">((((</span><span class="n">ac</span><span class="o">.</span><span class="n">inv_shift_val</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">inv_shift_val</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">6</span><span class="p">))</span><span class="w"> </span>
+<span class="w">          </span><span class="vi">@can_write_keys</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">can_write_access_bits</span>
+<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="vi">@can_write_access_bits</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@can_write_access_bits</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">          </span><span class="vi">@can_write_access_bits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ac</span><span class="o">.</span><span class="n">bits</span><span class="o">[</span><span class="mi">2</span><span class="o">].</span><span class="n">b</span>
+<span class="w">          </span><span class="vi">@can_write_access_bits</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">key_b_controls_write</span>
+<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="vi">@key_b_controls_write</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@key_b_controls_write</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">          </span><span class="vi">@key_b_controls_write</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">!</span><span class="p">(</span><span class="n">can_read_key_b</span><span class="p">)</span>
+<span class="w">          </span><span class="vi">@key_b_controls_write</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">        </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:ac</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="k">class</span><span class="w"> </span><span class="nc">ChunkBitRemap</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="n">bit_no</span><span class="p">)</span>
+<span class="w">          </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">          </span><span class="vi">@bit_no</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bit_no</span>
+<span class="w">          </span><span class="n">_read</span>
+<span class="w">        </span><span class="k">end</span>
 
-        <span class="k">def</span> <span class="n">_read</span>
-          <span class="nb">self</span>
-        <span class="k">end</span>
-        <span class="k">def</span> <span class="nf">shift_value</span>
-          <span class="k">return</span> <span class="vi">@shift_value</span> <span class="k">unless</span> <span class="vi">@shift_value</span><span class="o">.</span><span class="n">nil?</span>
-          <span class="vi">@shift_value</span> <span class="o">=</span> <span class="p">(</span><span class="n">bit_no</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">?</span> <span class="o">-</span><span class="mi">1</span> <span class="p">:</span> <span class="mi">1</span><span class="p">)</span>
-          <span class="vi">@shift_value</span>
-        <span class="k">end</span>
-        <span class="k">def</span> <span class="nf">chunk_no</span>
-          <span class="k">return</span> <span class="vi">@chunk_no</span> <span class="k">unless</span> <span class="vi">@chunk_no</span><span class="o">.</span><span class="n">nil?</span>
-          <span class="vi">@chunk_no</span> <span class="o">=</span> <span class="p">(((</span><span class="n">inv_chunk_no</span> <span class="o">+</span> <span class="n">shift_value</span><span class="p">)</span> <span class="o">+</span> <span class="n">_parent</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">ac_count_of_chunks</span><span class="p">)</span> <span class="o">%</span> <span class="n">_parent</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">ac_count_of_chunks</span><span class="p">)</span>
-          <span class="vi">@chunk_no</span>
-        <span class="k">end</span>
-        <span class="k">def</span> <span class="nf">inv_chunk_no</span>
-          <span class="k">return</span> <span class="vi">@inv_chunk_no</span> <span class="k">unless</span> <span class="vi">@inv_chunk_no</span><span class="o">.</span><span class="n">nil?</span>
-          <span class="vi">@inv_chunk_no</span> <span class="o">=</span> <span class="p">(</span><span class="n">bit_no</span> <span class="o">+</span> <span class="n">shift_value</span><span class="p">)</span>
-          <span class="vi">@inv_chunk_no</span>
-        <span class="k">end</span>
-        <span class="kp">attr_reader</span> <span class="ss">:bit_no</span>
-      <span class="k">end</span>
-      <span class="k">class</span> <span class="nc">DataAc</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-        <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">,</span> <span class="n">ac</span><span class="p">)</span>
-          <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-          <span class="vi">@ac</span> <span class="o">=</span> <span class="n">ac</span>
-          <span class="n">_read</span>
-        <span class="k">end</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">          </span><span class="nb">self</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">shift_value</span>
+<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="vi">@shift_value</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@shift_value</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">          </span><span class="vi">@shift_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">bit_no</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">          </span><span class="vi">@shift_value</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">chunk_no</span>
+<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="vi">@chunk_no</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@chunk_no</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">          </span><span class="vi">@chunk_no</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(((</span><span class="n">inv_chunk_no</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">shift_value</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">_parent</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">ac_count_of_chunks</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">_parent</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">ac_count_of_chunks</span><span class="p">)</span>
+<span class="w">          </span><span class="vi">@chunk_no</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">inv_chunk_no</span>
+<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="vi">@inv_chunk_no</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@inv_chunk_no</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">          </span><span class="vi">@inv_chunk_no</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">bit_no</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">shift_value</span><span class="p">)</span>
+<span class="w">          </span><span class="vi">@inv_chunk_no</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">        </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:bit_no</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="k">class</span><span class="w"> </span><span class="nc">DataAc</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="n">ac</span><span class="p">)</span>
+<span class="w">          </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">          </span><span class="vi">@ac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ac</span>
+<span class="w">          </span><span class="n">_read</span>
+<span class="w">        </span><span class="k">end</span>
 
-        <span class="k">def</span> <span class="n">_read</span>
-          <span class="nb">self</span>
-        <span class="k">end</span>
-        <span class="k">def</span> <span class="nf">read_key_a_required</span>
-          <span class="k">return</span> <span class="vi">@read_key_a_required</span> <span class="k">unless</span> <span class="vi">@read_key_a_required</span><span class="o">.</span><span class="n">nil?</span>
-          <span class="vi">@read_key_a_required</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="n">val</span> <span class="o">&lt;=</span> <span class="mi">4</span>
-          <span class="vi">@read_key_a_required</span>
-        <span class="k">end</span>
-        <span class="k">def</span> <span class="nf">write_key_b_required</span>
-          <span class="k">return</span> <span class="vi">@write_key_b_required</span> <span class="k">unless</span> <span class="vi">@write_key_b_required</span><span class="o">.</span><span class="n">nil?</span>
-          <span class="vi">@write_key_b_required</span> <span class="o">=</span>  <span class="p">((</span> <span class="p">((</span><span class="o">!</span><span class="p">(</span><span class="n">read_key_a_required</span><span class="p">))</span> <span class="o">||</span> <span class="p">(</span><span class="n">read_key_b_required</span><span class="p">))</span> <span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">bits</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">b</span><span class="p">)))</span> 
-          <span class="vi">@write_key_b_required</span>
-        <span class="k">end</span>
-        <span class="k">def</span> <span class="nf">write_key_a_required</span>
-          <span class="k">return</span> <span class="vi">@write_key_a_required</span> <span class="k">unless</span> <span class="vi">@write_key_a_required</span><span class="o">.</span><span class="n">nil?</span>
-          <span class="vi">@write_key_a_required</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="n">val</span> <span class="o">==</span> <span class="mi">0</span>
-          <span class="vi">@write_key_a_required</span>
-        <span class="k">end</span>
-        <span class="k">def</span> <span class="nf">read_key_b_required</span>
-          <span class="k">return</span> <span class="vi">@read_key_b_required</span> <span class="k">unless</span> <span class="vi">@read_key_b_required</span><span class="o">.</span><span class="n">nil?</span>
-          <span class="vi">@read_key_b_required</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="n">val</span> <span class="o">&lt;=</span> <span class="mi">6</span>
-          <span class="vi">@read_key_b_required</span>
-        <span class="k">end</span>
-        <span class="k">def</span> <span class="nf">decrement_available</span>
-          <span class="k">return</span> <span class="vi">@decrement_available</span> <span class="k">unless</span> <span class="vi">@decrement_available</span><span class="o">.</span><span class="n">nil?</span>
-          <span class="vi">@decrement_available</span> <span class="o">=</span>  <span class="p">((</span> <span class="p">((</span><span class="n">ac</span><span class="o">.</span><span class="n">bits</span><span class="o">[</span><span class="mi">1</span><span class="o">].</span><span class="n">b</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">bits</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">b</span><span class="p">)))</span> <span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">bits</span><span class="o">[</span><span class="mi">2</span><span class="o">].</span><span class="n">b</span><span class="p">)))</span> 
-          <span class="vi">@decrement_available</span>
-        <span class="k">end</span>
-        <span class="k">def</span> <span class="nf">increment_available</span>
-          <span class="k">return</span> <span class="vi">@increment_available</span> <span class="k">unless</span> <span class="vi">@increment_available</span><span class="o">.</span><span class="n">nil?</span>
-          <span class="vi">@increment_available</span> <span class="o">=</span>  <span class="p">((</span> <span class="p">((</span><span class="o">!</span><span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">bits</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">b</span><span class="p">))</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">read_key_a_required</span><span class="p">))</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">read_key_b_required</span><span class="p">)))</span> <span class="p">)</span> <span class="o">||</span> <span class="p">(</span> <span class="p">((</span><span class="o">!</span><span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">bits</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">b</span><span class="p">))</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">read_key_a_required</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">read_key_b_required</span><span class="p">))</span> <span class="p">))</span> 
-          <span class="vi">@increment_available</span>
-        <span class="k">end</span>
-        <span class="kp">attr_reader</span> <span class="ss">:ac</span>
-      <span class="k">end</span>
-      <span class="k">class</span> <span class="nc">Ac</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-        <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
-          <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-          <span class="vi">@index</span> <span class="o">=</span> <span class="n">index</span>
-          <span class="n">_read</span>
-        <span class="k">end</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">          </span><span class="nb">self</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">read_key_a_required</span>
+<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="vi">@read_key_a_required</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@read_key_a_required</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">          </span><span class="vi">@read_key_a_required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ac</span><span class="o">.</span><span class="n">val</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">          </span><span class="vi">@read_key_a_required</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">write_key_b_required</span>
+<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="vi">@write_key_b_required</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@write_key_b_required</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">          </span><span class="vi">@write_key_b_required</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="p">((</span><span class="w"> </span><span class="p">((</span><span class="o">!</span><span class="p">(</span><span class="n">read_key_a_required</span><span class="p">))</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">read_key_b_required</span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">bits</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">b</span><span class="p">)))</span><span class="w"> </span>
+<span class="w">          </span><span class="vi">@write_key_b_required</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">write_key_a_required</span>
+<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="vi">@write_key_a_required</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@write_key_a_required</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">          </span><span class="vi">@write_key_a_required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ac</span><span class="o">.</span><span class="n">val</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">          </span><span class="vi">@write_key_a_required</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">read_key_b_required</span>
+<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="vi">@read_key_b_required</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@read_key_b_required</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">          </span><span class="vi">@read_key_b_required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ac</span><span class="o">.</span><span class="n">val</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">6</span>
+<span class="w">          </span><span class="vi">@read_key_b_required</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">decrement_available</span>
+<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="vi">@decrement_available</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@decrement_available</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">          </span><span class="vi">@decrement_available</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="p">((</span><span class="w"> </span><span class="p">((</span><span class="n">ac</span><span class="o">.</span><span class="n">bits</span><span class="o">[</span><span class="mi">1</span><span class="o">].</span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">bits</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">b</span><span class="p">)))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">bits</span><span class="o">[</span><span class="mi">2</span><span class="o">].</span><span class="n">b</span><span class="p">)))</span><span class="w"> </span>
+<span class="w">          </span><span class="vi">@decrement_available</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">increment_available</span>
+<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="vi">@increment_available</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@increment_available</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">          </span><span class="vi">@increment_available</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="p">((</span><span class="w"> </span><span class="p">((</span><span class="o">!</span><span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">bits</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">b</span><span class="p">))</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">read_key_a_required</span><span class="p">))</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">read_key_b_required</span><span class="p">)))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="o">!</span><span class="p">(</span><span class="n">ac</span><span class="o">.</span><span class="n">bits</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">b</span><span class="p">))</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">read_key_a_required</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">read_key_b_required</span><span class="p">))</span><span class="w"> </span><span class="p">))</span><span class="w"> </span>
+<span class="w">          </span><span class="vi">@increment_available</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">        </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:ac</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="k">class</span><span class="w"> </span><span class="nc">Ac</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="n">index</span><span class="p">)</span>
+<span class="w">          </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">          </span><span class="vi">@index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">index</span>
+<span class="w">          </span><span class="n">_read</span>
+<span class="w">        </span><span class="k">end</span>
 
-        <span class="k">def</span> <span class="n">_read</span>
-          <span class="nb">self</span>
-        <span class="k">end</span>
-        <span class="k">class</span> <span class="nc">AcBit</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-          <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">chunk</span><span class="p">)</span>
-            <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-            <span class="vi">@i</span> <span class="o">=</span> <span class="n">i</span>
-            <span class="vi">@chunk</span> <span class="o">=</span> <span class="n">chunk</span>
-            <span class="n">_read</span>
-          <span class="k">end</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">          </span><span class="nb">self</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">        </span><span class="k">class</span><span class="w"> </span><span class="nc">AcBit</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">          </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">chunk</span><span class="p">)</span>
+<span class="w">            </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">            </span><span class="vi">@i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span>
+<span class="w">            </span><span class="vi">@chunk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">chunk</span>
+<span class="w">            </span><span class="n">_read</span>
+<span class="w">          </span><span class="k">end</span>
 
-          <span class="k">def</span> <span class="n">_read</span>
-            <span class="nb">self</span>
-          <span class="k">end</span>
-          <span class="k">def</span> <span class="nf">n</span>
-            <span class="k">return</span> <span class="vi">@n</span> <span class="k">unless</span> <span class="vi">@n</span><span class="o">.</span><span class="n">nil?</span>
-            <span class="vi">@n</span> <span class="o">=</span> <span class="p">((</span><span class="n">chunk</span> <span class="o">&gt;&gt;</span> <span class="n">i</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="vi">@n</span>
-          <span class="k">end</span>
-          <span class="k">def</span> <span class="nf">b</span>
-            <span class="k">return</span> <span class="vi">@b</span> <span class="k">unless</span> <span class="vi">@b</span><span class="o">.</span><span class="n">nil?</span>
-            <span class="vi">@b</span> <span class="o">=</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span>
-            <span class="vi">@b</span>
-          <span class="k">end</span>
-          <span class="kp">attr_reader</span> <span class="ss">:i</span>
-          <span class="kp">attr_reader</span> <span class="ss">:chunk</span>
-        <span class="k">end</span>
-        <span class="k">def</span> <span class="nf">bits</span>
-          <span class="k">return</span> <span class="vi">@bits</span> <span class="k">unless</span> <span class="vi">@bits</span><span class="o">.</span><span class="n">nil?</span>
-          <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
-          <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-          <span class="vi">@bits</span> <span class="o">=</span> <span class="o">[]</span>
-          <span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">ac_bits</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-            <span class="vi">@bits</span> <span class="o">&lt;&lt;</span> <span class="no">AcBit</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">_parent</span><span class="o">.</span><span class="n">chunks</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="n">chunk</span><span class="p">)</span>
-          <span class="p">}</span>
-          <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-          <span class="vi">@bits</span>
-        <span class="k">end</span>
+<span class="w">          </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">            </span><span class="nb">self</span>
+<span class="w">          </span><span class="k">end</span>
+<span class="w">          </span><span class="k">def</span><span class="w"> </span><span class="nf">n</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="vi">@n</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@n</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">            </span><span class="vi">@n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">chunk</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">            </span><span class="vi">@n</span>
+<span class="w">          </span><span class="k">end</span>
+<span class="w">          </span><span class="k">def</span><span class="w"> </span><span class="nf">b</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="vi">@b</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@b</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">            </span><span class="vi">@b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">            </span><span class="vi">@b</span>
+<span class="w">          </span><span class="k">end</span>
+<span class="w">          </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:i</span>
+<span class="w">          </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:chunk</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">bits</span>
+<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="vi">@bits</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@bits</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">          </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+<span class="w">          </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="w">          </span><span class="vi">@bits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
+<span class="w">          </span><span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">ac_bits</span><span class="p">)</span><span class="o">.</span><span class="n">times</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">|</span><span class="n">i</span><span class="o">|</span>
+<span class="w">            </span><span class="vi">@bits</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="no">AcBit</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">,</span><span class="w"> </span><span class="n">index</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="o">.</span><span class="n">chunks</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="n">chunk</span><span class="p">)</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">          </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+<span class="w">          </span><span class="vi">@bits</span>
+<span class="w">        </span><span class="k">end</span>
 
-        <span class="c1">##</span>
-        <span class="c1"># c3 c2 c1</span>
-        <span class="k">def</span> <span class="nf">val</span>
-          <span class="k">return</span> <span class="vi">@val</span> <span class="k">unless</span> <span class="vi">@val</span><span class="o">.</span><span class="n">nil?</span>
-          <span class="vi">@val</span> <span class="o">=</span> <span class="p">(((</span><span class="n">bits</span><span class="o">[</span><span class="mi">2</span><span class="o">].</span><span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">bits</span><span class="o">[</span><span class="mi">1</span><span class="o">].</span><span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">))</span> <span class="o">|</span> <span class="n">bits</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">n</span><span class="p">)</span>
-          <span class="vi">@val</span>
-        <span class="k">end</span>
-        <span class="k">def</span> <span class="nf">inv_shift_val</span>
-          <span class="k">return</span> <span class="vi">@inv_shift_val</span> <span class="k">unless</span> <span class="vi">@inv_shift_val</span><span class="o">.</span><span class="n">nil?</span>
-          <span class="vi">@inv_shift_val</span> <span class="o">=</span> <span class="p">(((</span><span class="n">bits</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">bits</span><span class="o">[</span><span class="mi">1</span><span class="o">].</span><span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">))</span> <span class="o">|</span> <span class="n">bits</span><span class="o">[</span><span class="mi">2</span><span class="o">].</span><span class="n">n</span><span class="p">)</span>
-          <span class="vi">@inv_shift_val</span>
-        <span class="k">end</span>
-        <span class="kp">attr_reader</span> <span class="ss">:index</span>
-      <span class="k">end</span>
-      <span class="k">class</span> <span class="nc">ValidChunk</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-        <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">,</span> <span class="n">inv_chunk</span><span class="p">,</span> <span class="n">chunk</span><span class="p">)</span>
-          <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-          <span class="vi">@inv_chunk</span> <span class="o">=</span> <span class="n">inv_chunk</span>
-          <span class="vi">@chunk</span> <span class="o">=</span> <span class="n">chunk</span>
-          <span class="n">_read</span>
-        <span class="k">end</span>
+<span class="w">        </span><span class="c1">##</span>
+<span class="w">        </span><span class="c1"># c3 c2 c1</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">val</span>
+<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="vi">@val</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@val</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">          </span><span class="vi">@val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(((</span><span class="n">bits</span><span class="o">[</span><span class="mi">2</span><span class="o">].</span><span class="n">n</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="p">(</span><span class="n">bits</span><span class="o">[</span><span class="mi">1</span><span class="o">].</span><span class="n">n</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">bits</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">n</span><span class="p">)</span>
+<span class="w">          </span><span class="vi">@val</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">inv_shift_val</span>
+<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="vi">@inv_shift_val</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@inv_shift_val</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">          </span><span class="vi">@inv_shift_val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(((</span><span class="n">bits</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">n</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="p">(</span><span class="n">bits</span><span class="o">[</span><span class="mi">1</span><span class="o">].</span><span class="n">n</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">bits</span><span class="o">[</span><span class="mi">2</span><span class="o">].</span><span class="n">n</span><span class="p">)</span>
+<span class="w">          </span><span class="vi">@inv_shift_val</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">        </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:index</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="k">class</span><span class="w"> </span><span class="nc">ValidChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="n">inv_chunk</span><span class="p">,</span><span class="w"> </span><span class="n">chunk</span><span class="p">)</span>
+<span class="w">          </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">          </span><span class="vi">@inv_chunk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inv_chunk</span>
+<span class="w">          </span><span class="vi">@chunk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">chunk</span>
+<span class="w">          </span><span class="n">_read</span>
+<span class="w">        </span><span class="k">end</span>
 
-        <span class="k">def</span> <span class="n">_read</span>
-          <span class="nb">self</span>
-        <span class="k">end</span>
-        <span class="k">def</span> <span class="nf">valid</span>
-          <span class="k">return</span> <span class="vi">@valid</span> <span class="k">unless</span> <span class="vi">@valid</span><span class="o">.</span><span class="n">nil?</span>
-          <span class="vi">@valid</span> <span class="o">=</span> <span class="p">(</span><span class="n">inv_chunk</span> <span class="o">^</span> <span class="n">chunk</span><span class="p">)</span> <span class="o">==</span> <span class="mi">15</span>
-          <span class="vi">@valid</span>
-        <span class="k">end</span>
-        <span class="kp">attr_reader</span> <span class="ss">:inv_chunk</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">          </span><span class="nb">self</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">valid</span>
+<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="vi">@valid</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@valid</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">          </span><span class="vi">@valid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">inv_chunk</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="n">chunk</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">15</span>
+<span class="w">          </span><span class="vi">@valid</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">        </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:inv_chunk</span>
 
-        <span class="c1">##</span>
-        <span class="c1"># c3 c2 c1 c0</span>
-        <span class="kp">attr_reader</span> <span class="ss">:chunk</span>
-      <span class="k">end</span>
-      <span class="k">def</span> <span class="nf">data_acs</span>
-        <span class="k">return</span> <span class="vi">@data_acs</span> <span class="k">unless</span> <span class="vi">@data_acs</span><span class="o">.</span><span class="n">nil?</span>
-        <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
-        <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="vi">@data_acs</span> <span class="o">=</span> <span class="o">[]</span>
-        <span class="p">((</span><span class="n">_parent</span><span class="o">.</span><span class="n">acs_in_sector</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@data_acs</span> <span class="o">&lt;&lt;</span> <span class="no">DataAc</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">,</span> <span class="n">acs_raw</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">)</span>
-        <span class="p">}</span>
-        <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-        <span class="vi">@data_acs</span>
-      <span class="k">end</span>
-      <span class="k">def</span> <span class="nf">remaps</span>
-        <span class="k">return</span> <span class="vi">@remaps</span> <span class="k">unless</span> <span class="vi">@remaps</span><span class="o">.</span><span class="n">nil?</span>
-        <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
-        <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="vi">@remaps</span> <span class="o">=</span> <span class="o">[]</span>
-        <span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">ac_bits</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@remaps</span> <span class="o">&lt;&lt;</span> <span class="no">ChunkBitRemap</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-        <span class="p">}</span>
-        <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-        <span class="vi">@remaps</span>
-      <span class="k">end</span>
-      <span class="k">def</span> <span class="nf">acs_raw</span>
-        <span class="k">return</span> <span class="vi">@acs_raw</span> <span class="k">unless</span> <span class="vi">@acs_raw</span><span class="o">.</span><span class="n">nil?</span>
-        <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
-        <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="vi">@acs_raw</span> <span class="o">=</span> <span class="o">[]</span>
-        <span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">acs_in_sector</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@acs_raw</span> <span class="o">&lt;&lt;</span> <span class="no">Ac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-        <span class="p">}</span>
-        <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-        <span class="vi">@acs_raw</span>
-      <span class="k">end</span>
-      <span class="k">def</span> <span class="nf">trailer_ac</span>
-        <span class="k">return</span> <span class="vi">@trailer_ac</span> <span class="k">unless</span> <span class="vi">@trailer_ac</span><span class="o">.</span><span class="n">nil?</span>
-        <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
-        <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="vi">@trailer_ac</span> <span class="o">=</span> <span class="no">TrailerAc</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">,</span> <span class="n">acs_raw</span><span class="o">[</span><span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">acs_in_sector</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">]</span><span class="p">)</span>
-        <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-        <span class="vi">@trailer_ac</span>
-      <span class="k">end</span>
-      <span class="k">def</span> <span class="nf">chunks</span>
-        <span class="k">return</span> <span class="vi">@chunks</span> <span class="k">unless</span> <span class="vi">@chunks</span><span class="o">.</span><span class="n">nil?</span>
-        <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
-        <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="vi">@chunks</span> <span class="o">=</span> <span class="o">[]</span>
-        <span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">ac_bits</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-          <span class="vi">@chunks</span> <span class="o">&lt;&lt;</span> <span class="no">ValidChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">,</span> <span class="n">raw_chunks</span><span class="o">[</span><span class="n">remaps</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="n">inv_chunk_no</span><span class="o">]</span><span class="p">,</span> <span class="n">raw_chunks</span><span class="o">[</span><span class="n">remaps</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="n">chunk_no</span><span class="o">]</span><span class="p">)</span>
-        <span class="p">}</span>
-        <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-        <span class="vi">@chunks</span>
-      <span class="k">end</span>
-      <span class="kp">attr_reader</span> <span class="ss">:raw_chunks</span>
-    <span class="k">end</span>
-    <span class="k">def</span> <span class="nf">ac_bits</span>
-      <span class="k">return</span> <span class="vi">@ac_bits</span> <span class="k">unless</span> <span class="vi">@ac_bits</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@ac_bits</span> <span class="o">=</span> <span class="mi">3</span>
-      <span class="vi">@ac_bits</span>
-    <span class="k">end</span>
-    <span class="k">def</span> <span class="nf">acs_in_sector</span>
-      <span class="k">return</span> <span class="vi">@acs_in_sector</span> <span class="k">unless</span> <span class="vi">@acs_in_sector</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@acs_in_sector</span> <span class="o">=</span> <span class="mi">4</span>
-      <span class="vi">@acs_in_sector</span>
-    <span class="k">end</span>
-    <span class="k">def</span> <span class="nf">ac_count_of_chunks</span>
-      <span class="k">return</span> <span class="vi">@ac_count_of_chunks</span> <span class="k">unless</span> <span class="vi">@ac_count_of_chunks</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@ac_count_of_chunks</span> <span class="o">=</span> <span class="p">(</span><span class="n">ac_bits</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
-      <span class="vi">@ac_count_of_chunks</span>
-    <span class="k">end</span>
-    <span class="kp">attr_reader</span> <span class="ss">:key_a</span>
-    <span class="kp">attr_reader</span> <span class="ss">:access_bits</span>
-    <span class="kp">attr_reader</span> <span class="ss">:user_byte</span>
-    <span class="kp">attr_reader</span> <span class="ss">:key_b</span>
-    <span class="kp">attr_reader</span> <span class="ss">:_raw_access_bits</span>
-  <span class="k">end</span>
-  <span class="kp">attr_reader</span> <span class="ss">:sectors</span>
-  <span class="kp">attr_reader</span> <span class="ss">:_raw_sectors</span>
+<span class="w">        </span><span class="c1">##</span>
+<span class="w">        </span><span class="c1"># c3 c2 c1 c0</span>
+<span class="w">        </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:chunk</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">data_acs</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="vi">@data_acs</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@data_acs</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">        </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+<span class="w">        </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@data_acs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
+<span class="w">        </span><span class="p">((</span><span class="n">_parent</span><span class="o">.</span><span class="n">acs_in_sector</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">times</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">|</span><span class="n">i</span><span class="o">|</span>
+<span class="w">          </span><span class="vi">@data_acs</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="no">DataAc</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">,</span><span class="w"> </span><span class="n">acs_raw</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">)</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@data_acs</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">remaps</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="vi">@remaps</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@remaps</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">        </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+<span class="w">        </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@remaps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
+<span class="w">        </span><span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">ac_bits</span><span class="p">)</span><span class="o">.</span><span class="n">times</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">|</span><span class="n">i</span><span class="o">|</span>
+<span class="w">          </span><span class="vi">@remaps</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="no">ChunkBitRemap</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">)</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@remaps</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">acs_raw</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="vi">@acs_raw</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@acs_raw</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">        </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+<span class="w">        </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@acs_raw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
+<span class="w">        </span><span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">acs_in_sector</span><span class="p">)</span><span class="o">.</span><span class="n">times</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">|</span><span class="n">i</span><span class="o">|</span>
+<span class="w">          </span><span class="vi">@acs_raw</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="no">Ac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">)</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@acs_raw</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">trailer_ac</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="vi">@trailer_ac</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@trailer_ac</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">        </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+<span class="w">        </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@trailer_ac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">TrailerAc</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">,</span><span class="w"> </span><span class="n">acs_raw</span><span class="o">[</span><span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">acs_in_sector</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="o">]</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@trailer_ac</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">chunks</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="vi">@chunks</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@chunks</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">        </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+<span class="w">        </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@chunks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
+<span class="w">        </span><span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">ac_bits</span><span class="p">)</span><span class="o">.</span><span class="n">times</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">|</span><span class="n">i</span><span class="o">|</span>
+<span class="w">          </span><span class="vi">@chunks</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="no">ValidChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">,</span><span class="w"> </span><span class="n">raw_chunks</span><span class="o">[</span><span class="n">remaps</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="n">inv_chunk_no</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">raw_chunks</span><span class="o">[</span><span class="n">remaps</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="n">chunk_no</span><span class="o">]</span><span class="p">)</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@chunks</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:raw_chunks</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">ac_bits</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@ac_bits</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@ac_bits</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@ac_bits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">      </span><span class="vi">@ac_bits</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">acs_in_sector</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@acs_in_sector</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@acs_in_sector</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@acs_in_sector</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">      </span><span class="vi">@acs_in_sector</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">ac_count_of_chunks</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@ac_count_of_chunks</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@ac_count_of_chunks</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@ac_count_of_chunks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">ac_bits</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@ac_count_of_chunks</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:key_a</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:access_bits</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:user_byte</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:key_b</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:_raw_access_bits</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:sectors</span>
+<span class="w">  </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:_raw_sectors</span>
 <span class="k">end</span>
 </pre></div>
 

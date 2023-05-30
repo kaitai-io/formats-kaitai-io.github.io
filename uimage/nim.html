@@ -239,200 +239,200 @@ with sha1 and md5 checksums.</p>
         </div>
 
         <div class="row">
-            <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">kaitai_struct_nim_runtime</span>
-<span class="kn">import</span> <span class="n">options</span>
+            <div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="n">kaitai_struct_nim_runtime</span>
+<span class="kn">import</span><span class="w"> </span><span class="n">options</span>
 
 <span class="k">type</span>
-  <span class="n">Uimage</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">header</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Uimage_Uheader</span>
-    <span class="p">`</span><span class="n">data</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-  <span class="n">Uimage_UimageOs</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
-    <span class="n">invalid</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">openbsd</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">netbsd</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="n">freebsd</span> <span class="o">=</span> <span class="mi">3</span>
-    <span class="n">bsd4_4</span> <span class="o">=</span> <span class="mi">4</span>
-    <span class="n">linux</span> <span class="o">=</span> <span class="mi">5</span>
-    <span class="n">svr4</span> <span class="o">=</span> <span class="mi">6</span>
-    <span class="n">esix</span> <span class="o">=</span> <span class="mi">7</span>
-    <span class="n">solaris</span> <span class="o">=</span> <span class="mi">8</span>
-    <span class="n">irix</span> <span class="o">=</span> <span class="mi">9</span>
-    <span class="n">sco</span> <span class="o">=</span> <span class="mi">10</span>
-    <span class="n">dell</span> <span class="o">=</span> <span class="mi">11</span>
-    <span class="n">ncr</span> <span class="o">=</span> <span class="mi">12</span>
-    <span class="n">lynxos</span> <span class="o">=</span> <span class="mi">13</span>
-    <span class="n">vxworks</span> <span class="o">=</span> <span class="mi">14</span>
-    <span class="n">psos</span> <span class="o">=</span> <span class="mi">15</span>
-    <span class="n">qnx</span> <span class="o">=</span> <span class="mi">16</span>
-    <span class="n">u_boot</span> <span class="o">=</span> <span class="mi">17</span>
-    <span class="n">rtems</span> <span class="o">=</span> <span class="mi">18</span>
-    <span class="n">artos</span> <span class="o">=</span> <span class="mi">19</span>
-    <span class="n">unity</span> <span class="o">=</span> <span class="mi">20</span>
-    <span class="n">integrity</span> <span class="o">=</span> <span class="mi">21</span>
-    <span class="n">ose</span> <span class="o">=</span> <span class="mi">22</span>
-    <span class="n">plan9</span> <span class="o">=</span> <span class="mi">23</span>
-    <span class="n">openrtos</span> <span class="o">=</span> <span class="mi">24</span>
-    <span class="n">arm_trusted_firmware</span> <span class="o">=</span> <span class="mi">25</span>
-    <span class="n">tee</span> <span class="o">=</span> <span class="mi">26</span>
-    <span class="n">opensbi</span> <span class="o">=</span> <span class="mi">27</span>
-    <span class="n">efi</span> <span class="o">=</span> <span class="mi">28</span>
-  <span class="n">Uimage_UimageArch</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
-    <span class="n">invalid</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">arm</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="n">i386</span> <span class="o">=</span> <span class="mi">3</span>
-    <span class="n">ia64</span> <span class="o">=</span> <span class="mi">4</span>
-    <span class="n">mips</span> <span class="o">=</span> <span class="mi">5</span>
-    <span class="n">mips64</span> <span class="o">=</span> <span class="mi">6</span>
-    <span class="n">ppc</span> <span class="o">=</span> <span class="mi">7</span>
-    <span class="n">s390</span> <span class="o">=</span> <span class="mi">8</span>
-    <span class="n">sh</span> <span class="o">=</span> <span class="mi">9</span>
-    <span class="n">sparc</span> <span class="o">=</span> <span class="mi">10</span>
-    <span class="n">sparc64</span> <span class="o">=</span> <span class="mi">11</span>
-    <span class="n">m68k</span> <span class="o">=</span> <span class="mi">12</span>
-    <span class="n">nios</span> <span class="o">=</span> <span class="mi">13</span>
-    <span class="n">microblaze</span> <span class="o">=</span> <span class="mi">14</span>
-    <span class="n">nios2</span> <span class="o">=</span> <span class="mi">15</span>
-    <span class="n">blackfin</span> <span class="o">=</span> <span class="mi">16</span>
-    <span class="n">avr32</span> <span class="o">=</span> <span class="mi">17</span>
-    <span class="n">st200</span> <span class="o">=</span> <span class="mi">18</span>
-    <span class="n">sandbox</span> <span class="o">=</span> <span class="mi">19</span>
-    <span class="n">nds32</span> <span class="o">=</span> <span class="mi">20</span>
-    <span class="n">openrisc</span> <span class="o">=</span> <span class="mi">21</span>
-    <span class="n">arm64</span> <span class="o">=</span> <span class="mi">22</span>
-    <span class="n">arc</span> <span class="o">=</span> <span class="mi">23</span>
-    <span class="n">x86_64</span> <span class="o">=</span> <span class="mi">24</span>
-    <span class="n">xtensa</span> <span class="o">=</span> <span class="mi">25</span>
-    <span class="n">riscv</span> <span class="o">=</span> <span class="mi">26</span>
-  <span class="n">Uimage_UimageComp</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
-    <span class="n">none</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">gzip</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">bzip2</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="n">lzma</span> <span class="o">=</span> <span class="mi">3</span>
-    <span class="n">lzo</span> <span class="o">=</span> <span class="mi">4</span>
-    <span class="n">lz4</span> <span class="o">=</span> <span class="mi">5</span>
-    <span class="n">zstd</span> <span class="o">=</span> <span class="mi">6</span>
-  <span class="n">Uimage_UimageType</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
-    <span class="n">invalid</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">standalone</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">kernel</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="n">ramdisk</span> <span class="o">=</span> <span class="mi">3</span>
-    <span class="n">multi</span> <span class="o">=</span> <span class="mi">4</span>
-    <span class="n">firmware</span> <span class="o">=</span> <span class="mi">5</span>
-    <span class="n">script</span> <span class="o">=</span> <span class="mi">6</span>
-    <span class="n">filesystem</span> <span class="o">=</span> <span class="mi">7</span>
-    <span class="n">flatdt</span> <span class="o">=</span> <span class="mi">8</span>
-    <span class="n">kwbimage</span> <span class="o">=</span> <span class="mi">9</span>
-    <span class="n">imximage</span> <span class="o">=</span> <span class="mi">10</span>
-    <span class="n">ublimage</span> <span class="o">=</span> <span class="mi">11</span>
-    <span class="n">omapimage</span> <span class="o">=</span> <span class="mi">12</span>
-    <span class="n">aisimage</span> <span class="o">=</span> <span class="mi">13</span>
-    <span class="n">kernel_noload</span> <span class="o">=</span> <span class="mi">14</span>
-    <span class="n">pblimage</span> <span class="o">=</span> <span class="mi">15</span>
-    <span class="n">mxsimage</span> <span class="o">=</span> <span class="mi">16</span>
-    <span class="n">gpimage</span> <span class="o">=</span> <span class="mi">17</span>
-    <span class="n">atmelimage</span> <span class="o">=</span> <span class="mi">18</span>
-    <span class="n">socfpgaimage</span> <span class="o">=</span> <span class="mi">19</span>
-    <span class="n">x86_setup</span> <span class="o">=</span> <span class="mi">20</span>
-    <span class="n">lpc32xximage</span> <span class="o">=</span> <span class="mi">21</span>
-    <span class="n">loadable</span> <span class="o">=</span> <span class="mi">22</span>
-    <span class="n">rkimage</span> <span class="o">=</span> <span class="mi">23</span>
-    <span class="n">rksd</span> <span class="o">=</span> <span class="mi">24</span>
-    <span class="n">rkspi</span> <span class="o">=</span> <span class="mi">25</span>
-    <span class="n">zynqimage</span> <span class="o">=</span> <span class="mi">26</span>
-    <span class="n">zynqmpimage</span> <span class="o">=</span> <span class="mi">27</span>
-    <span class="n">zynqmpbif</span> <span class="o">=</span> <span class="mi">28</span>
-    <span class="n">fpga</span> <span class="o">=</span> <span class="mi">29</span>
-    <span class="n">vybridimage</span> <span class="o">=</span> <span class="mi">30</span>
-    <span class="n">tee</span> <span class="o">=</span> <span class="mi">31</span>
-    <span class="n">firmware_ivt</span> <span class="o">=</span> <span class="mi">32</span>
-    <span class="n">pmmc</span> <span class="o">=</span> <span class="mi">33</span>
-    <span class="n">stm32image</span> <span class="o">=</span> <span class="mi">34</span>
-    <span class="n">socfpgaimage_v1</span> <span class="o">=</span> <span class="mi">35</span>
-    <span class="n">mtkimage</span> <span class="o">=</span> <span class="mi">36</span>
-    <span class="n">imx8mimage</span> <span class="o">=</span> <span class="mi">37</span>
-    <span class="n">imx8image</span> <span class="o">=</span> <span class="mi">38</span>
-    <span class="n">copro</span> <span class="o">=</span> <span class="mi">39</span>
-    <span class="n">sunxi_egon</span> <span class="o">=</span> <span class="mi">40</span>
-  <span class="n">Uimage_Uheader</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">headerCrc</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">timestamp</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">lenImage</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">loadAddress</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">entryAddress</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">dataCrc</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">osType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Uimage_UimageOs</span>
-    <span class="p">`</span><span class="n">architecture</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Uimage_UimageArch</span>
-    <span class="p">`</span><span class="n">imageType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Uimage_UimageType</span>
-    <span class="p">`</span><span class="n">compressionType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Uimage_UimageComp</span>
-    <span class="p">`</span><span class="n">name</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Uimage</span>
+<span class="w">  </span><span class="n">Uimage</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">header</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Uimage_Uheader</span>
+<span class="w">    </span><span class="p">`</span><span class="n">data</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">  </span><span class="n">Uimage_UimageOs</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">enum</span>
+<span class="w">    </span><span class="n">invalid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="n">openbsd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="n">netbsd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">    </span><span class="n">freebsd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">    </span><span class="n">bsd4_4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">    </span><span class="n">linux</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
+<span class="w">    </span><span class="n">svr4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span>
+<span class="w">    </span><span class="n">esix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span>
+<span class="w">    </span><span class="n">solaris</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span>
+<span class="w">    </span><span class="n">irix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">9</span>
+<span class="w">    </span><span class="n">sco</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span>
+<span class="w">    </span><span class="n">dell</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">11</span>
+<span class="w">    </span><span class="n">ncr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span>
+<span class="w">    </span><span class="n">lynxos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">13</span>
+<span class="w">    </span><span class="n">vxworks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">14</span>
+<span class="w">    </span><span class="n">psos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15</span>
+<span class="w">    </span><span class="n">qnx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">16</span>
+<span class="w">    </span><span class="n">u_boot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">17</span>
+<span class="w">    </span><span class="n">rtems</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">18</span>
+<span class="w">    </span><span class="n">artos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">19</span>
+<span class="w">    </span><span class="n">unity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span>
+<span class="w">    </span><span class="n">integrity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">21</span>
+<span class="w">    </span><span class="n">ose</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">22</span>
+<span class="w">    </span><span class="n">plan9</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">23</span>
+<span class="w">    </span><span class="n">openrtos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">24</span>
+<span class="w">    </span><span class="n">arm_trusted_firmware</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">25</span>
+<span class="w">    </span><span class="n">tee</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">26</span>
+<span class="w">    </span><span class="n">opensbi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">27</span>
+<span class="w">    </span><span class="n">efi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">28</span>
+<span class="w">  </span><span class="n">Uimage_UimageArch</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">enum</span>
+<span class="w">    </span><span class="n">invalid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="n">alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="n">arm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">    </span><span class="n">i386</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">    </span><span class="n">ia64</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">    </span><span class="n">mips</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
+<span class="w">    </span><span class="n">mips64</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span>
+<span class="w">    </span><span class="n">ppc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span>
+<span class="w">    </span><span class="n">s390</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span>
+<span class="w">    </span><span class="n">sh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">9</span>
+<span class="w">    </span><span class="n">sparc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span>
+<span class="w">    </span><span class="n">sparc64</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">11</span>
+<span class="w">    </span><span class="n">m68k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span>
+<span class="w">    </span><span class="n">nios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">13</span>
+<span class="w">    </span><span class="n">microblaze</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">14</span>
+<span class="w">    </span><span class="n">nios2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15</span>
+<span class="w">    </span><span class="n">blackfin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">16</span>
+<span class="w">    </span><span class="n">avr32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">17</span>
+<span class="w">    </span><span class="n">st200</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">18</span>
+<span class="w">    </span><span class="n">sandbox</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">19</span>
+<span class="w">    </span><span class="n">nds32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span>
+<span class="w">    </span><span class="n">openrisc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">21</span>
+<span class="w">    </span><span class="n">arm64</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">22</span>
+<span class="w">    </span><span class="n">arc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">23</span>
+<span class="w">    </span><span class="n">x86_64</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">24</span>
+<span class="w">    </span><span class="n">xtensa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">25</span>
+<span class="w">    </span><span class="n">riscv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">26</span>
+<span class="w">  </span><span class="n">Uimage_UimageComp</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">enum</span>
+<span class="w">    </span><span class="n">none</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="n">gzip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="n">bzip2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">    </span><span class="n">lzma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">    </span><span class="n">lzo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">    </span><span class="n">lz4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
+<span class="w">    </span><span class="n">zstd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span>
+<span class="w">  </span><span class="n">Uimage_UimageType</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">enum</span>
+<span class="w">    </span><span class="n">invalid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="n">standalone</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="n">kernel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">    </span><span class="n">ramdisk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">    </span><span class="n">multi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">    </span><span class="n">firmware</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
+<span class="w">    </span><span class="n">script</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span>
+<span class="w">    </span><span class="n">filesystem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span>
+<span class="w">    </span><span class="n">flatdt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span>
+<span class="w">    </span><span class="n">kwbimage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">9</span>
+<span class="w">    </span><span class="n">imximage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span>
+<span class="w">    </span><span class="n">ublimage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">11</span>
+<span class="w">    </span><span class="n">omapimage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span>
+<span class="w">    </span><span class="n">aisimage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">13</span>
+<span class="w">    </span><span class="n">kernel_noload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">14</span>
+<span class="w">    </span><span class="n">pblimage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15</span>
+<span class="w">    </span><span class="n">mxsimage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">16</span>
+<span class="w">    </span><span class="n">gpimage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">17</span>
+<span class="w">    </span><span class="n">atmelimage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">18</span>
+<span class="w">    </span><span class="n">socfpgaimage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">19</span>
+<span class="w">    </span><span class="n">x86_setup</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span>
+<span class="w">    </span><span class="n">lpc32xximage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">21</span>
+<span class="w">    </span><span class="n">loadable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">22</span>
+<span class="w">    </span><span class="n">rkimage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">23</span>
+<span class="w">    </span><span class="n">rksd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">24</span>
+<span class="w">    </span><span class="n">rkspi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">25</span>
+<span class="w">    </span><span class="n">zynqimage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">26</span>
+<span class="w">    </span><span class="n">zynqmpimage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">27</span>
+<span class="w">    </span><span class="n">zynqmpbif</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">28</span>
+<span class="w">    </span><span class="n">fpga</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">29</span>
+<span class="w">    </span><span class="n">vybridimage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">30</span>
+<span class="w">    </span><span class="n">tee</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">31</span>
+<span class="w">    </span><span class="n">firmware_ivt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">32</span>
+<span class="w">    </span><span class="n">pmmc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">33</span>
+<span class="w">    </span><span class="n">stm32image</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">34</span>
+<span class="w">    </span><span class="n">socfpgaimage_v1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">35</span>
+<span class="w">    </span><span class="n">mtkimage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">36</span>
+<span class="w">    </span><span class="n">imx8mimage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">37</span>
+<span class="w">    </span><span class="n">imx8image</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">38</span>
+<span class="w">    </span><span class="n">copro</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">39</span>
+<span class="w">    </span><span class="n">sunxi_egon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">40</span>
+<span class="w">  </span><span class="n">Uimage_Uheader</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">headerCrc</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">timestamp</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lenImage</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">loadAddress</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">entryAddress</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">dataCrc</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">osType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Uimage_UimageOs</span>
+<span class="w">    </span><span class="p">`</span><span class="n">architecture</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Uimage_UimageArch</span>
+<span class="w">    </span><span class="p">`</span><span class="n">imageType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Uimage_UimageType</span>
+<span class="w">    </span><span class="p">`</span><span class="n">compressionType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Uimage_UimageComp</span>
+<span class="w">    </span><span class="p">`</span><span class="n">name</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">string</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Uimage</span>
 
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Uimage], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Uimage</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Uimage_Uheader], io: KaitaiStream, root: KaitaiStruct, parent: Uimage): Uimage_Uheader</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Uimage], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Uimage</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Uimage_Uheader], io: KaitaiStream, root: KaitaiStruct, parent: Uimage): Uimage_Uheader</span>
 
 
 
 <span class="sd">##[</span>
-<span class="n">The</span> <span class="n">new</span> <span class="n">uImage</span> <span class="n">format</span> <span class="n">allows</span> <span class="n">more</span> <span class="n">flexibility</span> <span class="ow">in</span> <span class="n">handling</span> <span class="n">images</span> <span class="k">of</span> <span class="n">various</span>
-<span class="n">types</span> <span class="p">(</span><span class="n">kernel</span><span class="p">,</span> <span class="n">ramdisk</span><span class="p">,</span> <span class="n">etc</span><span class="p">.),</span> <span class="n">it</span> <span class="n">also</span> <span class="n">enhances</span> <span class="n">integrity</span> <span class="n">protection</span> <span class="k">of</span> <span class="n">images</span>
-<span class="n">with</span> <span class="n">sha1</span> <span class="ow">and</span> <span class="n">md5</span> <span class="n">checksums</span><span class="p">.</span>
+<span class="sd">The new uImage format allows more flexibility in handling images of various</span>
+<span class="sd">types (kernel, ramdisk, etc.), it also enhances integrity protection of images</span>
+<span class="sd">with sha1 and md5 checksums.</span>
 
-<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://source.denx.de/u-boot/u-boot/-/raw/e4dba4ba6f/include/image.h&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
-<span class="o">]</span><span class="sd">##</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Uimage], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Uimage =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Uimage</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Uimage</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Uimage</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="sd">@see &lt;a href=&quot;https://source.denx.de/u-boot/u-boot/-/raw/e4dba4ba6f/include/image.h&quot;&gt;Source&lt;/a&gt;</span>
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Uimage], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Uimage =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Uimage</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Uimage</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Uimage</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
-  <span class="k">let</span> <span class="n">headerExpr</span> <span class="o">=</span> <span class="n">Uimage_Uheader</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">headerExpr</span>
-  <span class="k">let</span> <span class="n">dataExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">lenImage</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">dataExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">headerExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Uimage_Uheader</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">headerExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">dataExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">lenImage</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dataExpr</span>
 
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Uimage], filename: string): Uimage =</span>
-  <span class="n">Uimage</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Uimage], filename: string): Uimage =</span>
+<span class="w">  </span><span class="n">Uimage</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Uimage_Uheader], io: KaitaiStream, root: KaitaiStruct, parent: Uimage): Uimage_Uheader =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Uimage_Uheader</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Uimage</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Uimage</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Uimage_Uheader], io: KaitaiStream, root: KaitaiStruct, parent: Uimage): Uimage_Uheader =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Uimage_Uheader</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Uimage</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Uimage</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
-  <span class="k">let</span> <span class="n">magicExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">magicExpr</span>
-  <span class="k">let</span> <span class="n">headerCrcExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">headerCrc</span> <span class="o">=</span> <span class="n">headerCrcExpr</span>
-  <span class="k">let</span> <span class="n">timestampExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">timestampExpr</span>
-  <span class="k">let</span> <span class="n">lenImageExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">lenImage</span> <span class="o">=</span> <span class="n">lenImageExpr</span>
-  <span class="k">let</span> <span class="n">loadAddressExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">loadAddress</span> <span class="o">=</span> <span class="n">loadAddressExpr</span>
-  <span class="k">let</span> <span class="n">entryAddressExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">entryAddress</span> <span class="o">=</span> <span class="n">entryAddressExpr</span>
-  <span class="k">let</span> <span class="n">dataCrcExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">dataCrc</span> <span class="o">=</span> <span class="n">dataCrcExpr</span>
-  <span class="k">let</span> <span class="n">osTypeExpr</span> <span class="o">=</span> <span class="n">Uimage_UimageOs</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">osType</span> <span class="o">=</span> <span class="n">osTypeExpr</span>
-  <span class="k">let</span> <span class="n">architectureExpr</span> <span class="o">=</span> <span class="n">Uimage_UimageArch</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">architecture</span> <span class="o">=</span> <span class="n">architectureExpr</span>
-  <span class="k">let</span> <span class="n">imageTypeExpr</span> <span class="o">=</span> <span class="n">Uimage_UimageType</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">imageType</span> <span class="o">=</span> <span class="n">imageTypeExpr</span>
-  <span class="k">let</span> <span class="n">compressionTypeExpr</span> <span class="o">=</span> <span class="n">Uimage_UimageComp</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">compressionType</span> <span class="o">=</span> <span class="n">compressionTypeExpr</span>
-  <span class="k">let</span> <span class="n">nameExpr</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">32</span><span class="p">)).</span><span class="n">bytesTerminate</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">),</span> <span class="s">&quot;UTF-8&quot;</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">nameExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">magicExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">magicExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">headerCrcExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">headerCrc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">headerCrcExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">timestampExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">timestamp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">timestampExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenImageExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenImage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenImageExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">loadAddressExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">loadAddress</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">loadAddressExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">entryAddressExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">entryAddress</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">entryAddressExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">dataCrcExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">dataCrc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dataCrcExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">osTypeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Uimage_UimageOs</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">osType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">osTypeExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">architectureExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Uimage_UimageArch</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">architecture</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">architectureExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">imageTypeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Uimage_UimageType</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">imageType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">imageTypeExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">compressionTypeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Uimage_UimageComp</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">compressionType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">compressionTypeExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">nameExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">32</span><span class="p">)).</span><span class="n">bytesTerminate</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kp">false</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;UTF-8&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nameExpr</span>
 
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Uimage_Uheader], filename: string): Uimage_Uheader =</span>
-  <span class="n">Uimage_Uheader</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Uimage_Uheader], filename: string): Uimage_Uheader =</span>
+<span class="w">  </span><span class="n">Uimage_Uheader</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 </pre></div>
 
         </div>

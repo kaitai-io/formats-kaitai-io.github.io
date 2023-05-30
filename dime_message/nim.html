@@ -273,262 +273,262 @@ SOAP messages, using standard transport protocols like HTTP.</p>
         </div>
 
         <div class="row">
-            <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">kaitai_struct_nim_runtime</span>
-<span class="kn">import</span> <span class="n">options</span>
+            <div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="n">kaitai_struct_nim_runtime</span>
+<span class="kn">import</span><span class="w"> </span><span class="n">options</span>
 
 <span class="k">type</span>
-  <span class="n">DimeMessage</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">records</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">DimeMessage_Record</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
-  <span class="n">DimeMessage_TypeFormats</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
-    <span class="n">unchanged</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">media_type</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">absolute_uri</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="n">unknown</span> <span class="o">=</span> <span class="mi">3</span>
-    <span class="n">none</span> <span class="o">=</span> <span class="mi">4</span>
-  <span class="n">DimeMessage_Padding</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">boundaryPadding</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DimeMessage_Record</span>
-  <span class="n">DimeMessage_OptionField</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">optionElements</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">DimeMessage_OptionElement</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DimeMessage_Record</span>
-  <span class="n">DimeMessage_OptionElement</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">elementFormat</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
-    <span class="p">`</span><span class="n">lenElement</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
-    <span class="p">`</span><span class="n">elementData</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DimeMessage_OptionField</span>
-  <span class="n">DimeMessage_Record</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">version</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
-    <span class="p">`</span><span class="n">isFirstRecord</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">isLastRecord</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">isChunkRecord</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
-    <span class="p">`</span><span class="n">typeFormat</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DimeMessage_TypeFormats</span>
-    <span class="p">`</span><span class="n">reserved</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
-    <span class="p">`</span><span class="n">lenOptions</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
-    <span class="p">`</span><span class="n">lenId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
-    <span class="p">`</span><span class="n">lenType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
-    <span class="p">`</span><span class="n">lenData</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">options</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DimeMessage_OptionField</span>
-    <span class="p">`</span><span class="n">optionsPadding</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DimeMessage_Padding</span>
-    <span class="p">`</span><span class="n">id</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
-    <span class="p">`</span><span class="n">idPadding</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DimeMessage_Padding</span>
-    <span class="p">`</span><span class="k">type</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
-    <span class="p">`</span><span class="n">typePadding</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DimeMessage_Padding</span>
-    <span class="p">`</span><span class="n">data</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">dataPadding</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DimeMessage_Padding</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">DimeMessage</span>
-    <span class="p">`</span><span class="n">rawOptions</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">  </span><span class="n">DimeMessage</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">records</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">DimeMessage_Record</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">  </span><span class="n">DimeMessage_TypeFormats</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">enum</span>
+<span class="w">    </span><span class="n">unchanged</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="n">media_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="n">absolute_uri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">    </span><span class="n">unknown</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">    </span><span class="n">none</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">  </span><span class="n">DimeMessage_Padding</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">boundaryPadding</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">DimeMessage_Record</span>
+<span class="w">  </span><span class="n">DimeMessage_OptionField</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">optionElements</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">DimeMessage_OptionElement</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">DimeMessage_Record</span>
+<span class="w">  </span><span class="n">DimeMessage_OptionElement</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">elementFormat</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lenElement</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">elementData</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">DimeMessage_OptionField</span>
+<span class="w">  </span><span class="n">DimeMessage_Record</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">version</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint64</span>
+<span class="w">    </span><span class="p">`</span><span class="n">isFirstRecord</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">isLastRecord</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">isChunkRecord</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">typeFormat</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">DimeMessage_TypeFormats</span>
+<span class="w">    </span><span class="p">`</span><span class="n">reserved</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint64</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lenOptions</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lenId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lenType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lenData</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">options</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">DimeMessage_OptionField</span>
+<span class="w">    </span><span class="p">`</span><span class="n">optionsPadding</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">DimeMessage_Padding</span>
+<span class="w">    </span><span class="p">`</span><span class="n">id</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">string</span>
+<span class="w">    </span><span class="p">`</span><span class="n">idPadding</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">DimeMessage_Padding</span>
+<span class="w">    </span><span class="p">`</span><span class="k">type</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">string</span>
+<span class="w">    </span><span class="p">`</span><span class="n">typePadding</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">DimeMessage_Padding</span>
+<span class="w">    </span><span class="p">`</span><span class="n">data</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">dataPadding</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">DimeMessage_Padding</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">DimeMessage</span>
+<span class="w">    </span><span class="p">`</span><span class="n">rawOptions</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
 
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DimeMessage], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): DimeMessage</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DimeMessage_Padding], io: KaitaiStream, root: KaitaiStruct, parent: DimeMessage_Record): DimeMessage_Padding</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DimeMessage_OptionField], io: KaitaiStream, root: KaitaiStruct, parent: DimeMessage_Record): DimeMessage_OptionField</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DimeMessage_OptionElement], io: KaitaiStream, root: KaitaiStruct, parent: DimeMessage_OptionField): DimeMessage_OptionElement</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DimeMessage_Record], io: KaitaiStream, root: KaitaiStruct, parent: DimeMessage): DimeMessage_Record</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DimeMessage], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): DimeMessage</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DimeMessage_Padding], io: KaitaiStream, root: KaitaiStruct, parent: DimeMessage_Record): DimeMessage_Padding</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DimeMessage_OptionField], io: KaitaiStream, root: KaitaiStruct, parent: DimeMessage_Record): DimeMessage_OptionField</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DimeMessage_OptionElement], io: KaitaiStream, root: KaitaiStruct, parent: DimeMessage_OptionField): DimeMessage_OptionElement</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DimeMessage_Record], io: KaitaiStream, root: KaitaiStruct, parent: DimeMessage): DimeMessage_Record</span>
 
-
-
-<span class="sd">##[</span>
-<span class="n">Direct</span> <span class="n">Internet</span> <span class="n">Message</span> <span class="n">Encapsulation</span> <span class="p">(</span><span class="n">DIME</span><span class="p">)</span>
-<span class="ow">is</span> <span class="n">an</span> <span class="n">old</span> <span class="n">Microsoft</span> <span class="n">specification</span> <span class="k">for</span> <span class="n">sending</span> <span class="ow">and</span> <span class="n">receiving</span>
-<span class="n">SOAP</span> <span class="n">messages</span> <span class="n">along</span> <span class="n">with</span> <span class="n">additional</span> <span class="n">attachments</span><span class="p">,</span>
-<span class="n">like</span> <span class="n">binary</span> <span class="n">files</span><span class="p">,</span> <span class="n">XML</span> <span class="n">fragments</span><span class="p">,</span> <span class="ow">and</span> <span class="n">even</span> <span class="n">other</span>
-<span class="n">SOAP</span> <span class="n">messages</span><span class="p">,</span> <span class="k">using</span> <span class="n">standard</span> <span class="n">transport</span> <span class="n">protocols</span> <span class="n">like</span> <span class="n">HTTP</span><span class="p">.</span>
-
-<span class="n">Sample</span> <span class="n">file</span><span class="p">:</span> <span class="p">`</span><span class="n">curl</span> <span class="o">-</span><span class="n">LO</span>
-<span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">kaitai</span><span class="o">-</span><span class="n">io</span><span class="o">/</span><span class="n">kaitai_struct_formats</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="mi">5894723</span><span class="o">/</span><span class="n">scanner_withoptions</span><span class="p">.</span><span class="n">dump</span><span class="p">.</span><span class="n">gz</span>
-<span class="o">&amp;&amp;</span> <span class="n">gunzip</span> <span class="n">scanner_withoptions</span><span class="p">.</span><span class="n">dump</span><span class="p">.</span><span class="n">gz</span><span class="p">`</span>
-
-<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://datatracker.ietf.org/doc/html/draft-nielsen-dime-02&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
-<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://learn.microsoft.com/en-us/archive/msdn-magazine/2002/december/sending-files-attachments-and-soap-messages-via-dime&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
-<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;http://imrannazar.com/Parsing-the-DIME-Message-Format&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
-<span class="o">]</span><span class="sd">##</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DimeMessage], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): DimeMessage =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">DimeMessage</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">DimeMessage</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">DimeMessage</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
-
-  <span class="k">block</span><span class="p">:</span>
-    <span class="kd">var</span> <span class="n">i</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="k">while</span> <span class="ow">not</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">:</span>
-      <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">DimeMessage_Record</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">records</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
-      <span class="n">inc</span> <span class="n">i</span>
-
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DimeMessage], filename: string): DimeMessage =</span>
-  <span class="n">DimeMessage</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
 
 
 <span class="sd">##[</span>
-<span class="n">padding</span> <span class="n">to</span> <span class="n">the</span> <span class="n">next</span> <span class="mi">4</span><span class="o">-</span><span class="n">byte</span> <span class="n">boundary</span>
-<span class="o">]</span><span class="sd">##</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DimeMessage_Padding], io: KaitaiStream, root: KaitaiStruct, parent: DimeMessage_Record): DimeMessage_Padding =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">DimeMessage_Padding</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">DimeMessage</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">DimeMessage</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="sd">Direct Internet Message Encapsulation (DIME)</span>
+<span class="sd">is an old Microsoft specification for sending and receiving</span>
+<span class="sd">SOAP messages along with additional attachments,</span>
+<span class="sd">like binary files, XML fragments, and even other</span>
+<span class="sd">SOAP messages, using standard transport protocols like HTTP.</span>
 
-  <span class="k">let</span> <span class="n">boundaryPaddingExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="o">-</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">)</span> <span class="o">%%%</span> <span class="mi">4</span><span class="p">)))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">boundaryPadding</span> <span class="o">=</span> <span class="n">boundaryPaddingExpr</span>
+<span class="sd">Sample file: `curl -LO</span>
+<span class="sd">https://github.com/kaitai-io/kaitai_struct_formats/files/5894723/scanner_withoptions.dump.gz</span>
+<span class="sd">&amp;&amp; gunzip scanner_withoptions.dump.gz`</span>
 
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DimeMessage_Padding], filename: string): DimeMessage_Padding =</span>
-  <span class="n">DimeMessage_Padding</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="sd">@see &lt;a href=&quot;https://datatracker.ietf.org/doc/html/draft-nielsen-dime-02&quot;&gt;Source&lt;/a&gt;</span>
+<span class="sd">@see &lt;a href=&quot;https://learn.microsoft.com/en-us/archive/msdn-magazine/2002/december/sending-files-attachments-and-soap-messages-via-dime&quot;&gt;Source&lt;/a&gt;</span>
+<span class="sd">@see &lt;a href=&quot;http://imrannazar.com/Parsing-the-DIME-Message-Format&quot;&gt;Source&lt;/a&gt;</span>
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DimeMessage], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): DimeMessage =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">DimeMessage</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">DimeMessage</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">DimeMessage</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
+<span class="w">  </span><span class="k">block</span><span class="p">:</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="n">i</span><span class="p">:</span><span class="w"> </span><span class="nb">int</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DimeMessage_Record</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">records</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+<span class="w">      </span><span class="n">inc</span><span class="w"> </span><span class="n">i</span>
 
-<span class="sd">##[</span>
-<span class="n">the</span> <span class="n">option</span> <span class="n">field</span> <span class="k">of</span> <span class="n">the</span> <span class="n">record</span>
-<span class="o">]</span><span class="sd">##</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DimeMessage_OptionField], io: KaitaiStream, root: KaitaiStruct, parent: DimeMessage_Record): DimeMessage_OptionField =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">DimeMessage_OptionField</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">DimeMessage</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">DimeMessage</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
-
-  <span class="k">block</span><span class="p">:</span>
-    <span class="kd">var</span> <span class="n">i</span><span class="p">:</span> <span class="kt">int</span>
-    <span class="k">while</span> <span class="ow">not</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">:</span>
-      <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">DimeMessage_OptionElement</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">optionElements</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
-      <span class="n">inc</span> <span class="n">i</span>
-
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DimeMessage_OptionField], filename: string): DimeMessage_OptionField =</span>
-  <span class="n">DimeMessage_OptionField</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DimeMessage], filename: string): DimeMessage =</span>
+<span class="w">  </span><span class="n">DimeMessage</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
 
 <span class="sd">##[</span>
-<span class="n">one</span> <span class="n">element</span> <span class="k">of</span> <span class="n">the</span> <span class="n">option</span> <span class="n">field</span>
-<span class="o">]</span><span class="sd">##</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DimeMessage_OptionElement], io: KaitaiStream, root: KaitaiStruct, parent: DimeMessage_OptionField): DimeMessage_OptionElement =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">DimeMessage_OptionElement</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">DimeMessage</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">DimeMessage</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="sd">padding to the next 4-byte boundary</span>
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DimeMessage_Padding], io: KaitaiStream, root: KaitaiStruct, parent: DimeMessage_Record): DimeMessage_Padding =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">DimeMessage_Padding</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">DimeMessage</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">DimeMessage</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
-  <span class="k">let</span> <span class="n">elementFormatExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">elementFormat</span> <span class="o">=</span> <span class="n">elementFormatExpr</span>
-  <span class="k">let</span> <span class="n">lenElementExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">lenElement</span> <span class="o">=</span> <span class="n">lenElementExpr</span>
-  <span class="k">let</span> <span class="n">elementDataExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenElement</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">elementData</span> <span class="o">=</span> <span class="n">elementDataExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">boundaryPaddingExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="o">-</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">)</span><span class="w"> </span><span class="o">%%%</span><span class="w"> </span><span class="mi">4</span><span class="p">)))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">boundaryPadding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">boundaryPaddingExpr</span>
 
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DimeMessage_OptionElement], filename: string): DimeMessage_OptionElement =</span>
-  <span class="n">DimeMessage_OptionElement</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DimeMessage_Padding], filename: string): DimeMessage_Padding =</span>
+<span class="w">  </span><span class="n">DimeMessage_Padding</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
 
 <span class="sd">##[</span>
-<span class="n">each</span> <span class="n">individual</span> <span class="n">fragment</span> <span class="k">of</span> <span class="n">the</span> <span class="n">message</span>
-<span class="o">]</span><span class="sd">##</span>
-<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DimeMessage_Record], io: KaitaiStream, root: KaitaiStruct, parent: DimeMessage): DimeMessage_Record =</span>
-  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
-  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">DimeMessage_Record</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">DimeMessage</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">DimeMessage</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="sd">the option field of the record</span>
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DimeMessage_OptionField], io: KaitaiStream, root: KaitaiStruct, parent: DimeMessage_Record): DimeMessage_OptionField =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">DimeMessage_OptionField</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">DimeMessage</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">DimeMessage</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
+
+<span class="w">  </span><span class="k">block</span><span class="p">:</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="n">i</span><span class="p">:</span><span class="w"> </span><span class="nb">int</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DimeMessage_OptionElement</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">optionElements</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+<span class="w">      </span><span class="n">inc</span><span class="w"> </span><span class="n">i</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DimeMessage_OptionField], filename: string): DimeMessage_OptionField =</span>
+<span class="w">  </span><span class="n">DimeMessage_OptionField</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
 
-  <span class="sd">##[</span>
-  <span class="n">DIME</span> <span class="n">format</span> <span class="n">version</span> <span class="p">(</span><span class="n">always</span> <span class="mi">1</span><span class="p">)</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">versionExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">versionExpr</span>
+<span class="sd">##[</span>
+<span class="sd">one element of the option field</span>
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DimeMessage_OptionElement], io: KaitaiStream, root: KaitaiStruct, parent: DimeMessage_OptionField): DimeMessage_OptionElement =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">DimeMessage_OptionElement</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">DimeMessage</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">DimeMessage</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
-  <span class="sd">##[</span>
-  <span class="kt">Set</span> <span class="k">if</span> <span class="n">this</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">first</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">message</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">isFirstRecordExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">isFirstRecord</span> <span class="o">=</span> <span class="n">isFirstRecordExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">elementFormatExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">elementFormat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">elementFormatExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenElementExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenElement</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenElementExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">elementDataExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenElement</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">elementData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">elementDataExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="kt">Set</span> <span class="k">if</span> <span class="n">this</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">last</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">message</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">isLastRecordExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">isLastRecord</span> <span class="o">=</span> <span class="n">isLastRecordExpr</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DimeMessage_OptionElement], filename: string): DimeMessage_OptionElement =</span>
+<span class="w">  </span><span class="n">DimeMessage_OptionElement</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
-  <span class="sd">##[</span>
-  <span class="kt">Set</span> <span class="k">if</span> <span class="n">the</span> <span class="n">file</span> <span class="n">contained</span> <span class="ow">in</span> <span class="n">this</span> <span class="n">record</span> <span class="ow">is</span> <span class="n">chunked</span> <span class="n">into</span> <span class="n">multiple</span> <span class="n">records</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">isChunkRecordExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">isChunkRecord</span> <span class="o">=</span> <span class="n">isChunkRecordExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Indicates</span> <span class="n">the</span> <span class="n">structure</span> <span class="ow">and</span> <span class="n">format</span> <span class="k">of</span> <span class="n">the</span> <span class="n">value</span> <span class="k">of</span> <span class="n">the</span> <span class="k">TYPE</span> <span class="n">field</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">typeFormatExpr</span> <span class="o">=</span> <span class="n">DimeMessage_TypeFormats</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">typeFormat</span> <span class="o">=</span> <span class="n">typeFormatExpr</span>
+<span class="sd">##[</span>
+<span class="sd">each individual fragment of the message</span>
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DimeMessage_Record], io: KaitaiStream, root: KaitaiStruct, parent: DimeMessage): DimeMessage_Record =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">DimeMessage_Record</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">DimeMessage</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">DimeMessage</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Reserved</span> <span class="k">for</span> <span class="n">future</span> <span class="n">use</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">reservedExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">reserved</span> <span class="o">=</span> <span class="n">reservedExpr</span>
-  <span class="n">alignToByte</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">)</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Length</span> <span class="k">of</span> <span class="n">the</span> <span class="n">Options</span> <span class="n">field</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">lenOptionsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">lenOptions</span> <span class="o">=</span> <span class="n">lenOptionsExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  DIME format version (always 1)</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">versionExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">versionExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Length</span> <span class="k">of</span> <span class="n">the</span> <span class="n">ID</span> <span class="n">field</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">lenIdExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">lenId</span> <span class="o">=</span> <span class="n">lenIdExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Set if this is the first record in the message</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">isFirstRecordExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">isFirstRecord</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">isFirstRecordExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Length</span> <span class="k">of</span> <span class="n">the</span> <span class="k">Type</span> <span class="n">field</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">lenTypeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">lenType</span> <span class="o">=</span> <span class="n">lenTypeExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Set if this is the last record in the message</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">isLastRecordExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">isLastRecord</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">isLastRecordExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Length</span> <span class="k">of</span> <span class="n">the</span> <span class="n">Data</span> <span class="n">field</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">lenDataExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">lenData</span> <span class="o">=</span> <span class="n">lenDataExpr</span>
-  <span class="k">let</span> <span class="n">rawOptionsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenOptions</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">rawOptions</span> <span class="o">=</span> <span class="n">rawOptionsExpr</span>
-  <span class="k">let</span> <span class="n">rawOptionsIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawOptionsExpr</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">optionsExpr</span> <span class="o">=</span> <span class="n">DimeMessage_OptionField</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawOptionsIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">options</span> <span class="o">=</span> <span class="n">optionsExpr</span>
-  <span class="k">let</span> <span class="n">optionsPaddingExpr</span> <span class="o">=</span> <span class="n">DimeMessage_Padding</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">optionsPadding</span> <span class="o">=</span> <span class="n">optionsPaddingExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Set if the file contained in this record is chunked into multiple records</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">isChunkRecordExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">isChunkRecord</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">isChunkRecordExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Unique</span> <span class="n">identifier</span> <span class="k">of</span> <span class="n">the</span> <span class="n">file</span> <span class="p">(</span><span class="kt">set</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">first</span> <span class="n">record</span> <span class="k">of</span> <span class="n">file</span><span class="p">)</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">idExpr</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenId</span><span class="p">)),</span> <span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">idExpr</span>
-  <span class="k">let</span> <span class="n">idPaddingExpr</span> <span class="o">=</span> <span class="n">DimeMessage_Padding</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">idPadding</span> <span class="o">=</span> <span class="n">idPaddingExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Indicates the structure and format of the value of the TYPE field</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">typeFormatExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DimeMessage_TypeFormats</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">typeFormat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">typeFormatExpr</span>
 
-  <span class="sd">##[</span>
-  <span class="n">Specified</span> <span class="k">type</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">format</span> <span class="kt">set</span> <span class="n">with</span> <span class="n">type_format</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">typeExpr</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenType</span><span class="p">)),</span> <span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="k">type</span> <span class="o">=</span> <span class="n">typeExpr</span>
-  <span class="k">let</span> <span class="n">typePaddingExpr</span> <span class="o">=</span> <span class="n">DimeMessage_Padding</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">typePadding</span> <span class="o">=</span> <span class="n">typePaddingExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Reserved for future use</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">reservedExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">reserved</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">reservedExpr</span>
+<span class="w">  </span><span class="n">alignToByte</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">)</span>
 
-  <span class="sd">##[</span>
-  <span class="n">The</span> <span class="n">file</span> <span class="n">data</span>
-  <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">dataExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenData</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">dataExpr</span>
-  <span class="k">let</span> <span class="n">dataPaddingExpr</span> <span class="o">=</span> <span class="n">DimeMessage_Padding</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">dataPadding</span> <span class="o">=</span> <span class="n">dataPaddingExpr</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Length of the Options field</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenOptionsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenOptions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenOptionsExpr</span>
 
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DimeMessage_Record], filename: string): DimeMessage_Record =</span>
-  <span class="n">DimeMessage_Record</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Length of the ID field</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenIdExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenIdExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Length of the Type field</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenTypeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenTypeExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Length of the Data field</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenDataExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenDataExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawOptionsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenOptions</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">rawOptions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawOptionsExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawOptionsIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawOptionsExpr</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">optionsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DimeMessage_OptionField</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawOptionsIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">optionsExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">optionsPaddingExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DimeMessage_Padding</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">optionsPadding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">optionsPaddingExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Unique identifier of the file (set in the first record of file)</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">idExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenId</span><span class="p">)),</span><span class="w"> </span><span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">idExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">idPaddingExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DimeMessage_Padding</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">idPadding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">idPaddingExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Specified type in the format set with type_format</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">typeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenType</span><span class="p">)),</span><span class="w"> </span><span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="k">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">typeExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">typePaddingExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DimeMessage_Padding</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">typePadding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">typePaddingExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The file data</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">dataExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenData</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dataExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">dataPaddingExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DimeMessage_Padding</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">dataPadding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dataPaddingExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[DimeMessage_Record], filename: string): DimeMessage_Record =</span>
+<span class="w">  </span><span class="n">DimeMessage_Record</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 </pre></div>
 
         </div>

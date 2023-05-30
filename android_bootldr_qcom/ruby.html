@@ -335,38 +335,38 @@ devices, however, these code names are the same.</p>
 
 
 
-<div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="no">AndroidBootldrQcom</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;path/to/local/file.img&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">AndroidBootldrQcom</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;path/to/local/file.img&quot;</span><span class="p">)</span>
 </pre></div>
 
 <p>Or parse structure from a string of bytes:</p>
 
-<div class="highlight"><pre><span></span><span class="n">bytes</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\x00\x01\x02</span><span class="s2">...&quot;</span>
-<span class="n">data</span> <span class="o">=</span> <span class="no">AndroidBootldrQcom</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">bytes</span><span class="p">))</span>
+<div class="highlight"><pre><span></span><span class="n">bytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\x00\x01\x02</span><span class="s2">...&quot;</span>
+<span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">AndroidBootldrQcom</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">bytes</span><span class="p">))</span>
 </pre></div>
 
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
 
-<div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">bootloader_size</span> <span class="c1"># =&gt; According to all available `releasetools.py` versions from AOSP (links are</span>
-<span class="k">in</span> <span class="n">the</span> <span class="n">top</span><span class="o">-</span><span class="n">level</span> <span class="sb">`/doc`</span><span class="p">),</span> <span class="n">this</span> <span class="n">should</span> <span class="n">determine</span> <span class="n">only</span> <span class="n">the</span> <span class="n">size</span> <span class="n">of</span>
-<span class="sb">`img_bodies`</span> <span class="o">-</span> <span class="n">there</span> <span class="n">is</span> <span class="o">[</span><span class="n">an</span> <span class="n">assertion</span><span class="o">]</span><span class="p">(</span>
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">bootloader_size</span><span class="w"> </span><span class="c1"># =&gt; According to all available `releasetools.py` versions from AOSP (links are</span>
+<span class="k">in</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">top</span><span class="o">-</span><span class="n">level</span><span class="w"> </span><span class="sb">`/doc`</span><span class="p">),</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">should</span><span class="w"> </span><span class="n">determine</span><span class="w"> </span><span class="n">only</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="n">of</span>
+<span class="sb">`img_bodies`</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">there</span><span class="w"> </span><span class="n">is</span><span class="w"> </span><span class="o">[</span><span class="n">an</span><span class="w"> </span><span class="n">assertion</span><span class="o">]</span><span class="p">(</span>
 <span class="ss">https</span><span class="p">:</span><span class="sr">//</span><span class="n">android</span><span class="o">.</span><span class="n">googlesource</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">device</span><span class="o">/</span><span class="n">lge</span><span class="o">/</span><span class="n">hammerhead</span><span class="o">/+/</span><span class="mi">7618</span><span class="n">a7d</span><span class="o">/</span><span class="n">releasetools</span><span class="o">.</span><span class="n">py</span><span class="c1">#167)</span>
-<span class="k">for</span> <span class="n">it</span><span class="o">.</span>
+<span class="k">for</span><span class="w"> </span><span class="n">it</span><span class="o">.</span>
 
-<span class="no">However</span><span class="p">,</span> <span class="n">files</span> <span class="k">for</span> <span class="n">certain</span> <span class="no">Pixel</span> <span class="n">devices</span> <span class="p">(</span><span class="n">see</span> <span class="sb">`/doc`</span><span class="p">)</span> <span class="n">apparently</span> <span class="n">declare</span>
-<span class="n">the</span> <span class="n">entire</span> <span class="n">file</span> <span class="n">size</span> <span class="n">here</span> <span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">e</span><span class="o">.</span> <span class="n">including</span> <span class="n">also</span> <span class="n">fields</span> <span class="n">from</span> <span class="sb">`magic`</span> <span class="n">to</span>
-<span class="sb">`img_headers`</span><span class="p">)</span><span class="o">.</span> <span class="no">So</span> <span class="k">if</span> <span class="n">you</span> <span class="n">interpreted</span> <span class="sb">`bootloader_size`</span> <span class="n">as</span> <span class="n">the</span> <span class="n">size</span> <span class="n">of</span>
-<span class="sb">`img_bodies`</span> <span class="n">substream</span> <span class="k">in</span> <span class="n">these</span> <span class="n">files</span><span class="p">,</span> <span class="n">you</span> <span class="n">would</span> <span class="n">exceed</span> <span class="n">the</span> <span class="k">end</span> <span class="n">of</span> <span class="n">file</span><span class="o">.</span>
-<span class="no">Although</span> <span class="n">you</span> <span class="n">could</span> <span class="n">check</span> <span class="n">that</span> <span class="n">it</span> <span class="n">fits</span> <span class="k">in</span> <span class="n">the</span> <span class="n">file</span> <span class="n">before</span> <span class="n">attempting</span> <span class="n">to</span>
-<span class="n">create</span> <span class="n">a</span> <span class="n">substream</span> <span class="n">of</span> <span class="n">that</span> <span class="n">size</span><span class="p">,</span> <span class="n">you</span> <span class="n">wouldn</span><span class="s1">&#39;t know if it&#39;</span><span class="n">s</span> <span class="n">meant</span> <span class="n">to</span>
-<span class="n">specify</span> <span class="n">the</span> <span class="n">size</span> <span class="n">of</span> <span class="n">just</span> <span class="sb">`img_bodies`</span> <span class="ow">or</span> <span class="n">the</span> <span class="n">size</span> <span class="n">of</span> <span class="n">the</span> <span class="n">entire</span> <span class="n">bootloader</span>
-<span class="n">payload</span> <span class="p">(</span><span class="n">whereas</span> <span class="n">there</span> <span class="n">may</span> <span class="n">be</span> <span class="n">additional</span> <span class="n">data</span> <span class="n">after</span> <span class="n">the</span> <span class="k">end</span> <span class="n">of</span> <span class="n">payload</span><span class="p">)</span>
-<span class="k">until</span> <span class="n">parsing</span> <span class="sb">`img_bodies`</span> <span class="p">(</span><span class="ow">or</span> <span class="n">at</span> <span class="n">least</span> <span class="n">summing</span> <span class="n">sizes</span> <span class="n">from</span> <span class="sb">`img_headers`</span><span class="p">,</span>
-<span class="n">but</span> <span class="n">that</span><span class="s1">&#39;s stupid).</span>
+<span class="no">However</span><span class="p">,</span><span class="w"> </span><span class="n">files</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">certain</span><span class="w"> </span><span class="no">Pixel</span><span class="w"> </span><span class="n">devices</span><span class="w"> </span><span class="p">(</span><span class="n">see</span><span class="w"> </span><span class="sb">`/doc`</span><span class="p">)</span><span class="w"> </span><span class="n">apparently</span><span class="w"> </span><span class="n">declare</span>
+<span class="n">the</span><span class="w"> </span><span class="n">entire</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="n">here</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">e</span><span class="o">.</span><span class="w"> </span><span class="n">including</span><span class="w"> </span><span class="n">also</span><span class="w"> </span><span class="n">fields</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="sb">`magic`</span><span class="w"> </span><span class="n">to</span>
+<span class="sb">`img_headers`</span><span class="p">)</span><span class="o">.</span><span class="w"> </span><span class="no">So</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">interpreted</span><span class="w"> </span><span class="sb">`bootloader_size`</span><span class="w"> </span><span class="n">as</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="n">of</span>
+<span class="sb">`img_bodies`</span><span class="w"> </span><span class="n">substream</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">these</span><span class="w"> </span><span class="n">files</span><span class="p">,</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">would</span><span class="w"> </span><span class="n">exceed</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">end</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">file</span><span class="o">.</span>
+<span class="no">Although</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">could</span><span class="w"> </span><span class="n">check</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="n">fits</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="n">before</span><span class="w"> </span><span class="n">attempting</span><span class="w"> </span><span class="n">to</span>
+<span class="n">create</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">substream</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="n">size</span><span class="p">,</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">wouldn</span><span class="s1">&#39;t know if it&#39;</span><span class="n">s</span><span class="w"> </span><span class="n">meant</span><span class="w"> </span><span class="n">to</span>
+<span class="n">specify</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">just</span><span class="w"> </span><span class="sb">`img_bodies`</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">entire</span><span class="w"> </span><span class="n">bootloader</span>
+<span class="n">payload</span><span class="w"> </span><span class="p">(</span><span class="n">whereas</span><span class="w"> </span><span class="n">there</span><span class="w"> </span><span class="n">may</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">additional</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="n">after</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">end</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">payload</span><span class="p">)</span>
+<span class="k">until</span><span class="w"> </span><span class="n">parsing</span><span class="w"> </span><span class="sb">`img_bodies`</span><span class="w"> </span><span class="p">(</span><span class="ow">or</span><span class="w"> </span><span class="n">at</span><span class="w"> </span><span class="n">least</span><span class="w"> </span><span class="n">summing</span><span class="w"> </span><span class="n">sizes</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="sb">`img_headers`</span><span class="p">,</span>
+<span class="n">but</span><span class="w"> </span><span class="n">that</span><span class="s1">&#39;s stupid).</span>
 
-<span class="s1">So this field isn&#39;</span><span class="n">t</span> <span class="n">reliable</span> <span class="n">enough</span> <span class="n">to</span> <span class="n">be</span> <span class="n">used</span> <span class="n">as</span> <span class="n">the</span> <span class="n">size</span> <span class="n">of</span> <span class="n">any</span>
-<span class="n">substream</span><span class="o">.</span> <span class="no">If</span> <span class="n">you</span> <span class="n">want</span> <span class="n">to</span> <span class="n">check</span> <span class="k">if</span> <span class="n">it</span> <span class="n">has</span> <span class="n">a</span> <span class="n">reasonable</span> <span class="n">value</span><span class="p">,</span> <span class="k">do</span> <span class="n">so</span> <span class="k">in</span>
-<span class="n">your</span> <span class="n">application</span> <span class="n">code</span><span class="o">.</span>
+<span class="s1">So this field isn&#39;</span><span class="n">t</span><span class="w"> </span><span class="n">reliable</span><span class="w"> </span><span class="n">enough</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">used</span><span class="w"> </span><span class="n">as</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">any</span>
+<span class="n">substream</span><span class="o">.</span><span class="w"> </span><span class="no">If</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">want</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">check</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="n">has</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">reasonable</span><span class="w"> </span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="n">so</span><span class="w"> </span><span class="k">in</span>
+<span class="n">your</span><span class="w"> </span><span class="n">application</span><span class="w"> </span><span class="n">code</span><span class="o">.</span>
 </pre></div>
 
     </div>
@@ -396,10 +396,10 @@ devices, however, these code names are the same.</p>
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
+<span class="nb">require</span><span class="w"> </span><span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.9&#39;</span><span class="p">)</span>
-  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">unless</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.9&#39;</span><span class="p">)</span>
+<span class="w">  </span><span class="k">raise</span><span class="w"> </span><span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="k">end</span>
 
 
@@ -508,95 +508,95 @@ devices, however, these code names are the same.</p>
 <span class="c1"># that is how the original `bootloader-*.img` files are identified. For most</span>
 <span class="c1"># devices, however, these code names are the same.</span>
 <span class="c1"># @see https://android.googlesource.com/device/lge/hammerhead/+/7618a7d/releasetools.py Source</span>
-<span class="k">class</span> <span class="nc">AndroidBootldrQcom</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
-    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-    <span class="n">_read</span>
-  <span class="k">end</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AndroidBootldrQcom</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">    </span><span class="n">_read</span>
+<span class="w">  </span><span class="k">end</span>
 
-  <span class="k">def</span> <span class="n">_read</span>
-    <span class="vi">@magic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
-    <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">66</span><span class="p">,</span> <span class="mi">79</span><span class="p">,</span> <span class="mi">79</span><span class="p">,</span> <span class="mi">84</span><span class="p">,</span> <span class="mi">76</span><span class="p">,</span> <span class="mi">68</span><span class="p">,</span> <span class="mi">82</span><span class="p">,</span> <span class="mi">33</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">magic</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/seq/0&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">magic</span> <span class="o">==</span> <span class="o">[</span><span class="mi">66</span><span class="p">,</span> <span class="mi">79</span><span class="p">,</span> <span class="mi">79</span><span class="p">,</span> <span class="mi">84</span><span class="p">,</span> <span class="mi">76</span><span class="p">,</span> <span class="mi">68</span><span class="p">,</span> <span class="mi">82</span><span class="p">,</span> <span class="mi">33</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
-    <span class="vi">@num_images</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-    <span class="vi">@ofs_img_bodies</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-    <span class="vi">@bootloader_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-    <span class="vi">@img_headers</span> <span class="o">=</span> <span class="o">[]</span>
-    <span class="p">(</span><span class="n">num_images</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-      <span class="vi">@img_headers</span> <span class="o">&lt;&lt;</span> <span class="no">ImgHeader</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-    <span class="p">}</span>
-    <span class="nb">self</span>
-  <span class="k">end</span>
-  <span class="k">class</span> <span class="nc">ImgHeader</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
-      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-      <span class="n">_read</span>
-    <span class="k">end</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">    </span><span class="vi">@magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+<span class="w">    </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">66</span><span class="p">,</span><span class="w"> </span><span class="mi">79</span><span class="p">,</span><span class="w"> </span><span class="mi">79</span><span class="p">,</span><span class="w"> </span><span class="mi">84</span><span class="p">,</span><span class="w"> </span><span class="mi">76</span><span class="p">,</span><span class="w"> </span><span class="mi">68</span><span class="p">,</span><span class="w"> </span><span class="mi">82</span><span class="p">,</span><span class="w"> </span><span class="mi">33</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span><span class="w"> </span><span class="n">magic</span><span class="p">,</span><span class="w"> </span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/seq/0&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">magic</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">66</span><span class="p">,</span><span class="w"> </span><span class="mi">79</span><span class="p">,</span><span class="w"> </span><span class="mi">79</span><span class="p">,</span><span class="w"> </span><span class="mi">84</span><span class="p">,</span><span class="w"> </span><span class="mi">76</span><span class="p">,</span><span class="w"> </span><span class="mi">68</span><span class="p">,</span><span class="w"> </span><span class="mi">82</span><span class="p">,</span><span class="w"> </span><span class="mi">33</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="vi">@num_images</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">    </span><span class="vi">@ofs_img_bodies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">    </span><span class="vi">@bootloader_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">    </span><span class="vi">@img_headers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
+<span class="w">    </span><span class="p">(</span><span class="n">num_images</span><span class="p">)</span><span class="o">.</span><span class="n">times</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">|</span><span class="n">i</span><span class="o">|</span>
+<span class="w">      </span><span class="vi">@img_headers</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="no">ImgHeader</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nb">self</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">ImgHeader</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
 
-    <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@name</span> <span class="o">=</span> <span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">bytes_terminate</span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">64</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
-      <span class="vi">@len_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-      <span class="nb">self</span>
-    <span class="k">end</span>
-    <span class="kp">attr_reader</span> <span class="ss">:name</span>
-    <span class="kp">attr_reader</span> <span class="ss">:len_body</span>
-  <span class="k">end</span>
-  <span class="k">class</span> <span class="nc">ImgBody</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span>
-      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
-      <span class="vi">@idx</span> <span class="o">=</span> <span class="n">idx</span>
-      <span class="n">_read</span>
-    <span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">bytes_terminate</span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">64</span><span class="p">),</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kp">false</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@len_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:name</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:len_body</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">ImgBody</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="n">idx</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">idx</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
 
-    <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">img_header</span><span class="o">.</span><span class="n">len_body</span><span class="p">)</span>
-      <span class="nb">self</span>
-    <span class="k">end</span>
-    <span class="k">def</span> <span class="nf">img_header</span>
-      <span class="k">return</span> <span class="vi">@img_header</span> <span class="k">unless</span> <span class="vi">@img_header</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@img_header</span> <span class="o">=</span> <span class="n">_root</span><span class="o">.</span><span class="n">img_headers</span><span class="o">[</span><span class="n">idx</span><span class="o">]</span>
-      <span class="vi">@img_header</span>
-    <span class="k">end</span>
-    <span class="kp">attr_reader</span> <span class="ss">:body</span>
-    <span class="kp">attr_reader</span> <span class="ss">:idx</span>
-  <span class="k">end</span>
-  <span class="k">def</span> <span class="nf">img_bodies</span>
-    <span class="k">return</span> <span class="vi">@img_bodies</span> <span class="k">unless</span> <span class="vi">@img_bodies</span><span class="o">.</span><span class="n">nil?</span>
-    <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
-    <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_img_bodies</span><span class="p">)</span>
-    <span class="vi">@img_bodies</span> <span class="o">=</span> <span class="o">[]</span>
-    <span class="p">(</span><span class="n">num_images</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-      <span class="vi">@img_bodies</span> <span class="o">&lt;&lt;</span> <span class="no">ImgBody</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-    <span class="p">}</span>
-    <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-    <span class="vi">@img_bodies</span>
-  <span class="k">end</span>
-  <span class="kp">attr_reader</span> <span class="ss">:magic</span>
-  <span class="kp">attr_reader</span> <span class="ss">:num_images</span>
-  <span class="kp">attr_reader</span> <span class="ss">:ofs_img_bodies</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">img_header</span><span class="o">.</span><span class="n">len_body</span><span class="p">)</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">img_header</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@img_header</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@img_header</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@img_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_root</span><span class="o">.</span><span class="n">img_headers</span><span class="o">[</span><span class="n">idx</span><span class="o">]</span>
+<span class="w">      </span><span class="vi">@img_header</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:body</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:idx</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">img_bodies</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="vi">@img_bodies</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@img_bodies</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">    </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+<span class="w">    </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_img_bodies</span><span class="p">)</span>
+<span class="w">    </span><span class="vi">@img_bodies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
+<span class="w">    </span><span class="p">(</span><span class="n">num_images</span><span class="p">)</span><span class="o">.</span><span class="n">times</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">|</span><span class="n">i</span><span class="o">|</span>
+<span class="w">      </span><span class="vi">@img_bodies</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="no">ImgBody</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+<span class="w">    </span><span class="vi">@img_bodies</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:magic</span>
+<span class="w">  </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:num_images</span>
+<span class="w">  </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:ofs_img_bodies</span>
 
-  <span class="c1">##</span>
-  <span class="c1"># According to all available `releasetools.py` versions from AOSP (links are</span>
-  <span class="c1"># in the top-level `/doc`), this should determine only the size of</span>
-  <span class="c1"># `img_bodies` - there is [an assertion](</span>
-  <span class="c1"># https://android.googlesource.com/device/lge/hammerhead/+/7618a7d/releasetools.py#167)</span>
-  <span class="c1"># for it.</span>
-  <span class="c1"># </span>
-  <span class="c1"># However, files for certain Pixel devices (see `/doc`) apparently declare</span>
-  <span class="c1"># the entire file size here (i.e. including also fields from `magic` to</span>
-  <span class="c1"># `img_headers`). So if you interpreted `bootloader_size` as the size of</span>
-  <span class="c1"># `img_bodies` substream in these files, you would exceed the end of file.</span>
-  <span class="c1"># Although you could check that it fits in the file before attempting to</span>
-  <span class="c1"># create a substream of that size, you wouldn&#39;t know if it&#39;s meant to</span>
-  <span class="c1"># specify the size of just `img_bodies` or the size of the entire bootloader</span>
-  <span class="c1"># payload (whereas there may be additional data after the end of payload)</span>
-  <span class="c1"># until parsing `img_bodies` (or at least summing sizes from `img_headers`,</span>
-  <span class="c1"># but that&#39;s stupid).</span>
-  <span class="c1"># </span>
-  <span class="c1"># So this field isn&#39;t reliable enough to be used as the size of any</span>
-  <span class="c1"># substream. If you want to check if it has a reasonable value, do so in</span>
-  <span class="c1"># your application code.</span>
-  <span class="kp">attr_reader</span> <span class="ss">:bootloader_size</span>
-  <span class="kp">attr_reader</span> <span class="ss">:img_headers</span>
+<span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># According to all available `releasetools.py` versions from AOSP (links are</span>
+<span class="w">  </span><span class="c1"># in the top-level `/doc`), this should determine only the size of</span>
+<span class="w">  </span><span class="c1"># `img_bodies` - there is [an assertion](</span>
+<span class="w">  </span><span class="c1"># https://android.googlesource.com/device/lge/hammerhead/+/7618a7d/releasetools.py#167)</span>
+<span class="w">  </span><span class="c1"># for it.</span>
+<span class="w">  </span><span class="c1"># </span>
+<span class="w">  </span><span class="c1"># However, files for certain Pixel devices (see `/doc`) apparently declare</span>
+<span class="w">  </span><span class="c1"># the entire file size here (i.e. including also fields from `magic` to</span>
+<span class="w">  </span><span class="c1"># `img_headers`). So if you interpreted `bootloader_size` as the size of</span>
+<span class="w">  </span><span class="c1"># `img_bodies` substream in these files, you would exceed the end of file.</span>
+<span class="w">  </span><span class="c1"># Although you could check that it fits in the file before attempting to</span>
+<span class="w">  </span><span class="c1"># create a substream of that size, you wouldn&#39;t know if it&#39;s meant to</span>
+<span class="w">  </span><span class="c1"># specify the size of just `img_bodies` or the size of the entire bootloader</span>
+<span class="w">  </span><span class="c1"># payload (whereas there may be additional data after the end of payload)</span>
+<span class="w">  </span><span class="c1"># until parsing `img_bodies` (or at least summing sizes from `img_headers`,</span>
+<span class="w">  </span><span class="c1"># but that&#39;s stupid).</span>
+<span class="w">  </span><span class="c1"># </span>
+<span class="w">  </span><span class="c1"># So this field isn&#39;t reliable enough to be used as the size of any</span>
+<span class="w">  </span><span class="c1"># substream. If you want to check if it has a reasonable value, do so in</span>
+<span class="w">  </span><span class="c1"># your application code.</span>
+<span class="w">  </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:bootloader_size</span>
+<span class="w">  </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:img_headers</span>
 <span class="k">end</span>
 </pre></div>
 

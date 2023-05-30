@@ -277,20 +277,20 @@ can also be found there.</p>
 
 
 
-<div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="n">SystemdJournal</span><span class="p">.</span><span class="n">FromFile</span><span class="p">(</span><span class="s">&quot;path/to/local/file.journal&quot;</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><span class="kt">var</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SystemdJournal</span><span class="p">.</span><span class="n">FromFile</span><span class="p">(</span><span class="s">&quot;path/to/local/file.journal&quot;</span><span class="p">);</span>
 </pre></div>
 
 <p>Or parse structure from a byte array:</p>
 
-<div class="highlight"><pre><span></span><span class="kt">byte</span><span class="p">[]</span> <span class="n">someArray</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
-<span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SystemdJournal</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">someArray</span><span class="p">));</span>
+<div class="highlight"><pre><span></span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">someArray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">};</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SystemdJournal</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">someArray</span><span class="p">));</span>
 </pre></div>
 
 <p>After that, one can get various attributes from the structure by accessing properties like:</p>
 
 
-<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">LenHeader</span> <span class="c1">// =&gt; Header length is used to set substream size, as it thus required</span>
-<span class="n">prior</span> <span class="n">to</span> <span class="n">declaration</span> <span class="n">of</span> <span class="n">header</span><span class="p">.</span>
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">LenHeader</span><span class="w"> </span><span class="c1">// =&gt; Header length is used to set substream size, as it thus required</span>
+<span class="n">prior</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">declaration</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">header</span><span class="p">.</span>
 </pre></div>
 
     </div>
@@ -320,437 +320,437 @@ can also be found there.</p>
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">System.Collections.Generic</span><span class="p">;</span>
 
-<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">Kaitai</span>
 <span class="p">{</span>
 
-    <span class="c1">/// &lt;summary&gt;</span>
-    <span class="c1">/// systemd, a popular user-space system/service management suite on Linux,</span>
-    <span class="c1">/// offers logging functionality, storing incoming logs in a binary journal</span>
-    <span class="c1">/// format.</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// On live Linux system running systemd, these journals are typically located at:</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// * /run/log/journal/machine-id/*.journal (volatile, lost after reboot)</span>
-    <span class="c1">/// * /var/log/journal/machine-id/*.journal (persistent, but disabled by default on Debian / Ubuntu)</span>
-    <span class="c1">/// &lt;/summary&gt;</span>
-    <span class="c1">/// &lt;remarks&gt;</span>
-    <span class="c1">/// Reference: &lt;a href=&quot;https://www.freedesktop.org/wiki/Software/systemd/journal-files/&quot;&gt;Source&lt;/a&gt;</span>
-    <span class="c1">/// &lt;/remarks&gt;</span>
-    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">SystemdJournal</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">{</span>
-        <span class="k">public</span> <span class="k">static</span> <span class="n">SystemdJournal</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">return</span> <span class="k">new</span> <span class="nf">SystemdJournal</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-        <span class="p">}</span>
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// systemd, a popular user-space system/service management suite on Linux,</span>
+<span class="w">    </span><span class="c1">/// offers logging functionality, storing incoming logs in a binary journal</span>
+<span class="w">    </span><span class="c1">/// format.</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// On live Linux system running systemd, these journals are typically located at:</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// * /run/log/journal/machine-id/*.journal (volatile, lost after reboot)</span>
+<span class="w">    </span><span class="c1">/// * /var/log/journal/machine-id/*.journal (persistent, but disabled by default on Debian / Ubuntu)</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;https://www.freedesktop.org/wiki/Software/systemd/journal-files/&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">SystemdJournal</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">SystemdJournal</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">SystemdJournal</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
 
 
-        <span class="k">public</span> <span class="k">enum</span> <span class="n">State</span>
-        <span class="p">{</span>
-            <span class="n">Offline</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
-            <span class="n">Online</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
-            <span class="n">Archived</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
-        <span class="p">}</span>
-        <span class="k">public</span> <span class="nf">SystemdJournal</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">SystemdJournal</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
-            <span class="n">f_lenHeader</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-            <span class="n">f_dataHashTable</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-            <span class="n">f_fieldHashTable</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-            <span class="n">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-        <span class="p">{</span>
-            <span class="n">__raw_header</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenHeader</span><span class="p">);</span>
-            <span class="kt">var</span> <span class="n">io___raw_header</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_header</span><span class="p">);</span>
-            <span class="n">_header</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Header</span><span class="p">(</span><span class="n">io___raw_header</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-            <span class="n">_objects</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">JournalObject</span><span class="p">&gt;();</span>
-            <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">Header</span><span class="p">.</span><span class="n">NumObjects</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
-            <span class="p">{</span>
-                <span class="n">_objects</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">JournalObject</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Header</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">Header</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">Header</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="n">State</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Offline</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Online</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Archived</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">,</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="nf">SystemdJournal</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">SystemdJournal</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">            </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">            </span><span class="n">f_lenHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">            </span><span class="n">f_dataHashTable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">            </span><span class="n">f_fieldHashTable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">            </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">__raw_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenHeader</span><span class="p">);</span>
+<span class="w">            </span><span class="kt">var</span><span class="w"> </span><span class="n">io___raw_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_header</span><span class="p">);</span>
+<span class="w">            </span><span class="n">_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Header</span><span class="p">(</span><span class="n">io___raw_header</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">            </span><span class="n">_objects</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">JournalObject</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">Header</span><span class="p">.</span><span class="n">NumObjects</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_objects</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">JournalObject</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Header</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">Header</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">Header</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">Header</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">SystemdJournal</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">SystemdJournal</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_signature</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">8</span><span class="p">);</span>
-                <span class="k">if</span> <span class="p">(!((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">Signature</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">76</span><span class="p">,</span> <span class="m">80</span><span class="p">,</span> <span class="m">75</span><span class="p">,</span> <span class="m">83</span><span class="p">,</span> <span class="m">72</span><span class="p">,</span> <span class="m">72</span><span class="p">,</span> <span class="m">82</span><span class="p">,</span> <span class="m">72</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">)))</span>
-                <span class="p">{</span>
-                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">76</span><span class="p">,</span> <span class="m">80</span><span class="p">,</span> <span class="m">75</span><span class="p">,</span> <span class="m">83</span><span class="p">,</span> <span class="m">72</span><span class="p">,</span> <span class="m">72</span><span class="p">,</span> <span class="m">82</span><span class="p">,</span> <span class="m">72</span> <span class="p">},</span> <span class="n">Signature</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/types/header/seq/0&quot;</span><span class="p">);</span>
-                <span class="p">}</span>
-                <span class="n">_compatibleFlags</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
-                <span class="n">_incompatibleFlags</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
-                <span class="n">_state</span> <span class="p">=</span> <span class="p">((</span><span class="n">SystemdJournal</span><span class="p">.</span><span class="n">State</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
-                <span class="n">_reserved</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">7</span><span class="p">);</span>
-                <span class="n">_fileId</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">16</span><span class="p">);</span>
-                <span class="n">_machineId</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">16</span><span class="p">);</span>
-                <span class="n">_bootId</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">16</span><span class="p">);</span>
-                <span class="n">_seqnumId</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">16</span><span class="p">);</span>
-                <span class="n">_lenHeader</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
-                <span class="n">_lenArena</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
-                <span class="n">_ofsDataHashTable</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
-                <span class="n">_lenDataHashTable</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
-                <span class="n">_ofsFieldHashTable</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
-                <span class="n">_lenFieldHashTable</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
-                <span class="n">_ofsTailObject</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
-                <span class="n">_numObjects</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
-                <span class="n">_numEntries</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
-                <span class="n">_tailEntrySeqnum</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
-                <span class="n">_headEntrySeqnum</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
-                <span class="n">_ofsEntryArray</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
-                <span class="n">_headEntryRealtime</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
-                <span class="n">_tailEntryRealtime</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
-                <span class="n">_tailEntryMonotonic</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
-                <span class="k">if</span> <span class="p">(!(</span><span class="n">M_Io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">))</span> <span class="p">{</span>
-                    <span class="n">_numData</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
-                <span class="p">}</span>
-                <span class="k">if</span> <span class="p">(!(</span><span class="n">M_Io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">))</span> <span class="p">{</span>
-                    <span class="n">_numFields</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
-                <span class="p">}</span>
-                <span class="k">if</span> <span class="p">(!(</span><span class="n">M_Io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">))</span> <span class="p">{</span>
-                    <span class="n">_numTags</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
-                <span class="p">}</span>
-                <span class="k">if</span> <span class="p">(!(</span><span class="n">M_Io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">))</span> <span class="p">{</span>
-                    <span class="n">_numEntryArrays</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_signature</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_compatibleFlags</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_incompatibleFlags</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">State</span> <span class="n">_state</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_reserved</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_fileId</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_machineId</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_bootId</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_seqnumId</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_lenHeader</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_lenArena</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_ofsDataHashTable</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_lenDataHashTable</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_ofsFieldHashTable</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_lenFieldHashTable</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_ofsTailObject</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_numObjects</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_numEntries</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_tailEntrySeqnum</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_headEntrySeqnum</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_ofsEntryArray</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_headEntryRealtime</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_tailEntryRealtime</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_tailEntryMonotonic</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ulong?</span> <span class="n">_numData</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ulong?</span> <span class="n">_numFields</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ulong?</span> <span class="n">_numTags</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ulong?</span> <span class="n">_numEntryArrays</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">SystemdJournal</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">SystemdJournal</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Signature</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_signature</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">uint</span> <span class="n">CompatibleFlags</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_compatibleFlags</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">uint</span> <span class="n">IncompatibleFlags</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_incompatibleFlags</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">State</span> <span class="n">State</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_state</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Reserved</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_reserved</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">FileId</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_fileId</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">MachineId</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_machineId</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">BootId</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_bootId</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">SeqnumId</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_seqnumId</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">LenHeader</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenHeader</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">LenArena</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenArena</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">OfsDataHashTable</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ofsDataHashTable</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">LenDataHashTable</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenDataHashTable</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">OfsFieldHashTable</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ofsFieldHashTable</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">LenFieldHashTable</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenFieldHashTable</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">OfsTailObject</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ofsTailObject</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">NumObjects</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numObjects</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">NumEntries</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numEntries</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">TailEntrySeqnum</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_tailEntrySeqnum</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">HeadEntrySeqnum</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_headEntrySeqnum</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">OfsEntryArray</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ofsEntryArray</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">HeadEntryRealtime</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_headEntryRealtime</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">TailEntryRealtime</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_tailEntryRealtime</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">TailEntryMonotonic</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_tailEntryMonotonic</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ulong?</span> <span class="n">NumData</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numData</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ulong?</span> <span class="n">NumFields</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numFields</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ulong?</span> <span class="n">NumTags</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numTags</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ulong?</span> <span class="n">NumEntryArrays</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numEntryArrays</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">SystemdJournal</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">SystemdJournal</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">Header</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">SystemdJournal</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">SystemdJournal</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_signature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">8</span><span class="p">);</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">Signature</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="m">76</span><span class="p">,</span><span class="w"> </span><span class="m">80</span><span class="p">,</span><span class="w"> </span><span class="m">75</span><span class="p">,</span><span class="w"> </span><span class="m">83</span><span class="p">,</span><span class="w"> </span><span class="m">72</span><span class="p">,</span><span class="w"> </span><span class="m">72</span><span class="p">,</span><span class="w"> </span><span class="m">82</span><span class="p">,</span><span class="w"> </span><span class="m">72</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">)))</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="m">76</span><span class="p">,</span><span class="w"> </span><span class="m">80</span><span class="p">,</span><span class="w"> </span><span class="m">75</span><span class="p">,</span><span class="w"> </span><span class="m">83</span><span class="p">,</span><span class="w"> </span><span class="m">72</span><span class="p">,</span><span class="w"> </span><span class="m">72</span><span class="p">,</span><span class="w"> </span><span class="m">82</span><span class="p">,</span><span class="w"> </span><span class="m">72</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="n">Signature</span><span class="p">,</span><span class="w"> </span><span class="n">M_Io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/header/seq/0&quot;</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="n">_compatibleFlags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_incompatibleFlags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">SystemdJournal</span><span class="p">.</span><span class="n">State</span><span class="p">)</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
+<span class="w">                </span><span class="n">_reserved</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">7</span><span class="p">);</span>
+<span class="w">                </span><span class="n">_fileId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">16</span><span class="p">);</span>
+<span class="w">                </span><span class="n">_machineId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">16</span><span class="p">);</span>
+<span class="w">                </span><span class="n">_bootId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">16</span><span class="p">);</span>
+<span class="w">                </span><span class="n">_seqnumId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">16</span><span class="p">);</span>
+<span class="w">                </span><span class="n">_lenHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_lenArena</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_ofsDataHashTable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_lenDataHashTable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_ofsFieldHashTable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_lenFieldHashTable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_ofsTailObject</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_numObjects</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_numEntries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_tailEntrySeqnum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_headEntrySeqnum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_ofsEntryArray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_headEntryRealtime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_tailEntryRealtime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_tailEntryMonotonic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">M_Io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">_numData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">M_Io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">_numFields</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">M_Io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">_numTags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">M_Io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">_numEntryArrays</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_signature</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">_compatibleFlags</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">_incompatibleFlags</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">State</span><span class="w"> </span><span class="n">_state</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_reserved</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_fileId</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_machineId</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_bootId</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_seqnumId</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">_lenHeader</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">_lenArena</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">_ofsDataHashTable</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">_lenDataHashTable</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">_ofsFieldHashTable</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">_lenFieldHashTable</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">_ofsTailObject</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">_numObjects</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">_numEntries</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">_tailEntrySeqnum</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">_headEntrySeqnum</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">_ofsEntryArray</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">_headEntryRealtime</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">_tailEntryRealtime</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">_tailEntryMonotonic</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong?</span><span class="w"> </span><span class="n">_numData</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong?</span><span class="w"> </span><span class="n">_numFields</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong?</span><span class="w"> </span><span class="n">_numTags</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong?</span><span class="w"> </span><span class="n">_numEntryArrays</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">SystemdJournal</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">SystemdJournal</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Signature</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_signature</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">CompatibleFlags</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_compatibleFlags</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">IncompatibleFlags</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_incompatibleFlags</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">State</span><span class="w"> </span><span class="n">State</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_state</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Reserved</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_reserved</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">FileId</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_fileId</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">MachineId</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_machineId</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">BootId</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_bootId</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">SeqnumId</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_seqnumId</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">LenHeader</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_lenHeader</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">LenArena</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_lenArena</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">OfsDataHashTable</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_ofsDataHashTable</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">LenDataHashTable</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_lenDataHashTable</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">OfsFieldHashTable</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_ofsFieldHashTable</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">LenFieldHashTable</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_lenFieldHashTable</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">OfsTailObject</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_ofsTailObject</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">NumObjects</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_numObjects</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">NumEntries</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_numEntries</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">TailEntrySeqnum</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_tailEntrySeqnum</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">HeadEntrySeqnum</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_headEntrySeqnum</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">OfsEntryArray</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_ofsEntryArray</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">HeadEntryRealtime</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_headEntryRealtime</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">TailEntryRealtime</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_tailEntryRealtime</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">TailEntryMonotonic</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_tailEntryMonotonic</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong?</span><span class="w"> </span><span class="n">NumData</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_numData</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong?</span><span class="w"> </span><span class="n">NumFields</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_numFields</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong?</span><span class="w"> </span><span class="n">NumTags</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_numTags</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong?</span><span class="w"> </span><span class="n">NumEntryArrays</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_numEntryArrays</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">SystemdJournal</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">SystemdJournal</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
 
-        <span class="c1">/// &lt;remarks&gt;</span>
-        <span class="c1">/// Reference: &lt;a href=&quot;https://www.freedesktop.org/wiki/Software/systemd/journal-files/#objects&quot;&gt;Source&lt;/a&gt;</span>
-        <span class="c1">/// &lt;/remarks&gt;</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">JournalObject</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">JournalObject</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">JournalObject</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">        </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">        </span><span class="c1">/// Reference: &lt;a href=&quot;https://www.freedesktop.org/wiki/Software/systemd/journal-files/#objects&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">        </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">JournalObject</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">JournalObject</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">JournalObject</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
 
-            <span class="k">public</span> <span class="k">enum</span> <span class="n">ObjectTypes</span>
-            <span class="p">{</span>
-                <span class="n">Unused</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
-                <span class="n">Data</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
-                <span class="n">Field</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
-                <span class="n">Entry</span> <span class="p">=</span> <span class="m">3</span><span class="p">,</span>
-                <span class="n">DataHashTable</span> <span class="p">=</span> <span class="m">4</span><span class="p">,</span>
-                <span class="n">FieldHashTable</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span>
-                <span class="n">EntryArray</span> <span class="p">=</span> <span class="m">6</span><span class="p">,</span>
-                <span class="n">Tag</span> <span class="p">=</span> <span class="m">7</span><span class="p">,</span>
-            <span class="p">}</span>
-            <span class="k">public</span> <span class="nf">JournalObject</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">SystemdJournal</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_padding</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">Mod</span><span class="p">((</span><span class="m">8</span> <span class="p">-</span> <span class="n">M_Io</span><span class="p">.</span><span class="n">Pos</span><span class="p">),</span> <span class="m">8</span><span class="p">));</span>
-                <span class="n">_objectType</span> <span class="p">=</span> <span class="p">((</span><span class="n">ObjectTypes</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
-                <span class="n">_flags</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
-                <span class="n">_reserved</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">6</span><span class="p">);</span>
-                <span class="n">_lenObject</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="n">ObjectType</span><span class="p">)</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">ObjectTypes</span><span class="p">.</span><span class="n">Data</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_payload</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">LenObject</span> <span class="p">-</span> <span class="m">16</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_payload</span><span class="p">);</span>
-                    <span class="n">_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DataObject</span><span class="p">(</span><span class="n">io___raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_payload</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">LenObject</span> <span class="p">-</span> <span class="m">16</span><span class="p">));</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_padding</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">ObjectTypes</span> <span class="n">_objectType</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_flags</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_reserved</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_lenObject</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">object</span> <span class="n">_payload</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">SystemdJournal</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_payload</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Padding</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_padding</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">ObjectTypes</span> <span class="n">ObjectType</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_objectType</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Flags</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_flags</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Reserved</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_reserved</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">LenObject</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenObject</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">object</span> <span class="n">Payload</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_payload</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">SystemdJournal</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawPayload</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_payload</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="n">ObjectTypes</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">Unused</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span>
+<span class="w">                </span><span class="n">Data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">,</span>
+<span class="w">                </span><span class="n">Field</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">,</span>
+<span class="w">                </span><span class="n">Entry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span><span class="p">,</span>
+<span class="w">                </span><span class="n">DataHashTable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span><span class="p">,</span>
+<span class="w">                </span><span class="n">FieldHashTable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span><span class="p">,</span>
+<span class="w">                </span><span class="n">EntryArray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">6</span><span class="p">,</span>
+<span class="w">                </span><span class="n">Tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">7</span><span class="p">,</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">JournalObject</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">SystemdJournal</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_padding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">Mod</span><span class="p">((</span><span class="m">8</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">M_Io</span><span class="p">.</span><span class="n">Pos</span><span class="p">),</span><span class="w"> </span><span class="m">8</span><span class="p">));</span>
+<span class="w">                </span><span class="n">_objectType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">ObjectTypes</span><span class="p">)</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
+<span class="w">                </span><span class="n">_flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_reserved</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">6</span><span class="p">);</span>
+<span class="w">                </span><span class="n">_lenObject</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+<span class="w">                </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">ObjectType</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">case</span><span class="w"> </span><span class="n">ObjectTypes</span><span class="p">.</span><span class="n">Data</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">__raw_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">LenObject</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">16</span><span class="p">));</span>
+<span class="w">                    </span><span class="kt">var</span><span class="w"> </span><span class="n">io___raw_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_payload</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DataObject</span><span class="p">(</span><span class="n">io___raw_payload</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                    </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">default</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">LenObject</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">16</span><span class="p">));</span>
+<span class="w">                    </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_padding</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">ObjectTypes</span><span class="w"> </span><span class="n">_objectType</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">_flags</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_reserved</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">_lenObject</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">object</span><span class="w"> </span><span class="n">_payload</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">SystemdJournal</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">__raw_payload</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Padding</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_padding</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">ObjectTypes</span><span class="w"> </span><span class="n">ObjectType</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_objectType</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">Flags</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_flags</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Reserved</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_reserved</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">LenObject</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_lenObject</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">object</span><span class="w"> </span><span class="n">Payload</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_payload</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">SystemdJournal</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">M_RawPayload</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">__raw_payload</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
 
-        <span class="c1">/// &lt;summary&gt;</span>
-        <span class="c1">/// Data objects are designed to carry log payload, typically in</span>
-        <span class="c1">/// form of a &amp;quot;key=value&amp;quot; string in `payload` attribute.</span>
-        <span class="c1">/// &lt;/summary&gt;</span>
-        <span class="c1">/// &lt;remarks&gt;</span>
-        <span class="c1">/// Reference: &lt;a href=&quot;https://www.freedesktop.org/wiki/Software/systemd/journal-files/#dataobjects&quot;&gt;Source&lt;/a&gt;</span>
-        <span class="c1">/// &lt;/remarks&gt;</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">DataObject</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">DataObject</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">DataObject</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">        </span><span class="c1">/// Data objects are designed to carry log payload, typically in</span>
+<span class="w">        </span><span class="c1">/// form of a &amp;quot;key=value&amp;quot; string in `payload` attribute.</span>
+<span class="w">        </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">        </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">        </span><span class="c1">/// Reference: &lt;a href=&quot;https://www.freedesktop.org/wiki/Software/systemd/journal-files/#dataobjects&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">        </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">DataObject</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">DataObject</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">DataObject</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">DataObject</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">SystemdJournal</span><span class="p">.</span><span class="n">JournalObject</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">SystemdJournal</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">f_nextHash</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_headField</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_entry</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_entryArray</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_hash</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
-                <span class="n">_ofsNextHash</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
-                <span class="n">_ofsHeadField</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
-                <span class="n">_ofsEntry</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
-                <span class="n">_ofsEntryArray</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
-                <span class="n">_numEntries</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
-                <span class="n">_payload</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesFull</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_nextHash</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">JournalObject</span> <span class="n">_nextHash</span><span class="p">;</span>
-            <span class="k">public</span> <span class="n">JournalObject</span> <span class="n">NextHash</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_nextHash</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_nextHash</span><span class="p">;</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">OfsNextHash</span> <span class="p">!=</span> <span class="m">0</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="p">=</span> <span class="n">M_Root</span><span class="p">.</span><span class="n">M_Io</span><span class="p">;</span>
-                        <span class="kt">long</span> <span class="n">_pos</span> <span class="p">=</span> <span class="n">io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
-                        <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsNextHash</span><span class="p">);</span>
-                        <span class="n">_nextHash</span> <span class="p">=</span> <span class="k">new</span> <span class="n">JournalObject</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                        <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
-                        <span class="n">f_nextHash</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">return</span> <span class="n">_nextHash</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_headField</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">JournalObject</span> <span class="n">_headField</span><span class="p">;</span>
-            <span class="k">public</span> <span class="n">JournalObject</span> <span class="n">HeadField</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_headField</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_headField</span><span class="p">;</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">OfsHeadField</span> <span class="p">!=</span> <span class="m">0</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="p">=</span> <span class="n">M_Root</span><span class="p">.</span><span class="n">M_Io</span><span class="p">;</span>
-                        <span class="kt">long</span> <span class="n">_pos</span> <span class="p">=</span> <span class="n">io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
-                        <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsHeadField</span><span class="p">);</span>
-                        <span class="n">_headField</span> <span class="p">=</span> <span class="k">new</span> <span class="n">JournalObject</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                        <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
-                        <span class="n">f_headField</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">return</span> <span class="n">_headField</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_entry</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">JournalObject</span> <span class="n">_entry</span><span class="p">;</span>
-            <span class="k">public</span> <span class="n">JournalObject</span> <span class="n">Entry</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_entry</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_entry</span><span class="p">;</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">OfsEntry</span> <span class="p">!=</span> <span class="m">0</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="p">=</span> <span class="n">M_Root</span><span class="p">.</span><span class="n">M_Io</span><span class="p">;</span>
-                        <span class="kt">long</span> <span class="n">_pos</span> <span class="p">=</span> <span class="n">io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
-                        <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsEntry</span><span class="p">);</span>
-                        <span class="n">_entry</span> <span class="p">=</span> <span class="k">new</span> <span class="n">JournalObject</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                        <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
-                        <span class="n">f_entry</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">return</span> <span class="n">_entry</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_entryArray</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">JournalObject</span> <span class="n">_entryArray</span><span class="p">;</span>
-            <span class="k">public</span> <span class="n">JournalObject</span> <span class="n">EntryArray</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_entryArray</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_entryArray</span><span class="p">;</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">OfsEntryArray</span> <span class="p">!=</span> <span class="m">0</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="p">=</span> <span class="n">M_Root</span><span class="p">.</span><span class="n">M_Io</span><span class="p">;</span>
-                        <span class="kt">long</span> <span class="n">_pos</span> <span class="p">=</span> <span class="n">io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
-                        <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsEntryArray</span><span class="p">);</span>
-                        <span class="n">_entryArray</span> <span class="p">=</span> <span class="k">new</span> <span class="n">JournalObject</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                        <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
-                        <span class="n">f_entryArray</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">return</span> <span class="n">_entryArray</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_hash</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_ofsNextHash</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_ofsHeadField</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_ofsEntry</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_ofsEntryArray</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_numEntries</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_payload</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">SystemdJournal</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">SystemdJournal</span><span class="p">.</span><span class="n">JournalObject</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">Hash</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_hash</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">OfsNextHash</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ofsNextHash</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">OfsHeadField</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ofsHeadField</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">OfsEntry</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ofsEntry</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">OfsEntryArray</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ofsEntryArray</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">NumEntries</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numEntries</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Payload</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_payload</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">SystemdJournal</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">SystemdJournal</span><span class="p">.</span><span class="n">JournalObject</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_lenHeader</span><span class="p">;</span>
-        <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_lenHeader</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">DataObject</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">SystemdJournal</span><span class="p">.</span><span class="n">JournalObject</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">SystemdJournal</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_nextHash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_headField</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_entry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_entryArray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_hash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_ofsNextHash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_ofsHeadField</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_ofsEntry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_ofsEntryArray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_numEntries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesFull</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_nextHash</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">JournalObject</span><span class="w"> </span><span class="n">_nextHash</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">JournalObject</span><span class="w"> </span><span class="n">NextHash</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_nextHash</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_nextHash</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">OfsNextHash</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">M_Root</span><span class="p">.</span><span class="n">M_Io</span><span class="p">;</span>
+<span class="w">                        </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
+<span class="w">                        </span><span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsNextHash</span><span class="p">);</span>
+<span class="w">                        </span><span class="n">_nextHash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">JournalObject</span><span class="p">(</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                        </span><span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+<span class="w">                        </span><span class="n">f_nextHash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_nextHash</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_headField</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">JournalObject</span><span class="w"> </span><span class="n">_headField</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">JournalObject</span><span class="w"> </span><span class="n">HeadField</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_headField</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_headField</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">OfsHeadField</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">M_Root</span><span class="p">.</span><span class="n">M_Io</span><span class="p">;</span>
+<span class="w">                        </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
+<span class="w">                        </span><span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsHeadField</span><span class="p">);</span>
+<span class="w">                        </span><span class="n">_headField</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">JournalObject</span><span class="p">(</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                        </span><span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+<span class="w">                        </span><span class="n">f_headField</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_headField</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_entry</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">JournalObject</span><span class="w"> </span><span class="n">_entry</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">JournalObject</span><span class="w"> </span><span class="n">Entry</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_entry</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_entry</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">OfsEntry</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">M_Root</span><span class="p">.</span><span class="n">M_Io</span><span class="p">;</span>
+<span class="w">                        </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
+<span class="w">                        </span><span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsEntry</span><span class="p">);</span>
+<span class="w">                        </span><span class="n">_entry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">JournalObject</span><span class="p">(</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                        </span><span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+<span class="w">                        </span><span class="n">f_entry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_entry</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_entryArray</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">JournalObject</span><span class="w"> </span><span class="n">_entryArray</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">JournalObject</span><span class="w"> </span><span class="n">EntryArray</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_entryArray</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_entryArray</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">OfsEntryArray</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">M_Root</span><span class="p">.</span><span class="n">M_Io</span><span class="p">;</span>
+<span class="w">                        </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
+<span class="w">                        </span><span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsEntryArray</span><span class="p">);</span>
+<span class="w">                        </span><span class="n">_entryArray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">JournalObject</span><span class="p">(</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                        </span><span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+<span class="w">                        </span><span class="n">f_entryArray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_entryArray</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">_hash</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">_ofsNextHash</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">_ofsHeadField</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">_ofsEntry</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">_ofsEntryArray</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">_numEntries</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_payload</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">SystemdJournal</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">SystemdJournal</span><span class="p">.</span><span class="n">JournalObject</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">Hash</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_hash</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">OfsNextHash</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_ofsNextHash</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">OfsHeadField</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_ofsHeadField</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">OfsEntry</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_ofsEntry</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">OfsEntryArray</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_ofsEntryArray</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">NumEntries</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_numEntries</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Payload</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_payload</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">SystemdJournal</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">SystemdJournal</span><span class="p">.</span><span class="n">JournalObject</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_lenHeader</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">_lenHeader</span><span class="p">;</span>
 
-        <span class="c1">/// &lt;summary&gt;</span>
-        <span class="c1">/// Header length is used to set substream size, as it thus required</span>
-        <span class="c1">/// prior to declaration of header.</span>
-        <span class="c1">/// &lt;/summary&gt;</span>
-        <span class="k">public</span> <span class="kt">ulong</span> <span class="n">LenHeader</span>
-        <span class="p">{</span>
-            <span class="k">get</span>
-            <span class="p">{</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">f_lenHeader</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="n">_lenHeader</span><span class="p">;</span>
-                <span class="kt">long</span> <span class="n">_pos</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
-                <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="m">88</span><span class="p">);</span>
-                <span class="n">_lenHeader</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
-                <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
-                <span class="n">f_lenHeader</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                <span class="k">return</span> <span class="n">_lenHeader</span><span class="p">;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_dataHashTable</span><span class="p">;</span>
-        <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_dataHashTable</span><span class="p">;</span>
-        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">DataHashTable</span>
-        <span class="p">{</span>
-            <span class="k">get</span>
-            <span class="p">{</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">f_dataHashTable</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="n">_dataHashTable</span><span class="p">;</span>
-                <span class="kt">long</span> <span class="n">_pos</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
-                <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">Header</span><span class="p">.</span><span class="n">OfsDataHashTable</span><span class="p">);</span>
-                <span class="n">_dataHashTable</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Header</span><span class="p">.</span><span class="n">LenDataHashTable</span><span class="p">);</span>
-                <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
-                <span class="n">f_dataHashTable</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                <span class="k">return</span> <span class="n">_dataHashTable</span><span class="p">;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_fieldHashTable</span><span class="p">;</span>
-        <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_fieldHashTable</span><span class="p">;</span>
-        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">FieldHashTable</span>
-        <span class="p">{</span>
-            <span class="k">get</span>
-            <span class="p">{</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">f_fieldHashTable</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="n">_fieldHashTable</span><span class="p">;</span>
-                <span class="kt">long</span> <span class="n">_pos</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
-                <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">Header</span><span class="p">.</span><span class="n">OfsFieldHashTable</span><span class="p">);</span>
-                <span class="n">_fieldHashTable</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Header</span><span class="p">.</span><span class="n">LenFieldHashTable</span><span class="p">);</span>
-                <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
-                <span class="n">f_fieldHashTable</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                <span class="k">return</span> <span class="n">_fieldHashTable</span><span class="p">;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="n">Header</span> <span class="n">_header</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">JournalObject</span><span class="p">&gt;</span> <span class="n">_objects</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">SystemdJournal</span> <span class="n">m_root</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
-        <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_header</span><span class="p">;</span>
-        <span class="k">public</span> <span class="n">Header</span> <span class="n">Header</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_header</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">JournalObject</span><span class="p">&gt;</span> <span class="n">Objects</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_objects</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">SystemdJournal</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawHeader</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_header</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-    <span class="p">}</span>
+<span class="w">        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">        </span><span class="c1">/// Header length is used to set substream size, as it thus required</span>
+<span class="w">        </span><span class="c1">/// prior to declaration of header.</span>
+<span class="w">        </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">LenHeader</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">get</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_lenHeader</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_lenHeader</span><span class="p">;</span>
+<span class="w">                </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="m">88</span><span class="p">);</span>
+<span class="w">                </span><span class="n">_lenHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+<span class="w">                </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+<span class="w">                </span><span class="n">f_lenHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">_lenHeader</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_dataHashTable</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_dataHashTable</span><span class="p">;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">DataHashTable</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">get</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_dataHashTable</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_dataHashTable</span><span class="p">;</span>
+<span class="w">                </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">Header</span><span class="p">.</span><span class="n">OfsDataHashTable</span><span class="p">);</span>
+<span class="w">                </span><span class="n">_dataHashTable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Header</span><span class="p">.</span><span class="n">LenDataHashTable</span><span class="p">);</span>
+<span class="w">                </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+<span class="w">                </span><span class="n">f_dataHashTable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">_dataHashTable</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_fieldHashTable</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_fieldHashTable</span><span class="p">;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">FieldHashTable</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">get</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_fieldHashTable</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_fieldHashTable</span><span class="p">;</span>
+<span class="w">                </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">Header</span><span class="p">.</span><span class="n">OfsFieldHashTable</span><span class="p">);</span>
+<span class="w">                </span><span class="n">_fieldHashTable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Header</span><span class="p">.</span><span class="n">LenFieldHashTable</span><span class="p">);</span>
+<span class="w">                </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+<span class="w">                </span><span class="n">f_fieldHashTable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">_fieldHashTable</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">Header</span><span class="w"> </span><span class="n">_header</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">JournalObject</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_objects</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">SystemdJournal</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">__raw_header</span><span class="p">;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">Header</span><span class="w"> </span><span class="n">Header</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_header</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">JournalObject</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Objects</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_objects</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">SystemdJournal</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">M_RawHeader</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">__raw_header</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 

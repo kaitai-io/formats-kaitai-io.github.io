@@ -255,73 +255,73 @@ but technically any of the larger formats could be used as well.</p>
         <h2>Format specification in Kaitai Struct YAML</h2>
 
         <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
-  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dcmp_variable_length_integer</span>
-  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Variable-length integer used in Apple `&#39;dcmp&#39; (0)` and `&#39;dcmp&#39; (1)` compressed resource formats</span>
-  <span class="nt">application</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Mac OS</span>
-  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MIT</span>
-  <span class="nt">ks-version</span><span class="p">:</span> <span class="s">&quot;0.8&quot;</span>
-  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">be</span>
-<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-  <span class="no">A variable-length integer,</span>
-  <span class="no">in the format used by the 0xfe chunks in the `&#39;dcmp&#39; (0)` and `&#39;dcmp&#39; (1)` resource compression formats.</span>
-  <span class="no">See the dcmp_0 and dcmp_1 specs for more information about these compression formats.</span>
+<span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dcmp_variable_length_integer</span>
+<span class="w">  </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Variable-length integer used in Apple `&#39;dcmp&#39; (0)` and `&#39;dcmp&#39; (1)` compressed resource formats</span>
+<span class="w">  </span><span class="nt">application</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Mac OS</span>
+<span class="w">  </span><span class="nt">license</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MIT</span>
+<span class="w">  </span><span class="nt">ks-version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0.8&quot;</span>
+<span class="w">  </span><span class="nt">endian</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">be</span>
+<span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">  </span><span class="no">A variable-length integer,</span>
+<span class="w">  </span><span class="no">in the format used by the 0xfe chunks in the `&#39;dcmp&#39; (0)` and `&#39;dcmp&#39; (1)` resource compression formats.</span>
+<span class="w">  </span><span class="no">See the dcmp_0 and dcmp_1 specs for more information about these compression formats.</span>
 
-  <span class="no">This variable-length integer format can store an integer `x` in any of the following ways:</span>
+<span class="w">  </span><span class="no">This variable-length integer format can store an integer `x` in any of the following ways:</span>
 
-  <span class="no">* In a single byte,</span>
-    <span class="no">if `0 &lt;= x &lt;= 0x7f`</span>
-    <span class="no">(7-bit unsigned integer)</span>
-  <span class="no">* In 2 bytes,</span>
-    <span class="no">if `-0x4000 &lt;= x &lt;= 0x3eff`</span>
-    <span class="no">(15-bit signed integer with the highest `0x100` values unavailable)</span>
-  <span class="no">* In 5 bytes, if `-0x80000000 &lt;= x &lt;= 0x7fffffff`</span>
-    <span class="no">(32-bit signed integer)</span>
+<span class="w">  </span><span class="no">* In a single byte,</span>
+<span class="w">    </span><span class="no">if `0 &lt;= x &lt;= 0x7f`</span>
+<span class="w">    </span><span class="no">(7-bit unsigned integer)</span>
+<span class="w">  </span><span class="no">* In 2 bytes,</span>
+<span class="w">    </span><span class="no">if `-0x4000 &lt;= x &lt;= 0x3eff`</span>
+<span class="w">    </span><span class="no">(15-bit signed integer with the highest `0x100` values unavailable)</span>
+<span class="w">  </span><span class="no">* In 5 bytes, if `-0x80000000 &lt;= x &lt;= 0x7fffffff`</span>
+<span class="w">    </span><span class="no">(32-bit signed integer)</span>
 
-  <span class="no">In practice,</span>
-  <span class="no">values are always stored in the smallest possible format,</span>
-  <span class="no">but technically any of the larger formats could be used as well.</span>
-<span class="nt">doc-ref</span><span class="p">:</span> <span class="s">&#39;https://github.com/dgelessus/python-rsrcfork/blob/f891a6e/src/rsrcfork/compress/common.py&#39;</span>
+<span class="w">  </span><span class="no">In practice,</span>
+<span class="w">  </span><span class="no">values are always stored in the smallest possible format,</span>
+<span class="w">  </span><span class="no">but technically any of the larger formats could be used as well.</span>
+<span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;https://github.com/dgelessus/python-rsrcfork/blob/f891a6e/src/rsrcfork/compress/common.py&#39;</span>
 <span class="nt">seq</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">first</span>
-    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-      <span class="no">The first byte of the variable-length integer.</span>
-      <span class="no">This determines which storage format is used.</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">first</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">The first byte of the variable-length integer.</span>
+<span class="w">      </span><span class="no">This determines which storage format is used.</span>
 
-      <span class="no">* For the 1-byte format,</span>
-        <span class="no">this encodes the entire value of the value.</span>
-      <span class="no">* For the 2-byte format,</span>
-        <span class="no">this encodes the high 7 bits of the value,</span>
-        <span class="no">minus `0xc0`.</span>
-        <span class="no">The highest bit of the value,</span>
-        <span class="no">i. e. the second-highest bit of this field,</span>
-        <span class="no">is the sign bit.</span>
-      <span class="no">* For the 5-byte format,</span>
-        <span class="no">this is always `0xff`.</span>
-  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">more</span>
-    <span class="nt">type</span><span class="p">:</span>
-      <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">first</span>
-      <span class="nt">cases</span><span class="p">:</span>
-        <span class="nt">0xff</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
-        <span class="nt">_</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
-    <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">first &gt;= 0x80</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-      <span class="no">The remaining bytes of the variable-length integer.</span>
+<span class="w">      </span><span class="no">* For the 1-byte format,</span>
+<span class="w">        </span><span class="no">this encodes the entire value of the value.</span>
+<span class="w">      </span><span class="no">* For the 2-byte format,</span>
+<span class="w">        </span><span class="no">this encodes the high 7 bits of the value,</span>
+<span class="w">        </span><span class="no">minus `0xc0`.</span>
+<span class="w">        </span><span class="no">The highest bit of the value,</span>
+<span class="w">        </span><span class="no">i. e. the second-highest bit of this field,</span>
+<span class="w">        </span><span class="no">is the sign bit.</span>
+<span class="w">      </span><span class="no">* For the 5-byte format,</span>
+<span class="w">        </span><span class="no">this is always `0xff`.</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">more</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">switch-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">first</span>
+<span class="w">      </span><span class="nt">cases</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">0xff</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s4</span>
+<span class="w">        </span><span class="nt">_</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
+<span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">first &gt;= 0x80</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">The remaining bytes of the variable-length integer.</span>
 
-      <span class="no">* For the 1-byte format,</span>
-        <span class="no">this is not present.</span>
-      <span class="no">* For the 2-byte format,</span>
-        <span class="no">this encodes the low 8 bits of the value.</span>
-      <span class="no">* For the 5-byte format,</span>
-        <span class="no">this encodes the entire value.</span>
+<span class="w">      </span><span class="no">* For the 1-byte format,</span>
+<span class="w">        </span><span class="no">this is not present.</span>
+<span class="w">      </span><span class="no">* For the 2-byte format,</span>
+<span class="w">        </span><span class="no">this encodes the low 8 bits of the value.</span>
+<span class="w">      </span><span class="no">* For the 5-byte format,</span>
+<span class="w">        </span><span class="no">this encodes the entire value.</span>
 <span class="nt">instances</span><span class="p">:</span>
-  <span class="nt">value</span><span class="p">:</span>
-    <span class="nt">value</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-      <span class="no">first == 0xff ? more</span>
-      <span class="no">: first &gt;= 0x80 ? (first &lt;&lt; 8 | more) - 0xc000</span>
-      <span class="no">: first</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-      <span class="no">The decoded value of the variable-length integer.</span>
+<span class="w">  </span><span class="nt">value</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">first == 0xff ? more</span>
+<span class="w">      </span><span class="no">: first &gt;= 0x80 ? (first &lt;&lt; 8 | more) - 0xc000</span>
+<span class="w">      </span><span class="no">: first</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">The decoded value of the variable-length integer.</span>
 </pre></div>
     </div>
 </section>

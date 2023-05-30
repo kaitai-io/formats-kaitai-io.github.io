@@ -286,19 +286,19 @@ can also be found there.</p>
 
 
 
-<div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="n">Bcd</span><span class="p">.</span><span class="n">FromFile</span><span class="p">(</span><span class="s">&quot;path/to/local/file.bcd&quot;</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><span class="kt">var</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Bcd</span><span class="p">.</span><span class="n">FromFile</span><span class="p">(</span><span class="s">&quot;path/to/local/file.bcd&quot;</span><span class="p">);</span>
 </pre></div>
 
 <p>Or parse structure from a byte array:</p>
 
-<div class="highlight"><pre><span></span><span class="kt">byte</span><span class="p">[]</span> <span class="n">someArray</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
-<span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Bcd</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">someArray</span><span class="p">));</span>
+<div class="highlight"><pre><span></span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">someArray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">};</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Bcd</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">someArray</span><span class="p">));</span>
 </pre></div>
 
 <p>After that, one can get various attributes from the structure by accessing properties like:</p>
 
 
-<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">AsInt</span> <span class="c1">// =&gt; Value of this BCD number as integer. Endianness would be selected based on `is_le` parameter given.</span>
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">AsInt</span><span class="w"> </span><span class="c1">// =&gt; Value of this BCD number as integer. Endianness would be selected based on `is_le` parameter given.</span>
 </pre></div>
 
     </div>
@@ -328,165 +328,165 @@ can also be found there.</p>
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">System.Collections.Generic</span><span class="p">;</span>
 
-<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">Kaitai</span>
 <span class="p">{</span>
 
-    <span class="c1">/// &lt;summary&gt;</span>
-    <span class="c1">/// BCD (Binary Coded Decimals) is a common way to encode integer</span>
-    <span class="c1">/// numbers in a way that makes human-readable output somewhat</span>
-    <span class="c1">/// simpler. In this encoding scheme, every decimal digit is encoded as</span>
-    <span class="c1">/// either a single byte (8 bits), or a nibble (half of a byte, 4</span>
-    <span class="c1">/// bits). This obviously wastes a lot of bits, but it makes translation</span>
-    <span class="c1">/// into human-readable string much easier than traditional</span>
-    <span class="c1">/// binary-to-decimal conversion process, which includes lots of</span>
-    <span class="c1">/// divisions by 10.</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// For example, encoding integer 31337 in 8-digit, 8 bits per digit,</span>
-    <span class="c1">/// big endian order of digits BCD format yields</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// ```</span>
-    <span class="c1">/// 00 00 00 03 01 03 03 07</span>
-    <span class="c1">/// ```</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// Encoding the same integer as 8-digit, 4 bits per digit, little</span>
-    <span class="c1">/// endian order BCD format would yield:</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// ```</span>
-    <span class="c1">/// 73 31 30 00</span>
-    <span class="c1">/// ```</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// Using this type of encoding in Kaitai Struct is pretty</span>
-    <span class="c1">/// straightforward: one calls for this type, specifying desired</span>
-    <span class="c1">/// encoding parameters, and gets result using either `as_int` or</span>
-    <span class="c1">/// `as_str` attributes.</span>
-    <span class="c1">/// &lt;/summary&gt;</span>
-    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Bcd</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">{</span>
-        <span class="k">public</span> <span class="nf">Bcd</span><span class="p">(</span><span class="kt">byte</span> <span class="n">p_numDigits</span><span class="p">,</span> <span class="kt">byte</span> <span class="n">p_bitsPerDigit</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">p_isLe</span><span class="p">,</span> <span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Bcd</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
-            <span class="n">_numDigits</span> <span class="p">=</span> <span class="n">p_numDigits</span><span class="p">;</span>
-            <span class="n">_bitsPerDigit</span> <span class="p">=</span> <span class="n">p_bitsPerDigit</span><span class="p">;</span>
-            <span class="n">_isLe</span> <span class="p">=</span> <span class="n">p_isLe</span><span class="p">;</span>
-            <span class="n">f_asInt</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-            <span class="n">f_asIntLe</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-            <span class="n">f_lastIdx</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-            <span class="n">f_asIntBe</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-            <span class="n">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-        <span class="p">{</span>
-            <span class="n">_digits</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;();</span>
-            <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumDigits</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
-            <span class="p">{</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="n">BitsPerDigit</span><span class="p">)</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="m">4</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_digits</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">4</span><span class="p">));</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="m">8</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_digits</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_asInt</span><span class="p">;</span>
-        <span class="k">private</span> <span class="kt">int</span> <span class="n">_asInt</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// BCD (Binary Coded Decimals) is a common way to encode integer</span>
+<span class="w">    </span><span class="c1">/// numbers in a way that makes human-readable output somewhat</span>
+<span class="w">    </span><span class="c1">/// simpler. In this encoding scheme, every decimal digit is encoded as</span>
+<span class="w">    </span><span class="c1">/// either a single byte (8 bits), or a nibble (half of a byte, 4</span>
+<span class="w">    </span><span class="c1">/// bits). This obviously wastes a lot of bits, but it makes translation</span>
+<span class="w">    </span><span class="c1">/// into human-readable string much easier than traditional</span>
+<span class="w">    </span><span class="c1">/// binary-to-decimal conversion process, which includes lots of</span>
+<span class="w">    </span><span class="c1">/// divisions by 10.</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// For example, encoding integer 31337 in 8-digit, 8 bits per digit,</span>
+<span class="w">    </span><span class="c1">/// big endian order of digits BCD format yields</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// ```</span>
+<span class="w">    </span><span class="c1">/// 00 00 00 03 01 03 03 07</span>
+<span class="w">    </span><span class="c1">/// ```</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// Encoding the same integer as 8-digit, 4 bits per digit, little</span>
+<span class="w">    </span><span class="c1">/// endian order BCD format would yield:</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// ```</span>
+<span class="w">    </span><span class="c1">/// 73 31 30 00</span>
+<span class="w">    </span><span class="c1">/// ```</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// Using this type of encoding in Kaitai Struct is pretty</span>
+<span class="w">    </span><span class="c1">/// straightforward: one calls for this type, specifying desired</span>
+<span class="w">    </span><span class="c1">/// encoding parameters, and gets result using either `as_int` or</span>
+<span class="w">    </span><span class="c1">/// `as_str` attributes.</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Bcd</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="nf">Bcd</span><span class="p">(</span><span class="kt">byte</span><span class="w"> </span><span class="n">p_numDigits</span><span class="p">,</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">p_bitsPerDigit</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">p_isLe</span><span class="p">,</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">Bcd</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">            </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">            </span><span class="n">_numDigits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p_numDigits</span><span class="p">;</span>
+<span class="w">            </span><span class="n">_bitsPerDigit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p_bitsPerDigit</span><span class="p">;</span>
+<span class="w">            </span><span class="n">_isLe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p_isLe</span><span class="p">;</span>
+<span class="w">            </span><span class="n">f_asInt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">            </span><span class="n">f_asIntLe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">            </span><span class="n">f_lastIdx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">            </span><span class="n">f_asIntBe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">            </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">_digits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">NumDigits</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">BitsPerDigit</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">case</span><span class="w"> </span><span class="m">4</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">_digits</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">4</span><span class="p">));</span>
+<span class="w">                    </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">case</span><span class="w"> </span><span class="m">8</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">_digits</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
+<span class="w">                    </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_asInt</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">_asInt</span><span class="p">;</span>
 
-        <span class="c1">/// &lt;summary&gt;</span>
-        <span class="c1">/// Value of this BCD number as integer. Endianness would be selected based on `is_le` parameter given.</span>
-        <span class="c1">/// &lt;/summary&gt;</span>
-        <span class="k">public</span> <span class="kt">int</span> <span class="n">AsInt</span>
-        <span class="p">{</span>
-            <span class="k">get</span>
-            <span class="p">{</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">f_asInt</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="n">_asInt</span><span class="p">;</span>
-                <span class="n">_asInt</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">IsLe</span> <span class="p">?</span> <span class="n">AsIntLe</span> <span class="p">:</span> <span class="n">AsIntBe</span><span class="p">));</span>
-                <span class="n">f_asInt</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                <span class="k">return</span> <span class="n">_asInt</span><span class="p">;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_asIntLe</span><span class="p">;</span>
-        <span class="k">private</span> <span class="kt">int</span> <span class="n">_asIntLe</span><span class="p">;</span>
+<span class="w">        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">        </span><span class="c1">/// Value of this BCD number as integer. Endianness would be selected based on `is_le` parameter given.</span>
+<span class="w">        </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">AsInt</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">get</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_asInt</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_asInt</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_asInt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">IsLe</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">AsIntLe</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">AsIntBe</span><span class="p">));</span>
+<span class="w">                </span><span class="n">f_asInt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">_asInt</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_asIntLe</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">_asIntLe</span><span class="p">;</span>
 
-        <span class="c1">/// &lt;summary&gt;</span>
-        <span class="c1">/// Value of this BCD number as integer (treating digit order as little-endian).</span>
-        <span class="c1">/// &lt;/summary&gt;</span>
-        <span class="k">public</span> <span class="kt">int</span> <span class="n">AsIntLe</span>
-        <span class="p">{</span>
-            <span class="k">get</span>
-            <span class="p">{</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">f_asIntLe</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="n">_asIntLe</span><span class="p">;</span>
-                <span class="n">_asIntLe</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">Digits</span><span class="p">[</span><span class="m">0</span><span class="p">]</span> <span class="p">+</span> <span class="p">(</span><span class="n">NumDigits</span> <span class="p">&lt;</span> <span class="m">2</span> <span class="p">?</span> <span class="m">0</span> <span class="p">:</span> <span class="p">((</span><span class="n">Digits</span><span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="p">*</span> <span class="m">10</span><span class="p">)</span> <span class="p">+</span> <span class="p">(</span><span class="n">NumDigits</span> <span class="p">&lt;</span> <span class="m">3</span> <span class="p">?</span> <span class="m">0</span> <span class="p">:</span> <span class="p">((</span><span class="n">Digits</span><span class="p">[</span><span class="m">2</span><span class="p">]</span> <span class="p">*</span> <span class="m">100</span><span class="p">)</span> <span class="p">+</span> <span class="p">(</span><span class="n">NumDigits</span> <span class="p">&lt;</span> <span class="m">4</span> <span class="p">?</span> <span class="m">0</span> <span class="p">:</span> <span class="p">((</span><span class="n">Digits</span><span class="p">[</span><span class="m">3</span><span class="p">]</span> <span class="p">*</span> <span class="m">1000</span><span class="p">)</span> <span class="p">+</span> <span class="p">(</span><span class="n">NumDigits</span> <span class="p">&lt;</span> <span class="m">5</span> <span class="p">?</span> <span class="m">0</span> <span class="p">:</span> <span class="p">((</span><span class="n">Digits</span><span class="p">[</span><span class="m">4</span><span class="p">]</span> <span class="p">*</span> <span class="m">10000</span><span class="p">)</span> <span class="p">+</span> <span class="p">(</span><span class="n">NumDigits</span> <span class="p">&lt;</span> <span class="m">6</span> <span class="p">?</span> <span class="m">0</span> <span class="p">:</span> <span class="p">((</span><span class="n">Digits</span><span class="p">[</span><span class="m">5</span><span class="p">]</span> <span class="p">*</span> <span class="m">100000</span><span class="p">)</span> <span class="p">+</span> <span class="p">(</span><span class="n">NumDigits</span> <span class="p">&lt;</span> <span class="m">7</span> <span class="p">?</span> <span class="m">0</span> <span class="p">:</span> <span class="p">((</span><span class="n">Digits</span><span class="p">[</span><span class="m">6</span><span class="p">]</span> <span class="p">*</span> <span class="m">1000000</span><span class="p">)</span> <span class="p">+</span> <span class="p">(</span><span class="n">NumDigits</span> <span class="p">&lt;</span> <span class="m">8</span> <span class="p">?</span> <span class="m">0</span> <span class="p">:</span> <span class="p">(</span><span class="n">Digits</span><span class="p">[</span><span class="m">7</span><span class="p">]</span> <span class="p">*</span> <span class="m">10000000</span><span class="p">))))))))))))))));</span>
-                <span class="n">f_asIntLe</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                <span class="k">return</span> <span class="n">_asIntLe</span><span class="p">;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_lastIdx</span><span class="p">;</span>
-        <span class="k">private</span> <span class="kt">int</span> <span class="n">_lastIdx</span><span class="p">;</span>
+<span class="w">        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">        </span><span class="c1">/// Value of this BCD number as integer (treating digit order as little-endian).</span>
+<span class="w">        </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">AsIntLe</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">get</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_asIntLe</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_asIntLe</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_asIntLe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">Digits</span><span class="p">[</span><span class="m">0</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">NumDigits</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">((</span><span class="n">Digits</span><span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">10</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">NumDigits</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">((</span><span class="n">Digits</span><span class="p">[</span><span class="m">2</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">100</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">NumDigits</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">((</span><span class="n">Digits</span><span class="p">[</span><span class="m">3</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">1000</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">NumDigits</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">((</span><span class="n">Digits</span><span class="p">[</span><span class="m">4</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">10000</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">NumDigits</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">((</span><span class="n">Digits</span><span class="p">[</span><span class="m">5</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">100000</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">NumDigits</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">7</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">((</span><span class="n">Digits</span><span class="p">[</span><span class="m">6</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">1000000</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">NumDigits</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">8</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="n">Digits</span><span class="p">[</span><span class="m">7</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">10000000</span><span class="p">))))))))))))))));</span>
+<span class="w">                </span><span class="n">f_asIntLe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">_asIntLe</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_lastIdx</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">_lastIdx</span><span class="p">;</span>
 
-        <span class="c1">/// &lt;summary&gt;</span>
-        <span class="c1">/// Index of last digit (0-based).</span>
-        <span class="c1">/// &lt;/summary&gt;</span>
-        <span class="k">public</span> <span class="kt">int</span> <span class="n">LastIdx</span>
-        <span class="p">{</span>
-            <span class="k">get</span>
-            <span class="p">{</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">f_lastIdx</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="n">_lastIdx</span><span class="p">;</span>
-                <span class="n">_lastIdx</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">NumDigits</span> <span class="p">-</span> <span class="m">1</span><span class="p">));</span>
-                <span class="n">f_lastIdx</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                <span class="k">return</span> <span class="n">_lastIdx</span><span class="p">;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_asIntBe</span><span class="p">;</span>
-        <span class="k">private</span> <span class="kt">int</span> <span class="n">_asIntBe</span><span class="p">;</span>
+<span class="w">        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">        </span><span class="c1">/// Index of last digit (0-based).</span>
+<span class="w">        </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">LastIdx</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">get</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_lastIdx</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_lastIdx</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_lastIdx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">NumDigits</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">1</span><span class="p">));</span>
+<span class="w">                </span><span class="n">f_lastIdx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">_lastIdx</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_asIntBe</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">_asIntBe</span><span class="p">;</span>
 
-        <span class="c1">/// &lt;summary&gt;</span>
-        <span class="c1">/// Value of this BCD number as integer (treating digit order as big-endian).</span>
-        <span class="c1">/// &lt;/summary&gt;</span>
-        <span class="k">public</span> <span class="kt">int</span> <span class="n">AsIntBe</span>
-        <span class="p">{</span>
-            <span class="k">get</span>
-            <span class="p">{</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">f_asIntBe</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="n">_asIntBe</span><span class="p">;</span>
-                <span class="n">_asIntBe</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">Digits</span><span class="p">[</span><span class="n">LastIdx</span><span class="p">]</span> <span class="p">+</span> <span class="p">(</span><span class="n">NumDigits</span> <span class="p">&lt;</span> <span class="m">2</span> <span class="p">?</span> <span class="m">0</span> <span class="p">:</span> <span class="p">((</span><span class="n">Digits</span><span class="p">[(</span><span class="n">LastIdx</span> <span class="p">-</span> <span class="m">1</span><span class="p">)]</span> <span class="p">*</span> <span class="m">10</span><span class="p">)</span> <span class="p">+</span> <span class="p">(</span><span class="n">NumDigits</span> <span class="p">&lt;</span> <span class="m">3</span> <span class="p">?</span> <span class="m">0</span> <span class="p">:</span> <span class="p">((</span><span class="n">Digits</span><span class="p">[(</span><span class="n">LastIdx</span> <span class="p">-</span> <span class="m">2</span><span class="p">)]</span> <span class="p">*</span> <span class="m">100</span><span class="p">)</span> <span class="p">+</span> <span class="p">(</span><span class="n">NumDigits</span> <span class="p">&lt;</span> <span class="m">4</span> <span class="p">?</span> <span class="m">0</span> <span class="p">:</span> <span class="p">((</span><span class="n">Digits</span><span class="p">[(</span><span class="n">LastIdx</span> <span class="p">-</span> <span class="m">3</span><span class="p">)]</span> <span class="p">*</span> <span class="m">1000</span><span class="p">)</span> <span class="p">+</span> <span class="p">(</span><span class="n">NumDigits</span> <span class="p">&lt;</span> <span class="m">5</span> <span class="p">?</span> <span class="m">0</span> <span class="p">:</span> <span class="p">((</span><span class="n">Digits</span><span class="p">[(</span><span class="n">LastIdx</span> <span class="p">-</span> <span class="m">4</span><span class="p">)]</span> <span class="p">*</span> <span class="m">10000</span><span class="p">)</span> <span class="p">+</span> <span class="p">(</span><span class="n">NumDigits</span> <span class="p">&lt;</span> <span class="m">6</span> <span class="p">?</span> <span class="m">0</span> <span class="p">:</span> <span class="p">((</span><span class="n">Digits</span><span class="p">[(</span><span class="n">LastIdx</span> <span class="p">-</span> <span class="m">5</span><span class="p">)]</span> <span class="p">*</span> <span class="m">100000</span><span class="p">)</span> <span class="p">+</span> <span class="p">(</span><span class="n">NumDigits</span> <span class="p">&lt;</span> <span class="m">7</span> <span class="p">?</span> <span class="m">0</span> <span class="p">:</span> <span class="p">((</span><span class="n">Digits</span><span class="p">[(</span><span class="n">LastIdx</span> <span class="p">-</span> <span class="m">6</span><span class="p">)]</span> <span class="p">*</span> <span class="m">1000000</span><span class="p">)</span> <span class="p">+</span> <span class="p">(</span><span class="n">NumDigits</span> <span class="p">&lt;</span> <span class="m">8</span> <span class="p">?</span> <span class="m">0</span> <span class="p">:</span> <span class="p">(</span><span class="n">Digits</span><span class="p">[(</span><span class="n">LastIdx</span> <span class="p">-</span> <span class="m">7</span><span class="p">)]</span> <span class="p">*</span> <span class="m">10000000</span><span class="p">))))))))))))))));</span>
-                <span class="n">f_asIntBe</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                <span class="k">return</span> <span class="n">_asIntBe</span><span class="p">;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">_digits</span><span class="p">;</span>
-        <span class="k">private</span> <span class="kt">byte</span> <span class="n">_numDigits</span><span class="p">;</span>
-        <span class="k">private</span> <span class="kt">byte</span> <span class="n">_bitsPerDigit</span><span class="p">;</span>
-        <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isLe</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">Bcd</span> <span class="n">m_root</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
-        <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">Digits</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_digits</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+<span class="w">        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">        </span><span class="c1">/// Value of this BCD number as integer (treating digit order as big-endian).</span>
+<span class="w">        </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">AsIntBe</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">get</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_asIntBe</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_asIntBe</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_asIntBe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">Digits</span><span class="p">[</span><span class="n">LastIdx</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">NumDigits</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">((</span><span class="n">Digits</span><span class="p">[(</span><span class="n">LastIdx</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">1</span><span class="p">)]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">10</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">NumDigits</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">((</span><span class="n">Digits</span><span class="p">[(</span><span class="n">LastIdx</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">2</span><span class="p">)]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">100</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">NumDigits</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">((</span><span class="n">Digits</span><span class="p">[(</span><span class="n">LastIdx</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">3</span><span class="p">)]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">1000</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">NumDigits</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">((</span><span class="n">Digits</span><span class="p">[(</span><span class="n">LastIdx</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">4</span><span class="p">)]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">10000</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">NumDigits</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">((</span><span class="n">Digits</span><span class="p">[(</span><span class="n">LastIdx</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">5</span><span class="p">)]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">100000</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">NumDigits</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">7</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">((</span><span class="n">Digits</span><span class="p">[(</span><span class="n">LastIdx</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">6</span><span class="p">)]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">1000000</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">NumDigits</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">8</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="n">Digits</span><span class="p">[(</span><span class="n">LastIdx</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">7</span><span class="p">)]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">10000000</span><span class="p">))))))))))))))));</span>
+<span class="w">                </span><span class="n">f_asIntBe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">_asIntBe</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_digits</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">_numDigits</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">_bitsPerDigit</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">_isLe</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">Bcd</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Digits</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_digits</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 
-        <span class="c1">/// &lt;summary&gt;</span>
-        <span class="c1">/// Number of digits in this BCD representation. Only values from 1 to 8 inclusive are supported.</span>
-        <span class="c1">/// &lt;/summary&gt;</span>
-        <span class="k">public</span> <span class="kt">byte</span> <span class="n">NumDigits</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numDigits</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+<span class="w">        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">        </span><span class="c1">/// Number of digits in this BCD representation. Only values from 1 to 8 inclusive are supported.</span>
+<span class="w">        </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">NumDigits</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_numDigits</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 
-        <span class="c1">/// &lt;summary&gt;</span>
-        <span class="c1">/// Number of bits per digit. Only values of 4 and 8 are supported.</span>
-        <span class="c1">/// &lt;/summary&gt;</span>
-        <span class="k">public</span> <span class="kt">byte</span> <span class="n">BitsPerDigit</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_bitsPerDigit</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+<span class="w">        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">        </span><span class="c1">/// Number of bits per digit. Only values of 4 and 8 are supported.</span>
+<span class="w">        </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">BitsPerDigit</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_bitsPerDigit</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 
-        <span class="c1">/// &lt;summary&gt;</span>
-        <span class="c1">/// Endianness used by this BCD representation. True means little-endian, false is for big-endian.</span>
-        <span class="c1">/// &lt;/summary&gt;</span>
-        <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsLe</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_isLe</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">Bcd</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-    <span class="p">}</span>
+<span class="w">        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">        </span><span class="c1">/// Endianness used by this BCD representation. True means little-endian, false is for big-endian.</span>
+<span class="w">        </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">IsLe</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_isLe</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">Bcd</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 

@@ -272,104 +272,104 @@ are the fields' default values, etc, etc.</li>
         <h2>Format specification in Kaitai Struct YAML</h2>
 
         <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
-  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">google_protobuf</span>
-  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Google Protocol Buffers (protobuf)</span>
-  <span class="nt">xref</span><span class="p">:</span>
-    <span class="nt">justsolve</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Protobuf</span>
-    <span class="nt">wikidata</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Q1645574</span>
-  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MIT</span>
-  <span class="nt">ks-version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.7</span>
-  <span class="nt">imports</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">/common/vlq_base128_le</span>
-<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-  <span class="no">Google Protocol Buffers (AKA protobuf) is a popular data</span>
-  <span class="no">serialization scheme used for communication protocols, data storage,</span>
-  <span class="no">etc. There are implementations are available for almost every</span>
-  <span class="no">popular language. The focus points of this scheme are brevity (data</span>
-  <span class="no">is encoded in a very size-efficient manner) and extensibility (one</span>
-  <span class="no">can add keys to the structure, while keeping it readable in previous</span>
-  <span class="no">version of software).</span>
+<span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">google_protobuf</span>
+<span class="w">  </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Google Protocol Buffers (protobuf)</span>
+<span class="w">  </span><span class="nt">xref</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">justsolve</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Protobuf</span>
+<span class="w">    </span><span class="nt">wikidata</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Q1645574</span>
+<span class="w">  </span><span class="nt">license</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MIT</span>
+<span class="w">  </span><span class="nt">ks-version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.7</span>
+<span class="w">  </span><span class="nt">imports</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/common/vlq_base128_le</span>
+<span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">  </span><span class="no">Google Protocol Buffers (AKA protobuf) is a popular data</span>
+<span class="w">  </span><span class="no">serialization scheme used for communication protocols, data storage,</span>
+<span class="w">  </span><span class="no">etc. There are implementations are available for almost every</span>
+<span class="w">  </span><span class="no">popular language. The focus points of this scheme are brevity (data</span>
+<span class="w">  </span><span class="no">is encoded in a very size-efficient manner) and extensibility (one</span>
+<span class="w">  </span><span class="no">can add keys to the structure, while keeping it readable in previous</span>
+<span class="w">  </span><span class="no">version of software).</span>
 
-  <span class="no">Protobuf uses semi-self-describing encoding scheme for its</span>
-  <span class="no">messages. It means that it is possible to parse overall structure of</span>
-  <span class="no">the message (skipping over fields one can&#39;t understand), but to</span>
-  <span class="no">fully understand the message, one needs a protocol definition file</span>
-  <span class="no">(`.proto`). To be specific:</span>
+<span class="w">  </span><span class="no">Protobuf uses semi-self-describing encoding scheme for its</span>
+<span class="w">  </span><span class="no">messages. It means that it is possible to parse overall structure of</span>
+<span class="w">  </span><span class="no">the message (skipping over fields one can&#39;t understand), but to</span>
+<span class="w">  </span><span class="no">fully understand the message, one needs a protocol definition file</span>
+<span class="w">  </span><span class="no">(`.proto`). To be specific:</span>
 
-  <span class="no">* &quot;Keys&quot; in key-value pairs provided in the message are identified</span>
-    <span class="no">only with an integer &quot;field tag&quot;. `.proto` file provides info on</span>
-    <span class="no">which symbolic field names these field tags map to.</span>
-  <span class="no">* &quot;Keys&quot; also provide something called &quot;wire type&quot;. It&#39;s not a data</span>
-    <span class="no">type in its common sense (i.e. you can&#39;t, for example, distinguish</span>
-    <span class="no">`sint32` vs `uint32` vs some enum, or `string` from `bytes`), but</span>
-    <span class="no">it&#39;s enough information to determine how many bytes to</span>
-    <span class="no">parse. Interpretation of the value should be done according to the</span>
-    <span class="no">type specified in `.proto` file.</span>
-  <span class="no">* There&#39;s no direct information on which fields are optional /</span>
-    <span class="no">required, which fields may be repeated or constitute a map, what</span>
-    <span class="no">restrictions are placed on fields usage in a single message, what</span>
-    <span class="no">are the fields&#39; default values, etc, etc.</span>
-<span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://protobuf.dev/programming-guides/encoding/</span>
+<span class="w">  </span><span class="no">* &quot;Keys&quot; in key-value pairs provided in the message are identified</span>
+<span class="w">    </span><span class="no">only with an integer &quot;field tag&quot;. `.proto` file provides info on</span>
+<span class="w">    </span><span class="no">which symbolic field names these field tags map to.</span>
+<span class="w">  </span><span class="no">* &quot;Keys&quot; also provide something called &quot;wire type&quot;. It&#39;s not a data</span>
+<span class="w">    </span><span class="no">type in its common sense (i.e. you can&#39;t, for example, distinguish</span>
+<span class="w">    </span><span class="no">`sint32` vs `uint32` vs some enum, or `string` from `bytes`), but</span>
+<span class="w">    </span><span class="no">it&#39;s enough information to determine how many bytes to</span>
+<span class="w">    </span><span class="no">parse. Interpretation of the value should be done according to the</span>
+<span class="w">    </span><span class="no">type specified in `.proto` file.</span>
+<span class="w">  </span><span class="no">* There&#39;s no direct information on which fields are optional /</span>
+<span class="w">    </span><span class="no">required, which fields may be repeated or constitute a map, what</span>
+<span class="w">    </span><span class="no">restrictions are placed on fields usage in a single message, what</span>
+<span class="w">    </span><span class="no">are the fields&#39; default values, etc, etc.</span>
+<span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://protobuf.dev/programming-guides/encoding/</span>
 <span class="nt">seq</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pairs</span>
-    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pair</span>
-    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Key-value pairs which constitute a message</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pairs</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pair</span>
+<span class="w">    </span><span class="nt">repeat</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eos</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Key-value pairs which constitute a message</span>
 <span class="nt">types</span><span class="p">:</span>
-  <span class="nt">pair</span><span class="p">:</span>
-    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Key-value pair</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">key</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">vlq_base128_le</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-          <span class="no">Key is a bit-mapped variable-length integer: lower 3 bits</span>
-          <span class="no">are used for &quot;wire type&quot;, and everything higher designates</span>
-          <span class="no">an integer &quot;field tag&quot;.</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-          <span class="no">Value that corresponds to field identified by</span>
-          <span class="no">`field_tag`. Type is determined approximately: there is</span>
-          <span class="no">enough information to parse it unambiguously from a stream,</span>
-          <span class="no">but further infromation from `.proto` file is required to</span>
-          <span class="no">interprete it properly.</span>
-        <span class="nt">type</span><span class="p">:</span>
-          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">wire_type</span>
-          <span class="nt">cases</span><span class="p">:</span>
-            <span class="s">&#39;wire_types::varint&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">vlq_base128_le</span>
-            <span class="s">&#39;wire_types::len_delimited&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">delimited_bytes</span>
-            <span class="s">&#39;wire_types::bit_64&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u8le</span>
-            <span class="s">&#39;wire_types::bit_32&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u4le</span>
-    <span class="nt">instances</span><span class="p">:</span>
-      <span class="nt">wire_type</span><span class="p">:</span>
-        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;key.value</span><span class="nv"> </span><span class="s">&amp;</span><span class="nv"> </span><span class="s">0b111&#39;</span>
-        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">wire_types</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-          <span class="no">&quot;Wire type&quot; is a part of the &quot;key&quot; that carries enough</span>
-          <span class="no">information to parse value from the wire, i.e. read correct</span>
-          <span class="no">amount of bytes, but there&#39;s not enough informaton to</span>
-          <span class="no">interprete in unambiguously. For example, one can&#39;t clearly</span>
-          <span class="no">distinguish 64-bit fixed-sized integers from 64-bit floats,</span>
-          <span class="no">signed zigzag-encoded varints from regular unsigned varints,</span>
-          <span class="no">arbitrary bytes from UTF-8 encoded strings, etc.</span>
-      <span class="nt">field_tag</span><span class="p">:</span>
-        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;key.value</span><span class="nv"> </span><span class="s">&gt;&gt;</span><span class="nv"> </span><span class="s">3&#39;</span>
-        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-          <span class="no">Identifies a field of protocol. One can look up symbolic</span>
-          <span class="no">field name in a `.proto` file by this field tag.</span>
-    <span class="nt">enums</span><span class="p">:</span>
-      <span class="nt">wire_types</span><span class="p">:</span>
-        <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">varint</span>
-        <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bit_64</span>
-        <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_delimited</span>
-        <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">group_start</span>
-        <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">group_end</span>
-        <span class="nt">5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bit_32</span>
-  <span class="nt">delimited_bytes</span><span class="p">:</span>
-    <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">vlq_base128_le</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">body</span>
-        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len.value</span>
+<span class="w">  </span><span class="nt">pair</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Key-value pair</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">key</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vlq_base128_le</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Key is a bit-mapped variable-length integer: lower 3 bits</span>
+<span class="w">          </span><span class="no">are used for &quot;wire type&quot;, and everything higher designates</span>
+<span class="w">          </span><span class="no">an integer &quot;field tag&quot;.</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Value that corresponds to field identified by</span>
+<span class="w">          </span><span class="no">`field_tag`. Type is determined approximately: there is</span>
+<span class="w">          </span><span class="no">enough information to parse it unambiguously from a stream,</span>
+<span class="w">          </span><span class="no">but further infromation from `.proto` file is required to</span>
+<span class="w">          </span><span class="no">interprete it properly.</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">switch-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wire_type</span>
+<span class="w">          </span><span class="nt">cases</span><span class="p">:</span>
+<span class="w">            </span><span class="s">&#39;wire_types::varint&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vlq_base128_le</span>
+<span class="w">            </span><span class="s">&#39;wire_types::len_delimited&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">delimited_bytes</span>
+<span class="w">            </span><span class="s">&#39;wire_types::bit_64&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u8le</span>
+<span class="w">            </span><span class="s">&#39;wire_types::bit_32&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4le</span>
+<span class="w">    </span><span class="nt">instances</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">wire_type</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;key.value</span><span class="nv"> </span><span class="s">&amp;</span><span class="nv"> </span><span class="s">0b111&#39;</span>
+<span class="w">        </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wire_types</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">&quot;Wire type&quot; is a part of the &quot;key&quot; that carries enough</span>
+<span class="w">          </span><span class="no">information to parse value from the wire, i.e. read correct</span>
+<span class="w">          </span><span class="no">amount of bytes, but there&#39;s not enough informaton to</span>
+<span class="w">          </span><span class="no">interprete in unambiguously. For example, one can&#39;t clearly</span>
+<span class="w">          </span><span class="no">distinguish 64-bit fixed-sized integers from 64-bit floats,</span>
+<span class="w">          </span><span class="no">signed zigzag-encoded varints from regular unsigned varints,</span>
+<span class="w">          </span><span class="no">arbitrary bytes from UTF-8 encoded strings, etc.</span>
+<span class="w">      </span><span class="nt">field_tag</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;key.value</span><span class="nv"> </span><span class="s">&gt;&gt;</span><span class="nv"> </span><span class="s">3&#39;</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Identifies a field of protocol. One can look up symbolic</span>
+<span class="w">          </span><span class="no">field name in a `.proto` file by this field tag.</span>
+<span class="w">    </span><span class="nt">enums</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">wire_types</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">0</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">varint</span>
+<span class="w">        </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bit_64</span>
+<span class="w">        </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len_delimited</span>
+<span class="w">        </span><span class="nt">3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">group_start</span>
+<span class="w">        </span><span class="nt">4</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">group_end</span>
+<span class="w">        </span><span class="nt">5</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bit_32</span>
+<span class="w">  </span><span class="nt">delimited_bytes</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vlq_base128_le</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">body</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">len.value</span>
 </pre></div>
     </div>
 </section>

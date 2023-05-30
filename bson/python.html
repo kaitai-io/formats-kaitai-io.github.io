@@ -318,7 +318,7 @@ section#format-index .row {
     <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
 
 <span class="k">class</span> <span class="nc">Bson</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;BSON, short for Binary JSON, is a binary-encoded serialization of JSON-like documents. Like JSON, BSON supports the embedding of documents and arrays within other documents and arrays. BSON also contains extensions that allow representation of data types that are not part of the JSON spec. For example, BSON has a Date type and a BinData type. BSON can be compared to binary interchange formats, like Protocol Buffers. BSON is more &quot;schemaless&quot; than Protocol Buffers, which can give it an advantage in flexibility but also a slight disadvantage in space efficiency (BSON has overhead for field names within the serialized data). BSON was designed to have the following three characteristics:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;BSON, short for Binary JSON, is a binary-encoded serialization of JSON-like documents. Like JSON, BSON supports the embedding of documents and arrays within other documents and arrays. BSON also contains extensions that allow representation of data types that are not part of the JSON spec. For example, BSON has a Date type and a BinData type. BSON can be compared to binary interchange formats, like Protocol Buffers. BSON is more &quot;schemaless&quot; than Protocol Buffers, which can give it an advantage in flexibility but also a slight disadvantage in space efficiency (BSON has overhead for field names within the serialized data). BSON was designed to have the following three characteristics:</span>
 <span class="sd">      * Lightweight. Keeping spatial overhead to a minimum is important for any data representation format, especially when used over the network.</span>
 <span class="sd">      * Traversable. BSON is designed to be traversed easily. This is a vital property in its role as the primary data representation for MongoDB.</span>
 <span class="sd">      * Efficient. Encoding data to BSON and decoding from BSON can be performed very quickly in most languages due to the use of C data types.</span>
@@ -339,7 +339,7 @@ section#format-index .row {
             <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationNotEqualError</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x00</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">terminator</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/seq/2&quot;</span><span class="p">)</span>
 
     <span class="k">class</span> <span class="nc">Timestamp</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Special internal type used by MongoDB replication and sharding. First 4 bytes are an increment, second 4 are a timestamp.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Special internal type used by MongoDB replication and sharding. First 4 bytes are an increment, second 4 are a timestamp.&quot;&quot;&quot;</span>
         <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
@@ -352,7 +352,7 @@ section#format-index .row {
 
 
     <span class="k">class</span> <span class="nc">BinData</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;The BSON &quot;binary&quot; or &quot;BinData&quot; datatype is used to represent arrays of bytes. It is somewhat analogous to the Java notion of a ByteArray. BSON binary values have a subtype. This is used to indicate what kind of data is in the byte array. Subtypes from zero to 127 are predefined or reserved. Subtypes from 128-255 are user-defined.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The BSON &quot;binary&quot; or &quot;BinData&quot; datatype is used to represent arrays of bytes. It is somewhat analogous to the Java notion of a ByteArray. BSON binary values have a subtype. This is used to indicate what kind of data is in the byte array. Subtypes from zero to 127 are predefined or reserved. Subtypes from 128-255 are user-defined.&quot;&quot;&quot;</span>
 
         <span class="k">class</span> <span class="nc">Subtype</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
             <span class="n">generic</span> <span class="o">=</span> <span class="mi">0</span>
@@ -380,7 +380,7 @@ section#format-index .row {
                 <span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">)</span>
 
         <span class="k">class</span> <span class="nc">ByteArrayDeprecated</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;The BSON &quot;binary&quot; or &quot;BinData&quot; datatype is used to represent arrays of bytes. It is somewhat analogous to the Java notion of a ByteArray. BSON binary values have a subtype. This is used to indicate what kind of data is in the byte array. Subtypes from zero to 127 are predefined or reserved. Subtypes from 128-255 are user-defined.&quot;&quot;&quot;</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;The BSON &quot;binary&quot; or &quot;BinData&quot; datatype is used to represent arrays of bytes. It is somewhat analogous to the Java notion of a ByteArray. BSON binary values have a subtype. This is used to indicate what kind of data is in the byte array. Subtypes from zero to 127 are predefined or reserved. Subtypes from 128-255 are user-defined.&quot;&quot;&quot;</span>
             <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
@@ -519,7 +519,7 @@ section#format-index .row {
 
 
     <span class="k">class</span> <span class="nc">U3</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implements unsigned 24-bit (3 byte) integer.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implements unsigned 24-bit (3 byte) integer.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
@@ -555,7 +555,7 @@ section#format-index .row {
 
 
     <span class="k">class</span> <span class="nc">F16</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;128-bit IEEE 754-2008 decimal floating point.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;128-bit IEEE 754-2008 decimal floating point.&quot;&quot;&quot;</span>
         <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
@@ -571,7 +571,7 @@ section#format-index .row {
 
 
     <span class="k">class</span> <span class="nc">ObjectId</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        .. seealso::</span>
 <span class="sd">           Source - https://www.mongodb.com/docs/manual/reference/method/ObjectId/</span>
 <span class="sd">        &quot;&quot;&quot;</span>

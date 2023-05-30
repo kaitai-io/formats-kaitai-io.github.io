@@ -299,19 +299,19 @@ can also be found there.</p>
 
 
 
-<div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="n">DosDatetime</span><span class="p">.</span><span class="n">FromFile</span><span class="p">(</span><span class="s">&quot;path/to/local/file.dos_datetime&quot;</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><span class="kt">var</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DosDatetime</span><span class="p">.</span><span class="n">FromFile</span><span class="p">(</span><span class="s">&quot;path/to/local/file.dos_datetime&quot;</span><span class="p">);</span>
 </pre></div>
 
 <p>Or parse structure from a byte array:</p>
 
-<div class="highlight"><pre><span></span><span class="kt">byte</span><span class="p">[]</span> <span class="n">someArray</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
-<span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DosDatetime</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">someArray</span><span class="p">));</span>
+<div class="highlight"><pre><span></span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">someArray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">};</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DosDatetime</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">someArray</span><span class="p">));</span>
 </pre></div>
 
 <p>After that, one can get various attributes from the structure by accessing properties like:</p>
 
 
-<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">Time</span> <span class="c1">// =&gt; get time</span>
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="p">.</span><span class="n">Time</span><span class="w"> </span><span class="c1">// =&gt; get time</span>
 </pre></div>
 
     </div>
@@ -341,280 +341,280 @@ can also be found there.</p>
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-<span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">System</span><span class="p">;</span>
 
-<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">Kaitai</span>
 <span class="p">{</span>
 
-    <span class="c1">/// &lt;summary&gt;</span>
-    <span class="c1">/// MS-DOS date and time are packed 16-bit values that specify local date/time.</span>
-    <span class="c1">/// The time is always stored in the current UTC time offset set on the computer</span>
-    <span class="c1">/// which created the file. Note that the daylight saving time (DST) shifts</span>
-    <span class="c1">/// also change the UTC time offset.</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// For example, if you pack two files A and B into a ZIP archive, file A last modified</span>
-    <span class="c1">/// at 2020-03-29 00:59 UTC+00:00 (GMT) and file B at 2020-03-29 02:00 UTC+01:00 (BST),</span>
-    <span class="c1">/// the file modification times saved in MS-DOS format in the ZIP file will vary depending</span>
-    <span class="c1">/// on whether the computer packing the files is set to GMT or BST at the time of ZIP creation.</span>
-    <span class="c1">/// </span>
-    <span class="c1">///   - If set to GMT:</span>
-    <span class="c1">///       - file A: 2020-03-29 00:59 (UTC+00:00)</span>
-    <span class="c1">///       - file B: 2020-03-29 01:00 (UTC+00:00)</span>
-    <span class="c1">///   - If set to BST:</span>
-    <span class="c1">///       - file A: 2020-03-29 01:59 (UTC+01:00)</span>
-    <span class="c1">///       - file B: 2020-03-29 02:00 (UTC+01:00)</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// It follows that you are unable to determine the actual last modified time</span>
-    <span class="c1">/// of any file stored in the ZIP archive, if you don&#39;t know the locale time</span>
-    <span class="c1">/// setting of the computer at the time it created the ZIP.</span>
-    <span class="c1">/// </span>
-    <span class="c1">/// This format is used in some data formats from the MS-DOS era, for example:</span>
-    <span class="c1">/// </span>
-    <span class="c1">///   - [zip](/zip/)</span>
-    <span class="c1">///   - [rar](/rar/)</span>
-    <span class="c1">///   - [vfat](/vfat/) (FAT12)</span>
-    <span class="c1">///   - [lzh](/lzh/)</span>
-    <span class="c1">///   - [cab](http://justsolve.archiveteam.org/wiki/Cabinet)</span>
-    <span class="c1">/// &lt;/summary&gt;</span>
-    <span class="c1">/// &lt;remarks&gt;</span>
-    <span class="c1">/// Reference: &lt;a href=&quot;https://learn.microsoft.com/en-us/windows/win32/sysinfo/ms-dos-date-and-time&quot;&gt;Source&lt;/a&gt;</span>
-    <span class="c1">/// &lt;/remarks&gt;</span>
-    <span class="c1">/// &lt;remarks&gt;</span>
-    <span class="c1">/// Reference: &lt;a href=&quot;https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-dosdatetimetofiletime&quot;&gt;Source&lt;/a&gt;</span>
-    <span class="c1">/// &lt;/remarks&gt;</span>
-    <span class="c1">/// &lt;remarks&gt;</span>
-    <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/reactos/reactos/blob/c6b64448ce4/dll/win32/kernel32/client/time.c#L82-L87&quot;&gt;DosDateTimeToFileTime&lt;/a&gt;</span>
-    <span class="c1">/// &lt;/remarks&gt;</span>
-    <span class="c1">/// &lt;remarks&gt;</span>
-    <span class="c1">/// Reference: &lt;a href=&quot;https://download.microsoft.com/download/0/8/4/084c452b-b772-4fe5-89bb-a0cbf082286a/fatgen103.doc&quot;&gt;page 25/34&lt;/a&gt;</span>
-    <span class="c1">/// &lt;/remarks&gt;</span>
-    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">DosDatetime</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-    <span class="p">{</span>
-        <span class="k">public</span> <span class="k">static</span> <span class="n">DosDatetime</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">return</span> <span class="k">new</span> <span class="nf">DosDatetime</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-        <span class="p">}</span>
+<span class="w">    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">    </span><span class="c1">/// MS-DOS date and time are packed 16-bit values that specify local date/time.</span>
+<span class="w">    </span><span class="c1">/// The time is always stored in the current UTC time offset set on the computer</span>
+<span class="w">    </span><span class="c1">/// which created the file. Note that the daylight saving time (DST) shifts</span>
+<span class="w">    </span><span class="c1">/// also change the UTC time offset.</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// For example, if you pack two files A and B into a ZIP archive, file A last modified</span>
+<span class="w">    </span><span class="c1">/// at 2020-03-29 00:59 UTC+00:00 (GMT) and file B at 2020-03-29 02:00 UTC+01:00 (BST),</span>
+<span class="w">    </span><span class="c1">/// the file modification times saved in MS-DOS format in the ZIP file will vary depending</span>
+<span class="w">    </span><span class="c1">/// on whether the computer packing the files is set to GMT or BST at the time of ZIP creation.</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">///   - If set to GMT:</span>
+<span class="w">    </span><span class="c1">///       - file A: 2020-03-29 00:59 (UTC+00:00)</span>
+<span class="w">    </span><span class="c1">///       - file B: 2020-03-29 01:00 (UTC+00:00)</span>
+<span class="w">    </span><span class="c1">///   - If set to BST:</span>
+<span class="w">    </span><span class="c1">///       - file A: 2020-03-29 01:59 (UTC+01:00)</span>
+<span class="w">    </span><span class="c1">///       - file B: 2020-03-29 02:00 (UTC+01:00)</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// It follows that you are unable to determine the actual last modified time</span>
+<span class="w">    </span><span class="c1">/// of any file stored in the ZIP archive, if you don&#39;t know the locale time</span>
+<span class="w">    </span><span class="c1">/// setting of the computer at the time it created the ZIP.</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">/// This format is used in some data formats from the MS-DOS era, for example:</span>
+<span class="w">    </span><span class="c1">/// </span>
+<span class="w">    </span><span class="c1">///   - [zip](/zip/)</span>
+<span class="w">    </span><span class="c1">///   - [rar](/rar/)</span>
+<span class="w">    </span><span class="c1">///   - [vfat](/vfat/) (FAT12)</span>
+<span class="w">    </span><span class="c1">///   - [lzh](/lzh/)</span>
+<span class="w">    </span><span class="c1">///   - [cab](http://justsolve.archiveteam.org/wiki/Cabinet)</span>
+<span class="w">    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;https://learn.microsoft.com/en-us/windows/win32/sysinfo/ms-dos-date-and-time&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-dosdatetimetofiletime&quot;&gt;Source&lt;/a&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;https://github.com/reactos/reactos/blob/c6b64448ce4/dll/win32/kernel32/client/time.c#L82-L87&quot;&gt;DosDateTimeToFileTime&lt;/a&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;remarks&gt;</span>
+<span class="w">    </span><span class="c1">/// Reference: &lt;a href=&quot;https://download.microsoft.com/download/0/8/4/084c452b-b772-4fe5-89bb-a0cbf082286a/fatgen103.doc&quot;&gt;page 25/34&lt;/a&gt;</span>
+<span class="w">    </span><span class="c1">/// &lt;/remarks&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">DosDatetime</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">DosDatetime</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">DosDatetime</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
 
-        <span class="k">public</span> <span class="nf">DosDatetime</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">DosDatetime</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
-            <span class="n">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-        <span class="p">{</span>
-            <span class="n">_time</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Time</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-            <span class="n">_date</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Date</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Time</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">Time</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">Time</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="nf">DosDatetime</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">DosDatetime</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">            </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">            </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Time</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">            </span><span class="n">_date</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Date</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Time</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">Time</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">Time</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">Time</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">DosDatetime</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">DosDatetime</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">f_second</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_paddedSecond</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_paddedMinute</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_paddedHour</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_secondDiv2</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntLe</span><span class="p">(</span><span class="m">5</span><span class="p">);</span>
-                <span class="k">if</span> <span class="p">(!(</span><span class="n">SecondDiv2</span> <span class="p">&lt;=</span> <span class="m">29</span><span class="p">))</span>
-                <span class="p">{</span>
-                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationGreaterThanError</span><span class="p">(</span><span class="m">29</span><span class="p">,</span> <span class="n">SecondDiv2</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/types/time/seq/0&quot;</span><span class="p">);</span>
-                <span class="p">}</span>
-                <span class="n">_minute</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntLe</span><span class="p">(</span><span class="m">6</span><span class="p">);</span>
-                <span class="k">if</span> <span class="p">(!(</span><span class="n">Minute</span> <span class="p">&lt;=</span> <span class="m">59</span><span class="p">))</span>
-                <span class="p">{</span>
-                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationGreaterThanError</span><span class="p">(</span><span class="m">59</span><span class="p">,</span> <span class="n">Minute</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/types/time/seq/1&quot;</span><span class="p">);</span>
-                <span class="p">}</span>
-                <span class="n">_hour</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntLe</span><span class="p">(</span><span class="m">5</span><span class="p">);</span>
-                <span class="k">if</span> <span class="p">(!(</span><span class="n">Hour</span> <span class="p">&lt;=</span> <span class="m">23</span><span class="p">))</span>
-                <span class="p">{</span>
-                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationGreaterThanError</span><span class="p">(</span><span class="m">23</span><span class="p">,</span> <span class="n">Hour</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/types/time/seq/2&quot;</span><span class="p">);</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_second</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">int</span> <span class="n">_second</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">int</span> <span class="n">Second</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_second</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_second</span><span class="p">;</span>
-                    <span class="n">_second</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="m">2</span> <span class="p">*</span> <span class="n">SecondDiv2</span><span class="p">));</span>
-                    <span class="n">f_second</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_second</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_paddedSecond</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">string</span> <span class="n">_paddedSecond</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">string</span> <span class="n">PaddedSecond</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_paddedSecond</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_paddedSecond</span><span class="p">;</span>
-                    <span class="n">_paddedSecond</span> <span class="p">=</span> <span class="p">(</span><span class="kt">string</span><span class="p">)</span> <span class="p">((</span><span class="n">Second</span> <span class="p">&lt;=</span> <span class="m">9</span> <span class="p">?</span> <span class="s">&quot;0&quot;</span> <span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="p">+</span> <span class="n">Convert</span><span class="p">.</span><span class="n">ToString</span><span class="p">((</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="n">Second</span><span class="p">),</span> <span class="m">10</span><span class="p">));</span>
-                    <span class="n">f_paddedSecond</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_paddedSecond</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_paddedMinute</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">string</span> <span class="n">_paddedMinute</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">string</span> <span class="n">PaddedMinute</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_paddedMinute</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_paddedMinute</span><span class="p">;</span>
-                    <span class="n">_paddedMinute</span> <span class="p">=</span> <span class="p">(</span><span class="kt">string</span><span class="p">)</span> <span class="p">((</span><span class="n">Minute</span> <span class="p">&lt;=</span> <span class="m">9</span> <span class="p">?</span> <span class="s">&quot;0&quot;</span> <span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="p">+</span> <span class="n">Convert</span><span class="p">.</span><span class="n">ToString</span><span class="p">((</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="n">Minute</span><span class="p">),</span> <span class="m">10</span><span class="p">));</span>
-                    <span class="n">f_paddedMinute</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_paddedMinute</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_paddedHour</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">string</span> <span class="n">_paddedHour</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">string</span> <span class="n">PaddedHour</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_paddedHour</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_paddedHour</span><span class="p">;</span>
-                    <span class="n">_paddedHour</span> <span class="p">=</span> <span class="p">(</span><span class="kt">string</span><span class="p">)</span> <span class="p">((</span><span class="n">Hour</span> <span class="p">&lt;=</span> <span class="m">9</span> <span class="p">?</span> <span class="s">&quot;0&quot;</span> <span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="p">+</span> <span class="n">Convert</span><span class="p">.</span><span class="n">ToString</span><span class="p">((</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="n">Hour</span><span class="p">),</span> <span class="m">10</span><span class="p">));</span>
-                    <span class="n">f_paddedHour</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_paddedHour</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_secondDiv2</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_minute</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_hour</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">DosDatetime</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">DosDatetime</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">SecondDiv2</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_secondDiv2</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">Minute</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_minute</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">Hour</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_hour</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">DosDatetime</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">DosDatetime</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Date</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">Date</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">Date</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">Time</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">DosDatetime</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">DosDatetime</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_second</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_paddedSecond</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_paddedMinute</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_paddedHour</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_secondDiv2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntLe</span><span class="p">(</span><span class="m">5</span><span class="p">);</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">SecondDiv2</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="m">29</span><span class="p">))</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">ValidationGreaterThanError</span><span class="p">(</span><span class="m">29</span><span class="p">,</span><span class="w"> </span><span class="n">SecondDiv2</span><span class="p">,</span><span class="w"> </span><span class="n">M_Io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/time/seq/0&quot;</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="n">_minute</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntLe</span><span class="p">(</span><span class="m">6</span><span class="p">);</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">Minute</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="m">59</span><span class="p">))</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">ValidationGreaterThanError</span><span class="p">(</span><span class="m">59</span><span class="p">,</span><span class="w"> </span><span class="n">Minute</span><span class="p">,</span><span class="w"> </span><span class="n">M_Io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/time/seq/1&quot;</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="n">_hour</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntLe</span><span class="p">(</span><span class="m">5</span><span class="p">);</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">Hour</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="m">23</span><span class="p">))</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">ValidationGreaterThanError</span><span class="p">(</span><span class="m">23</span><span class="p">,</span><span class="w"> </span><span class="n">Hour</span><span class="p">,</span><span class="w"> </span><span class="n">M_Io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/time/seq/2&quot;</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_second</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">_second</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">Second</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_second</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_second</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_second</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="m">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">SecondDiv2</span><span class="p">));</span>
+<span class="w">                    </span><span class="n">f_second</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_second</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_paddedSecond</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">_paddedSecond</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">PaddedSecond</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_paddedSecond</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_paddedSecond</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_paddedSecond</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">Second</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="m">9</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Convert</span><span class="p">.</span><span class="n">ToString</span><span class="p">((</span><span class="kt">long</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">Second</span><span class="p">),</span><span class="w"> </span><span class="m">10</span><span class="p">));</span>
+<span class="w">                    </span><span class="n">f_paddedSecond</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_paddedSecond</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_paddedMinute</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">_paddedMinute</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">PaddedMinute</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_paddedMinute</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_paddedMinute</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_paddedMinute</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">Minute</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="m">9</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Convert</span><span class="p">.</span><span class="n">ToString</span><span class="p">((</span><span class="kt">long</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">Minute</span><span class="p">),</span><span class="w"> </span><span class="m">10</span><span class="p">));</span>
+<span class="w">                    </span><span class="n">f_paddedMinute</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_paddedMinute</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_paddedHour</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">_paddedHour</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">PaddedHour</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_paddedHour</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_paddedHour</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_paddedHour</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">Hour</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="m">9</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Convert</span><span class="p">.</span><span class="n">ToString</span><span class="p">((</span><span class="kt">long</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">Hour</span><span class="p">),</span><span class="w"> </span><span class="m">10</span><span class="p">));</span>
+<span class="w">                    </span><span class="n">f_paddedHour</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_paddedHour</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">_secondDiv2</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">_minute</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">_hour</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">DosDatetime</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">DosDatetime</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">SecondDiv2</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_secondDiv2</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">Minute</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_minute</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">Hour</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_hour</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">DosDatetime</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">DosDatetime</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Date</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">Date</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">Date</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
 
-            <span class="k">public</span> <span class="nf">Date</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">DosDatetime</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">DosDatetime</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">f_year</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_paddedDay</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_paddedMonth</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_paddedYear</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-                <span class="n">_day</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntLe</span><span class="p">(</span><span class="m">5</span><span class="p">);</span>
-                <span class="k">if</span> <span class="p">(!(</span><span class="n">Day</span> <span class="p">&gt;=</span> <span class="m">1</span><span class="p">))</span>
-                <span class="p">{</span>
-                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationLessThanError</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="n">Day</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/types/date/seq/0&quot;</span><span class="p">);</span>
-                <span class="p">}</span>
-                <span class="n">_month</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntLe</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
-                <span class="k">if</span> <span class="p">(!(</span><span class="n">Month</span> <span class="p">&gt;=</span> <span class="m">1</span><span class="p">))</span>
-                <span class="p">{</span>
-                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationLessThanError</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="n">Month</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/types/date/seq/1&quot;</span><span class="p">);</span>
-                <span class="p">}</span>
-                <span class="k">if</span> <span class="p">(!(</span><span class="n">Month</span> <span class="p">&lt;=</span> <span class="m">12</span><span class="p">))</span>
-                <span class="p">{</span>
-                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationGreaterThanError</span><span class="p">(</span><span class="m">12</span><span class="p">,</span> <span class="n">Month</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/types/date/seq/1&quot;</span><span class="p">);</span>
-                <span class="p">}</span>
-                <span class="n">_yearMinus1980</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntLe</span><span class="p">(</span><span class="m">7</span><span class="p">);</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_year</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">int</span> <span class="n">_year</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">Date</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">DosDatetime</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">DosDatetime</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_year</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_paddedDay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_paddedMonth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_paddedYear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_day</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntLe</span><span class="p">(</span><span class="m">5</span><span class="p">);</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">Day</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="m">1</span><span class="p">))</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">ValidationLessThanError</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="n">Day</span><span class="p">,</span><span class="w"> </span><span class="n">M_Io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/date/seq/0&quot;</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="n">_month</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntLe</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">Month</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="m">1</span><span class="p">))</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">ValidationLessThanError</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="n">Month</span><span class="p">,</span><span class="w"> </span><span class="n">M_Io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/date/seq/1&quot;</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">Month</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="m">12</span><span class="p">))</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">ValidationGreaterThanError</span><span class="p">(</span><span class="m">12</span><span class="p">,</span><span class="w"> </span><span class="n">Month</span><span class="p">,</span><span class="w"> </span><span class="n">M_Io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/date/seq/1&quot;</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="n">_yearMinus1980</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntLe</span><span class="p">(</span><span class="m">7</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_year</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">_year</span><span class="p">;</span>
 
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// only years from 1980 to 2107 (1980 + 127) can be represented</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">int</span> <span class="n">Year</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_year</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_year</span><span class="p">;</span>
-                    <span class="n">_year</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="m">1980</span> <span class="p">+</span> <span class="n">YearMinus1980</span><span class="p">));</span>
-                    <span class="n">f_year</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_year</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_paddedDay</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">string</span> <span class="n">_paddedDay</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">string</span> <span class="n">PaddedDay</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_paddedDay</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_paddedDay</span><span class="p">;</span>
-                    <span class="n">_paddedDay</span> <span class="p">=</span> <span class="p">(</span><span class="kt">string</span><span class="p">)</span> <span class="p">((</span><span class="n">Day</span> <span class="p">&lt;=</span> <span class="m">9</span> <span class="p">?</span> <span class="s">&quot;0&quot;</span> <span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="p">+</span> <span class="n">Convert</span><span class="p">.</span><span class="n">ToString</span><span class="p">((</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="n">Day</span><span class="p">),</span> <span class="m">10</span><span class="p">));</span>
-                    <span class="n">f_paddedDay</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_paddedDay</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_paddedMonth</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">string</span> <span class="n">_paddedMonth</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">string</span> <span class="n">PaddedMonth</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_paddedMonth</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_paddedMonth</span><span class="p">;</span>
-                    <span class="n">_paddedMonth</span> <span class="p">=</span> <span class="p">(</span><span class="kt">string</span><span class="p">)</span> <span class="p">((</span><span class="n">Month</span> <span class="p">&lt;=</span> <span class="m">9</span> <span class="p">?</span> <span class="s">&quot;0&quot;</span> <span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="p">+</span> <span class="n">Convert</span><span class="p">.</span><span class="n">ToString</span><span class="p">((</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="n">Month</span><span class="p">),</span> <span class="m">10</span><span class="p">));</span>
-                    <span class="n">f_paddedMonth</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_paddedMonth</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_paddedYear</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">string</span> <span class="n">_paddedYear</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">string</span> <span class="n">PaddedYear</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_paddedYear</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_paddedYear</span><span class="p">;</span>
-                    <span class="n">_paddedYear</span> <span class="p">=</span> <span class="p">(</span><span class="kt">string</span><span class="p">)</span> <span class="p">((</span><span class="n">Year</span> <span class="p">&lt;=</span> <span class="m">999</span> <span class="p">?</span> <span class="s">&quot;0&quot;</span> <span class="p">+</span> <span class="p">(</span><span class="n">Year</span> <span class="p">&lt;=</span> <span class="m">99</span> <span class="p">?</span> <span class="s">&quot;0&quot;</span> <span class="p">+</span> <span class="p">(</span><span class="n">Year</span> <span class="p">&lt;=</span> <span class="m">9</span> <span class="p">?</span> <span class="s">&quot;0&quot;</span> <span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="p">+</span> <span class="n">Convert</span><span class="p">.</span><span class="n">ToString</span><span class="p">((</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="n">Year</span><span class="p">),</span> <span class="m">10</span><span class="p">));</span>
-                    <span class="n">f_paddedYear</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_paddedYear</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_day</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_month</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_yearMinus1980</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">DosDatetime</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">DosDatetime</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">Day</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_day</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">Month</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_month</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">YearMinus1980</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_yearMinus1980</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">DosDatetime</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">DosDatetime</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">private</span> <span class="n">Time</span> <span class="n">_time</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">Date</span> <span class="n">_date</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">DosDatetime</span> <span class="n">m_root</span><span class="p">;</span>
-        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
-        <span class="k">public</span> <span class="n">Time</span> <span class="n">Time</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_time</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">Date</span> <span class="n">Date</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_date</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">DosDatetime</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-    <span class="p">}</span>
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// only years from 1980 to 2107 (1980 + 127) can be represented</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">Year</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_year</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_year</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_year</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="m">1980</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">YearMinus1980</span><span class="p">));</span>
+<span class="w">                    </span><span class="n">f_year</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_year</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_paddedDay</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">_paddedDay</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">PaddedDay</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_paddedDay</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_paddedDay</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_paddedDay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">Day</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="m">9</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Convert</span><span class="p">.</span><span class="n">ToString</span><span class="p">((</span><span class="kt">long</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">Day</span><span class="p">),</span><span class="w"> </span><span class="m">10</span><span class="p">));</span>
+<span class="w">                    </span><span class="n">f_paddedDay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_paddedDay</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_paddedMonth</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">_paddedMonth</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">PaddedMonth</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_paddedMonth</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_paddedMonth</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_paddedMonth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">Month</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="m">9</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Convert</span><span class="p">.</span><span class="n">ToString</span><span class="p">((</span><span class="kt">long</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">Month</span><span class="p">),</span><span class="w"> </span><span class="m">10</span><span class="p">));</span>
+<span class="w">                    </span><span class="n">f_paddedMonth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_paddedMonth</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_paddedYear</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">_paddedYear</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">PaddedYear</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">get</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_paddedYear</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_paddedYear</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_paddedYear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">Year</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="m">999</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">Year</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="m">99</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">Year</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="m">9</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Convert</span><span class="p">.</span><span class="n">ToString</span><span class="p">((</span><span class="kt">long</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">Year</span><span class="p">),</span><span class="w"> </span><span class="m">10</span><span class="p">));</span>
+<span class="w">                    </span><span class="n">f_paddedYear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_paddedYear</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">_day</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">_month</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">_yearMinus1980</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">DosDatetime</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">DosDatetime</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">Day</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_day</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">Month</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_month</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">YearMinus1980</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_yearMinus1980</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">DosDatetime</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">DosDatetime</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">Time</span><span class="w"> </span><span class="n">_time</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">Date</span><span class="w"> </span><span class="n">_date</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">DosDatetime</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">Time</span><span class="w"> </span><span class="n">Time</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_time</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">Date</span><span class="w"> </span><span class="n">Date</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_date</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">DosDatetime</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 

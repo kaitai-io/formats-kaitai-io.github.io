@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Amlogic proprietary eMMC partition table format spec for Kaitai Struct</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="/pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MFSBBRGREL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-MFSBBRGREL');
+  </script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li><a href="//kaitai.io/news/">News</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../">Format Gallery</a></li>
+        <li>Filesystems</li>
+        <li class="active">Amlogic proprietary eMMC partition table</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Amlogic proprietary eMMC partition table:
+            
+            format specification
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>This is an unnamed and undocumented partition table format implemented by
+the bootloader and kernel that Amlogic provides for their Linux SoCs (Meson
+series at least, and probably others). They appear to use this rather than GPT,
+the industry standard, because their BootROM loads and executes the next stage
+loader from offset 512 (0x200) on the eMMC, which is exactly where the GPT
+header would have to start. So instead of changing their BootROM, Amlogic
+devised this partition table, which lives at an offset of 36MiB (0x240_0000)
+on the eMMC and so doesn't conflict. This parser expects as input just the
+partition table from that offset. The maximum number of partitions in a table
+is 32, which corresponds to a maximum table size of 1304 bytes (0x518).</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.9
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Amlogic proprietary eMMC partition table
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li class="active">
+                
+                <a href="index.html" title="Amlogic proprietary eMMC partition table parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="Amlogic proprietary eMMC partition table parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="Amlogic proprietary eMMC partition table parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Amlogic proprietary eMMC partition table parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="Amlogic proprietary eMMC partition table parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Amlogic proprietary eMMC partition table parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Amlogic proprietary eMMC partition table parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Amlogic proprietary eMMC partition table parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Amlogic proprietary eMMC partition table parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="Amlogic proprietary eMMC partition table parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Amlogic proprietary eMMC partition table parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Amlogic proprietary eMMC partition table parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Amlogic proprietary eMMC partition table parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Amlogic proprietary eMMC partition table parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="format-diagram" class="format">
+    <div class="container">
+        <h2>Block diagram</h2>
+        <a href="amlogic_emmc_partitions.svg">
+            <img class="diagram-img" src="amlogic_emmc_partitions.svg" />
+        </a>
+    </div>
+</section>
+
+<section id="format-ksy" class="format">
+    <div class="container">
+        <h2>Format specification in Kaitai Struct YAML</h2>
+
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">amlogic_emmc_partitions</span>
+<span class="w">  </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Amlogic proprietary eMMC partition table</span>
+<span class="w">  </span><span class="nt">license</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+<span class="w">  </span><span class="nt">ks-version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.9</span>
+<span class="w">  </span><span class="nt">encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
+<span class="w">  </span><span class="nt">endian</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">le</span>
+<span class="w">  </span><span class="nt">bit-endian</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">le</span>
+
+<span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">  </span><span class="no">This is an unnamed and undocumented partition table format implemented by</span>
+<span class="w">  </span><span class="no">the bootloader and kernel that Amlogic provides for their Linux SoCs (Meson</span>
+<span class="w">  </span><span class="no">series at least, and probably others). They appear to use this rather than GPT,</span>
+<span class="w">  </span><span class="no">the industry standard, because their BootROM loads and executes the next stage</span>
+<span class="w">  </span><span class="no">loader from offset 512 (0x200) on the eMMC, which is exactly where the GPT</span>
+<span class="w">  </span><span class="no">header would have to start. So instead of changing their BootROM, Amlogic</span>
+<span class="w">  </span><span class="no">devised this partition table, which lives at an offset of 36MiB (0x240_0000)</span>
+<span class="w">  </span><span class="no">on the eMMC and so doesn&#39;t conflict. This parser expects as input just the</span>
+<span class="w">  </span><span class="no">partition table from that offset. The maximum number of partitions in a table</span>
+<span class="w">  </span><span class="no">is 32, which corresponds to a maximum table size of 1304 bytes (0x518).</span>
+
+<span class="nt">doc-ref</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://aml-code.amlogic.com/kernel/common.git/tree/include/linux/mmc/emmc_partitions.h?id=18a4a87072ababf76ea08c8539e939b5b8a440ef</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://aml-code.amlogic.com/kernel/common.git/tree/drivers/amlogic/mmc/emmc_partitions.c?id=18a4a87072ababf76ea08c8539e939b5b8a440ef</span>
+
+<span class="nt">seq</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">magic</span>
+<span class="w">    </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;MPT&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">version</span>
+<span class="w">    </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">strz</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num_partitions</span>
+<span class="w">    </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">part_num</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s4</span>
+<span class="w">    </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">min</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">      </span><span class="nt">max</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">32</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">checksum</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">To calculate this, treat the first (and only the first) partition</span>
+<span class="w">      </span><span class="no">descriptor in the table below as an array of unsigned little-endian</span>
+<span class="w">      </span><span class="no">32-bit integers. Sum all those integers mod 2^32, then multiply the</span>
+<span class="w">      </span><span class="no">result by the total number of partitions, also mod 2^32. Amlogic</span>
+<span class="w">      </span><span class="no">likely meant to include all the partition descriptors in the sum,</span>
+<span class="w">      </span><span class="no">but their code as written instead repeatedly loops over the first</span>
+<span class="w">      </span><span class="no">one, once for each partition in the table.</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">partitions</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">partition</span>
+<span class="w">    </span><span class="nt">repeat</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">expr</span>
+<span class="w">    </span><span class="nt">repeat-expr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">num_partitions</span>
+
+<span class="nt">types</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">partition</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">name</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">strz</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">size</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u8</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">offset</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u8</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">The start of the partition relative to the start of the eMMC, in bytes</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">flags</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">part_flags</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">padding</span>
+<span class="w">        </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
+
+<span class="w">    </span><span class="nt">types</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">part_flags</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">seq</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">is_code</span>
+<span class="w">            </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">STORE_CODE</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b1</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">is_cache</span>
+<span class="w">            </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">STORE_CACHE</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b1</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">is_data</span>
+<span class="w">            </span><span class="nt">-orig-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">STORE_DATA</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b1</span>
+</pre></div>
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015&ndash;2023 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">format repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>
