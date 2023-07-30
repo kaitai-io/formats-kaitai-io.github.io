@@ -648,33 +648,152 @@ namespace MicrosoftPe {
 
 namespace MicrosoftPe\CoffHeader {
     class MachineType {
+
+        /**
+         * The content of this field is assumed to be applicable to any machine type
+         */
         const UNKNOWN = 0;
+
+        /**
+         * Intel 386 or later processors and compatible processors
+         */
         const I386 = 332;
+
+        /**
+         * MIPS little endian
+         */
         const R4000 = 358;
-        const WCEMIPSV2 = 361;
+
+        /**
+         * MIPS little-endian WCE v2
+         */
+        const WCE_MIPS_V2 = 361;
+
+        /**
+         * Alpha AXP, 32-bit address space
+         */
         const ALPHA = 388;
+
+        /**
+         * Hitachi SH3
+         */
         const SH3 = 418;
-        const SH3DSP = 419;
+
+        /**
+         * Hitachi SH3 DSP
+         */
+        const SH3_DSP = 419;
+
+        /**
+         * Hitachi SH4
+         */
         const SH4 = 422;
+
+        /**
+         * Hitachi SH5
+         */
         const SH5 = 424;
+
+        /**
+         * ARM little endian
+         */
         const ARM = 448;
+
+        /**
+         * Thumb
+         */
         const THUMB = 450;
-        const ARMNT = 452;
+
+        /**
+         * ARM Thumb-2 little endian
+         */
+        const ARM_NT = 452;
+
+        /**
+         * Matsushita AM33
+         */
         const AM33 = 467;
+
+        /**
+         * Power PC little endian
+         */
         const POWERPC = 496;
-        const POWERPCFP = 497;
+
+        /**
+         * Power PC with floating point support
+         */
+        const POWERPC_FP = 497;
+
+        /**
+         * Intel Itanium processor family
+         */
         const IA64 = 512;
+
+        /**
+         * MIPS16
+         */
         const MIPS16 = 614;
-        const MIPSFPU = 870;
-        const MIPSFPU16 = 1126;
+
+        /**
+         * > Alpha 64, 64-bit address space
+         * or
+         * > AXP 64 (Same as Alpha 64)
+         */
+        const ALPHA64_OR_AXP64 = 644;
+
+        /**
+         * MIPS with FPU
+         */
+        const MIPS_FPU = 870;
+
+        /**
+         * MIPS16 with FPU
+         */
+        const MIPS16_FPU = 1126;
+
+        /**
+         * EFI byte code
+         */
         const EBC = 3772;
+
+        /**
+         * RISC-V 32-bit address space
+         */
         const RISCV32 = 20530;
+
+        /**
+         * RISC-V 64-bit address space
+         */
         const RISCV64 = 20580;
+
+        /**
+         * RISC-V 128-bit address space
+         */
         const RISCV128 = 20776;
+
+        /**
+         * LoongArch 32-bit processor family
+         */
         const LOONGARCH32 = 25138;
+
+        /**
+         * LoongArch 64-bit processor family
+         */
         const LOONGARCH64 = 25188;
+
+        /**
+         * x64
+         */
         const AMD64 = 34404;
+
+        /**
+         * Mitsubishi M32R little endian
+         */
         const M32R = 36929;
+
+        /**
+         * ARM64 little endian
+         */
         const ARM64 = 43620;
     }
 }

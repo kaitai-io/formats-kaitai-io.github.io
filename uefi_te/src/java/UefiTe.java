@@ -69,26 +69,29 @@ public class UefiTe extends KaitaiStruct {
             UNKNOWN(0),
             I386(332),
             R4000(358),
-            WCEMIPSV2(361),
+            WCE_MIPS_V2(361),
             ALPHA(388),
             SH3(418),
-            SH3DSP(419),
+            SH3_DSP(419),
             SH4(422),
             SH5(424),
             ARM(448),
             THUMB(450),
-            ARMNT(452),
+            ARM_NT(452),
             AM33(467),
             POWERPC(496),
-            POWERPCFP(497),
+            POWERPC_FP(497),
             IA64(512),
             MIPS16(614),
-            MIPSFPU(870),
-            MIPSFPU16(1126),
+            ALPHA64_OR_AXP64(644),
+            MIPS_FPU(870),
+            MIPS16_FPU(1126),
             EBC(3772),
             RISCV32(20530),
             RISCV64(20580),
             RISCV128(20776),
+            LOONGARCH32(25138),
+            LOONGARCH64(25188),
             AMD64(34404),
             M32R(36929),
             ARM64(43620);
@@ -96,7 +99,7 @@ public class UefiTe extends KaitaiStruct {
             private final long id;
             MachineType(long id) { this.id = id; }
             public long id() { return id; }
-            private static final Map<Long, MachineType> byId = new HashMap<Long, MachineType>(26);
+            private static final Map<Long, MachineType> byId = new HashMap<Long, MachineType>(29);
             static {
                 for (MachineType e : MachineType.values())
                     byId.put(e.id(), e);
