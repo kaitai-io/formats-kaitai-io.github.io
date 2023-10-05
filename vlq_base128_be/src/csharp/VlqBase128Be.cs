@@ -64,52 +64,27 @@ namespace Kaitai
             {
                 m_parent = p__parent;
                 m_root = p__root;
-                f_hasNext = false;
-                f_value = false;
                 _read();
             }
             private void _read()
             {
-                _b = m_io.ReadU1();
+                _hasNext = m_io.ReadBitsIntBe(1) != 0;
+                _value = m_io.ReadBitsIntBe(7);
             }
-            private bool f_hasNext;
             private bool _hasNext;
+            private ulong _value;
+            private VlqBase128Be m_root;
+            private VlqBase128Be m_parent;
 
             /// <summary>
             /// If true, then we have more bytes to read
             /// </summary>
-            public bool HasNext
-            {
-                get
-                {
-                    if (f_hasNext)
-                        return _hasNext;
-                    _hasNext = (bool) ((B & 128) != 0);
-                    f_hasNext = true;
-                    return _hasNext;
-                }
-            }
-            private bool f_value;
-            private int _value;
+            public bool HasNext { get { return _hasNext; } }
 
             /// <summary>
             /// The 7-bit (base128) numeric value chunk of this group
             /// </summary>
-            public int Value
-            {
-                get
-                {
-                    if (f_value)
-                        return _value;
-                    _value = (int) ((B & 127));
-                    f_value = true;
-                    return _value;
-                }
-            }
-            private byte _b;
-            private VlqBase128Be m_root;
-            private VlqBase128Be m_parent;
-            public byte B { get { return _b; } }
+            public ulong Value { get { return _value; } }
             public VlqBase128Be M_Root { get { return m_root; } }
             public VlqBase128Be M_Parent { get { return m_parent; } }
         }
@@ -127,18 +102,18 @@ namespace Kaitai
             }
         }
         private bool f_value;
-        private int _value;
+        private ulong _value;
 
         /// <summary>
         /// Resulting value as normal integer
         /// </summary>
-        public int Value
+        public ulong Value
         {
             get
             {
                 if (f_value)
                     return _value;
-                _value = (int) ((((((((Groups[Last].Value + (Last >= 1 ? (Groups[(Last - 1)].Value << 7) : 0)) + (Last >= 2 ? (Groups[(Last - 2)].Value << 14) : 0)) + (Last >= 3 ? (Groups[(Last - 3)].Value << 21) : 0)) + (Last >= 4 ? (Groups[(Last - 4)].Value << 28) : 0)) + (Last >= 5 ? (Groups[(Last - 5)].Value << 35) : 0)) + (Last >= 6 ? (Groups[(Last - 6)].Value << 42) : 0)) + (Last >= 7 ? (Groups[(Last - 7)].Value << 49) : 0)));
+                _value = (ulong) (((ulong) ((((((((Groups[Last].Value + (Last >= 1 ? (Groups[(Last - 1)].Value << 7) : 0)) + (Last >= 2 ? (Groups[(Last - 2)].Value << 14) : 0)) + (Last >= 3 ? (Groups[(Last - 3)].Value << 21) : 0)) + (Last >= 4 ? (Groups[(Last - 4)].Value << 28) : 0)) + (Last >= 5 ? (Groups[(Last - 5)].Value << 35) : 0)) + (Last >= 6 ? (Groups[(Last - 6)].Value << 42) : 0)) + (Last >= 7 ? (Groups[(Last - 7)].Value << 49) : 0)))));
                 f_value = true;
                 return _value;
             }

@@ -60,34 +60,22 @@ public:
         ~group_t();
 
     private:
-        bool f_has_next;
         bool m_has_next;
+        uint64_t m_value;
+        vlq_base128_be_t* m__root;
+        vlq_base128_be_t* m__parent;
 
     public:
 
         /**
          * If true, then we have more bytes to read
          */
-        bool has_next();
-
-    private:
-        bool f_value;
-        int32_t m_value;
-
-    public:
+        bool has_next() const { return m_has_next; }
 
         /**
          * The 7-bit (base128) numeric value chunk of this group
          */
-        int32_t value();
-
-    private:
-        uint8_t m_b;
-        vlq_base128_be_t* m__root;
-        vlq_base128_be_t* m__parent;
-
-    public:
-        uint8_t b() const { return m_b; }
+        uint64_t value() const { return m_value; }
         vlq_base128_be_t* _root() const { return m__root; }
         vlq_base128_be_t* _parent() const { return m__parent; }
     };
@@ -101,14 +89,14 @@ public:
 
 private:
     bool f_value;
-    int32_t m_value;
+    uint64_t m_value;
 
 public:
 
     /**
      * Resulting value as normal integer
      */
-    int32_t value();
+    uint64_t value();
 
 private:
     std::vector<group_t*>* m_groups;

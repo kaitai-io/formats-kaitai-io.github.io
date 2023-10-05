@@ -57,32 +57,17 @@ var VlqBase128Be = (function() {
       this._read();
     }
     Group.prototype._read = function() {
-      this.b = this._io.readU1();
+      this.hasNext = this._io.readBitsIntBe(1) != 0;
+      this.value = this._io.readBitsIntBe(7);
     }
 
     /**
      * If true, then we have more bytes to read
      */
-    Object.defineProperty(Group.prototype, 'hasNext', {
-      get: function() {
-        if (this._m_hasNext !== undefined)
-          return this._m_hasNext;
-        this._m_hasNext = (this.b & 128) != 0;
-        return this._m_hasNext;
-      }
-    });
 
     /**
      * The 7-bit (base128) numeric value chunk of this group
      */
-    Object.defineProperty(Group.prototype, 'value', {
-      get: function() {
-        if (this._m_value !== undefined)
-          return this._m_value;
-        this._m_value = (this.b & 127);
-        return this._m_value;
-      }
-    });
 
     return Group;
   })();

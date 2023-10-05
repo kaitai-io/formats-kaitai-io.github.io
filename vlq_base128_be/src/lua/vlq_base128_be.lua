@@ -78,31 +78,12 @@ function VlqBase128Be.Group:_init(io, parent, root)
 end
 
 function VlqBase128Be.Group:_read()
-  self.b = self._io:read_u1()
+  self.has_next = self._io:read_bits_int_be(1) ~= 0
+  self.value = self._io:read_bits_int_be(7)
 end
 
 -- 
 -- If true, then we have more bytes to read.
-VlqBase128Be.Group.property.has_next = {}
-function VlqBase128Be.Group.property.has_next:get()
-  if self._m_has_next ~= nil then
-    return self._m_has_next
-  end
-
-  self._m_has_next = (self.b & 128) ~= 0
-  return self._m_has_next
-end
-
 -- 
 -- The 7-bit (base128) numeric value chunk of this group.
-VlqBase128Be.Group.property.value = {}
-function VlqBase128Be.Group.property.value:get()
-  if self._m_value ~= nil then
-    return self._m_value
-  end
-
-  self._m_value = (self.b & 127)
-  return self._m_value
-end
-
 

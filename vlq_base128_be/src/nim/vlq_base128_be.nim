@@ -7,23 +7,18 @@ type
     `parent`*: KaitaiStruct
     `lastInst`: int
     `lastInstFlag`: bool
-    `valueInst`: int
+    `valueInst`: uint64
     `valueInstFlag`: bool
   VlqBase128Be_Group* = ref object of KaitaiStruct
-    `b`*: uint8
+    `hasNext`*: bool
+    `value`*: uint64
     `parent`*: VlqBase128Be
-    `hasNextInst`: bool
-    `hasNextInstFlag`: bool
-    `valueInst`: int
-    `valueInstFlag`: bool
 
 proc read*(_: typedesc[VlqBase128Be], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): VlqBase128Be
 proc read*(_: typedesc[VlqBase128Be_Group], io: KaitaiStream, root: KaitaiStruct, parent: VlqBase128Be): VlqBase128Be_Group
 
 proc last*(this: VlqBase128Be): int
-proc value*(this: VlqBase128Be): int
-proc hasNext*(this: VlqBase128Be_Group): bool
-proc value*(this: VlqBase128Be_Group): int
+proc value*(this: VlqBase128Be): uint64
 
 
 ##[
@@ -68,14 +63,14 @@ proc last(this: VlqBase128Be): int =
   this.lastInstFlag = true
   return this.lastInst
 
-proc value(this: VlqBase128Be): int = 
+proc value(this: VlqBase128Be): uint64 = 
 
   ##[
   Resulting value as normal integer
   ]##
   if this.valueInstFlag:
     return this.valueInst
-  let valueInstExpr = int((((((((this.groups[this.last].value + (if this.last >= 1: (this.groups[(this.last - 1)].value shl 7) else: 0)) + (if this.last >= 2: (this.groups[(this.last - 2)].value shl 14) else: 0)) + (if this.last >= 3: (this.groups[(this.last - 3)].value shl 21) else: 0)) + (if this.last >= 4: (this.groups[(this.last - 4)].value shl 28) else: 0)) + (if this.last >= 5: (this.groups[(this.last - 5)].value shl 35) else: 0)) + (if this.last >= 6: (this.groups[(this.last - 6)].value shl 42) else: 0)) + (if this.last >= 7: (this.groups[(this.last - 7)].value shl 49) else: 0)))
+  let valueInstExpr = uint64((uint64((((((((this.groups[this.last].value + (if this.last >= 1: (this.groups[(this.last - 1)].value shl 7) else: 0)) + (if this.last >= 2: (this.groups[(this.last - 2)].value shl 14) else: 0)) + (if this.last >= 3: (this.groups[(this.last - 3)].value shl 21) else: 0)) + (if this.last >= 4: (this.groups[(this.last - 4)].value shl 28) else: 0)) + (if this.last >= 5: (this.groups[(this.last - 5)].value shl 35) else: 0)) + (if this.last >= 6: (this.groups[(this.last - 6)].value shl 42) else: 0)) + (if this.last >= 7: (this.groups[(this.last - 7)].value shl 49) else: 0)))))
   this.valueInst = valueInstExpr
   this.valueInstFlag = true
   return this.valueInst
@@ -96,32 +91,18 @@ proc read*(_: typedesc[VlqBase128Be_Group], io: KaitaiStream, root: KaitaiStruct
   this.root = root
   this.parent = parent
 
-  let bExpr = this.io.readU1()
-  this.b = bExpr
-
-proc hasNext(this: VlqBase128Be_Group): bool = 
 
   ##[
   If true, then we have more bytes to read
   ]##
-  if this.hasNextInstFlag:
-    return this.hasNextInst
-  let hasNextInstExpr = bool((this.b and 128) != 0)
-  this.hasNextInst = hasNextInstExpr
-  this.hasNextInstFlag = true
-  return this.hasNextInst
-
-proc value(this: VlqBase128Be_Group): int = 
+  let hasNextExpr = this.io.readBitsIntBe(1) != 0
+  this.hasNext = hasNextExpr
 
   ##[
   The 7-bit (base128) numeric value chunk of this group
   ]##
-  if this.valueInstFlag:
-    return this.valueInst
-  let valueInstExpr = int((this.b and 127))
-  this.valueInst = valueInstExpr
-  this.valueInstFlag = true
-  return this.valueInst
+  let valueExpr = this.io.readBitsIntBe(7)
+  this.value = valueExpr
 
 proc fromFile*(_: typedesc[VlqBase128Be_Group], filename: string): VlqBase128Be_Group =
   VlqBase128Be_Group.read(newKaitaiFileStream(filename), nil, nil)

@@ -134,7 +134,7 @@ consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.7
+                        Minimal Kaitai Struct required: 0.9
                     </div>
                     
                     
@@ -173,16 +173,6 @@ consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
                 <li>
                 
                 <a href="csharp.html" title="Variable length quantity, unsigned integer, base128, big-endian parsing C# library">C#</a></li>
-                
-                
-                <li>
-                
-                <a href="go.html" title="Variable length quantity, unsigned integer, base128, big-endian parsing Go library">Go</a></li>
-                
-                
-                <li>
-                
-                <a href="graphviz.html" title="Variable length quantity, unsigned integer, base128, big-endian parsing GraphViz library">GraphViz</a></li>
                 
                 
                 <li>
@@ -246,7 +236,8 @@ consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
 <span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vlq_base128_be</span>
 <span class="w">  </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Variable length quantity, unsigned integer, base128, big-endian</span>
 <span class="w">  </span><span class="nt">license</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
-<span class="w">  </span><span class="nt">ks-version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.7</span>
+<span class="w">  </span><span class="nt">ks-version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.9</span>
+<span class="w">  </span><span class="nt">bit-endian</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">be</span>
 <span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">  </span><span class="no">A variable-length unsigned integer using base128 encoding. 1-byte groups</span>
 <span class="w">  </span><span class="no">consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered</span>
@@ -274,28 +265,25 @@ consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
 <span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">      </span><span class="no">One byte group, clearly divided into 7-bit &quot;value&quot; chunk and 1-bit &quot;continuation&quot; flag.</span>
 <span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b</span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
-<span class="w">    </span><span class="nt">instances</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">has_next</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(b &amp; 0b1000_0000) != 0</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">has_next</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b1</span>
 <span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">If true, then we have more bytes to read</span>
-<span class="w">      </span><span class="nt">value</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b &amp; 0b0111_1111</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b7</span>
 <span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">The 7-bit (base128) numeric value chunk of this group</span>
 <span class="nt">instances</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">last</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">groups.size - 1</span>
 <span class="w">  </span><span class="nt">value</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
-<span class="w">      </span><span class="no">groups[last].value</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">(groups[last].value</span>
 <span class="w">      </span><span class="no">+ (last &gt;= 1 ? (groups[last - 1].value &lt;&lt; 7) : 0)</span>
 <span class="w">      </span><span class="no">+ (last &gt;= 2 ? (groups[last - 2].value &lt;&lt; 14) : 0)</span>
 <span class="w">      </span><span class="no">+ (last &gt;= 3 ? (groups[last - 3].value &lt;&lt; 21) : 0)</span>
 <span class="w">      </span><span class="no">+ (last &gt;= 4 ? (groups[last - 4].value &lt;&lt; 28) : 0)</span>
 <span class="w">      </span><span class="no">+ (last &gt;= 5 ? (groups[last - 5].value &lt;&lt; 35) : 0)</span>
 <span class="w">      </span><span class="no">+ (last &gt;= 6 ? (groups[last - 6].value &lt;&lt; 42) : 0)</span>
-<span class="w">      </span><span class="no">+ (last &gt;= 7 ? (groups[last - 7].value &lt;&lt; 49) : 0)</span>
+<span class="w">      </span><span class="no">+ (last &gt;= 7 ? (groups[last - 7].value &lt;&lt; 49) : 0)).as&lt;u8&gt;</span>
 <span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Resulting value as normal integer</span>
 </pre></div>
     </div>

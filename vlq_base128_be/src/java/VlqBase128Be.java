@@ -78,36 +78,23 @@ public class VlqBase128Be extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.b = this._io.readU1();
+            this.hasNext = this._io.readBitsIntBe(1) != 0;
+            this.value = this._io.readBitsIntBe(7);
         }
-        private Boolean hasNext;
+        private boolean hasNext;
+        private long value;
+        private VlqBase128Be _root;
+        private VlqBase128Be _parent;
 
         /**
          * If true, then we have more bytes to read
          */
-        public Boolean hasNext() {
-            if (this.hasNext != null)
-                return this.hasNext;
-            boolean _tmp = (boolean) ((b() & 128) != 0);
-            this.hasNext = _tmp;
-            return this.hasNext;
-        }
-        private Integer value;
+        public boolean hasNext() { return hasNext; }
 
         /**
          * The 7-bit (base128) numeric value chunk of this group
          */
-        public Integer value() {
-            if (this.value != null)
-                return this.value;
-            int _tmp = (int) ((b() & 127));
-            this.value = _tmp;
-            return this.value;
-        }
-        private int b;
-        private VlqBase128Be _root;
-        private VlqBase128Be _parent;
-        public int b() { return b; }
+        public long value() { return value; }
         public VlqBase128Be _root() { return _root; }
         public VlqBase128Be _parent() { return _parent; }
     }
@@ -119,15 +106,15 @@ public class VlqBase128Be extends KaitaiStruct {
         this.last = _tmp;
         return this.last;
     }
-    private Integer value;
+    private Long value;
 
     /**
      * Resulting value as normal integer
      */
-    public Integer value() {
+    public Long value() {
         if (this.value != null)
             return this.value;
-        int _tmp = (int) ((((((((groups().get((int) last()).value() + (last() >= 1 ? (groups().get((int) (last() - 1)).value() << 7) : 0)) + (last() >= 2 ? (groups().get((int) (last() - 2)).value() << 14) : 0)) + (last() >= 3 ? (groups().get((int) (last() - 3)).value() << 21) : 0)) + (last() >= 4 ? (groups().get((int) (last() - 4)).value() << 28) : 0)) + (last() >= 5 ? (groups().get((int) (last() - 5)).value() << 35) : 0)) + (last() >= 6 ? (groups().get((int) (last() - 6)).value() << 42) : 0)) + (last() >= 7 ? (groups().get((int) (last() - 7)).value() << 49) : 0)));
+        long _tmp = (long) (((long) ((((((((groups().get((int) last()).value() + (last() >= 1 ? (groups().get((int) (last() - 1)).value() << 7) : 0)) + (last() >= 2 ? (groups().get((int) (last() - 2)).value() << 14) : 0)) + (last() >= 3 ? (groups().get((int) (last() - 3)).value() << 21) : 0)) + (last() >= 4 ? (groups().get((int) (last() - 4)).value() << 28) : 0)) + (last() >= 5 ? (groups().get((int) (last() - 5)).value() << 35) : 0)) + (last() >= 6 ? (groups().get((int) (last() - 6)).value() << 42) : 0)) + (last() >= 7 ? (groups().get((int) (last() - 7)).value() << 49) : 0)))));
         this.value = _tmp;
         return this.value;
     }

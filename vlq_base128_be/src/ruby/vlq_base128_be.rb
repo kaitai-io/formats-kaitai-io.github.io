@@ -48,26 +48,18 @@ class VlqBase128Be < Kaitai::Struct::Struct
     end
 
     def _read
-      @b = @_io.read_u1
+      @has_next = @_io.read_bits_int_be(1) != 0
+      @value = @_io.read_bits_int_be(7)
       self
     end
 
     ##
     # If true, then we have more bytes to read
-    def has_next
-      return @has_next unless @has_next.nil?
-      @has_next = (b & 128) != 0
-      @has_next
-    end
+    attr_reader :has_next
 
     ##
     # The 7-bit (base128) numeric value chunk of this group
-    def value
-      return @value unless @value.nil?
-      @value = (b & 127)
-      @value
-    end
-    attr_reader :b
+    attr_reader :value
   end
   def last
     return @last unless @last.nil?
