@@ -139,7 +139,7 @@ top of it for signed ints
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.7
+                        Minimal Kaitai Struct required: 0.9
                     </div>
                     
                     
@@ -178,16 +178,6 @@ top of it for signed ints
                 <li>
                 
                 <a href="csharp.html" title="Variable length quantity, unsigned/signed integer, base128, little-endian parsing C# library">C#</a></li>
-                
-                
-                <li>
-                
-                <a href="go.html" title="Variable length quantity, unsigned/signed integer, base128, little-endian parsing Go library">Go</a></li>
-                
-                
-                <li>
-                
-                <a href="graphviz.html" title="Variable length quantity, unsigned/signed integer, base128, little-endian parsing GraphViz library">GraphViz</a></li>
                 
                 
                 <li>
@@ -251,7 +241,8 @@ top of it for signed ints
 <span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vlq_base128_le</span>
 <span class="w">  </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Variable length quantity, unsigned/signed integer, base128, little-endian</span>
 <span class="w">  </span><span class="nt">license</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
-<span class="w">  </span><span class="nt">ks-version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.7</span>
+<span class="w">  </span><span class="nt">ks-version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.9</span>
+<span class="w">  </span><span class="nt">bit-endian</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">be</span>
 <span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">  </span><span class="no">A variable-length unsigned/signed integer using base128 encoding. 1-byte groups</span>
 <span class="w">  </span><span class="no">consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered</span>
@@ -284,33 +275,30 @@ top of it for signed ints
 <span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">      </span><span class="no">One byte group, clearly divided into 7-bit &quot;value&quot; chunk and 1-bit &quot;continuation&quot; flag.</span>
 <span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b</span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u1</span>
-<span class="w">    </span><span class="nt">instances</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">has_next</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(b &amp; 0b1000_0000) != 0</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">has_next</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b1</span>
 <span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">If true, then we have more bytes to read</span>
-<span class="w">      </span><span class="nt">value</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b &amp; 0b0111_1111</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b7</span>
 <span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">The 7-bit (base128) numeric value chunk of this group</span>
 <span class="nt">instances</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">len</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">groups.size</span>
 <span class="w">  </span><span class="nt">value</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
-<span class="w">      </span><span class="no">groups[0].value</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">(groups[0].value</span>
 <span class="w">      </span><span class="no">+ (len &gt;= 2 ? (groups[1].value &lt;&lt; 7) : 0)</span>
 <span class="w">      </span><span class="no">+ (len &gt;= 3 ? (groups[2].value &lt;&lt; 14) : 0)</span>
 <span class="w">      </span><span class="no">+ (len &gt;= 4 ? (groups[3].value &lt;&lt; 21) : 0)</span>
 <span class="w">      </span><span class="no">+ (len &gt;= 5 ? (groups[4].value &lt;&lt; 28) : 0)</span>
 <span class="w">      </span><span class="no">+ (len &gt;= 6 ? (groups[5].value &lt;&lt; 35) : 0)</span>
 <span class="w">      </span><span class="no">+ (len &gt;= 7 ? (groups[6].value &lt;&lt; 42) : 0)</span>
-<span class="w">      </span><span class="no">+ (len &gt;= 8 ? (groups[7].value &lt;&lt; 49) : 0)</span>
+<span class="w">      </span><span class="no">+ (len &gt;= 8 ? (groups[7].value &lt;&lt; 49) : 0)).as&lt;u8&gt;</span>
 <span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Resulting unsigned value as normal integer</span>
 <span class="w">  </span><span class="nt">sign_bit</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;1</span><span class="nv"> </span><span class="s">&lt;&lt;</span><span class="nv"> </span><span class="s">(7</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">len</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">1)&#39;</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;(1.as&lt;u8&gt;</span><span class="nv"> </span><span class="s">&lt;&lt;</span><span class="nv"> </span><span class="s">(7</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">len</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">1)).as&lt;u8&gt;&#39;</span>
 <span class="w">  </span><span class="nt">value_signed</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;(value</span><span class="nv"> </span><span class="s">^</span><span class="nv"> </span><span class="s">sign_bit)</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">sign_bit&#39;</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;((value</span><span class="nv"> </span><span class="s">^</span><span class="nv"> </span><span class="s">sign_bit).as&lt;s8&gt;</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">sign_bit.as&lt;s8&gt;).as&lt;s8&gt;&#39;</span>
 <span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://graphics.stanford.edu/~seander/bithacks.html#VariableSignExtend</span>
 </pre></div>
     </div>

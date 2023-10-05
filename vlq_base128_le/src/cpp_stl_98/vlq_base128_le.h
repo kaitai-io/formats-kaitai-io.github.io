@@ -65,34 +65,22 @@ public:
         ~group_t();
 
     private:
-        bool f_has_next;
         bool m_has_next;
+        uint64_t m_value;
+        vlq_base128_le_t* m__root;
+        vlq_base128_le_t* m__parent;
 
     public:
 
         /**
          * If true, then we have more bytes to read
          */
-        bool has_next();
-
-    private:
-        bool f_value;
-        int32_t m_value;
-
-    public:
+        bool has_next() const { return m_has_next; }
 
         /**
          * The 7-bit (base128) numeric value chunk of this group
          */
-        int32_t value();
-
-    private:
-        uint8_t m_b;
-        vlq_base128_le_t* m__root;
-        vlq_base128_le_t* m__parent;
-
-    public:
-        uint8_t b() const { return m_b; }
+        uint64_t value() const { return m_value; }
         vlq_base128_le_t* _root() const { return m__root; }
         vlq_base128_le_t* _parent() const { return m__parent; }
     };
@@ -106,32 +94,32 @@ public:
 
 private:
     bool f_value;
-    int32_t m_value;
+    uint64_t m_value;
 
 public:
 
     /**
      * Resulting unsigned value as normal integer
      */
-    int32_t value();
+    uint64_t value();
 
 private:
     bool f_sign_bit;
-    int32_t m_sign_bit;
+    uint64_t m_sign_bit;
 
 public:
-    int32_t sign_bit();
+    uint64_t sign_bit();
 
 private:
     bool f_value_signed;
-    int32_t m_value_signed;
+    int64_t m_value_signed;
 
 public:
 
     /**
      * \sa https://graphics.stanford.edu/~seander/bithacks.html#VariableSignExtend Source
      */
-    int32_t value_signed();
+    int64_t value_signed();
 
 private:
     std::vector<group_t*>* m_groups;

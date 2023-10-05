@@ -7,29 +7,24 @@ type
     `parent`*: KaitaiStruct
     `lenInst`: int
     `lenInstFlag`: bool
-    `valueInst`: int
+    `valueInst`: uint64
     `valueInstFlag`: bool
-    `signBitInst`: int
+    `signBitInst`: uint64
     `signBitInstFlag`: bool
-    `valueSignedInst`: int
+    `valueSignedInst`: int64
     `valueSignedInstFlag`: bool
   VlqBase128Le_Group* = ref object of KaitaiStruct
-    `b`*: uint8
+    `hasNext`*: bool
+    `value`*: uint64
     `parent`*: VlqBase128Le
-    `hasNextInst`: bool
-    `hasNextInstFlag`: bool
-    `valueInst`: int
-    `valueInstFlag`: bool
 
 proc read*(_: typedesc[VlqBase128Le], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): VlqBase128Le
 proc read*(_: typedesc[VlqBase128Le_Group], io: KaitaiStream, root: KaitaiStruct, parent: VlqBase128Le): VlqBase128Le_Group
 
 proc len*(this: VlqBase128Le): int
-proc value*(this: VlqBase128Le): int
-proc signBit*(this: VlqBase128Le): int
-proc valueSigned*(this: VlqBase128Le): int
-proc hasNext*(this: VlqBase128Le_Group): bool
-proc value*(this: VlqBase128Le_Group): int
+proc value*(this: VlqBase128Le): uint64
+proc signBit*(this: VlqBase128Le): uint64
+proc valueSigned*(this: VlqBase128Le): int64
 
 
 ##[
@@ -79,34 +74,34 @@ proc len(this: VlqBase128Le): int =
   this.lenInstFlag = true
   return this.lenInst
 
-proc value(this: VlqBase128Le): int = 
+proc value(this: VlqBase128Le): uint64 = 
 
   ##[
   Resulting unsigned value as normal integer
   ]##
   if this.valueInstFlag:
     return this.valueInst
-  let valueInstExpr = int((((((((this.groups[0].value + (if this.len >= 2: (this.groups[1].value shl 7) else: 0)) + (if this.len >= 3: (this.groups[2].value shl 14) else: 0)) + (if this.len >= 4: (this.groups[3].value shl 21) else: 0)) + (if this.len >= 5: (this.groups[4].value shl 28) else: 0)) + (if this.len >= 6: (this.groups[5].value shl 35) else: 0)) + (if this.len >= 7: (this.groups[6].value shl 42) else: 0)) + (if this.len >= 8: (this.groups[7].value shl 49) else: 0)))
+  let valueInstExpr = uint64((uint64((((((((this.groups[0].value + (if this.len >= 2: (this.groups[1].value shl 7) else: 0)) + (if this.len >= 3: (this.groups[2].value shl 14) else: 0)) + (if this.len >= 4: (this.groups[3].value shl 21) else: 0)) + (if this.len >= 5: (this.groups[4].value shl 28) else: 0)) + (if this.len >= 6: (this.groups[5].value shl 35) else: 0)) + (if this.len >= 7: (this.groups[6].value shl 42) else: 0)) + (if this.len >= 8: (this.groups[7].value shl 49) else: 0)))))
   this.valueInst = valueInstExpr
   this.valueInstFlag = true
   return this.valueInst
 
-proc signBit(this: VlqBase128Le): int = 
+proc signBit(this: VlqBase128Le): uint64 = 
   if this.signBitInstFlag:
     return this.signBitInst
-  let signBitInstExpr = int((1 shl ((7 * this.len) - 1)))
+  let signBitInstExpr = uint64((uint64(((uint64(1)) shl ((7 * this.len) - 1)))))
   this.signBitInst = signBitInstExpr
   this.signBitInstFlag = true
   return this.signBitInst
 
-proc valueSigned(this: VlqBase128Le): int = 
+proc valueSigned(this: VlqBase128Le): int64 = 
 
   ##[
   @see <a href="https://graphics.stanford.edu/~seander/bithacks.html#VariableSignExtend">Source</a>
   ]##
   if this.valueSignedInstFlag:
     return this.valueSignedInst
-  let valueSignedInstExpr = int(((this.value xor this.signBit) - this.signBit))
+  let valueSignedInstExpr = int64((int64(((int64((this.value xor this.signBit))) - (int64(this.signBit))))))
   this.valueSignedInst = valueSignedInstExpr
   this.valueSignedInstFlag = true
   return this.valueSignedInst
@@ -127,32 +122,18 @@ proc read*(_: typedesc[VlqBase128Le_Group], io: KaitaiStream, root: KaitaiStruct
   this.root = root
   this.parent = parent
 
-  let bExpr = this.io.readU1()
-  this.b = bExpr
-
-proc hasNext(this: VlqBase128Le_Group): bool = 
 
   ##[
   If true, then we have more bytes to read
   ]##
-  if this.hasNextInstFlag:
-    return this.hasNextInst
-  let hasNextInstExpr = bool((this.b and 128) != 0)
-  this.hasNextInst = hasNextInstExpr
-  this.hasNextInstFlag = true
-  return this.hasNextInst
-
-proc value(this: VlqBase128Le_Group): int = 
+  let hasNextExpr = this.io.readBitsIntBe(1) != 0
+  this.hasNext = hasNextExpr
 
   ##[
   The 7-bit (base128) numeric value chunk of this group
   ]##
-  if this.valueInstFlag:
-    return this.valueInst
-  let valueInstExpr = int((this.b and 127))
-  this.valueInst = valueInstExpr
-  this.valueInstFlag = true
-  return this.valueInst
+  let valueExpr = this.io.readBitsIntBe(7)
+  this.value = valueExpr
 
 proc fromFile*(_: typedesc[VlqBase128Le_Group], filename: string): VlqBase128Le_Group =
   VlqBase128Le_Group.read(newKaitaiFileStream(filename), nil, nil)

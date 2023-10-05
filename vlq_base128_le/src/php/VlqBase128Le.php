@@ -88,31 +88,20 @@ namespace VlqBase128Le {
         }
 
         private function _read() {
-            $this->_m_b = $this->_io->readU1();
+            $this->_m_hasNext = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_value = $this->_io->readBitsIntBe(7);
         }
         protected $_m_hasNext;
+        protected $_m_value;
 
         /**
          * If true, then we have more bytes to read
          */
-        public function hasNext() {
-            if ($this->_m_hasNext !== null)
-                return $this->_m_hasNext;
-            $this->_m_hasNext = ($this->b() & 128) != 0;
-            return $this->_m_hasNext;
-        }
-        protected $_m_value;
+        public function hasNext() { return $this->_m_hasNext; }
 
         /**
          * The 7-bit (base128) numeric value chunk of this group
          */
-        public function value() {
-            if ($this->_m_value !== null)
-                return $this->_m_value;
-            $this->_m_value = ($this->b() & 127);
-            return $this->_m_value;
-        }
-        protected $_m_b;
-        public function b() { return $this->_m_b; }
+        public function value() { return $this->_m_value; }
     }
 }

@@ -104,26 +104,18 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{b} = $self->{_io}->read_u1();
+    $self->{has_next} = $self->{_io}->read_bits_int_be(1);
+    $self->{value} = $self->{_io}->read_bits_int_be(7);
 }
 
 sub has_next {
     my ($self) = @_;
-    return $self->{has_next} if ($self->{has_next});
-    $self->{has_next} = ($self->b() & 128) != 0;
     return $self->{has_next};
 }
 
 sub value {
     my ($self) = @_;
-    return $self->{value} if ($self->{value});
-    $self->{value} = ($self->b() & 127);
     return $self->{value};
-}
-
-sub b {
-    my ($self) = @_;
-    return $self->{b};
 }
 
 1;

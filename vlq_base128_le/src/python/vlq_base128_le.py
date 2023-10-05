@@ -54,25 +54,8 @@ class VlqBase128Le(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.b = self._io.read_u1()
-
-        @property
-        def has_next(self):
-            """If true, then we have more bytes to read."""
-            if hasattr(self, '_m_has_next'):
-                return self._m_has_next
-
-            self._m_has_next = (self.b & 128) != 0
-            return getattr(self, '_m_has_next', None)
-
-        @property
-        def value(self):
-            """The 7-bit (base128) numeric value chunk of this group."""
-            if hasattr(self, '_m_value'):
-                return self._m_value
-
-            self._m_value = (self.b & 127)
-            return getattr(self, '_m_value', None)
+            self.has_next = self._io.read_bits_int_be(1) != 0
+            self.value = self._io.read_bits_int_be(7)
 
 
     @property

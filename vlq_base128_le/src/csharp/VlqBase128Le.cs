@@ -71,52 +71,27 @@ namespace Kaitai
             {
                 m_parent = p__parent;
                 m_root = p__root;
-                f_hasNext = false;
-                f_value = false;
                 _read();
             }
             private void _read()
             {
-                _b = m_io.ReadU1();
+                _hasNext = m_io.ReadBitsIntBe(1) != 0;
+                _value = m_io.ReadBitsIntBe(7);
             }
-            private bool f_hasNext;
             private bool _hasNext;
+            private ulong _value;
+            private VlqBase128Le m_root;
+            private VlqBase128Le m_parent;
 
             /// <summary>
             /// If true, then we have more bytes to read
             /// </summary>
-            public bool HasNext
-            {
-                get
-                {
-                    if (f_hasNext)
-                        return _hasNext;
-                    _hasNext = (bool) ((B & 128) != 0);
-                    f_hasNext = true;
-                    return _hasNext;
-                }
-            }
-            private bool f_value;
-            private int _value;
+            public bool HasNext { get { return _hasNext; } }
 
             /// <summary>
             /// The 7-bit (base128) numeric value chunk of this group
             /// </summary>
-            public int Value
-            {
-                get
-                {
-                    if (f_value)
-                        return _value;
-                    _value = (int) ((B & 127));
-                    f_value = true;
-                    return _value;
-                }
-            }
-            private byte _b;
-            private VlqBase128Le m_root;
-            private VlqBase128Le m_parent;
-            public byte B { get { return _b; } }
+            public ulong Value { get { return _value; } }
             public VlqBase128Le M_Root { get { return m_root; } }
             public VlqBase128Le M_Parent { get { return m_parent; } }
         }
@@ -134,48 +109,48 @@ namespace Kaitai
             }
         }
         private bool f_value;
-        private int _value;
+        private ulong _value;
 
         /// <summary>
         /// Resulting unsigned value as normal integer
         /// </summary>
-        public int Value
+        public ulong Value
         {
             get
             {
                 if (f_value)
                     return _value;
-                _value = (int) ((((((((Groups[0].Value + (Len >= 2 ? (Groups[1].Value << 7) : 0)) + (Len >= 3 ? (Groups[2].Value << 14) : 0)) + (Len >= 4 ? (Groups[3].Value << 21) : 0)) + (Len >= 5 ? (Groups[4].Value << 28) : 0)) + (Len >= 6 ? (Groups[5].Value << 35) : 0)) + (Len >= 7 ? (Groups[6].Value << 42) : 0)) + (Len >= 8 ? (Groups[7].Value << 49) : 0)));
+                _value = (ulong) (((ulong) ((((((((Groups[0].Value + (Len >= 2 ? (Groups[1].Value << 7) : 0)) + (Len >= 3 ? (Groups[2].Value << 14) : 0)) + (Len >= 4 ? (Groups[3].Value << 21) : 0)) + (Len >= 5 ? (Groups[4].Value << 28) : 0)) + (Len >= 6 ? (Groups[5].Value << 35) : 0)) + (Len >= 7 ? (Groups[6].Value << 42) : 0)) + (Len >= 8 ? (Groups[7].Value << 49) : 0)))));
                 f_value = true;
                 return _value;
             }
         }
         private bool f_signBit;
-        private int _signBit;
-        public int SignBit
+        private ulong _signBit;
+        public ulong SignBit
         {
             get
             {
                 if (f_signBit)
                     return _signBit;
-                _signBit = (int) ((1 << ((7 * Len) - 1)));
+                _signBit = (ulong) (((ulong) ((((ulong) (1)) << ((7 * Len) - 1)))));
                 f_signBit = true;
                 return _signBit;
             }
         }
         private bool f_valueSigned;
-        private int _valueSigned;
+        private long _valueSigned;
 
         /// <remarks>
         /// Reference: <a href="https://graphics.stanford.edu/~seander/bithacks.html#VariableSignExtend">Source</a>
         /// </remarks>
-        public int ValueSigned
+        public long ValueSigned
         {
             get
             {
                 if (f_valueSigned)
                     return _valueSigned;
-                _valueSigned = (int) (((Value ^ SignBit) - SignBit));
+                _valueSigned = (long) (((long) ((((long) ((Value ^ SignBit))) - ((long) (SignBit))))));
                 f_valueSigned = true;
                 return _valueSigned;
             }

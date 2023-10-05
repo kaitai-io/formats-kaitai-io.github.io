@@ -139,7 +139,7 @@ top of it for signed ints
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.7
+                        Minimal Kaitai Struct required: 0.9
                     </div>
                     
                     
@@ -178,16 +178,6 @@ top of it for signed ints
                 <li>
                 
                 <a href="csharp.html" title="Variable length quantity, unsigned/signed integer, base128, little-endian parsing C# library">C#</a></li>
-                
-                
-                <li>
-                
-                <a href="go.html" title="Variable length quantity, unsigned/signed integer, base128, little-endian parsing Go library">Go</a></li>
-                
-                
-                <li>
-                
-                <a href="graphviz.html" title="Variable length quantity, unsigned/signed integer, base128, little-endian parsing GraphViz library">GraphViz</a></li>
                 
                 
                 <li>
@@ -360,32 +350,17 @@ top of it for signed ints
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="nx">Group</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">hasNext</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">7</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="cm">/**</span>
 <span class="cm">     * If true, then we have more bytes to read</span>
 <span class="cm">     */</span>
-<span class="w">    </span><span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Group</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;hasNext&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nx">get</span><span class="o">:</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_hasNext</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">undefined</span><span class="p">)</span>
-<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_m_hasNext</span><span class="p">;</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_m_hasNext</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">b</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mf">128</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_m_hasNext</span><span class="p">;</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">    </span><span class="p">});</span>
 
 <span class="w">    </span><span class="cm">/**</span>
 <span class="cm">     * The 7-bit (base128) numeric value chunk of this group</span>
 <span class="cm">     */</span>
-<span class="w">    </span><span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Group</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;value&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nx">get</span><span class="o">:</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_value</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">undefined</span><span class="p">)</span>
-<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_m_value</span><span class="p">;</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_m_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">b</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mf">127</span><span class="p">);</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_m_value</span><span class="p">;</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">    </span><span class="p">});</span>
 
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">Group</span><span class="p">;</span>
 <span class="w">  </span><span class="p">})();</span>
