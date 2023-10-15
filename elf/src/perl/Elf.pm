@@ -670,10 +670,10 @@ sub _read_le {
     }
     $self->{flags} = $self->{_io}->read_bytes(4);
     $self->{e_ehsize} = $self->{_io}->read_u2le();
-    $self->{program_header_entry_size} = $self->{_io}->read_u2le();
-    $self->{qty_program_header} = $self->{_io}->read_u2le();
-    $self->{section_header_entry_size} = $self->{_io}->read_u2le();
-    $self->{qty_section_header} = $self->{_io}->read_u2le();
+    $self->{len_program_headers} = $self->{_io}->read_u2le();
+    $self->{num_program_headers} = $self->{_io}->read_u2le();
+    $self->{len_section_headers} = $self->{_io}->read_u2le();
+    $self->{num_section_headers} = $self->{_io}->read_u2le();
     $self->{section_names_idx} = $self->{_io}->read_u2le();
 }
 
@@ -706,10 +706,10 @@ sub _read_be {
     }
     $self->{flags} = $self->{_io}->read_bytes(4);
     $self->{e_ehsize} = $self->{_io}->read_u2be();
-    $self->{program_header_entry_size} = $self->{_io}->read_u2be();
-    $self->{qty_program_header} = $self->{_io}->read_u2be();
-    $self->{section_header_entry_size} = $self->{_io}->read_u2be();
-    $self->{qty_section_header} = $self->{_io}->read_u2be();
+    $self->{len_program_headers} = $self->{_io}->read_u2be();
+    $self->{num_program_headers} = $self->{_io}->read_u2be();
+    $self->{len_section_headers} = $self->{_io}->read_u2be();
+    $self->{num_section_headers} = $self->{_io}->read_u2be();
     $self->{section_names_idx} = $self->{_io}->read_u2be();
 }
 
@@ -721,18 +721,18 @@ sub program_headers {
     if ($self->{_is_le}) {
         $self->{_raw_program_headers} = ();
         $self->{program_headers} = ();
-        my $n_program_headers = $self->qty_program_header();
+        my $n_program_headers = $self->num_program_headers();
         for (my $i = 0; $i < $n_program_headers; $i++) {
-            push @{$self->{_raw_program_headers}}, $self->{_io}->read_bytes($self->program_header_entry_size());
+            push @{$self->{_raw_program_headers}}, $self->{_io}->read_bytes($self->len_program_headers());
             my $io__raw_program_headers = IO::KaitaiStruct::Stream->new($self->{_raw_program_headers}[$i]);
             push @{$self->{program_headers}}, Elf::EndianElf::ProgramHeader->new($io__raw_program_headers, $self, $self->{_root}, $self->{_is_le});
         }
     } else {
         $self->{_raw_program_headers} = ();
         $self->{program_headers} = ();
-        my $n_program_headers = $self->qty_program_header();
+        my $n_program_headers = $self->num_program_headers();
         for (my $i = 0; $i < $n_program_headers; $i++) {
-            push @{$self->{_raw_program_headers}}, $self->{_io}->read_bytes($self->program_header_entry_size());
+            push @{$self->{_raw_program_headers}}, $self->{_io}->read_bytes($self->len_program_headers());
             my $io__raw_program_headers = IO::KaitaiStruct::Stream->new($self->{_raw_program_headers}[$i]);
             push @{$self->{program_headers}}, Elf::EndianElf::ProgramHeader->new($io__raw_program_headers, $self, $self->{_root}, $self->{_is_le});
         }
@@ -749,18 +749,18 @@ sub section_headers {
     if ($self->{_is_le}) {
         $self->{_raw_section_headers} = ();
         $self->{section_headers} = ();
-        my $n_section_headers = $self->qty_section_header();
+        my $n_section_headers = $self->num_section_headers();
         for (my $i = 0; $i < $n_section_headers; $i++) {
-            push @{$self->{_raw_section_headers}}, $self->{_io}->read_bytes($self->section_header_entry_size());
+            push @{$self->{_raw_section_headers}}, $self->{_io}->read_bytes($self->len_section_headers());
             my $io__raw_section_headers = IO::KaitaiStruct::Stream->new($self->{_raw_section_headers}[$i]);
             push @{$self->{section_headers}}, Elf::EndianElf::SectionHeader->new($io__raw_section_headers, $self, $self->{_root}, $self->{_is_le});
         }
     } else {
         $self->{_raw_section_headers} = ();
         $self->{section_headers} = ();
-        my $n_section_headers = $self->qty_section_header();
+        my $n_section_headers = $self->num_section_headers();
         for (my $i = 0; $i < $n_section_headers; $i++) {
-            push @{$self->{_raw_section_headers}}, $self->{_io}->read_bytes($self->section_header_entry_size());
+            push @{$self->{_raw_section_headers}}, $self->{_io}->read_bytes($self->len_section_headers());
             my $io__raw_section_headers = IO::KaitaiStruct::Stream->new($self->{_raw_section_headers}[$i]);
             push @{$self->{section_headers}}, Elf::EndianElf::SectionHeader->new($io__raw_section_headers, $self, $self->{_root}, $self->{_is_le});
         }
@@ -772,7 +772,7 @@ sub section_headers {
 sub section_names {
     my ($self) = @_;
     return $self->{section_names} if ($self->{section_names});
-    if ( (($self->section_names_idx() != $Elf::SECTION_HEADER_IDX_SPECIAL_UNDEFINED) && ($self->section_names_idx() < $self->_root()->header()->qty_section_header())) ) {
+    if ( (($self->section_names_idx() != $Elf::SECTION_HEADER_IDX_SPECIAL_UNDEFINED) && ($self->section_names_idx() < $self->_root()->header()->num_section_headers())) ) {
         my $_pos = $self->{_io}->pos();
         $self->{_io}->seek(@{$self->section_headers()}[$self->section_names_idx()]->ofs_body());
         if ($self->{_is_le}) {
@@ -829,24 +829,24 @@ sub e_ehsize {
     return $self->{e_ehsize};
 }
 
-sub program_header_entry_size {
+sub len_program_headers {
     my ($self) = @_;
-    return $self->{program_header_entry_size};
+    return $self->{len_program_headers};
 }
 
-sub qty_program_header {
+sub num_program_headers {
     my ($self) = @_;
-    return $self->{qty_program_header};
+    return $self->{num_program_headers};
 }
 
-sub section_header_entry_size {
+sub len_section_headers {
     my ($self) = @_;
-    return $self->{section_header_entry_size};
+    return $self->{len_section_headers};
 }
 
-sub qty_section_header {
+sub num_section_headers {
     my ($self) = @_;
-    return $self->{qty_section_header};
+    return $self->{num_section_headers};
 }
 
 sub section_names_idx {
@@ -1531,7 +1531,7 @@ sub body {
 sub linked_section {
     my ($self) = @_;
     return $self->{linked_section} if ($self->{linked_section});
-    if ( (($self->linked_section_idx() != $Elf::SECTION_HEADER_IDX_SPECIAL_UNDEFINED) && ($self->linked_section_idx() < $self->_root()->header()->qty_section_header())) ) {
+    if ( (($self->linked_section_idx() != $Elf::SECTION_HEADER_IDX_SPECIAL_UNDEFINED) && ($self->linked_section_idx() < $self->_root()->header()->num_section_headers())) ) {
         $self->{linked_section} = @{$self->_root()->header()->section_headers()}[$self->linked_section_idx()];
     }
     return $self->{linked_section};

@@ -501,10 +501,10 @@ type
     `sectionHeaderOffset`*: uint64
     `flags`*: seq[byte]
     `eEhsize`*: uint16
-    `programHeaderEntrySize`*: uint16
-    `qtyProgramHeader`*: uint16
-    `sectionHeaderEntrySize`*: uint16
-    `qtySectionHeader`*: uint16
+    `lenProgramHeaders`*: uint16
+    `numProgramHeaders`*: uint16
+    `lenSectionHeaders`*: uint16
+    `numSectionHeaders`*: uint16
     `sectionNamesIdx`*: uint16
     `parent`*: Elf
     `rawProgramHeadersInst`*: seq[seq[byte]]
@@ -1000,14 +1000,14 @@ proc readLe(this: Elf_EndianElf) =
   this.flags = flagsExpr
   let eEhsizeExpr = this.io.readU2le()
   this.eEhsize = eEhsizeExpr
-  let programHeaderEntrySizeExpr = this.io.readU2le()
-  this.programHeaderEntrySize = programHeaderEntrySizeExpr
-  let qtyProgramHeaderExpr = this.io.readU2le()
-  this.qtyProgramHeader = qtyProgramHeaderExpr
-  let sectionHeaderEntrySizeExpr = this.io.readU2le()
-  this.sectionHeaderEntrySize = sectionHeaderEntrySizeExpr
-  let qtySectionHeaderExpr = this.io.readU2le()
-  this.qtySectionHeader = qtySectionHeaderExpr
+  let lenProgramHeadersExpr = this.io.readU2le()
+  this.lenProgramHeaders = lenProgramHeadersExpr
+  let numProgramHeadersExpr = this.io.readU2le()
+  this.numProgramHeaders = numProgramHeadersExpr
+  let lenSectionHeadersExpr = this.io.readU2le()
+  this.lenSectionHeaders = lenSectionHeadersExpr
+  let numSectionHeadersExpr = this.io.readU2le()
+  this.numSectionHeaders = numSectionHeadersExpr
   let sectionNamesIdxExpr = this.io.readU2le()
   this.sectionNamesIdx = sectionNamesIdxExpr
 
@@ -1047,14 +1047,14 @@ proc readBe(this: Elf_EndianElf) =
   this.flags = flagsExpr
   let eEhsizeExpr = this.io.readU2be()
   this.eEhsize = eEhsizeExpr
-  let programHeaderEntrySizeExpr = this.io.readU2be()
-  this.programHeaderEntrySize = programHeaderEntrySizeExpr
-  let qtyProgramHeaderExpr = this.io.readU2be()
-  this.qtyProgramHeader = qtyProgramHeaderExpr
-  let sectionHeaderEntrySizeExpr = this.io.readU2be()
-  this.sectionHeaderEntrySize = sectionHeaderEntrySizeExpr
-  let qtySectionHeaderExpr = this.io.readU2be()
-  this.qtySectionHeader = qtySectionHeaderExpr
+  let lenProgramHeadersExpr = this.io.readU2be()
+  this.lenProgramHeaders = lenProgramHeadersExpr
+  let numProgramHeadersExpr = this.io.readU2be()
+  this.numProgramHeaders = numProgramHeadersExpr
+  let lenSectionHeadersExpr = this.io.readU2be()
+  this.lenSectionHeaders = lenSectionHeadersExpr
+  let numSectionHeadersExpr = this.io.readU2be()
+  this.numSectionHeaders = numSectionHeadersExpr
   let sectionNamesIdxExpr = this.io.readU2be()
   this.sectionNamesIdx = sectionNamesIdxExpr
 
@@ -1087,15 +1087,15 @@ proc programHeaders(this: Elf_EndianElf): seq[Elf_EndianElf_ProgramHeader] =
   let pos = this.io.pos()
   this.io.seek(int(this.programHeaderOffset))
   if this.isLe:
-    for i in 0 ..< int(this.qtyProgramHeader):
-      let buf = this.io.readBytes(int(this.programHeaderEntrySize))
+    for i in 0 ..< int(this.numProgramHeaders):
+      let buf = this.io.readBytes(int(this.lenProgramHeaders))
       this.rawProgramHeadersInst.add(buf)
       let rawProgramHeadersInstIo = newKaitaiStream(buf)
       let it = Elf_EndianElf_ProgramHeader.read(rawProgramHeadersInstIo, this.root, this)
       this.programHeadersInst.add(it)
   else:
-    for i in 0 ..< int(this.qtyProgramHeader):
-      let buf = this.io.readBytes(int(this.programHeaderEntrySize))
+    for i in 0 ..< int(this.numProgramHeaders):
+      let buf = this.io.readBytes(int(this.lenProgramHeaders))
       this.rawProgramHeadersInst.add(buf)
       let rawProgramHeadersInstIo = newKaitaiStream(buf)
       let it = Elf_EndianElf_ProgramHeader.read(rawProgramHeadersInstIo, this.root, this)
@@ -1110,15 +1110,15 @@ proc sectionHeaders(this: Elf_EndianElf): seq[Elf_EndianElf_SectionHeader] =
   let pos = this.io.pos()
   this.io.seek(int(this.sectionHeaderOffset))
   if this.isLe:
-    for i in 0 ..< int(this.qtySectionHeader):
-      let buf = this.io.readBytes(int(this.sectionHeaderEntrySize))
+    for i in 0 ..< int(this.numSectionHeaders):
+      let buf = this.io.readBytes(int(this.lenSectionHeaders))
       this.rawSectionHeadersInst.add(buf)
       let rawSectionHeadersInstIo = newKaitaiStream(buf)
       let it = Elf_EndianElf_SectionHeader.read(rawSectionHeadersInstIo, this.root, this)
       this.sectionHeadersInst.add(it)
   else:
-    for i in 0 ..< int(this.qtySectionHeader):
-      let buf = this.io.readBytes(int(this.sectionHeaderEntrySize))
+    for i in 0 ..< int(this.numSectionHeaders):
+      let buf = this.io.readBytes(int(this.lenSectionHeaders))
       this.rawSectionHeadersInst.add(buf)
       let rawSectionHeadersInstIo = newKaitaiStream(buf)
       let it = Elf_EndianElf_SectionHeader.read(rawSectionHeadersInstIo, this.root, this)
@@ -1130,7 +1130,7 @@ proc sectionHeaders(this: Elf_EndianElf): seq[Elf_EndianElf_SectionHeader] =
 proc sectionNames(this: Elf_EndianElf): Elf_EndianElf_StringsStruct = 
   if this.sectionNamesInstFlag:
     return this.sectionNamesInst
-  if  ((this.sectionNamesIdx != ord(elf.undefined)) and (this.sectionNamesIdx < Elf(this.root).header.qtySectionHeader)) :
+  if  ((this.sectionNamesIdx != ord(elf.undefined)) and (this.sectionNamesIdx < Elf(this.root).header.numSectionHeaders)) :
     let pos = this.io.pos()
     this.io.seek(int(this.sectionHeaders[this.sectionNamesIdx].ofsBody))
     if this.isLe:
@@ -1716,7 +1716,7 @@ proc linkedSection(this: Elf_EndianElf_SectionHeader): Elf_EndianElf_SectionHead
   ]##
   if this.linkedSectionInstFlag:
     return this.linkedSectionInst
-  if  ((this.linkedSectionIdx != ord(elf.undefined)) and (this.linkedSectionIdx < Elf(this.root).header.qtySectionHeader)) :
+  if  ((this.linkedSectionIdx != ord(elf.undefined)) and (this.linkedSectionIdx < Elf(this.root).header.numSectionHeaders)) :
     let linkedSectionInstExpr = Elf_EndianElf_SectionHeader(Elf(this.root).header.sectionHeaders[this.linkedSectionIdx])
     this.linkedSectionInst = linkedSectionInstExpr
   this.linkedSectionInstFlag = true

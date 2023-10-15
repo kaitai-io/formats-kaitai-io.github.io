@@ -1393,10 +1393,10 @@ public:
     private:
         std::string m_flags;
         uint16_t m_e_ehsize;
-        uint16_t m_program_header_entry_size;
-        uint16_t m_qty_program_header;
-        uint16_t m_section_header_entry_size;
-        uint16_t m_qty_section_header;
+        uint16_t m_len_program_headers;
+        uint16_t m_num_program_headers;
+        uint16_t m_len_section_headers;
+        uint16_t m_num_section_headers;
         uint16_t m_section_names_idx;
         elf_t* m__root;
         elf_t* m__parent;
@@ -1422,10 +1422,10 @@ public:
         uint64_t section_header_offset() const { return m_section_header_offset; }
         std::string flags() const { return m_flags; }
         uint16_t e_ehsize() const { return m_e_ehsize; }
-        uint16_t program_header_entry_size() const { return m_program_header_entry_size; }
-        uint16_t qty_program_header() const { return m_qty_program_header; }
-        uint16_t section_header_entry_size() const { return m_section_header_entry_size; }
-        uint16_t qty_section_header() const { return m_qty_section_header; }
+        uint16_t len_program_headers() const { return m_len_program_headers; }
+        uint16_t num_program_headers() const { return m_num_program_headers; }
+        uint16_t len_section_headers() const { return m_len_section_headers; }
+        uint16_t num_section_headers() const { return m_num_section_headers; }
         uint16_t section_names_idx() const { return m_section_names_idx; }
         elf_t* _root() const { return m__root; }
         elf_t* _parent() const { return m__parent; }

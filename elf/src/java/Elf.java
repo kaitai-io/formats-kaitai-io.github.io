@@ -764,10 +764,10 @@ public class Elf extends KaitaiStruct {
             }
             this.flags = this._io.readBytes(4);
             this.eEhsize = this._io.readU2le();
-            this.programHeaderEntrySize = this._io.readU2le();
-            this.qtyProgramHeader = this._io.readU2le();
-            this.sectionHeaderEntrySize = this._io.readU2le();
-            this.qtySectionHeader = this._io.readU2le();
+            this.lenProgramHeaders = this._io.readU2le();
+            this.numProgramHeaders = this._io.readU2le();
+            this.lenSectionHeaders = this._io.readU2le();
+            this.numSectionHeaders = this._io.readU2le();
             this.sectionNamesIdx = this._io.readU2le();
         }
         private void _readBE() {
@@ -821,10 +821,10 @@ public class Elf extends KaitaiStruct {
             }
             this.flags = this._io.readBytes(4);
             this.eEhsize = this._io.readU2be();
-            this.programHeaderEntrySize = this._io.readU2be();
-            this.qtyProgramHeader = this._io.readU2be();
-            this.sectionHeaderEntrySize = this._io.readU2be();
-            this.qtySectionHeader = this._io.readU2be();
+            this.lenProgramHeaders = this._io.readU2be();
+            this.numProgramHeaders = this._io.readU2be();
+            this.lenSectionHeaders = this._io.readU2be();
+            this.numSectionHeaders = this._io.readU2be();
             this.sectionNamesIdx = this._io.readU2be();
         }
         public static class NoteSection extends KaitaiStruct {
@@ -1656,7 +1656,7 @@ public class Elf extends KaitaiStruct {
             public SectionHeader linkedSection() {
                 if (this.linkedSection != null)
                     return this.linkedSection;
-                if ( ((linkedSectionIdx() != Elf.SectionHeaderIdxSpecial.UNDEFINED.id()) && (linkedSectionIdx() < _root().header().qtySectionHeader())) ) {
+                if ( ((linkedSectionIdx() != Elf.SectionHeaderIdxSpecial.UNDEFINED.id()) && (linkedSectionIdx() < _root().header().numSectionHeaders())) ) {
                     this.linkedSection = _root().header().sectionHeaders().get((int) linkedSectionIdx());
                 }
                 return this.linkedSection;
@@ -2300,16 +2300,16 @@ public class Elf extends KaitaiStruct {
             if (_is_le) {
                 this._raw_programHeaders = new ArrayList<byte[]>();
                 this.programHeaders = new ArrayList<ProgramHeader>();
-                for (int i = 0; i < qtyProgramHeader(); i++) {
-                    this._raw_programHeaders.add(this._io.readBytes(programHeaderEntrySize()));
+                for (int i = 0; i < numProgramHeaders(); i++) {
+                    this._raw_programHeaders.add(this._io.readBytes(lenProgramHeaders()));
                     KaitaiStream _io__raw_programHeaders = new ByteBufferKaitaiStream(_raw_programHeaders.get(_raw_programHeaders.size() - 1));
                     this.programHeaders.add(new ProgramHeader(_io__raw_programHeaders, this, _root, _is_le));
                 }
             } else {
                 this._raw_programHeaders = new ArrayList<byte[]>();
                 this.programHeaders = new ArrayList<ProgramHeader>();
-                for (int i = 0; i < qtyProgramHeader(); i++) {
-                    this._raw_programHeaders.add(this._io.readBytes(programHeaderEntrySize()));
+                for (int i = 0; i < numProgramHeaders(); i++) {
+                    this._raw_programHeaders.add(this._io.readBytes(lenProgramHeaders()));
                     KaitaiStream _io__raw_programHeaders = new ByteBufferKaitaiStream(_raw_programHeaders.get(_raw_programHeaders.size() - 1));
                     this.programHeaders.add(new ProgramHeader(_io__raw_programHeaders, this, _root, _is_le));
                 }
@@ -2326,16 +2326,16 @@ public class Elf extends KaitaiStruct {
             if (_is_le) {
                 this._raw_sectionHeaders = new ArrayList<byte[]>();
                 this.sectionHeaders = new ArrayList<SectionHeader>();
-                for (int i = 0; i < qtySectionHeader(); i++) {
-                    this._raw_sectionHeaders.add(this._io.readBytes(sectionHeaderEntrySize()));
+                for (int i = 0; i < numSectionHeaders(); i++) {
+                    this._raw_sectionHeaders.add(this._io.readBytes(lenSectionHeaders()));
                     KaitaiStream _io__raw_sectionHeaders = new ByteBufferKaitaiStream(_raw_sectionHeaders.get(_raw_sectionHeaders.size() - 1));
                     this.sectionHeaders.add(new SectionHeader(_io__raw_sectionHeaders, this, _root, _is_le));
                 }
             } else {
                 this._raw_sectionHeaders = new ArrayList<byte[]>();
                 this.sectionHeaders = new ArrayList<SectionHeader>();
-                for (int i = 0; i < qtySectionHeader(); i++) {
-                    this._raw_sectionHeaders.add(this._io.readBytes(sectionHeaderEntrySize()));
+                for (int i = 0; i < numSectionHeaders(); i++) {
+                    this._raw_sectionHeaders.add(this._io.readBytes(lenSectionHeaders()));
                     KaitaiStream _io__raw_sectionHeaders = new ByteBufferKaitaiStream(_raw_sectionHeaders.get(_raw_sectionHeaders.size() - 1));
                     this.sectionHeaders.add(new SectionHeader(_io__raw_sectionHeaders, this, _root, _is_le));
                 }
@@ -2347,7 +2347,7 @@ public class Elf extends KaitaiStruct {
         public StringsStruct sectionNames() {
             if (this.sectionNames != null)
                 return this.sectionNames;
-            if ( ((sectionNamesIdx() != Elf.SectionHeaderIdxSpecial.UNDEFINED.id()) && (sectionNamesIdx() < _root().header().qtySectionHeader())) ) {
+            if ( ((sectionNamesIdx() != Elf.SectionHeaderIdxSpecial.UNDEFINED.id()) && (sectionNamesIdx() < _root().header().numSectionHeaders())) ) {
                 long _pos = this._io.pos();
                 this._io.seek(sectionHeaders().get((int) sectionNamesIdx()).ofsBody());
                 if (_is_le) {
@@ -2371,10 +2371,10 @@ public class Elf extends KaitaiStruct {
         private Long sectionHeaderOffset;
         private byte[] flags;
         private int eEhsize;
-        private int programHeaderEntrySize;
-        private int qtyProgramHeader;
-        private int sectionHeaderEntrySize;
-        private int qtySectionHeader;
+        private int lenProgramHeaders;
+        private int numProgramHeaders;
+        private int lenSectionHeaders;
+        private int numSectionHeaders;
         private int sectionNamesIdx;
         private Elf _root;
         private Elf _parent;
@@ -2389,10 +2389,10 @@ public class Elf extends KaitaiStruct {
         public Long sectionHeaderOffset() { return sectionHeaderOffset; }
         public byte[] flags() { return flags; }
         public int eEhsize() { return eEhsize; }
-        public int programHeaderEntrySize() { return programHeaderEntrySize; }
-        public int qtyProgramHeader() { return qtyProgramHeader; }
-        public int sectionHeaderEntrySize() { return sectionHeaderEntrySize; }
-        public int qtySectionHeader() { return qtySectionHeader; }
+        public int lenProgramHeaders() { return lenProgramHeaders; }
+        public int numProgramHeaders() { return numProgramHeaders; }
+        public int lenSectionHeaders() { return lenSectionHeaders; }
+        public int numSectionHeaders() { return numSectionHeaders; }
         public int sectionNamesIdx() { return sectionNamesIdx; }
         public Elf _root() { return _root; }
         public Elf _parent() { return _parent; }

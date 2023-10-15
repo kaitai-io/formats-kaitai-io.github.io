@@ -583,10 +583,10 @@ class Elf < Kaitai::Struct::Struct
       end
       @flags = @_io.read_bytes(4)
       @e_ehsize = @_io.read_u2le
-      @program_header_entry_size = @_io.read_u2le
-      @qty_program_header = @_io.read_u2le
-      @section_header_entry_size = @_io.read_u2le
-      @qty_section_header = @_io.read_u2le
+      @len_program_headers = @_io.read_u2le
+      @num_program_headers = @_io.read_u2le
+      @len_section_headers = @_io.read_u2le
+      @num_section_headers = @_io.read_u2le
       @section_names_idx = @_io.read_u2le
       self
     end
@@ -615,10 +615,10 @@ class Elf < Kaitai::Struct::Struct
       end
       @flags = @_io.read_bytes(4)
       @e_ehsize = @_io.read_u2be
-      @program_header_entry_size = @_io.read_u2be
-      @qty_program_header = @_io.read_u2be
-      @section_header_entry_size = @_io.read_u2be
-      @qty_section_header = @_io.read_u2be
+      @len_program_headers = @_io.read_u2be
+      @num_program_headers = @_io.read_u2be
+      @len_section_headers = @_io.read_u2be
+      @num_section_headers = @_io.read_u2be
       @section_names_idx = @_io.read_u2be
       self
     end
@@ -1096,7 +1096,7 @@ class Elf < Kaitai::Struct::Struct
       # @see https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.sheader.html#sh_link Source
       def linked_section
         return @linked_section unless @linked_section.nil?
-        if  ((linked_section_idx != Elf::I__SECTION_HEADER_IDX_SPECIAL[:section_header_idx_special_undefined]) && (linked_section_idx < _root.header.qty_section_header)) 
+        if  ((linked_section_idx != Elf::I__SECTION_HEADER_IDX_SPECIAL[:section_header_idx_special_undefined]) && (linked_section_idx < _root.header.num_section_headers)) 
           @linked_section = _root.header.section_headers[linked_section_idx]
         end
         @linked_section
@@ -1578,16 +1578,16 @@ class Elf < Kaitai::Struct::Struct
       if @_is_le
         @_raw_program_headers = []
         @program_headers = []
-        (qty_program_header).times { |i|
-          @_raw_program_headers << @_io.read_bytes(program_header_entry_size)
+        (num_program_headers).times { |i|
+          @_raw_program_headers << @_io.read_bytes(len_program_headers)
           _io__raw_program_headers = Kaitai::Struct::Stream.new(@_raw_program_headers[i])
           @program_headers << ProgramHeader.new(_io__raw_program_headers, self, @_root, @_is_le)
         }
       else
         @_raw_program_headers = []
         @program_headers = []
-        (qty_program_header).times { |i|
-          @_raw_program_headers << @_io.read_bytes(program_header_entry_size)
+        (num_program_headers).times { |i|
+          @_raw_program_headers << @_io.read_bytes(len_program_headers)
           _io__raw_program_headers = Kaitai::Struct::Stream.new(@_raw_program_headers[i])
           @program_headers << ProgramHeader.new(_io__raw_program_headers, self, @_root, @_is_le)
         }
@@ -1602,16 +1602,16 @@ class Elf < Kaitai::Struct::Struct
       if @_is_le
         @_raw_section_headers = []
         @section_headers = []
-        (qty_section_header).times { |i|
-          @_raw_section_headers << @_io.read_bytes(section_header_entry_size)
+        (num_section_headers).times { |i|
+          @_raw_section_headers << @_io.read_bytes(len_section_headers)
           _io__raw_section_headers = Kaitai::Struct::Stream.new(@_raw_section_headers[i])
           @section_headers << SectionHeader.new(_io__raw_section_headers, self, @_root, @_is_le)
         }
       else
         @_raw_section_headers = []
         @section_headers = []
-        (qty_section_header).times { |i|
-          @_raw_section_headers << @_io.read_bytes(section_header_entry_size)
+        (num_section_headers).times { |i|
+          @_raw_section_headers << @_io.read_bytes(len_section_headers)
           _io__raw_section_headers = Kaitai::Struct::Stream.new(@_raw_section_headers[i])
           @section_headers << SectionHeader.new(_io__raw_section_headers, self, @_root, @_is_le)
         }
@@ -1621,7 +1621,7 @@ class Elf < Kaitai::Struct::Struct
     end
     def section_names
       return @section_names unless @section_names.nil?
-      if  ((section_names_idx != Elf::I__SECTION_HEADER_IDX_SPECIAL[:section_header_idx_special_undefined]) && (section_names_idx < _root.header.qty_section_header)) 
+      if  ((section_names_idx != Elf::I__SECTION_HEADER_IDX_SPECIAL[:section_header_idx_special_undefined]) && (section_names_idx < _root.header.num_section_headers)) 
         _pos = @_io.pos
         @_io.seek(section_headers[section_names_idx].ofs_body)
         if @_is_le
@@ -1645,10 +1645,10 @@ class Elf < Kaitai::Struct::Struct
     attr_reader :section_header_offset
     attr_reader :flags
     attr_reader :e_ehsize
-    attr_reader :program_header_entry_size
-    attr_reader :qty_program_header
-    attr_reader :section_header_entry_size
-    attr_reader :qty_section_header
+    attr_reader :len_program_headers
+    attr_reader :num_program_headers
+    attr_reader :len_section_headers
+    attr_reader :num_section_headers
     attr_reader :section_names_idx
     attr_reader :_raw_program_headers
     attr_reader :_raw_section_headers
