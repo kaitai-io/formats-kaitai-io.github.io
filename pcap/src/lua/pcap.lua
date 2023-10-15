@@ -5,6 +5,7 @@
 local class = require("class")
 require("kaitaistruct")
 local enum = require("enum")
+local utils = require("utils")
 local stringstream = require("string_stream")
 
 require("packet_ppi")
@@ -306,15 +307,15 @@ function Pcap.Packet:_read()
   self.orig_len = self._io:read_u4le()
   local _on = self._root.hdr.network
   if _on == Pcap.Linktype.ppi then
-    self._raw_body = self._io:read_bytes(self.incl_len)
+    self._raw_body = self._io:read_bytes(utils.box_unwrap((self.incl_len < self._root.hdr.snaplen) and utils.box_wrap(self.incl_len) or (self._root.hdr.snaplen)))
     local _io = KaitaiStream(stringstream(self._raw_body))
     self.body = PacketPpi(_io)
   elseif _on == Pcap.Linktype.ethernet then
-    self._raw_body = self._io:read_bytes(self.incl_len)
+    self._raw_body = self._io:read_bytes(utils.box_unwrap((self.incl_len < self._root.hdr.snaplen) and utils.box_wrap(self.incl_len) or (self._root.hdr.snaplen)))
     local _io = KaitaiStream(stringstream(self._raw_body))
     self.body = EthernetFrame(_io)
   else
-    self.body = self._io:read_bytes(self.incl_len)
+    self.body = self._io:read_bytes(utils.box_unwrap((self.incl_len < self._root.hdr.snaplen) and utils.box_wrap(self.incl_len) or (self._root.hdr.snaplen)))
   end
 end
 

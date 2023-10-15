@@ -301,17 +301,23 @@ func (this *ProtocolBody_OptionHopByHop) Read(io *kaitai.Stream, parent *Protoco
 		return err
 	}
 	this.HdrExtLen = tmp10
-	tmp11, err := this._io.ReadBytes(int((this.HdrExtLen - 1)))
+	var tmp11 int;
+	if (this.HdrExtLen > 0) {
+		tmp11 = (this.HdrExtLen - 1)
+	} else {
+		tmp11 = 1
+	}
+	tmp12, err := this._io.ReadBytes(int(tmp11))
 	if err != nil {
 		return err
 	}
-	tmp11 = tmp11
-	this.Body = tmp11
-	tmp12 := NewProtocolBody(this.NextHeaderType)
-	err = tmp12.Read(this._io, this, nil)
+	tmp12 = tmp12
+	this.Body = tmp12
+	tmp13 := NewProtocolBody(this.NextHeaderType)
+	err = tmp13.Read(this._io, this, nil)
 	if err != nil {
 		return err
 	}
-	this.NextHeader = tmp12
+	this.NextHeader = tmp13
 	return err
 }

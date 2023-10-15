@@ -105,17 +105,17 @@ namespace Pcap {
             $this->_m_origLen = $this->_io->readU4le();
             switch ($this->_root()->hdr()->network()) {
                 case \Pcap\Linktype::PPI:
-                    $this->_m__raw_body = $this->_io->readBytes($this->inclLen());
+                    $this->_m__raw_body = $this->_io->readBytes(($this->inclLen() < $this->_root()->hdr()->snaplen() ? $this->inclLen() : $this->_root()->hdr()->snaplen()));
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
                     $this->_m_body = new \PacketPpi($_io__raw_body);
                     break;
                 case \Pcap\Linktype::ETHERNET:
-                    $this->_m__raw_body = $this->_io->readBytes($this->inclLen());
+                    $this->_m__raw_body = $this->_io->readBytes(($this->inclLen() < $this->_root()->hdr()->snaplen() ? $this->inclLen() : $this->_root()->hdr()->snaplen()));
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
                     $this->_m_body = new \EthernetFrame($_io__raw_body);
                     break;
                 default:
-                    $this->_m_body = $this->_io->readBytes($this->inclLen());
+                    $this->_m_body = $this->_io->readBytes(($this->inclLen() < $this->_root()->hdr()->snaplen() ? $this->inclLen() : $this->_root()->hdr()->snaplen()));
                     break;
             }
         }

@@ -255,7 +255,7 @@ namespace Kaitai
             {
                 _nextHeaderType = m_io.ReadU1();
                 _hdrExtLen = m_io.ReadU1();
-                _body = m_io.ReadBytes((HdrExtLen - 1));
+                _body = m_io.ReadBytes((HdrExtLen > 0 ? (HdrExtLen - 1) : 1));
                 _nextHeader = new ProtocolBody(NextHeaderType, m_io);
             }
             private byte _nextHeaderType;

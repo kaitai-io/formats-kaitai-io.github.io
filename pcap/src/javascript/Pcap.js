@@ -528,17 +528,17 @@ var Pcap = (function() {
       this.origLen = this._io.readU4le();
       switch (this._root.hdr.network) {
       case Pcap.Linktype.PPI:
-        this._raw_body = this._io.readBytes(this.inclLen);
+        this._raw_body = this._io.readBytes((this.inclLen < this._root.hdr.snaplen ? this.inclLen : this._root.hdr.snaplen));
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new PacketPpi(_io__raw_body, this, null);
         break;
       case Pcap.Linktype.ETHERNET:
-        this._raw_body = this._io.readBytes(this.inclLen);
+        this._raw_body = this._io.readBytes((this.inclLen < this._root.hdr.snaplen ? this.inclLen : this._root.hdr.snaplen));
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new EthernetFrame(_io__raw_body, this, null);
         break;
       default:
-        this.body = this._io.readBytes(this.inclLen);
+        this.body = this._io.readBytes((this.inclLen < this._root.hdr.snaplen ? this.inclLen : this._root.hdr.snaplen));
         break;
       }
     }

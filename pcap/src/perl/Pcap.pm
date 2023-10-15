@@ -373,17 +373,17 @@ sub _read {
     $self->{orig_len} = $self->{_io}->read_u4le();
     my $_on = $self->_root()->hdr()->network();
     if ($_on == $Pcap::LINKTYPE_PPI) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->incl_len());
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->incl_len() < $self->_root()->hdr()->snaplen() ? $self->incl_len() : $self->_root()->hdr()->snaplen()));
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = PacketPpi->new($io__raw_body);
     }
     elsif ($_on == $Pcap::LINKTYPE_ETHERNET) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->incl_len());
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->incl_len() < $self->_root()->hdr()->snaplen() ? $self->incl_len() : $self->_root()->hdr()->snaplen()));
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = EthernetFrame->new($io__raw_body);
     }
     else {
-        $self->{body} = $self->{_io}->read_bytes($self->incl_len());
+        $self->{body} = $self->{_io}->read_bytes(($self->incl_len() < $self->_root()->hdr()->snaplen() ? $self->incl_len() : $self->_root()->hdr()->snaplen()));
     }
 }
 

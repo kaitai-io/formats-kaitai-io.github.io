@@ -404,40 +404,58 @@ func (this *Pcap_Packet) Read(io *kaitai.Stream, parent *Pcap, root *Pcap) (err 
 	this.OrigLen = uint32(tmp14)
 	switch (this._root.Hdr.Network) {
 	case Pcap_Linktype__Ppi:
-		tmp15, err := this._io.ReadBytes(int(this.InclLen))
+		var tmp15 uint32;
+		if (this.InclLen < this._root.Hdr.Snaplen) {
+			tmp15 = this.InclLen
+		} else {
+			tmp15 = this._root.Hdr.Snaplen
+		}
+		tmp16, err := this._io.ReadBytes(int(tmp15))
 		if err != nil {
 			return err
 		}
-		tmp15 = tmp15
-		this._raw_Body = tmp15
+		tmp16 = tmp16
+		this._raw_Body = tmp16
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp16 := NewPacketPpi()
-		err = tmp16.Read(_io__raw_Body, this, nil)
+		tmp17 := NewPacketPpi()
+		err = tmp17.Read(_io__raw_Body, this, nil)
 		if err != nil {
 			return err
 		}
-		this.Body = tmp16
+		this.Body = tmp17
 	case Pcap_Linktype__Ethernet:
-		tmp17, err := this._io.ReadBytes(int(this.InclLen))
-		if err != nil {
-			return err
+		var tmp18 uint32;
+		if (this.InclLen < this._root.Hdr.Snaplen) {
+			tmp18 = this.InclLen
+		} else {
+			tmp18 = this._root.Hdr.Snaplen
 		}
-		tmp17 = tmp17
-		this._raw_Body = tmp17
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp18 := NewEthernetFrame()
-		err = tmp18.Read(_io__raw_Body, this, nil)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp18
-	default:
-		tmp19, err := this._io.ReadBytes(int(this.InclLen))
+		tmp19, err := this._io.ReadBytes(int(tmp18))
 		if err != nil {
 			return err
 		}
 		tmp19 = tmp19
 		this._raw_Body = tmp19
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp20 := NewEthernetFrame()
+		err = tmp20.Read(_io__raw_Body, this, nil)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp20
+	default:
+		var tmp21 uint32;
+		if (this.InclLen < this._root.Hdr.Snaplen) {
+			tmp21 = this.InclLen
+		} else {
+			tmp21 = this._root.Hdr.Snaplen
+		}
+		tmp22, err := this._io.ReadBytes(int(tmp21))
+		if err != nil {
+			return err
+		}
+		tmp22 = tmp22
+		this._raw_Body = tmp22
 	}
 	return err
 }

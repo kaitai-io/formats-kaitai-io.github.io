@@ -75,20 +75,20 @@ void pcap_t::packet_t::_read() {
     switch (_root()->hdr()->network()) {
     case pcap_t::LINKTYPE_PPI: {
         n_body = false;
-        m__raw_body = m__io->read_bytes(incl_len());
+        m__raw_body = m__io->read_bytes(((incl_len() < _root()->hdr()->snaplen()) ? (incl_len()) : (_root()->hdr()->snaplen())));
         m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
         m_body = std::unique_ptr<packet_ppi_t>(new packet_ppi_t(m__io__raw_body.get()));
         break;
     }
     case pcap_t::LINKTYPE_ETHERNET: {
         n_body = false;
-        m__raw_body = m__io->read_bytes(incl_len());
+        m__raw_body = m__io->read_bytes(((incl_len() < _root()->hdr()->snaplen()) ? (incl_len()) : (_root()->hdr()->snaplen())));
         m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
         m_body = std::unique_ptr<ethernet_frame_t>(new ethernet_frame_t(m__io__raw_body.get()));
         break;
     }
     default: {
-        m__raw_body = m__io->read_bytes(incl_len());
+        m__raw_body = m__io->read_bytes(((incl_len() < _root()->hdr()->snaplen()) ? (incl_len()) : (_root()->hdr()->snaplen())));
         break;
     }
     }

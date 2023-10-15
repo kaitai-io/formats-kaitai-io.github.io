@@ -304,15 +304,15 @@ class Pcap < Kaitai::Struct::Struct
       @orig_len = @_io.read_u4le
       case _root.hdr.network
       when :linktype_ppi
-        @_raw_body = @_io.read_bytes(incl_len)
+        @_raw_body = @_io.read_bytes((incl_len < _root.hdr.snaplen ? incl_len : _root.hdr.snaplen))
         _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
         @body = PacketPpi.new(_io__raw_body)
       when :linktype_ethernet
-        @_raw_body = @_io.read_bytes(incl_len)
+        @_raw_body = @_io.read_bytes((incl_len < _root.hdr.snaplen ? incl_len : _root.hdr.snaplen))
         _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
         @body = EthernetFrame.new(_io__raw_body)
       else
-        @body = @_io.read_bytes(incl_len)
+        @body = @_io.read_bytes((incl_len < _root.hdr.snaplen ? incl_len : _root.hdr.snaplen))
       end
       self
     end

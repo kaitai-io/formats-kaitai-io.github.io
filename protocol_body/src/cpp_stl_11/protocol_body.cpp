@@ -86,7 +86,7 @@ protocol_body_t::option_hop_by_hop_t::option_hop_by_hop_t(kaitai::kstream* p__io
 void protocol_body_t::option_hop_by_hop_t::_read() {
     m_next_header_type = m__io->read_u1();
     m_hdr_ext_len = m__io->read_u1();
-    m_body = m__io->read_bytes((hdr_ext_len() - 1));
+    m_body = m__io->read_bytes(((hdr_ext_len() > 0) ? ((hdr_ext_len() - 1)) : (1)));
     m_next_header = std::unique_ptr<protocol_body_t>(new protocol_body_t(next_header_type(), m__io));
 }
 

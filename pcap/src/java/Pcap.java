@@ -380,24 +380,24 @@ public class Pcap extends KaitaiStruct {
                 if (on != null) {
                     switch (_root().hdr().network()) {
                     case PPI: {
-                        this._raw_body = this._io.readBytes(inclLen());
+                        this._raw_body = this._io.readBytes((inclLen() < _root().hdr().snaplen() ? inclLen() : _root().hdr().snaplen()));
                         KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                         this.body = new PacketPpi(_io__raw_body);
                         break;
                     }
                     case ETHERNET: {
-                        this._raw_body = this._io.readBytes(inclLen());
+                        this._raw_body = this._io.readBytes((inclLen() < _root().hdr().snaplen() ? inclLen() : _root().hdr().snaplen()));
                         KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                         this.body = new EthernetFrame(_io__raw_body);
                         break;
                     }
                     default: {
-                        this.body = this._io.readBytes(inclLen());
+                        this.body = this._io.readBytes((inclLen() < _root().hdr().snaplen() ? inclLen() : _root().hdr().snaplen()));
                         break;
                     }
                     }
                 } else {
-                    this.body = this._io.readBytes(inclLen());
+                    this.body = this._io.readBytes((inclLen() < _root().hdr().snaplen() ? inclLen() : _root().hdr().snaplen()));
                 }
             }
         }

@@ -362,19 +362,19 @@ proc read*(_: typedesc[Pcap_Packet], io: KaitaiStream, root: KaitaiStruct, paren
   block:
     let on = Pcap(this.root).hdr.network
     if on == pcap.ppi:
-      let rawBodyExpr = this.io.readBytes(int(this.inclLen))
+      let rawBodyExpr = this.io.readBytes(int((if this.inclLen < Pcap(this.root).hdr.snaplen: this.inclLen else: Pcap(this.root).hdr.snaplen)))
       this.rawBody = rawBodyExpr
       let rawBodyIo = newKaitaiStream(rawBodyExpr)
       let bodyExpr = PacketPpi.read(rawBodyIo, this.root, this)
       this.body = bodyExpr
     elif on == pcap.ethernet:
-      let rawBodyExpr = this.io.readBytes(int(this.inclLen))
+      let rawBodyExpr = this.io.readBytes(int((if this.inclLen < Pcap(this.root).hdr.snaplen: this.inclLen else: Pcap(this.root).hdr.snaplen)))
       this.rawBody = rawBodyExpr
       let rawBodyIo = newKaitaiStream(rawBodyExpr)
       let bodyExpr = EthernetFrame.read(rawBodyIo, this.root, this)
       this.body = bodyExpr
     else:
-      let bodyExpr = this.io.readBytes(int(this.inclLen))
+      let bodyExpr = this.io.readBytes(int((if this.inclLen < Pcap(this.root).hdr.snaplen: this.inclLen else: Pcap(this.root).hdr.snaplen)))
       this.body = bodyExpr
 
 proc fromFile*(_: typedesc[Pcap_Packet], filename: string): Pcap_Packet =

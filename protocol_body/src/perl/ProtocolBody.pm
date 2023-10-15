@@ -289,7 +289,7 @@ sub _read {
 
     $self->{next_header_type} = $self->{_io}->read_u1();
     $self->{hdr_ext_len} = $self->{_io}->read_u1();
-    $self->{body} = $self->{_io}->read_bytes(($self->hdr_ext_len() - 1));
+    $self->{body} = $self->{_io}->read_bytes(($self->hdr_ext_len() > 0 ? ($self->hdr_ext_len() - 1) : 1));
     $self->{next_header} = ProtocolBody->new($self->{_io});
 }
 

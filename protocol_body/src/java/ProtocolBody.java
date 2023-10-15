@@ -286,7 +286,7 @@ public class ProtocolBody extends KaitaiStruct {
         private void _read() {
             this.nextHeaderType = this._io.readU1();
             this.hdrExtLen = this._io.readU1();
-            this.body = this._io.readBytes((hdrExtLen() - 1));
+            this.body = this._io.readBytes((hdrExtLen() > 0 ? (hdrExtLen() - 1) : 1));
             this.nextHeader = new ProtocolBody(this._io, nextHeaderType());
         }
         private int nextHeaderType;

@@ -217,7 +217,7 @@ class ProtocolBody < Kaitai::Struct::Struct
     def _read
       @next_header_type = @_io.read_u1
       @hdr_ext_len = @_io.read_u1
-      @body = @_io.read_bytes((hdr_ext_len - 1))
+      @body = @_io.read_bytes((hdr_ext_len > 0 ? (hdr_ext_len - 1) : 1))
       @next_header = ProtocolBody.new(@_io, next_header_type)
       self
     end

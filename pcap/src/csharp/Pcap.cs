@@ -352,19 +352,19 @@ namespace Kaitai
                 _origLen = m_io.ReadU4le();
                 switch (M_Root.Hdr.Network) {
                 case Pcap.Linktype.Ppi: {
-                    __raw_body = m_io.ReadBytes(InclLen);
+                    __raw_body = m_io.ReadBytes((InclLen < M_Root.Hdr.Snaplen ? InclLen : M_Root.Hdr.Snaplen));
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new PacketPpi(io___raw_body);
                     break;
                 }
                 case Pcap.Linktype.Ethernet: {
-                    __raw_body = m_io.ReadBytes(InclLen);
+                    __raw_body = m_io.ReadBytes((InclLen < M_Root.Hdr.Snaplen ? InclLen : M_Root.Hdr.Snaplen));
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new EthernetFrame(io___raw_body);
                     break;
                 }
                 default: {
-                    _body = m_io.ReadBytes(InclLen);
+                    _body = m_io.ReadBytes((InclLen < M_Root.Hdr.Snaplen ? InclLen : M_Root.Hdr.Snaplen));
                     break;
                 }
                 }

@@ -102,20 +102,20 @@ void pcap_t::packet_t::_read() {
     switch (_root()->hdr()->network()) {
     case pcap_t::LINKTYPE_PPI: {
         n_body = false;
-        m__raw_body = m__io->read_bytes(incl_len());
+        m__raw_body = m__io->read_bytes(((incl_len() < _root()->hdr()->snaplen()) ? (incl_len()) : (_root()->hdr()->snaplen())));
         m__io__raw_body = new kaitai::kstream(m__raw_body);
         m_body = new packet_ppi_t(m__io__raw_body);
         break;
     }
     case pcap_t::LINKTYPE_ETHERNET: {
         n_body = false;
-        m__raw_body = m__io->read_bytes(incl_len());
+        m__raw_body = m__io->read_bytes(((incl_len() < _root()->hdr()->snaplen()) ? (incl_len()) : (_root()->hdr()->snaplen())));
         m__io__raw_body = new kaitai::kstream(m__raw_body);
         m_body = new ethernet_frame_t(m__io__raw_body);
         break;
     }
     default: {
-        m__raw_body = m__io->read_bytes(incl_len());
+        m__raw_body = m__io->read_bytes(((incl_len() < _root()->hdr()->snaplen()) ? (incl_len()) : (_root()->hdr()->snaplen())));
         break;
     }
     }

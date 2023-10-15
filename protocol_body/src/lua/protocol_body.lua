@@ -5,6 +5,7 @@
 local class = require("class")
 require("kaitaistruct")
 local enum = require("enum")
+local utils = require("utils")
 
 require("tcp_segment")
 require("udp_datagram")
@@ -241,7 +242,7 @@ end
 function ProtocolBody.OptionHopByHop:_read()
   self.next_header_type = self._io:read_u1()
   self.hdr_ext_len = self._io:read_u1()
-  self.body = self._io:read_bytes((self.hdr_ext_len - 1))
+  self.body = self._io:read_bytes(utils.box_unwrap((self.hdr_ext_len > 0) and utils.box_wrap((self.hdr_ext_len - 1)) or (1)))
   self.next_header = ProtocolBody(self.next_header_type, self._io)
 end
 

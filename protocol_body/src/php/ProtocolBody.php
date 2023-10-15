@@ -93,7 +93,7 @@ namespace ProtocolBody {
         private function _read() {
             $this->_m_nextHeaderType = $this->_io->readU1();
             $this->_m_hdrExtLen = $this->_io->readU1();
-            $this->_m_body = $this->_io->readBytes(($this->hdrExtLen() - 1));
+            $this->_m_body = $this->_io->readBytes(($this->hdrExtLen() > 0 ? ($this->hdrExtLen() - 1) : 1));
             $this->_m_nextHeader = new \ProtocolBody($this->nextHeaderType(), $this->_io);
         }
         protected $_m_nextHeaderType;

@@ -268,7 +268,7 @@ proc read*(_: typedesc[ProtocolBody_OptionHopByHop], io: KaitaiStream, root: Kai
   this.nextHeaderType = nextHeaderTypeExpr
   let hdrExtLenExpr = this.io.readU1()
   this.hdrExtLen = hdrExtLenExpr
-  let bodyExpr = this.io.readBytes(int((this.hdrExtLen - 1)))
+  let bodyExpr = this.io.readBytes(int((if this.hdrExtLen > 0: (this.hdrExtLen - 1) else: 1)))
   this.body = bodyExpr
   let nextHeaderExpr = ProtocolBody.read(this.io, this.root, this, this.nextHeaderType)
   this.nextHeader = nextHeaderExpr

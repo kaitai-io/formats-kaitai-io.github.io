@@ -381,7 +381,7 @@ var ProtocolBody = (function() {
     OptionHopByHop.prototype._read = function() {
       this.nextHeaderType = this._io.readU1();
       this.hdrExtLen = this._io.readU1();
-      this.body = this._io.readBytes((this.hdrExtLen - 1));
+      this.body = this._io.readBytes((this.hdrExtLen > 0 ? (this.hdrExtLen - 1) : 1));
       this.nextHeader = new ProtocolBody(this._io, this, null, this.nextHeaderType);
     }
 

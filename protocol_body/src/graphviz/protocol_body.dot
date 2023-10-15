@@ -39,7 +39,7 @@ protocol_body__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPAC
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="next_header_type_pos">0</TD><TD PORT="next_header_type_size">1</TD><TD>u1</TD><TD PORT="next_header_type_type">next_header_type</TD></TR>
 				<TR><TD PORT="hdr_ext_len_pos">1</TD><TD PORT="hdr_ext_len_size">1</TD><TD>u1</TD><TD PORT="hdr_ext_len_type">hdr_ext_len</TD></TR>
-				<TR><TD PORT="body_pos">2</TD><TD PORT="body_size">(hdr_ext_len - 1)</TD><TD></TD><TD PORT="body_type">body</TD></TR>
+				<TR><TD PORT="body_pos">2</TD><TD PORT="body_size">(hdr_ext_len &gt; 0 ? (hdr_ext_len - 1) : 1)</TD><TD></TD><TD PORT="body_type">body</TD></TR>
 				<TR><TD PORT="next_header_pos">...</TD><TD PORT="next_header_size">...</TD><TD>ProtocolBody</TD><TD PORT="next_header_type">next_header</TD></TR>
 			</TABLE>>];
 		}
@@ -54,6 +54,7 @@ protocol_body__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPAC
 	protocol_body__seq_body_switch:case6 -> tcp_segment__seq [style=bold];
 	protocol_body__inst__protocol:protocol_type -> protocol_body__seq:body_type [color="#404040"];
 	protocol_body__params:protocol_num_type -> protocol_body__inst__protocol [color="#404040"];
+	option_hop_by_hop__seq:hdr_ext_len_type -> option_hop_by_hop__seq:body_size [color="#404040"];
 	option_hop_by_hop__seq:hdr_ext_len_type -> option_hop_by_hop__seq:body_size [color="#404040"];
 	option_hop_by_hop__seq:next_header_type -> protocol_body__seq [style=bold];
 }
