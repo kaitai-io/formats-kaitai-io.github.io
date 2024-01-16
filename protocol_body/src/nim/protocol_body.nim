@@ -6,11 +6,11 @@ import /network/udp_datagram
 import /network/ipv4_packet
 import /network/ipv6_packet
 
-import "tcp_segment"
 import "udp_datagram"
 import "ipv4_packet"
 import "icmp_packet"
 import "ipv6_packet"
+import "tcp_segment"
 type
   ProtocolBody* = ref object of KaitaiStruct
     `body`*: KaitaiStruct

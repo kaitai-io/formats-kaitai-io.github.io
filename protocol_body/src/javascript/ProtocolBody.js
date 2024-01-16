@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './TcpSegment', './UdpDatagram', './Ipv4Packet', './IcmpPacket', './Ipv6Packet'], factory);
+    define(['kaitai-struct/KaitaiStream', './UdpDatagram', './Ipv4Packet', './IcmpPacket', './Ipv6Packet', './TcpSegment'], factory);
   } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./TcpSegment'), require('./UdpDatagram'), require('./Ipv4Packet'), require('./IcmpPacket'), require('./Ipv6Packet'));
+    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./UdpDatagram'), require('./Ipv4Packet'), require('./IcmpPacket'), require('./Ipv6Packet'), require('./TcpSegment'));
   } else {
-    root.ProtocolBody = factory(root.KaitaiStream, root.TcpSegment, root.UdpDatagram, root.Ipv4Packet, root.IcmpPacket, root.Ipv6Packet);
+    root.ProtocolBody = factory(root.KaitaiStream, root.UdpDatagram, root.Ipv4Packet, root.IcmpPacket, root.Ipv6Packet, root.TcpSegment);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, TcpSegment, UdpDatagram, Ipv4Packet, IcmpPacket, Ipv6Packet) {
+}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, UdpDatagram, Ipv4Packet, IcmpPacket, Ipv6Packet, TcpSegment) {
 /**
  * Protocol body represents particular payload on transport level (OSI
  * layer 4).

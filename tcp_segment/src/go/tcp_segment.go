@@ -14,11 +14,13 @@ type TcpSegment struct {
 	DstPort uint16
 	SeqNum uint32
 	AckNum uint32
-	B12 uint8
-	B13 uint8
+	DataOffset uint64
+	Reserved uint64
+	Flags *TcpSegment_Flags
 	WindowSize uint16
 	Checksum uint16
 	UrgentPointer uint16
+	Options []byte
 	Body []byte
 	_io *kaitai.Stream
 	_root *TcpSegment
@@ -54,36 +56,172 @@ func (this *TcpSegment) Read(io *kaitai.Stream, parent interface{}, root *TcpSeg
 		return err
 	}
 	this.AckNum = uint32(tmp4)
-	tmp5, err := this._io.ReadU1()
+	tmp5, err := this._io.ReadBitsIntBe(4)
 	if err != nil {
 		return err
 	}
-	this.B12 = tmp5
-	tmp6, err := this._io.ReadU1()
+	this.DataOffset = tmp5
+	tmp6, err := this._io.ReadBitsIntBe(4)
 	if err != nil {
 		return err
 	}
-	this.B13 = tmp6
-	tmp7, err := this._io.ReadU2be()
+	this.Reserved = tmp6
+	this._io.AlignToByte()
+	tmp7 := NewTcpSegment_Flags()
+	err = tmp7.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.WindowSize = uint16(tmp7)
+	this.Flags = tmp7
 	tmp8, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.Checksum = uint16(tmp8)
+	this.WindowSize = uint16(tmp8)
 	tmp9, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.UrgentPointer = uint16(tmp9)
-	tmp10, err := this._io.ReadBytesFull()
+	this.Checksum = uint16(tmp9)
+	tmp10, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	tmp10 = tmp10
-	this.Body = tmp10
+	this.UrgentPointer = uint16(tmp10)
+	if (((this.DataOffset * 4) - 20) != 0) {
+		tmp11, err := this._io.ReadBytes(int(((this.DataOffset * 4) - 20)))
+		if err != nil {
+			return err
+		}
+		tmp11 = tmp11
+		this.Options = tmp11
+	}
+	tmp12, err := this._io.ReadBytesFull()
+	if err != nil {
+		return err
+	}
+	tmp12 = tmp12
+	this.Body = tmp12
 	return err
 }
+
+/**
+ * Source port
+ */
+
+/**
+ * Destination port
+ */
+
+/**
+ * Sequence number
+ */
+
+/**
+ * Acknowledgment number
+ */
+
+/**
+ * Data offset (in 32-bit words from the beginning of this type, normally 32 or can be extended if there are any TCP options or padding is present)
+ */
+
+/**
+ * TCP header flags as defined "TCP Header Flags" registry.
+ */
+type TcpSegment_Flags struct {
+	Cwr bool
+	Ece bool
+	Urg bool
+	Ack bool
+	Psh bool
+	Rst bool
+	Syn bool
+	Fin bool
+	_io *kaitai.Stream
+	_root *TcpSegment
+	_parent *TcpSegment
+}
+func NewTcpSegment_Flags() *TcpSegment_Flags {
+	return &TcpSegment_Flags{
+	}
+}
+
+func (this *TcpSegment_Flags) Read(io *kaitai.Stream, parent *TcpSegment, root *TcpSegment) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp13, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Cwr = tmp13 != 0
+	tmp14, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Ece = tmp14 != 0
+	tmp15, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Urg = tmp15 != 0
+	tmp16, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Ack = tmp16 != 0
+	tmp17, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Psh = tmp17 != 0
+	tmp18, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Rst = tmp18 != 0
+	tmp19, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Syn = tmp19 != 0
+	tmp20, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Fin = tmp20 != 0
+	return err
+}
+
+/**
+ * Congestion Window Reduced
+ */
+
+/**
+ * ECN-Echo
+ */
+
+/**
+ * Urgent pointer field is significant
+ */
+
+/**
+ * Acknowledgment field is significant
+ */
+
+/**
+ * Push function
+ */
+
+/**
+ * Reset the connection
+ */
+
+/**
+ * Synchronize sequence numbers
+ */
+
+/**
+ * No more data from sender
+ */

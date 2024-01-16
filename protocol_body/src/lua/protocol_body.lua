@@ -7,11 +7,11 @@ require("kaitaistruct")
 local enum = require("enum")
 local utils = require("utils")
 
-require("tcp_segment")
 require("udp_datagram")
 require("ipv4_packet")
 require("icmp_packet")
 require("ipv6_packet")
+require("tcp_segment")
 -- 
 -- Protocol body represents particular payload on transport level (OSI
 -- layer 4).
