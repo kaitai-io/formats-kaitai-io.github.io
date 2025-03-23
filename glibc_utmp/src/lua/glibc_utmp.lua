@@ -97,7 +97,7 @@ function GlibcUtmp.Timeval:_init(io, parent, root)
 end
 
 function GlibcUtmp.Timeval:_read()
-  self.sec = self._io:read_s4le()
+  self.sec = self._io:read_u4le()
   self.usec = self._io:read_s4le()
 end
 

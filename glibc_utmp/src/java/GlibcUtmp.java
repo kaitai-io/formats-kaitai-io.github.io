@@ -183,10 +183,10 @@ public class GlibcUtmp extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.sec = this._io.readS4le();
+            this.sec = this._io.readU4le();
             this.usec = this._io.readS4le();
         }
-        private int sec;
+        private long sec;
         private int usec;
         private GlibcUtmp _root;
         private GlibcUtmp.Record _parent;
@@ -194,7 +194,7 @@ public class GlibcUtmp extends KaitaiStruct {
         /**
          * Seconds
          */
-        public int sec() { return sec; }
+        public long sec() { return sec; }
 
         /**
          * Microseconds

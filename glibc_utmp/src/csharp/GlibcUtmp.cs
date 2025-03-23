@@ -154,10 +154,10 @@ namespace Kaitai
             }
             private void _read()
             {
-                _sec = m_io.ReadS4le();
+                _sec = m_io.ReadU4le();
                 _usec = m_io.ReadS4le();
             }
-            private int _sec;
+            private uint _sec;
             private int _usec;
             private GlibcUtmp m_root;
             private GlibcUtmp.Record m_parent;
@@ -165,7 +165,7 @@ namespace Kaitai
             /// <summary>
             /// Seconds
             /// </summary>
-            public int Sec { get { return _sec; } }
+            public uint Sec { get { return _sec; } }
 
             /// <summary>
             /// Microseconds

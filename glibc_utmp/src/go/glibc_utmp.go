@@ -191,7 +191,7 @@ func (this *GlibcUtmp_Record) Read(io *kaitai.Stream, parent *GlibcUtmp, root *G
  * Internet address of remote host
  */
 type GlibcUtmp_Timeval struct {
-	Sec int32
+	Sec uint32
 	Usec int32
 	_io *kaitai.Stream
 	_root *GlibcUtmp
@@ -207,11 +207,11 @@ func (this *GlibcUtmp_Timeval) Read(io *kaitai.Stream, parent *GlibcUtmp_Record,
 	this._parent = parent
 	this._root = root
 
-	tmp15, err := this._io.ReadS4le()
+	tmp15, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Sec = int32(tmp15)
+	this.Sec = uint32(tmp15)
 	tmp16, err := this._io.ReadS4le()
 	if err != nil {
 		return err

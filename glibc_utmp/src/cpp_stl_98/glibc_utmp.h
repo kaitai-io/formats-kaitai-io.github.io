@@ -137,7 +137,7 @@ public:
         ~timeval_t();
 
     private:
-        int32_t m_sec;
+        uint32_t m_sec;
         int32_t m_usec;
         glibc_utmp_t* m__root;
         glibc_utmp_t::record_t* m__parent;
@@ -147,7 +147,7 @@ public:
         /**
          * Seconds
          */
-        int32_t sec() const { return m_sec; }
+        uint32_t sec() const { return m_sec; }
 
         /**
          * Microseconds

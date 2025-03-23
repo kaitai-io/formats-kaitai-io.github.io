@@ -69,7 +69,7 @@ glibc_utmp_t::timeval_t::timeval_t(kaitai::kstream* p__io, glibc_utmp_t::record_
 }
 
 void glibc_utmp_t::timeval_t::_read() {
-    m_sec = m__io->read_s4le();
+    m_sec = m__io->read_u4le();
     m_usec = m__io->read_s4le();
 }
 

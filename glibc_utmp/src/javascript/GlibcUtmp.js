@@ -127,7 +127,7 @@ var GlibcUtmp = (function() {
       this._read();
     }
     Timeval.prototype._read = function() {
-      this.sec = this._io.readS4le();
+      this.sec = this._io.readU4le();
       this.usec = this._io.readS4le();
     }
 

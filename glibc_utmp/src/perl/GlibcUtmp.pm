@@ -193,7 +193,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{sec} = $self->{_io}->read_s4le();
+    $self->{sec} = $self->{_io}->read_u4le();
     $self->{usec} = $self->{_io}->read_s4le();
 }
 

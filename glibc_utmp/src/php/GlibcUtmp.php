@@ -119,7 +119,7 @@ namespace GlibcUtmp {
         }
 
         private function _read() {
-            $this->_m_sec = $this->_io->readS4le();
+            $this->_m_sec = $this->_io->readU4le();
             $this->_m_usec = $this->_io->readS4le();
         }
         protected $_m_sec;

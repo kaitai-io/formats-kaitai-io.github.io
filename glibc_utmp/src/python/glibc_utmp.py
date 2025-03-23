@@ -67,7 +67,7 @@ class GlibcUtmp(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.sec = self._io.read_s4le()
+            self.sec = self._io.read_u4le()
             self.usec = self._io.read_s4le()
 
 

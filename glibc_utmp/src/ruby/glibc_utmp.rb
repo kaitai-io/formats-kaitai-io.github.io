@@ -107,7 +107,7 @@ class GlibcUtmp < Kaitai::Struct::Struct
     end
 
     def _read
-      @sec = @_io.read_s4le
+      @sec = @_io.read_u4le
       @usec = @_io.read_s4le
       self
     end

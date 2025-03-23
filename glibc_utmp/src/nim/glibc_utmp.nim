@@ -31,7 +31,7 @@ type
     `reserved`*: seq[byte]
     `parent`*: GlibcUtmp
   GlibcUtmp_Timeval* = ref object of KaitaiStruct
-    `sec`*: int32
+    `sec`*: uint32
     `usec`*: int32
     `parent`*: GlibcUtmp_Record
 
@@ -147,7 +147,7 @@ proc read*(_: typedesc[GlibcUtmp_Timeval], io: KaitaiStream, root: KaitaiStruct,
   ##[
   Seconds
   ]##
-  let secExpr = this.io.readS4le()
+  let secExpr = this.io.readU4le()
   this.sec = secExpr
 
   ##[
