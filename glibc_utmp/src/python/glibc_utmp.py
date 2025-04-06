@@ -47,7 +47,7 @@ class GlibcUtmp(KaitaiStruct):
 
         def _read(self):
             self.ut_type = KaitaiStream.resolve_enum(GlibcUtmp.EntryType, self._io.read_s4le())
-            self.pid = self._io.read_u4le()
+            self.pid = self._io.read_s4le()
             self.line = (self._io.read_bytes(32)).decode(u"UTF-8")
             self.id = (self._io.read_bytes(4)).decode(u"UTF-8")
             self.user = (self._io.read_bytes(32)).decode(u"UTF-8")

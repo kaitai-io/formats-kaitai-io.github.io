@@ -35,7 +35,7 @@ namespace GlibcUtmp {
 
         private function _read() {
             $this->_m_utType = $this->_io->readS4le();
-            $this->_m_pid = $this->_io->readU4le();
+            $this->_m_pid = $this->_io->readS4le();
             $this->_m_line = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(32), "UTF-8");
             $this->_m_id = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(4), "UTF-8");
             $this->_m_user = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(32), "UTF-8");

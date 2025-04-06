@@ -96,7 +96,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{ut_type} = $self->{_io}->read_s4le();
-    $self->{pid} = $self->{_io}->read_u4le();
+    $self->{pid} = $self->{_io}->read_s4le();
     $self->{line} = Encode::decode("UTF-8", $self->{_io}->read_bytes(32));
     $self->{id} = Encode::decode("UTF-8", $self->{_io}->read_bytes(4));
     $self->{user} = Encode::decode("UTF-8", $self->{_io}->read_bytes(32));

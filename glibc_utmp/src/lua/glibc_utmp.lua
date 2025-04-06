@@ -54,7 +54,7 @@ end
 
 function GlibcUtmp.Record:_read()
   self.ut_type = GlibcUtmp.EntryType(self._io:read_s4le())
-  self.pid = self._io:read_u4le()
+  self.pid = self._io:read_s4le()
   self.line = str_decode.decode(self._io:read_bytes(32), "UTF-8")
   self.id = str_decode.decode(self._io:read_bytes(4), "UTF-8")
   self.user = str_decode.decode(self._io:read_bytes(32), "UTF-8")

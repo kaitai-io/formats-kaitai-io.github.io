@@ -61,7 +61,7 @@ namespace Kaitai
             private void _read()
             {
                 _utType = ((GlibcUtmp.EntryType) m_io.ReadS4le());
-                _pid = m_io.ReadU4le();
+                _pid = m_io.ReadS4le();
                 _line = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(32));
                 _id = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(4));
                 _user = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(32));
@@ -73,7 +73,7 @@ namespace Kaitai
                 _reserved = m_io.ReadBytes(20);
             }
             private EntryType _utType;
-            private uint _pid;
+            private int _pid;
             private string _line;
             private string _id;
             private string _user;
@@ -94,7 +94,7 @@ namespace Kaitai
             /// <summary>
             /// Process ID of login process
             /// </summary>
-            public uint Pid { get { return _pid; } }
+            public int Pid { get { return _pid; } }
 
             /// <summary>
             /// Devicename

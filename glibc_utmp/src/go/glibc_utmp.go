@@ -62,7 +62,7 @@ func (this *GlibcUtmp) Read(io *kaitai.Stream, parent interface{}, root *GlibcUt
 }
 type GlibcUtmp_Record struct {
 	UtType GlibcUtmp_EntryType
-	Pid uint32
+	Pid int32
 	Line string
 	Id string
 	User string
@@ -91,11 +91,11 @@ func (this *GlibcUtmp_Record) Read(io *kaitai.Stream, parent *GlibcUtmp, root *G
 		return err
 	}
 	this.UtType = GlibcUtmp_EntryType(tmp4)
-	tmp5, err := this._io.ReadU4le()
+	tmp5, err := this._io.ReadS4le()
 	if err != nil {
 		return err
 	}
-	this.Pid = uint32(tmp5)
+	this.Pid = int32(tmp5)
 	tmp6, err := this._io.ReadBytes(int(32))
 	if err != nil {
 		return err

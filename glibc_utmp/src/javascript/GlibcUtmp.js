@@ -63,7 +63,7 @@ var GlibcUtmp = (function() {
     }
     Record.prototype._read = function() {
       this.utType = this._io.readS4le();
-      this.pid = this._io.readU4le();
+      this.pid = this._io.readS4le();
       this.line = KaitaiStream.bytesToStr(this._io.readBytes(32), "UTF-8");
       this.id = KaitaiStream.bytesToStr(this._io.readBytes(4), "UTF-8");
       this.user = KaitaiStream.bytesToStr(this._io.readBytes(32), "UTF-8");

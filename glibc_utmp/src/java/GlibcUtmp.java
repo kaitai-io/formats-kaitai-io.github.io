@@ -85,7 +85,7 @@ public class GlibcUtmp extends KaitaiStruct {
         }
         private void _read() {
             this.utType = GlibcUtmp.EntryType.byId(this._io.readS4le());
-            this.pid = this._io.readU4le();
+            this.pid = this._io.readS4le();
             this.line = new String(this._io.readBytes(32), Charset.forName("UTF-8"));
             this.id = new String(this._io.readBytes(4), Charset.forName("UTF-8"));
             this.user = new String(this._io.readBytes(32), Charset.forName("UTF-8"));
@@ -97,7 +97,7 @@ public class GlibcUtmp extends KaitaiStruct {
             this.reserved = this._io.readBytes(20);
         }
         private EntryType utType;
-        private long pid;
+        private int pid;
         private String line;
         private String id;
         private String user;
@@ -118,7 +118,7 @@ public class GlibcUtmp extends KaitaiStruct {
         /**
          * Process ID of login process
          */
-        public long pid() { return pid; }
+        public int pid() { return pid; }
 
         /**
          * Devicename

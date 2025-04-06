@@ -54,7 +54,7 @@ public:
 
     private:
         entry_type_t m_ut_type;
-        uint32_t m_pid;
+        int32_t m_pid;
         std::string m_line;
         std::string m_id;
         std::string m_user;
@@ -77,7 +77,7 @@ public:
         /**
          * Process ID of login process
          */
-        uint32_t pid() const { return m_pid; }
+        int32_t pid() const { return m_pid; }
 
         /**
          * Devicename

@@ -46,7 +46,7 @@ class GlibcUtmp < Kaitai::Struct::Struct
 
     def _read
       @ut_type = Kaitai::Struct::Stream::resolve_enum(GlibcUtmp::ENTRY_TYPE, @_io.read_s4le)
-      @pid = @_io.read_u4le
+      @pid = @_io.read_s4le
       @line = (@_io.read_bytes(32)).force_encoding("UTF-8")
       @id = (@_io.read_bytes(4)).force_encoding("UTF-8")
       @user = (@_io.read_bytes(32)).force_encoding("UTF-8")

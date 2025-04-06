@@ -19,7 +19,7 @@ type
     accounting = 9
   GlibcUtmp_Record* = ref object of KaitaiStruct
     `utType`*: GlibcUtmp_EntryType
-    `pid`*: uint32
+    `pid`*: int32
     `line`*: string
     `id`*: string
     `user`*: string
@@ -79,7 +79,7 @@ proc read*(_: typedesc[GlibcUtmp_Record], io: KaitaiStream, root: KaitaiStruct, 
   ##[
   Process ID of login process
   ]##
-  let pidExpr = this.io.readU4le()
+  let pidExpr = this.io.readS4le()
   this.pid = pidExpr
 
   ##[

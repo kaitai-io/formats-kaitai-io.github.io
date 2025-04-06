@@ -43,7 +43,7 @@ glibc_utmp_t::record_t::record_t(kaitai::kstream* p__io, glibc_utmp_t* p__parent
 
 void glibc_utmp_t::record_t::_read() {
     m_ut_type = static_cast<glibc_utmp_t::entry_type_t>(m__io->read_s4le());
-    m_pid = m__io->read_u4le();
+    m_pid = m__io->read_s4le();
     m_line = kaitai::kstream::bytes_to_str(m__io->read_bytes(32), std::string("UTF-8"));
     m_id = kaitai::kstream::bytes_to_str(m__io->read_bytes(4), std::string("UTF-8"));
     m_user = kaitai::kstream::bytes_to_str(m__io->read_bytes(32), std::string("UTF-8"));
