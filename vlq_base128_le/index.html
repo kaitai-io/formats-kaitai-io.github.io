@@ -111,7 +111,16 @@ top of it for signed ints
 <a href="https://avro.apache.org/docs/current/spec.html#binary_encode_primitive">https://avro.apache.org/docs/current/spec.html#binary_encode_primitive</a></li>
 </ul>
 <p>More information on this encoding is available at <a href="https://en.wikipedia.org/wiki/LEB128">https://en.wikipedia.org/wiki/LEB128</a></p>
-<p>This particular implementation supports serialized values to up 8 bytes long.</p>
+<p>This particular implementation supports integer values up to 64 bits (i.e. the
+maximum unsigned value supported is <code>2**64</code>), which implies that serialized
+values can be up to 10 bytes in length.</p>
+<p>If the most significant 10th byte (<code>groups[9]</code>) is present, its <code>has_next</code>
+must be <code>false</code> (otherwise we would have 11 or more bytes, which is not
+supported) and its <code>value</code> can be only <code>0</code> or <code>1</code> (because a 9-byte VLQ can
+represent <code>9 * 7 = 63</code> bits already, so the 10th byte can only add 1 bit,
+since only integers up to 64 bits are supported). These restrictions are
+enforced by this implementation. They were inspired by the Protoscope tool,
+see <a href="https://github.com/protocolbuffers/protoscope/blob/8e7a6aafa2c9958527b1e0747e66e1bfff045819/writer.go#L644-L648">https://github.com/protocolbuffers/protoscope/blob/8e7a6aafa2c9958527b1e0747e66e1bfff045819/writer.go#L644-L648</a>.</p>
 </p>
             </div>
             <div class="col-md-4">
@@ -129,7 +138,7 @@ top of it for signed ints
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.9
+                        Minimal Kaitai Struct required: 0.10
                     </div>
                     
                     
@@ -231,7 +240,7 @@ top of it for signed ints
 <span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vlq_base128_le</span>
 <span class="w">  </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Variable length quantity, unsigned/signed integer, base128, little-endian</span>
 <span class="w">  </span><span class="nt">license</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
-<span class="w">  </span><span class="nt">ks-version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.9</span>
+<span class="w">  </span><span class="nt">ks-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;0.10&#39;</span>
 <span class="w">  </span><span class="nt">bit-endian</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">be</span>
 <span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">  </span><span class="no">A variable-length unsigned/signed integer using base128 encoding. 1-byte groups</span>
@@ -252,11 +261,29 @@ top of it for signed ints
 
 <span class="w">  </span><span class="no">More information on this encoding is available at &lt;https://en.wikipedia.org/wiki/LEB128&gt;</span>
 
-<span class="w">  </span><span class="no">This particular implementation supports serialized values to up 8 bytes long.</span>
+<span class="w">  </span><span class="no">This particular implementation supports integer values up to 64 bits (i.e. the</span>
+<span class="w">  </span><span class="no">maximum unsigned value supported is `2**64`), which implies that serialized</span>
+<span class="w">  </span><span class="no">values can be up to 10 bytes in length.</span>
+
+<span class="w">  </span><span class="no">If the most significant 10th byte (`groups[9]`) is present, its `has_next`</span>
+<span class="w">  </span><span class="no">must be `false` (otherwise we would have 11 or more bytes, which is not</span>
+<span class="w">  </span><span class="no">supported) and its `value` can be only `0` or `1` (because a 9-byte VLQ can</span>
+<span class="w">  </span><span class="no">represent `9 * 7 = 63` bits already, so the 10th byte can only add 1 bit,</span>
+<span class="w">  </span><span class="no">since only integers up to 64 bits are supported). These restrictions are</span>
+<span class="w">  </span><span class="no">enforced by this implementation. They were inspired by the Protoscope tool,</span>
+<span class="w">  </span><span class="no">see &lt;https://github.com/protocolbuffers/protoscope/blob/8e7a6aafa2c9958527b1e0747e66e1bfff045819/writer.go#L644-L648&gt;.</span>
 <span class="nt">-webide-representation</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{value:dec}&#39;</span>
 <span class="nt">seq</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">groups</span>
-<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">group</span>
+<span class="w">    </span><span class="c1"># NOTE: with KSC 0.11, handling `_index == 9` as a special case is needed</span>
+<span class="w">    </span><span class="c1"># for PHP, otherwise `TypeError: Argument #3 ($multiplier) must be of type</span>
+<span class="w">    </span><span class="c1"># int, float given` would occur.</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">group(</span>
+<span class="w">        </span><span class="no">_index,</span>
+<span class="w">        </span><span class="no">_index != 0 ? groups[_index - 1].interm_value : 0,</span>
+<span class="w">        </span><span class="no">_index != 0 ? (_index == 9 ? 0x8000_0000_0000_0000 : groups[_index - 1].multiplier * 128) : 1</span>
+<span class="w">      </span><span class="no">)</span>
 <span class="w">    </span><span class="nt">repeat</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">until</span>
 <span class="w">    </span><span class="nt">repeat-until</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">not _.has_next</span>
 <span class="nt">types</span><span class="p">:</span>
@@ -264,32 +291,90 @@ top of it for signed ints
 <span class="w">    </span><span class="nt">-webide-representation</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{value}&#39;</span>
 <span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">      </span><span class="no">One byte group, clearly divided into 7-bit &quot;value&quot; chunk and 1-bit &quot;continuation&quot; flag.</span>
+<span class="w">    </span><span class="nt">params</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">idx</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prev_interm_value</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u8</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">multiplier</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u8</span>
 <span class="w">    </span><span class="nt">seq</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">has_next</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b1</span>
-<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">If true, then we have more bytes to read</span>
+<span class="w">        </span><span class="nt">valid</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;idx</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">9</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">false</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">has_next&#39;</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">If `true`, then we have more bytes to read.</span>
+
+<span class="w">          </span><span class="no">Since this implementation only supports serialized values up to 10</span>
+<span class="w">          </span><span class="no">bytes, this must be `false` in the 10th group (`groups[9]`).</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b7</span>
-<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">The 7-bit (base128) numeric value chunk of this group</span>
+<span class="w">        </span><span class="nt">valid</span><span class="p">:</span>
+<span class="w">          </span><span class="c1"># # As of KSC 0.11, this causes `if (!(_value &lt;= (Idx == 9 ? 1 :</span>
+<span class="w">          </span><span class="c1"># # 127))) { throw new ValidationGreaterThanError(...); }` to be</span>
+<span class="w">          </span><span class="c1"># # generated in the C# code, which fails to compile with the message</span>
+<span class="w">          </span><span class="c1"># # `error CS0034: Operator &#39;&lt;=&#39; is ambiguous on operands of type</span>
+<span class="w">          </span><span class="c1"># # &#39;ulong&#39; and &#39;int&#39;`. To work around that, we add type casting</span>
+<span class="w">          </span><span class="c1"># # (`.as&lt;u8&gt;`).</span>
+<span class="w">          </span><span class="c1"># max: &#39;idx == 9 ? 1 : 0b111_1111&#39;</span>
+<span class="w">          </span><span class="nt">max</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;(idx</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">9</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">1</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">0b111_1111).as&lt;u8&gt;&#39;</span>
+<span class="w">        </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">The 7-bit (base128) numeric value chunk of this group</span>
+
+<span class="w">          </span><span class="no">Since this implementation only supports integer values up to 64 bits,</span>
+<span class="w">          </span><span class="no">the `value` in the 10th group (`groups[9]`) can only be `0` or `1`</span>
+<span class="w">          </span><span class="no">(otherwise the width of the represented value would be 65 bits or</span>
+<span class="w">          </span><span class="no">more, which is not supported).</span>
+<span class="w">    </span><span class="nt">instances</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">interm_value</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># We intentionally use addition (`+`) and multiplication (`*`), not</span>
+<span class="w">        </span><span class="c1"># bitwise OR (`|`) and left shift (`&lt;&lt;`), in order to get better</span>
+<span class="w">        </span><span class="c1"># precision in JavaScript, especially with respect to the Web IDE. Using</span>
+<span class="w">        </span><span class="c1"># any bitwise operators (like `|` and `&lt;&lt;`) in JavaScript truncates the</span>
+<span class="w">        </span><span class="c1"># result to a signed 32-bit integer (except `&gt;&gt;&gt;`, which yields an</span>
+<span class="w">        </span><span class="c1"># unsigned 32-bit integer).</span>
+<span class="w">        </span><span class="c1">#</span>
+<span class="w">        </span><span class="c1"># Avoiding bitwise operators allows greater precision than 32 bits. We</span>
+<span class="w">        </span><span class="c1"># are still limited by the fact that the built-in `Number` type in</span>
+<span class="w">        </span><span class="c1"># JavaScript can only exactly represent integers from `-2**53 + 1` to</span>
+<span class="w">        </span><span class="c1"># `2**53 - 1` (these bounds are available as constants</span>
+<span class="w">        </span><span class="c1"># `Number.MIN_SAFE_INTEGER` and `Number.MAX_SAFE_INTEGER`), so for any</span>
+<span class="w">        </span><span class="c1"># integer that requires more than 53 bits of precision, we get</span>
+<span class="w">        </span><span class="c1"># approximate values. But 53 bits is still better than 32.</span>
+<span class="w">        </span><span class="c1">#</span>
+<span class="w">        </span><span class="c1"># Full 64-bit integer support in JavaScript is only possible via the</span>
+<span class="w">        </span><span class="c1"># `BigInt` type: https://github.com/kaitai-io/kaitai_struct/issues/183</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(prev_interm_value + value * multiplier).as&lt;u8&gt;</span>
 <span class="nt">instances</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">len</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">groups.size</span>
 <span class="w">  </span><span class="nt">value</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">      </span><span class="no">(groups[0].value</span>
-<span class="w">      </span><span class="no">+ (len &gt;= 2 ? (groups[1].value &lt;&lt; 7) : 0)</span>
-<span class="w">      </span><span class="no">+ (len &gt;= 3 ? (groups[2].value &lt;&lt; 14) : 0)</span>
-<span class="w">      </span><span class="no">+ (len &gt;= 4 ? (groups[3].value &lt;&lt; 21) : 0)</span>
-<span class="w">      </span><span class="no">+ (len &gt;= 5 ? (groups[4].value &lt;&lt; 28) : 0)</span>
-<span class="w">      </span><span class="no">+ (len &gt;= 6 ? (groups[5].value &lt;&lt; 35) : 0)</span>
-<span class="w">      </span><span class="no">+ (len &gt;= 7 ? (groups[6].value &lt;&lt; 42) : 0)</span>
-<span class="w">      </span><span class="no">+ (len &gt;= 8 ? (groups[7].value &lt;&lt; 49) : 0)).as&lt;u8&gt;</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">groups.last.interm_value</span>
 <span class="w">    </span><span class="nt">doc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Resulting unsigned value as normal integer</span>
 <span class="w">  </span><span class="nt">sign_bit</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;(1.as&lt;u8&gt;</span><span class="nv"> </span><span class="s">&lt;&lt;</span><span class="nv"> </span><span class="s">(7</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">len</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">1)).as&lt;u8&gt;&#39;</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;(len</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">10</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">0x8000_0000_0000_0000</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">groups.last.multiplier</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">0b100_0000).as&lt;u8&gt;&#39;</span>
 <span class="w">  </span><span class="nt">value_signed</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;((value</span><span class="nv"> </span><span class="s">^</span><span class="nv"> </span><span class="s">sign_bit).as&lt;s8&gt;</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">sign_bit.as&lt;s8&gt;).as&lt;s8&gt;&#39;</span>
-<span class="w">    </span><span class="nt">doc-ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://graphics.stanford.edu/~seander/bithacks.html#VariableSignExtend</span>
+<span class="w">    </span><span class="c1"># NOTE 1: the expression `-(sign_bit - (value - sign_bit))` performing</span>
+<span class="w">    </span><span class="c1"># signed extension is carefully written to avoid overflows in statically</span>
+<span class="w">    </span><span class="c1"># typed languages like C++ (where they would cause undefined behavior) or</span>
+<span class="w">    </span><span class="c1"># Nim. The goal is to achieve mathematically exactly `value - 2 * sign_bit`.</span>
+<span class="w">    </span><span class="c1">#</span>
+<span class="w">    </span><span class="c1"># NOTE 2: the `sign_bit &gt; 0` check is a hack for PHP (it is required only</span>
+<span class="w">    </span><span class="c1"># because KSC 0.11 does not abstract from the fact that PHP has only</span>
+<span class="w">    </span><span class="c1"># **signed** 64-bit integers, which should be considered a bug because it</span>
+<span class="w">    </span><span class="c1"># reduces portability between target languages). Since PHP only has signed</span>
+<span class="w">    </span><span class="c1"># 64-bit integers, `sign_bit` will be `-0x8000_0000_0000_0000` if</span>
+<span class="w">    </span><span class="c1"># `len == 10`, so the `value &gt;= sign_bit` condition that is supposed to</span>
+<span class="w">    </span><span class="c1"># detect whether the sign bit is set will not work (in reality, it will be</span>
+<span class="w">    </span><span class="c1"># true for any `value`). However, the sign extension would only cause the</span>
+<span class="w">    </span><span class="c1"># value to overflow and become a `float`. The fix in this case is to return</span>
+<span class="w">    </span><span class="c1"># `value` as is, since it already represents the correct signed value.</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;sign_bit</span><span class="nv"> </span><span class="s">&gt;</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">value</span><span class="nv"> </span><span class="s">&gt;=</span><span class="nv"> </span><span class="s">sign_bit</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">-(sign_bit</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">(value</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">sign_bit)).as&lt;s8&gt;</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">value.as&lt;s8&gt;&#39;</span>
+<span class="w">    </span><span class="c1"># # We don&#39;t use this anymore again because of JavaScript as explained</span>
+<span class="w">    </span><span class="c1"># # above. Since it relies on bitwise XOR (`^`), it would truncate the value</span>
+<span class="w">    </span><span class="c1"># # to 32 bits in the Web IDE.</span>
+<span class="w">    </span><span class="c1"># value: &#39;((value ^ sign_bit).as&lt;s8&gt; - sign_bit.as&lt;s8&gt;).as&lt;s8&gt;&#39;</span>
+<span class="w">    </span><span class="c1"># doc-ref: https://graphics.stanford.edu/~seander/bithacks.html#VariableSignExtend</span>
 </pre></div>
     </div>
 </section>

@@ -51,21 +51,21 @@ sub len {
 sub value {
     my ($self) = @_;
     return $self->{value} if ($self->{value});
-    $self->{value} = (((((((@{$self->groups()}[0]->value() + ($self->len() >= 2 ? (@{$self->groups()}[1]->value() << 7) : 0)) + ($self->len() >= 3 ? (@{$self->groups()}[2]->value() << 14) : 0)) + ($self->len() >= 4 ? (@{$self->groups()}[3]->value() << 21) : 0)) + ($self->len() >= 5 ? (@{$self->groups()}[4]->value() << 28) : 0)) + ($self->len() >= 6 ? (@{$self->groups()}[5]->value() << 35) : 0)) + ($self->len() >= 7 ? (@{$self->groups()}[6]->value() << 42) : 0)) + ($self->len() >= 8 ? (@{$self->groups()}[7]->value() << 49) : 0));
+    $self->{value} = @{$self->groups()}[-1]->interm_value();
     return $self->{value};
 }
 
 sub sign_bit {
     my ($self) = @_;
     return $self->{sign_bit} if ($self->{sign_bit});
-    $self->{sign_bit} = (1 << ((7 * $self->len()) - 1));
+    $self->{sign_bit} = ($self->len() == 10 ? 9223372036854775808 : (@{$self->groups()}[-1]->multiplier() * 64));
     return $self->{sign_bit};
 }
 
 sub value_signed {
     my ($self) = @_;
     return $self->{value_signed} if ($self->{value_signed});
-    $self->{value_signed} = (($self->value() ^ $self->sign_bit()) - $self->sign_bit());
+    $self->{value_signed} = ( (($self->sign_bit() > 0) && ($self->value() >= $self->sign_bit()))  ? -(($self->sign_bit() - ($self->value() - $self->sign_bit()))) : $self->value());
     return $self->{value_signed};
 }
 
@@ -108,6 +108,13 @@ sub _read {
     $self->{value} = $self->{_io}->read_bits_int_be(7);
 }
 
+sub interm_value {
+    my ($self) = @_;
+    return $self->{interm_value} if ($self->{interm_value});
+    $self->{interm_value} = ($self->prev_interm_value() + ($self->value() * $self->multiplier()));
+    return $self->{interm_value};
+}
+
 sub has_next {
     my ($self) = @_;
     return $self->{has_next};
@@ -116,6 +123,21 @@ sub has_next {
 sub value {
     my ($self) = @_;
     return $self->{value};
+}
+
+sub idx {
+    my ($self) = @_;
+    return $self->{idx};
+}
+
+sub prev_interm_value {
+    my ($self) = @_;
+    return $self->{prev_interm_value};
+}
+
+sub multiplier {
+    my ($self) = @_;
+    return $self->{multiplier};
 }
 
 1;

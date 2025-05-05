@@ -30,7 +30,17 @@
  * 
  * More information on this encoding is available at <https://en.wikipedia.org/wiki/LEB128>
  * 
- * This particular implementation supports serialized values to up 8 bytes long.
+ * This particular implementation supports integer values up to 64 bits (i.e. the
+ * maximum unsigned value supported is `2**64`), which implies that serialized
+ * values can be up to 10 bytes in length.
+ * 
+ * If the most significant 10th byte (`groups[9]`) is present, its `has_next`
+ * must be `false` (otherwise we would have 11 or more bytes, which is not
+ * supported) and its `value` can be only `0` or `1` (because a 9-byte VLQ can
+ * represent `9 * 7 = 63` bits already, so the 10th byte can only add 1 bit,
+ * since only integers up to 64 bits are supported). These restrictions are
+ * enforced by this implementation. They were inspired by the Protoscope tool,
+ * see <https://github.com/protocolbuffers/protoscope/blob/8e7a6aafa2c9958527b1e0747e66e1bfff045819/writer.go#L644-L648>.
  */
 
 class vlq_base128_le_t : public kaitai::kstruct {
@@ -55,7 +65,7 @@ public:
 
     public:
 
-        group_t(kaitai::kstream* p__io, vlq_base128_le_t* p__parent = nullptr, vlq_base128_le_t* p__root = nullptr);
+        group_t(int32_t p_idx, uint64_t p_prev_interm_value, uint64_t p_multiplier, kaitai::kstream* p__io, vlq_base128_le_t* p__parent = nullptr, vlq_base128_le_t* p__root = nullptr);
 
     private:
         void _read();
@@ -65,22 +75,43 @@ public:
         ~group_t();
 
     private:
+        bool f_interm_value;
+        uint64_t m_interm_value;
+
+    public:
+        uint64_t interm_value();
+
+    private:
         bool m_has_next;
         uint64_t m_value;
+        int32_t m_idx;
+        uint64_t m_prev_interm_value;
+        uint64_t m_multiplier;
         vlq_base128_le_t* m__root;
         vlq_base128_le_t* m__parent;
 
     public:
 
         /**
-         * If true, then we have more bytes to read
+         * If `true`, then we have more bytes to read.
+         * 
+         * Since this implementation only supports serialized values up to 10
+         * bytes, this must be `false` in the 10th group (`groups[9]`).
          */
         bool has_next() const { return m_has_next; }
 
         /**
          * The 7-bit (base128) numeric value chunk of this group
+         * 
+         * Since this implementation only supports integer values up to 64 bits,
+         * the `value` in the 10th group (`groups[9]`) can only be `0` or `1`
+         * (otherwise the width of the represented value would be 65 bits or
+         * more, which is not supported).
          */
         uint64_t value() const { return m_value; }
+        int32_t idx() const { return m_idx; }
+        uint64_t prev_interm_value() const { return m_prev_interm_value; }
+        uint64_t multiplier() const { return m_multiplier; }
         vlq_base128_le_t* _root() const { return m__root; }
         vlq_base128_le_t* _parent() const { return m__parent; }
     };
@@ -115,10 +146,6 @@ private:
     int64_t m_value_signed;
 
 public:
-
-    /**
-     * \sa https://graphics.stanford.edu/~seander/bithacks.html#VariableSignExtend Source
-     */
     int64_t value_signed();
 
 private:

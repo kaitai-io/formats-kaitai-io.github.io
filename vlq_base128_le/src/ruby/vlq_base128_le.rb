@@ -26,7 +26,17 @@ end
 # 
 # More information on this encoding is available at <https://en.wikipedia.org/wiki/LEB128>
 # 
-# This particular implementation supports serialized values to up 8 bytes long.
+# This particular implementation supports integer values up to 64 bits (i.e. the
+# maximum unsigned value supported is `2**64`), which implies that serialized
+# values can be up to 10 bytes in length.
+# 
+# If the most significant 10th byte (`groups[9]`) is present, its `has_next`
+# must be `false` (otherwise we would have 11 or more bytes, which is not
+# supported) and its `value` can be only `0` or `1` (because a 9-byte VLQ can
+# represent `9 * 7 = 63` bits already, so the 10th byte can only add 1 bit,
+# since only integers up to 64 bits are supported). These restrictions are
+# enforced by this implementation. They were inspired by the Protoscope tool,
+# see <https://github.com/protocolbuffers/protoscope/blob/8e7a6aafa2c9958527b1e0747e66e1bfff045819/writer.go#L644-L648>.
 class VlqBase128Le < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)
@@ -37,7 +47,7 @@ class VlqBase128Le < Kaitai::Struct::Struct
     @groups = []
     i = 0
     begin
-      _ = Group.new(@_io, self, @_root)
+      _ = Group.new(@_io, self, @_root, i, (i != 0 ? groups[(i - 1)].interm_value : 0), (i != 0 ? (i == 9 ? 9223372036854775808 : (groups[(i - 1)].multiplier * 128)) : 1))
       @groups << _
       i += 1
     end until !(_.has_next)
@@ -47,24 +57,45 @@ class VlqBase128Le < Kaitai::Struct::Struct
   ##
   # One byte group, clearly divided into 7-bit "value" chunk and 1-bit "continuation" flag.
   class Group < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = self, idx, prev_interm_value, multiplier)
       super(_io, _parent, _root)
+      @idx = idx
+      @prev_interm_value = prev_interm_value
+      @multiplier = multiplier
       _read
     end
 
     def _read
       @has_next = @_io.read_bits_int_be(1) != 0
+      raise Kaitai::Struct::ValidationNotEqualError.new((idx == 9 ? false : has_next), has_next, _io, "/types/group/seq/0") if not has_next == (idx == 9 ? false : has_next)
       @value = @_io.read_bits_int_be(7)
+      raise Kaitai::Struct::ValidationGreaterThanError.new((idx == 9 ? 1 : 127), value, _io, "/types/group/seq/1") if not value <= (idx == 9 ? 1 : 127)
       self
+    end
+    def interm_value
+      return @interm_value unless @interm_value.nil?
+      @interm_value = (prev_interm_value + (value * multiplier))
+      @interm_value
     end
 
     ##
-    # If true, then we have more bytes to read
+    # If `true`, then we have more bytes to read.
+    # 
+    # Since this implementation only supports serialized values up to 10
+    # bytes, this must be `false` in the 10th group (`groups[9]`).
     attr_reader :has_next
 
     ##
     # The 7-bit (base128) numeric value chunk of this group
+    # 
+    # Since this implementation only supports integer values up to 64 bits,
+    # the `value` in the 10th group (`groups[9]`) can only be `0` or `1`
+    # (otherwise the width of the represented value would be 65 bits or
+    # more, which is not supported).
     attr_reader :value
+    attr_reader :idx
+    attr_reader :prev_interm_value
+    attr_reader :multiplier
   end
   def len
     return @len unless @len.nil?
@@ -76,20 +107,17 @@ class VlqBase128Le < Kaitai::Struct::Struct
   # Resulting unsigned value as normal integer
   def value
     return @value unless @value.nil?
-    @value = (((((((groups[0].value + (len >= 2 ? (groups[1].value << 7) : 0)) + (len >= 3 ? (groups[2].value << 14) : 0)) + (len >= 4 ? (groups[3].value << 21) : 0)) + (len >= 5 ? (groups[4].value << 28) : 0)) + (len >= 6 ? (groups[5].value << 35) : 0)) + (len >= 7 ? (groups[6].value << 42) : 0)) + (len >= 8 ? (groups[7].value << 49) : 0))
+    @value = groups.last.interm_value
     @value
   end
   def sign_bit
     return @sign_bit unless @sign_bit.nil?
-    @sign_bit = (1 << ((7 * len) - 1))
+    @sign_bit = (len == 10 ? 9223372036854775808 : (groups.last.multiplier * 64))
     @sign_bit
   end
-
-  ##
-  # @see https://graphics.stanford.edu/~seander/bithacks.html#VariableSignExtend Source
   def value_signed
     return @value_signed unless @value_signed.nil?
-    @value_signed = ((value ^ sign_bit) - sign_bit)
+    @value_signed = ( ((sign_bit > 0) && (value >= sign_bit))  ? -((sign_bit - (value - sign_bit))) : value)
     @value_signed
   end
   attr_reader :groups

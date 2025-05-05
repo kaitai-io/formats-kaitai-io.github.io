@@ -26,7 +26,17 @@ import java.util.ArrayList;
  * 
  * More information on this encoding is available at <https://en.wikipedia.org/wiki/LEB128>
  * 
- * This particular implementation supports serialized values to up 8 bytes long.
+ * This particular implementation supports integer values up to 64 bits (i.e. the
+ * maximum unsigned value supported is `2**64`), which implies that serialized
+ * values can be up to 10 bytes in length.
+ * 
+ * If the most significant 10th byte (`groups[9]`) is present, its `has_next`
+ * must be `false` (otherwise we would have 11 or more bytes, which is not
+ * supported) and its `value` can be only `0` or `1` (because a 9-byte VLQ can
+ * represent `9 * 7 = 63` bits already, so the 10th byte can only add 1 bit,
+ * since only integers up to 64 bits are supported). These restrictions are
+ * enforced by this implementation. They were inspired by the Protoscope tool,
+ * see <https://github.com/protocolbuffers/protoscope/blob/8e7a6aafa2c9958527b1e0747e66e1bfff045819/writer.go#L644-L648>.
  */
 public class VlqBase128Le extends KaitaiStruct {
     public static VlqBase128Le fromFile(String fileName) throws IOException {
@@ -53,7 +63,7 @@ public class VlqBase128Le extends KaitaiStruct {
             Group _it;
             int i = 0;
             do {
-                _it = new Group(this._io, this, _root);
+                _it = new Group(this._io, this, _root, i, (i != 0 ? groups().get((int) (i - 1)).intermValue() : 0), (i != 0 ? (i == 9 ? 0x8000000000000000L : (groups().get((int) (i - 1)).multiplier() * 128)) : 1));
                 this.groups.add(_it);
                 i++;
             } while (!(!(_it.hasNext())));
@@ -64,42 +74,70 @@ public class VlqBase128Le extends KaitaiStruct {
      * One byte group, clearly divided into 7-bit "value" chunk and 1-bit "continuation" flag.
      */
     public static class Group extends KaitaiStruct {
-        public static Group fromFile(String fileName) throws IOException {
-            return new Group(new ByteBufferKaitaiStream(fileName));
+
+        public Group(KaitaiStream _io, int idx, long prevIntermValue, long multiplier) {
+            this(_io, null, null, idx, prevIntermValue, multiplier);
         }
 
-        public Group(KaitaiStream _io) {
-            this(_io, null, null);
+        public Group(KaitaiStream _io, VlqBase128Le _parent, int idx, long prevIntermValue, long multiplier) {
+            this(_io, _parent, null, idx, prevIntermValue, multiplier);
         }
 
-        public Group(KaitaiStream _io, VlqBase128Le _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Group(KaitaiStream _io, VlqBase128Le _parent, VlqBase128Le _root) {
+        public Group(KaitaiStream _io, VlqBase128Le _parent, VlqBase128Le _root, int idx, long prevIntermValue, long multiplier) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
+            this.idx = idx;
+            this.prevIntermValue = prevIntermValue;
+            this.multiplier = multiplier;
             _read();
         }
         private void _read() {
             this.hasNext = this._io.readBitsIntBe(1) != 0;
+            if (!(hasNext() == (idx() == 9 ? false : hasNext()))) {
+                throw new KaitaiStream.ValidationNotEqualError((idx() == 9 ? false : hasNext()), hasNext(), _io(), "/types/group/seq/0");
+            }
             this.value = this._io.readBitsIntBe(7);
+            if (!(value() <= ((long) ((idx() == 9 ? 1 : 127))))) {
+                throw new KaitaiStream.ValidationGreaterThanError(((long) ((idx() == 9 ? 1 : 127))), value(), _io(), "/types/group/seq/1");
+            }
+        }
+        private Long intermValue;
+        public Long intermValue() {
+            if (this.intermValue != null)
+                return this.intermValue;
+            long _tmp = (long) (((long) ((prevIntermValue() + (value() * multiplier())))));
+            this.intermValue = _tmp;
+            return this.intermValue;
         }
         private boolean hasNext;
         private long value;
+        private int idx;
+        private long prevIntermValue;
+        private long multiplier;
         private VlqBase128Le _root;
         private VlqBase128Le _parent;
 
         /**
-         * If true, then we have more bytes to read
+         * If `true`, then we have more bytes to read.
+         * 
+         * Since this implementation only supports serialized values up to 10
+         * bytes, this must be `false` in the 10th group (`groups[9]`).
          */
         public boolean hasNext() { return hasNext; }
 
         /**
          * The 7-bit (base128) numeric value chunk of this group
+         * 
+         * Since this implementation only supports integer values up to 64 bits,
+         * the `value` in the 10th group (`groups[9]`) can only be `0` or `1`
+         * (otherwise the width of the represented value would be 65 bits or
+         * more, which is not supported).
          */
         public long value() { return value; }
+        public int idx() { return idx; }
+        public long prevIntermValue() { return prevIntermValue; }
+        public long multiplier() { return multiplier; }
         public VlqBase128Le _root() { return _root; }
         public VlqBase128Le _parent() { return _parent; }
     }
@@ -119,7 +157,7 @@ public class VlqBase128Le extends KaitaiStruct {
     public Long value() {
         if (this.value != null)
             return this.value;
-        long _tmp = (long) (((long) ((((((((groups().get((int) 0).value() + (len() >= 2 ? (groups().get((int) 1).value() << 7) : 0)) + (len() >= 3 ? (groups().get((int) 2).value() << 14) : 0)) + (len() >= 4 ? (groups().get((int) 3).value() << 21) : 0)) + (len() >= 5 ? (groups().get((int) 4).value() << 28) : 0)) + (len() >= 6 ? (groups().get((int) 5).value() << 35) : 0)) + (len() >= 7 ? (groups().get((int) 6).value() << 42) : 0)) + (len() >= 8 ? (groups().get((int) 7).value() << 49) : 0)))));
+        long _tmp = (long) (groups().get(groups().size() - 1).intermValue());
         this.value = _tmp;
         return this.value;
     }
@@ -127,19 +165,15 @@ public class VlqBase128Le extends KaitaiStruct {
     public Long signBit() {
         if (this.signBit != null)
             return this.signBit;
-        long _tmp = (long) (((long) ((((long) (1)) << ((7 * len()) - 1)))));
+        long _tmp = (long) (((long) ((len() == 10 ? 0x8000000000000000L : (groups().get(groups().size() - 1).multiplier() * 64)))));
         this.signBit = _tmp;
         return this.signBit;
     }
     private Long valueSigned;
-
-    /**
-     * @see <a href="https://graphics.stanford.edu/~seander/bithacks.html#VariableSignExtend">Source</a>
-     */
     public Long valueSigned() {
         if (this.valueSigned != null)
             return this.valueSigned;
-        long _tmp = (long) (((long) ((((long) ((value() ^ signBit()))) - ((long) (signBit()))))));
+        long _tmp = (long) (( ((signBit() > 0) && (value() >= signBit()))  ? -(((long) ((signBit() - (value() - signBit()))))) : ((long) (value()))));
         this.valueSigned = _tmp;
         return this.valueSigned;
     }

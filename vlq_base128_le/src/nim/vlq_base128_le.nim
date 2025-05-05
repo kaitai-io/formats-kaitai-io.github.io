@@ -16,15 +16,21 @@ type
   VlqBase128Le_Group* = ref object of KaitaiStruct
     `hasNext`*: bool
     `value`*: uint64
+    `idx`*: int32
+    `prevIntermValue`*: uint64
+    `multiplier`*: uint64
     `parent`*: VlqBase128Le
+    `intermValueInst`: uint64
+    `intermValueInstFlag`: bool
 
 proc read*(_: typedesc[VlqBase128Le], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): VlqBase128Le
-proc read*(_: typedesc[VlqBase128Le_Group], io: KaitaiStream, root: KaitaiStruct, parent: VlqBase128Le): VlqBase128Le_Group
+proc read*(_: typedesc[VlqBase128Le_Group], io: KaitaiStream, root: KaitaiStruct, parent: VlqBase128Le, idx: any, prevIntermValue: any, multiplier: any): VlqBase128Le_Group
 
 proc len*(this: VlqBase128Le): int
 proc value*(this: VlqBase128Le): uint64
 proc signBit*(this: VlqBase128Le): uint64
 proc valueSigned*(this: VlqBase128Le): int64
+proc intermValue*(this: VlqBase128Le_Group): uint64
 
 
 ##[
@@ -46,7 +52,17 @@ This particular encoding is specified and used in:
 
 More information on this encoding is available at <https://en.wikipedia.org/wiki/LEB128>
 
-This particular implementation supports serialized values to up 8 bytes long.
+This particular implementation supports integer values up to 64 bits (i.e. the
+maximum unsigned value supported is `2**64`), which implies that serialized
+values can be up to 10 bytes in length.
+
+If the most significant 10th byte (`groups[9]`) is present, its `has_next`
+must be `false` (otherwise we would have 11 or more bytes, which is not
+supported) and its `value` can be only `0` or `1` (because a 9-byte VLQ can
+represent `9 * 7 = 63` bits already, so the 10th byte can only add 1 bit,
+since only integers up to 64 bits are supported). These restrictions are
+enforced by this implementation. They were inspired by the Protoscope tool,
+see <https://github.com/protocolbuffers/protoscope/blob/8e7a6aafa2c9958527b1e0747e66e1bfff045819/writer.go#L644-L648>.
 
 ]##
 proc read*(_: typedesc[VlqBase128Le], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): VlqBase128Le =
@@ -60,7 +76,7 @@ proc read*(_: typedesc[VlqBase128Le], io: KaitaiStream, root: KaitaiStruct, pare
   block:
     var i: int
     while true:
-      let it = VlqBase128Le_Group.read(this.io, this.root, this)
+      let it = VlqBase128Le_Group.read(this.io, this.root, this, i, (if i != 0: this.groups[(i - 1)].intermValue else: 0), (if i != 0: (if i == 9: 9223372036854775808'u64 else: (this.groups[(i - 1)].multiplier * 128)) else: 1))
       this.groups.add(it)
       if not(it.hasNext):
         break
@@ -81,7 +97,7 @@ proc value(this: VlqBase128Le): uint64 =
   ]##
   if this.valueInstFlag:
     return this.valueInst
-  let valueInstExpr = uint64((uint64((((((((this.groups[0].value + (if this.len >= 2: (this.groups[1].value shl 7) else: 0)) + (if this.len >= 3: (this.groups[2].value shl 14) else: 0)) + (if this.len >= 4: (this.groups[3].value shl 21) else: 0)) + (if this.len >= 5: (this.groups[4].value shl 28) else: 0)) + (if this.len >= 6: (this.groups[5].value shl 35) else: 0)) + (if this.len >= 7: (this.groups[6].value shl 42) else: 0)) + (if this.len >= 8: (this.groups[7].value shl 49) else: 0)))))
+  let valueInstExpr = uint64(this.groups[^1].intermValue)
   this.valueInst = valueInstExpr
   this.valueInstFlag = true
   return this.valueInst
@@ -89,19 +105,15 @@ proc value(this: VlqBase128Le): uint64 =
 proc signBit(this: VlqBase128Le): uint64 = 
   if this.signBitInstFlag:
     return this.signBitInst
-  let signBitInstExpr = uint64((uint64(((uint64(1)) shl ((7 * this.len) - 1)))))
+  let signBitInstExpr = uint64((uint64((if this.len == 10: 9223372036854775808'u64 else: (this.groups[^1].multiplier * 64)))))
   this.signBitInst = signBitInstExpr
   this.signBitInstFlag = true
   return this.signBitInst
 
 proc valueSigned(this: VlqBase128Le): int64 = 
-
-  ##[
-  @see <a href="https://graphics.stanford.edu/~seander/bithacks.html#VariableSignExtend">Source</a>
-  ]##
   if this.valueSignedInstFlag:
     return this.valueSignedInst
-  let valueSignedInstExpr = int64((int64(((int64((this.value xor this.signBit))) - (int64(this.signBit))))))
+  let valueSignedInstExpr = int64((if  ((this.signBit > 0) and (this.value >= this.signBit)) : -((int64((this.signBit - (this.value - this.signBit))))) else: (int64(this.value))))
   this.valueSignedInst = valueSignedInstExpr
   this.valueSignedInstFlag = true
   return this.valueSignedInst
@@ -114,26 +126,50 @@ proc fromFile*(_: typedesc[VlqBase128Le], filename: string): VlqBase128Le =
 One byte group, clearly divided into 7-bit "value" chunk and 1-bit "continuation" flag.
 
 ]##
-proc read*(_: typedesc[VlqBase128Le_Group], io: KaitaiStream, root: KaitaiStruct, parent: VlqBase128Le): VlqBase128Le_Group =
+proc read*(_: typedesc[VlqBase128Le_Group], io: KaitaiStream, root: KaitaiStruct, parent: VlqBase128Le, idx: any, prevIntermValue: any, multiplier: any): VlqBase128Le_Group =
   template this: untyped = result
   this = new(VlqBase128Le_Group)
   let root = if root == nil: cast[VlqBase128Le](this) else: cast[VlqBase128Le](root)
   this.io = io
   this.root = root
   this.parent = parent
+  let idxExpr = int32(idx)
+  this.idx = idxExpr
+  let prevIntermValueExpr = uint64(prevIntermValue)
+  this.prevIntermValue = prevIntermValueExpr
+  let multiplierExpr = uint64(multiplier)
+  this.multiplier = multiplierExpr
 
 
   ##[
-  If true, then we have more bytes to read
+  If `true`, then we have more bytes to read.
+
+Since this implementation only supports serialized values up to 10
+bytes, this must be `false` in the 10th group (`groups[9]`).
+
   ]##
   let hasNextExpr = this.io.readBitsIntBe(1) != 0
   this.hasNext = hasNextExpr
 
   ##[
   The 7-bit (base128) numeric value chunk of this group
+
+Since this implementation only supports integer values up to 64 bits,
+the `value` in the 10th group (`groups[9]`) can only be `0` or `1`
+(otherwise the width of the represented value would be 65 bits or
+more, which is not supported).
+
   ]##
   let valueExpr = this.io.readBitsIntBe(7)
   this.value = valueExpr
+
+proc intermValue(this: VlqBase128Le_Group): uint64 = 
+  if this.intermValueInstFlag:
+    return this.intermValueInst
+  let intermValueInstExpr = uint64((uint64((this.prevIntermValue + (this.value * this.multiplier)))))
+  this.intermValueInst = intermValueInstExpr
+  this.intermValueInstFlag = true
+  return this.intermValueInst
 
 proc fromFile*(_: typedesc[VlqBase128Le_Group], filename: string): VlqBase128Le_Group =
   VlqBase128Le_Group.read(newKaitaiFileStream(filename), nil, nil)
