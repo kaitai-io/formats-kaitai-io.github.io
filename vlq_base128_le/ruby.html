@@ -108,11 +108,11 @@ consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
 <a href="https://lucene.apache.org/core/3_5_0/fileformats.html#VInt">https://lucene.apache.org/core/3_5_0/fileformats.html#VInt</a></li>
 <li>Apache Avro uses this as a basis for integer encoding, adding ZigZag on
 top of it for signed ints
-<a href="https://avro.apache.org/docs/current/spec.html#binary_encode_primitive">https://avro.apache.org/docs/current/spec.html#binary_encode_primitive</a></li>
+<a href="https://avro.apache.org/docs/1.12.0/specification/#primitive-types-1">https://avro.apache.org/docs/1.12.0/specification/#primitive-types-1</a></li>
 </ul>
 <p>More information on this encoding is available at <a href="https://en.wikipedia.org/wiki/LEB128">https://en.wikipedia.org/wiki/LEB128</a></p>
 <p>This particular implementation supports integer values up to 64 bits (i.e. the
-maximum unsigned value supported is <code>2**64</code>), which implies that serialized
+maximum unsigned value supported is <code>2**64 - 1</code>), which implies that serialized
 values can be up to 10 bytes in length.</p>
 <p>If the most significant 10th byte (<code>groups[9]</code>) is present, its <code>has_next</code>
 must be <code>false</code> (otherwise we would have 11 or more bytes, which is not
@@ -142,6 +142,30 @@ see <a href="https://github.com/protocolbuffers/protoscope/blob/8e7a6aafa2c99585
                     </div>
                     
                     
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q6457577">Wikidata Q6457577</a></li>
+                            
+                            
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/Variable-length_quantity">Variable-length quantity in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
                     
                 </div>
             </div>
@@ -312,12 +336,12 @@ see <a href="https://github.com/protocolbuffers/protoscope/blob/8e7a6aafa2c99585
 <span class="c1">#   &lt;https://lucene.apache.org/core/3_5_0/fileformats.html#VInt&gt;</span>
 <span class="c1"># * Apache Avro uses this as a basis for integer encoding, adding ZigZag on</span>
 <span class="c1">#   top of it for signed ints</span>
-<span class="c1">#   &lt;https://avro.apache.org/docs/current/spec.html#binary_encode_primitive&gt;</span>
+<span class="c1">#   &lt;https://avro.apache.org/docs/1.12.0/specification/#primitive-types-1&gt;</span>
 <span class="c1"># </span>
 <span class="c1"># More information on this encoding is available at &lt;https://en.wikipedia.org/wiki/LEB128&gt;</span>
 <span class="c1"># </span>
 <span class="c1"># This particular implementation supports integer values up to 64 bits (i.e. the</span>
-<span class="c1"># maximum unsigned value supported is `2**64`), which implies that serialized</span>
+<span class="c1"># maximum unsigned value supported is `2**64 - 1`), which implies that serialized</span>
 <span class="c1"># values can be up to 10 bytes in length.</span>
 <span class="c1"># </span>
 <span class="c1"># If the most significant 10th byte (`groups[9]`) is present, its `has_next`</span>
