@@ -571,21 +571,21 @@ class Elf < Kaitai::Struct::Struct
       end
       case _root.bits
       when :bits_b32
-        @program_header_offset = @_io.read_u4le
+        @ofs_program_headers = @_io.read_u4le
       when :bits_b64
-        @program_header_offset = @_io.read_u8le
+        @ofs_program_headers = @_io.read_u8le
       end
       case _root.bits
       when :bits_b32
-        @section_header_offset = @_io.read_u4le
+        @ofs_section_headers = @_io.read_u4le
       when :bits_b64
-        @section_header_offset = @_io.read_u8le
+        @ofs_section_headers = @_io.read_u8le
       end
       @flags = @_io.read_bytes(4)
       @e_ehsize = @_io.read_u2le
-      @len_program_headers = @_io.read_u2le
+      @program_header_size = @_io.read_u2le
       @num_program_headers = @_io.read_u2le
-      @len_section_headers = @_io.read_u2le
+      @section_header_size = @_io.read_u2le
       @num_section_headers = @_io.read_u2le
       @section_names_idx = @_io.read_u2le
       self
@@ -603,21 +603,21 @@ class Elf < Kaitai::Struct::Struct
       end
       case _root.bits
       when :bits_b32
-        @program_header_offset = @_io.read_u4be
+        @ofs_program_headers = @_io.read_u4be
       when :bits_b64
-        @program_header_offset = @_io.read_u8be
+        @ofs_program_headers = @_io.read_u8be
       end
       case _root.bits
       when :bits_b32
-        @section_header_offset = @_io.read_u4be
+        @ofs_section_headers = @_io.read_u4be
       when :bits_b64
-        @section_header_offset = @_io.read_u8be
+        @ofs_section_headers = @_io.read_u8be
       end
       @flags = @_io.read_bytes(4)
       @e_ehsize = @_io.read_u2be
-      @len_program_headers = @_io.read_u2be
+      @program_header_size = @_io.read_u2be
       @num_program_headers = @_io.read_u2be
-      @len_section_headers = @_io.read_u2be
+      @section_header_size = @_io.read_u2be
       @num_section_headers = @_io.read_u2be
       @section_names_idx = @_io.read_u2be
       self
@@ -1574,12 +1574,12 @@ class Elf < Kaitai::Struct::Struct
     def program_headers
       return @program_headers unless @program_headers.nil?
       _pos = @_io.pos
-      @_io.seek(program_header_offset)
+      @_io.seek(ofs_program_headers)
       if @_is_le
         @_raw_program_headers = []
         @program_headers = []
         (num_program_headers).times { |i|
-          @_raw_program_headers << @_io.read_bytes(len_program_headers)
+          @_raw_program_headers << @_io.read_bytes(program_header_size)
           _io__raw_program_headers = Kaitai::Struct::Stream.new(@_raw_program_headers[i])
           @program_headers << ProgramHeader.new(_io__raw_program_headers, self, @_root, @_is_le)
         }
@@ -1587,7 +1587,7 @@ class Elf < Kaitai::Struct::Struct
         @_raw_program_headers = []
         @program_headers = []
         (num_program_headers).times { |i|
-          @_raw_program_headers << @_io.read_bytes(len_program_headers)
+          @_raw_program_headers << @_io.read_bytes(program_header_size)
           _io__raw_program_headers = Kaitai::Struct::Stream.new(@_raw_program_headers[i])
           @program_headers << ProgramHeader.new(_io__raw_program_headers, self, @_root, @_is_le)
         }
@@ -1598,12 +1598,12 @@ class Elf < Kaitai::Struct::Struct
     def section_headers
       return @section_headers unless @section_headers.nil?
       _pos = @_io.pos
-      @_io.seek(section_header_offset)
+      @_io.seek(ofs_section_headers)
       if @_is_le
         @_raw_section_headers = []
         @section_headers = []
         (num_section_headers).times { |i|
-          @_raw_section_headers << @_io.read_bytes(len_section_headers)
+          @_raw_section_headers << @_io.read_bytes(section_header_size)
           _io__raw_section_headers = Kaitai::Struct::Stream.new(@_raw_section_headers[i])
           @section_headers << SectionHeader.new(_io__raw_section_headers, self, @_root, @_is_le)
         }
@@ -1611,7 +1611,7 @@ class Elf < Kaitai::Struct::Struct
         @_raw_section_headers = []
         @section_headers = []
         (num_section_headers).times { |i|
-          @_raw_section_headers << @_io.read_bytes(len_section_headers)
+          @_raw_section_headers << @_io.read_bytes(section_header_size)
           _io__raw_section_headers = Kaitai::Struct::Stream.new(@_raw_section_headers[i])
           @section_headers << SectionHeader.new(_io__raw_section_headers, self, @_root, @_is_le)
         }
@@ -1641,13 +1641,13 @@ class Elf < Kaitai::Struct::Struct
     attr_reader :machine
     attr_reader :e_version
     attr_reader :entry_point
-    attr_reader :program_header_offset
-    attr_reader :section_header_offset
+    attr_reader :ofs_program_headers
+    attr_reader :ofs_section_headers
     attr_reader :flags
     attr_reader :e_ehsize
-    attr_reader :len_program_headers
+    attr_reader :program_header_size
     attr_reader :num_program_headers
-    attr_reader :len_section_headers
+    attr_reader :section_header_size
     attr_reader :num_section_headers
     attr_reader :section_names_idx
     attr_reader :_raw_program_headers

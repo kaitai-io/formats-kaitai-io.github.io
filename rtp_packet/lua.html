@@ -259,127 +259,127 @@ Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).</p>
 <span class="c1">--</span>
 <span class="c1">-- This file is compatible with Lua 5.3</span>
 
-<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="kd">local</span><span class="w"> </span><span class="nv">class</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
 <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
-<span class="kd">local</span> <span class="n">enum</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;enum&quot;</span><span class="p">)</span>
-<span class="kd">local</span> <span class="n">utils</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;utils&quot;</span><span class="p">)</span>
+<span class="kd">local</span><span class="w"> </span><span class="nv">enum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">&quot;enum&quot;</span><span class="p">)</span>
+<span class="kd">local</span><span class="w"> </span><span class="nv">utils</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">&quot;utils&quot;</span><span class="p">)</span>
 
 <span class="c1">-- </span>
 <span class="c1">-- The Real-time Transport Protocol (RTP) is a widely used network</span>
 <span class="c1">-- protocol for transmitting audio or video. It usually works with the</span>
 <span class="c1">-- RTP Control Protocol (RTCP). The transmission can be based on</span>
 <span class="c1">-- Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).</span>
-<span class="n">RtpPacket</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+<span class="nv">RtpPacket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
-<span class="n">RtpPacket</span><span class="p">.</span><span class="n">PayloadTypeEnum</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
-  <span class="n">pcmu</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-  <span class="n">reserved1</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-  <span class="n">reserved2</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
-  <span class="n">gsm</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
-  <span class="n">g723</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
-  <span class="n">dvi4_1</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
-  <span class="n">dvi4_2</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
-  <span class="n">lpc</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span>
-  <span class="n">pcma</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
-  <span class="n">g722</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span>
-  <span class="n">l16_1</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
-  <span class="n">l16_2</span> <span class="o">=</span> <span class="mi">11</span><span class="p">,</span>
-  <span class="n">qcelp</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
-  <span class="n">cn</span> <span class="o">=</span> <span class="mi">13</span><span class="p">,</span>
-  <span class="n">mpa</span> <span class="o">=</span> <span class="mi">14</span><span class="p">,</span>
-  <span class="n">g728</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
-  <span class="n">dvi4_3</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
-  <span class="n">dvi4_4</span> <span class="o">=</span> <span class="mi">17</span><span class="p">,</span>
-  <span class="n">g729</span> <span class="o">=</span> <span class="mi">18</span><span class="p">,</span>
-  <span class="n">reserved19</span> <span class="o">=</span> <span class="mi">19</span><span class="p">,</span>
-  <span class="n">unassigned20</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
-  <span class="n">unassigned21</span> <span class="o">=</span> <span class="mi">21</span><span class="p">,</span>
-  <span class="n">unassigned22</span> <span class="o">=</span> <span class="mi">22</span><span class="p">,</span>
-  <span class="n">unassigned23</span> <span class="o">=</span> <span class="mi">23</span><span class="p">,</span>
-  <span class="n">unassigned24</span> <span class="o">=</span> <span class="mi">24</span><span class="p">,</span>
-  <span class="n">celb</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span>
-  <span class="n">jpeg</span> <span class="o">=</span> <span class="mi">26</span><span class="p">,</span>
-  <span class="n">unassigned27</span> <span class="o">=</span> <span class="mi">27</span><span class="p">,</span>
-  <span class="n">nv</span> <span class="o">=</span> <span class="mi">28</span><span class="p">,</span>
-  <span class="n">unassigned29</span> <span class="o">=</span> <span class="mi">29</span><span class="p">,</span>
-  <span class="n">unassigned30</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
-  <span class="n">h261</span> <span class="o">=</span> <span class="mi">31</span><span class="p">,</span>
-  <span class="n">mpv</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
-  <span class="n">mp2t</span> <span class="o">=</span> <span class="mi">33</span><span class="p">,</span>
-  <span class="n">h263</span> <span class="o">=</span> <span class="mi">34</span><span class="p">,</span>
-  <span class="n">mpeg_ps</span> <span class="o">=</span> <span class="mi">96</span><span class="p">,</span>
+<span class="nv">RtpPacket</span><span class="p">.</span><span class="py">PayloadTypeEnum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">enum</span><span class="p">.</span><span class="py">Enum</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nv">pcmu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">reserved1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">reserved2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">gsm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">g723</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">dvi4_1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">dvi4_2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">lpc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">pcma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">g722</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">l16_1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">l16_2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">11</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">qcelp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">cn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">13</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">mpa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">14</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">g728</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">dvi4_3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">16</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">dvi4_4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">17</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">g729</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">18</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">reserved19</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">19</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">unassigned20</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">unassigned21</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">21</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">unassigned22</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">22</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">unassigned23</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">23</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">unassigned24</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">24</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">celb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">jpeg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">26</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">unassigned27</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">27</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">nv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">28</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">unassigned29</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">29</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">unassigned30</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">h261</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">31</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">mpv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">32</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">mp2t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">33</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">h263</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">34</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">mpeg_ps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">96</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="kr">function</span> <span class="nc">RtpPacket</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">RtpPacket</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
-<span class="kr">function</span> <span class="nc">RtpPacket</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">has_padding</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">has_extension</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">csrc_count</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">marker</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">payload_type</span> <span class="o">=</span> <span class="n">RtpPacket</span><span class="p">.</span><span class="n">PayloadTypeEnum</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">7</span><span class="p">))</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">align_to_byte</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">sequence_number</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">ssrc</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">has_extension</span> <span class="kr">then</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">header_extension</span> <span class="o">=</span> <span class="n">RtpPacket</span><span class="p">.</span><span class="n">HeaderExtention</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-  <span class="kr">end</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(((</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">())</span> <span class="o">-</span> <span class="n">self</span><span class="p">.</span><span class="n">len_padding</span><span class="p">))</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">padding</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_padding</span><span class="p">)</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">RtpPacket</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">has_padding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">has_extension</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">csrc_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_be</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">marker</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">payload_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">RtpPacket</span><span class="p">.</span><span class="nf">PayloadTypeEnum</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_be</span><span class="p">(</span><span class="mi">7</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">align_to_byte</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">sequence_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">timestamp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">ssrc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">has_extension</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">header_extension</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">RtpPacket</span><span class="p">.</span><span class="nf">HeaderExtention</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(((</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">pos</span><span class="p">())</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">len_padding</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">padding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_padding</span><span class="p">)</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
 <span class="c1">-- If padding bit is enabled, last byte of data contains number of</span>
 <span class="c1">-- bytes appended to the payload as padding.</span>
-<span class="n">RtpPacket</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">len_padding_if_exists</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">RtpPacket</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">len_padding_if_exists</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_len_padding_if_exists</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_len_padding_if_exists</span>
-  <span class="kr">end</span>
+<span class="nv">RtpPacket</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">len_padding_if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">RtpPacket</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">len_padding_if_exists</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_padding_if_exists</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_padding_if_exists</span>
+<span class="w">  </span><span class="kr">end</span>
 
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">has_padding</span> <span class="kr">then</span>
-    <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">_m_len_padding_if_exists</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-  <span class="kr">end</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_len_padding_if_exists</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">has_padding</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">pos</span><span class="p">()</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_padding_if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">_pos</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_padding_if_exists</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
 <span class="c1">-- Always returns number of padding bytes to in the payload.</span>
-<span class="n">RtpPacket</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">len_padding</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">RtpPacket</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">len_padding</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_len_padding</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_len_padding</span>
-  <span class="kr">end</span>
+<span class="nv">RtpPacket</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">len_padding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">RtpPacket</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">len_padding</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_padding</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_padding</span>
+<span class="w">  </span><span class="kr">end</span>
 
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_len_padding</span> <span class="o">=</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">has_padding</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_padding_if_exists</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="mi">0</span><span class="p">))</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_len_padding</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_padding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">has_padding</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_padding_if_exists</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_padding</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
 <span class="c1">-- Payload without padding.</span>
 
-<span class="n">RtpPacket</span><span class="p">.</span><span class="n">HeaderExtention</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+<span class="nv">RtpPacket</span><span class="p">.</span><span class="py">HeaderExtention</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
-<span class="kr">function</span> <span class="nc">RtpPacket</span><span class="p">.</span><span class="nc">HeaderExtention</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">RtpPacket</span><span class="p">.</span><span class="nc">HeaderExtention</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
-<span class="kr">function</span> <span class="nc">RtpPacket</span><span class="p">.</span><span class="nc">HeaderExtention</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">RtpPacket</span><span class="p">.</span><span class="nc">HeaderExtention</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
 <span class="kr">end</span>
 </pre></div>
 

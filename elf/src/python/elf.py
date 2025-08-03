@@ -554,19 +554,19 @@ class Elf(KaitaiStruct):
                 self.entry_point = self._io.read_u8le()
             _on = self._root.bits
             if _on == Elf.Bits.b32:
-                self.program_header_offset = self._io.read_u4le()
+                self.ofs_program_headers = self._io.read_u4le()
             elif _on == Elf.Bits.b64:
-                self.program_header_offset = self._io.read_u8le()
+                self.ofs_program_headers = self._io.read_u8le()
             _on = self._root.bits
             if _on == Elf.Bits.b32:
-                self.section_header_offset = self._io.read_u4le()
+                self.ofs_section_headers = self._io.read_u4le()
             elif _on == Elf.Bits.b64:
-                self.section_header_offset = self._io.read_u8le()
+                self.ofs_section_headers = self._io.read_u8le()
             self.flags = self._io.read_bytes(4)
             self.e_ehsize = self._io.read_u2le()
-            self.len_program_headers = self._io.read_u2le()
+            self.program_header_size = self._io.read_u2le()
             self.num_program_headers = self._io.read_u2le()
-            self.len_section_headers = self._io.read_u2le()
+            self.section_header_size = self._io.read_u2le()
             self.num_section_headers = self._io.read_u2le()
             self.section_names_idx = self._io.read_u2le()
 
@@ -581,19 +581,19 @@ class Elf(KaitaiStruct):
                 self.entry_point = self._io.read_u8be()
             _on = self._root.bits
             if _on == Elf.Bits.b32:
-                self.program_header_offset = self._io.read_u4be()
+                self.ofs_program_headers = self._io.read_u4be()
             elif _on == Elf.Bits.b64:
-                self.program_header_offset = self._io.read_u8be()
+                self.ofs_program_headers = self._io.read_u8be()
             _on = self._root.bits
             if _on == Elf.Bits.b32:
-                self.section_header_offset = self._io.read_u4be()
+                self.ofs_section_headers = self._io.read_u4be()
             elif _on == Elf.Bits.b64:
-                self.section_header_offset = self._io.read_u8be()
+                self.ofs_section_headers = self._io.read_u8be()
             self.flags = self._io.read_bytes(4)
             self.e_ehsize = self._io.read_u2be()
-            self.len_program_headers = self._io.read_u2be()
+            self.program_header_size = self._io.read_u2be()
             self.num_program_headers = self._io.read_u2be()
-            self.len_section_headers = self._io.read_u2be()
+            self.section_header_size = self._io.read_u2be()
             self.num_section_headers = self._io.read_u2be()
             self.section_names_idx = self._io.read_u2be()
 
@@ -1458,12 +1458,12 @@ class Elf(KaitaiStruct):
                 return self._m_program_headers
 
             _pos = self._io.pos()
-            self._io.seek(self.program_header_offset)
+            self._io.seek(self.ofs_program_headers)
             if self._is_le:
                 self._raw__m_program_headers = []
                 self._m_program_headers = []
                 for i in range(self.num_program_headers):
-                    self._raw__m_program_headers.append(self._io.read_bytes(self.len_program_headers))
+                    self._raw__m_program_headers.append(self._io.read_bytes(self.program_header_size))
                     _io__raw__m_program_headers = KaitaiStream(BytesIO(self._raw__m_program_headers[i]))
                     self._m_program_headers.append(Elf.EndianElf.ProgramHeader(_io__raw__m_program_headers, self, self._root, self._is_le))
 
@@ -1471,7 +1471,7 @@ class Elf(KaitaiStruct):
                 self._raw__m_program_headers = []
                 self._m_program_headers = []
                 for i in range(self.num_program_headers):
-                    self._raw__m_program_headers.append(self._io.read_bytes(self.len_program_headers))
+                    self._raw__m_program_headers.append(self._io.read_bytes(self.program_header_size))
                     _io__raw__m_program_headers = KaitaiStream(BytesIO(self._raw__m_program_headers[i]))
                     self._m_program_headers.append(Elf.EndianElf.ProgramHeader(_io__raw__m_program_headers, self, self._root, self._is_le))
 
@@ -1484,12 +1484,12 @@ class Elf(KaitaiStruct):
                 return self._m_section_headers
 
             _pos = self._io.pos()
-            self._io.seek(self.section_header_offset)
+            self._io.seek(self.ofs_section_headers)
             if self._is_le:
                 self._raw__m_section_headers = []
                 self._m_section_headers = []
                 for i in range(self.num_section_headers):
-                    self._raw__m_section_headers.append(self._io.read_bytes(self.len_section_headers))
+                    self._raw__m_section_headers.append(self._io.read_bytes(self.section_header_size))
                     _io__raw__m_section_headers = KaitaiStream(BytesIO(self._raw__m_section_headers[i]))
                     self._m_section_headers.append(Elf.EndianElf.SectionHeader(_io__raw__m_section_headers, self, self._root, self._is_le))
 
@@ -1497,7 +1497,7 @@ class Elf(KaitaiStruct):
                 self._raw__m_section_headers = []
                 self._m_section_headers = []
                 for i in range(self.num_section_headers):
-                    self._raw__m_section_headers.append(self._io.read_bytes(self.len_section_headers))
+                    self._raw__m_section_headers.append(self._io.read_bytes(self.section_header_size))
                     _io__raw__m_section_headers = KaitaiStream(BytesIO(self._raw__m_section_headers[i]))
                     self._m_section_headers.append(Elf.EndianElf.SectionHeader(_io__raw__m_section_headers, self, self._root, self._is_le))
 

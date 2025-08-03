@@ -497,13 +497,13 @@ type
     `machine`*: Elf_Machine
     `eVersion`*: uint32
     `entryPoint`*: uint64
-    `programHeaderOffset`*: uint64
-    `sectionHeaderOffset`*: uint64
+    `ofsProgramHeaders`*: uint64
+    `ofsSectionHeaders`*: uint64
     `flags`*: seq[byte]
     `eEhsize`*: uint16
-    `lenProgramHeaders`*: uint16
+    `programHeaderSize`*: uint16
     `numProgramHeaders`*: uint16
-    `lenSectionHeaders`*: uint16
+    `sectionHeaderSize`*: uint16
     `numSectionHeaders`*: uint16
     `sectionNamesIdx`*: uint16
     `parent`*: Elf
@@ -983,29 +983,29 @@ proc readLe(this: Elf_EndianElf) =
   block:
     let on = Elf(this.root).bits
     if on == elf.b32:
-      let programHeaderOffsetExpr = uint64(this.io.readU4le())
-      this.programHeaderOffset = programHeaderOffsetExpr
+      let ofsProgramHeadersExpr = uint64(this.io.readU4le())
+      this.ofsProgramHeaders = ofsProgramHeadersExpr
     elif on == elf.b64:
-      let programHeaderOffsetExpr = this.io.readU8le()
-      this.programHeaderOffset = programHeaderOffsetExpr
+      let ofsProgramHeadersExpr = this.io.readU8le()
+      this.ofsProgramHeaders = ofsProgramHeadersExpr
   block:
     let on = Elf(this.root).bits
     if on == elf.b32:
-      let sectionHeaderOffsetExpr = uint64(this.io.readU4le())
-      this.sectionHeaderOffset = sectionHeaderOffsetExpr
+      let ofsSectionHeadersExpr = uint64(this.io.readU4le())
+      this.ofsSectionHeaders = ofsSectionHeadersExpr
     elif on == elf.b64:
-      let sectionHeaderOffsetExpr = this.io.readU8le()
-      this.sectionHeaderOffset = sectionHeaderOffsetExpr
+      let ofsSectionHeadersExpr = this.io.readU8le()
+      this.ofsSectionHeaders = ofsSectionHeadersExpr
   let flagsExpr = this.io.readBytes(int(4))
   this.flags = flagsExpr
   let eEhsizeExpr = this.io.readU2le()
   this.eEhsize = eEhsizeExpr
-  let lenProgramHeadersExpr = this.io.readU2le()
-  this.lenProgramHeaders = lenProgramHeadersExpr
+  let programHeaderSizeExpr = this.io.readU2le()
+  this.programHeaderSize = programHeaderSizeExpr
   let numProgramHeadersExpr = this.io.readU2le()
   this.numProgramHeaders = numProgramHeadersExpr
-  let lenSectionHeadersExpr = this.io.readU2le()
-  this.lenSectionHeaders = lenSectionHeadersExpr
+  let sectionHeaderSizeExpr = this.io.readU2le()
+  this.sectionHeaderSize = sectionHeaderSizeExpr
   let numSectionHeadersExpr = this.io.readU2le()
   this.numSectionHeaders = numSectionHeadersExpr
   let sectionNamesIdxExpr = this.io.readU2le()
@@ -1030,29 +1030,29 @@ proc readBe(this: Elf_EndianElf) =
   block:
     let on = Elf(this.root).bits
     if on == elf.b32:
-      let programHeaderOffsetExpr = uint64(this.io.readU4be())
-      this.programHeaderOffset = programHeaderOffsetExpr
+      let ofsProgramHeadersExpr = uint64(this.io.readU4be())
+      this.ofsProgramHeaders = ofsProgramHeadersExpr
     elif on == elf.b64:
-      let programHeaderOffsetExpr = this.io.readU8be()
-      this.programHeaderOffset = programHeaderOffsetExpr
+      let ofsProgramHeadersExpr = this.io.readU8be()
+      this.ofsProgramHeaders = ofsProgramHeadersExpr
   block:
     let on = Elf(this.root).bits
     if on == elf.b32:
-      let sectionHeaderOffsetExpr = uint64(this.io.readU4be())
-      this.sectionHeaderOffset = sectionHeaderOffsetExpr
+      let ofsSectionHeadersExpr = uint64(this.io.readU4be())
+      this.ofsSectionHeaders = ofsSectionHeadersExpr
     elif on == elf.b64:
-      let sectionHeaderOffsetExpr = this.io.readU8be()
-      this.sectionHeaderOffset = sectionHeaderOffsetExpr
+      let ofsSectionHeadersExpr = this.io.readU8be()
+      this.ofsSectionHeaders = ofsSectionHeadersExpr
   let flagsExpr = this.io.readBytes(int(4))
   this.flags = flagsExpr
   let eEhsizeExpr = this.io.readU2be()
   this.eEhsize = eEhsizeExpr
-  let lenProgramHeadersExpr = this.io.readU2be()
-  this.lenProgramHeaders = lenProgramHeadersExpr
+  let programHeaderSizeExpr = this.io.readU2be()
+  this.programHeaderSize = programHeaderSizeExpr
   let numProgramHeadersExpr = this.io.readU2be()
   this.numProgramHeaders = numProgramHeadersExpr
-  let lenSectionHeadersExpr = this.io.readU2be()
-  this.lenSectionHeaders = lenSectionHeadersExpr
+  let sectionHeaderSizeExpr = this.io.readU2be()
+  this.sectionHeaderSize = sectionHeaderSizeExpr
   let numSectionHeadersExpr = this.io.readU2be()
   this.numSectionHeaders = numSectionHeadersExpr
   let sectionNamesIdxExpr = this.io.readU2be()
@@ -1085,17 +1085,17 @@ proc programHeaders(this: Elf_EndianElf): seq[Elf_EndianElf_ProgramHeader] =
   if this.programHeadersInstFlag:
     return this.programHeadersInst
   let pos = this.io.pos()
-  this.io.seek(int(this.programHeaderOffset))
+  this.io.seek(int(this.ofsProgramHeaders))
   if this.isLe:
     for i in 0 ..< int(this.numProgramHeaders):
-      let buf = this.io.readBytes(int(this.lenProgramHeaders))
+      let buf = this.io.readBytes(int(this.programHeaderSize))
       this.rawProgramHeadersInst.add(buf)
       let rawProgramHeadersInstIo = newKaitaiStream(buf)
       let it = Elf_EndianElf_ProgramHeader.read(rawProgramHeadersInstIo, this.root, this)
       this.programHeadersInst.add(it)
   else:
     for i in 0 ..< int(this.numProgramHeaders):
-      let buf = this.io.readBytes(int(this.lenProgramHeaders))
+      let buf = this.io.readBytes(int(this.programHeaderSize))
       this.rawProgramHeadersInst.add(buf)
       let rawProgramHeadersInstIo = newKaitaiStream(buf)
       let it = Elf_EndianElf_ProgramHeader.read(rawProgramHeadersInstIo, this.root, this)
@@ -1108,17 +1108,17 @@ proc sectionHeaders(this: Elf_EndianElf): seq[Elf_EndianElf_SectionHeader] =
   if this.sectionHeadersInstFlag:
     return this.sectionHeadersInst
   let pos = this.io.pos()
-  this.io.seek(int(this.sectionHeaderOffset))
+  this.io.seek(int(this.ofsSectionHeaders))
   if this.isLe:
     for i in 0 ..< int(this.numSectionHeaders):
-      let buf = this.io.readBytes(int(this.lenSectionHeaders))
+      let buf = this.io.readBytes(int(this.sectionHeaderSize))
       this.rawSectionHeadersInst.add(buf)
       let rawSectionHeadersInstIo = newKaitaiStream(buf)
       let it = Elf_EndianElf_SectionHeader.read(rawSectionHeadersInstIo, this.root, this)
       this.sectionHeadersInst.add(it)
   else:
     for i in 0 ..< int(this.numSectionHeaders):
-      let buf = this.io.readBytes(int(this.lenSectionHeaders))
+      let buf = this.io.readBytes(int(this.sectionHeaderSize))
       this.rawSectionHeadersInst.add(buf)
       let rawSectionHeadersInstIo = newKaitaiStream(buf)
       let it = Elf_EndianElf_SectionHeader.read(rawSectionHeadersInstIo, this.root, this)

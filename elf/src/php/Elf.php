@@ -158,25 +158,25 @@ namespace Elf {
             }
             switch ($this->_root()->bits()) {
                 case \Elf\Bits::B32:
-                    $this->_m_programHeaderOffset = $this->_io->readU4le();
+                    $this->_m_ofsProgramHeaders = $this->_io->readU4le();
                     break;
                 case \Elf\Bits::B64:
-                    $this->_m_programHeaderOffset = $this->_io->readU8le();
+                    $this->_m_ofsProgramHeaders = $this->_io->readU8le();
                     break;
             }
             switch ($this->_root()->bits()) {
                 case \Elf\Bits::B32:
-                    $this->_m_sectionHeaderOffset = $this->_io->readU4le();
+                    $this->_m_ofsSectionHeaders = $this->_io->readU4le();
                     break;
                 case \Elf\Bits::B64:
-                    $this->_m_sectionHeaderOffset = $this->_io->readU8le();
+                    $this->_m_ofsSectionHeaders = $this->_io->readU8le();
                     break;
             }
             $this->_m_flags = $this->_io->readBytes(4);
             $this->_m_eEhsize = $this->_io->readU2le();
-            $this->_m_lenProgramHeaders = $this->_io->readU2le();
+            $this->_m_programHeaderSize = $this->_io->readU2le();
             $this->_m_numProgramHeaders = $this->_io->readU2le();
-            $this->_m_lenSectionHeaders = $this->_io->readU2le();
+            $this->_m_sectionHeaderSize = $this->_io->readU2le();
             $this->_m_numSectionHeaders = $this->_io->readU2le();
             $this->_m_sectionNamesIdx = $this->_io->readU2le();
         }
@@ -195,25 +195,25 @@ namespace Elf {
             }
             switch ($this->_root()->bits()) {
                 case \Elf\Bits::B32:
-                    $this->_m_programHeaderOffset = $this->_io->readU4be();
+                    $this->_m_ofsProgramHeaders = $this->_io->readU4be();
                     break;
                 case \Elf\Bits::B64:
-                    $this->_m_programHeaderOffset = $this->_io->readU8be();
+                    $this->_m_ofsProgramHeaders = $this->_io->readU8be();
                     break;
             }
             switch ($this->_root()->bits()) {
                 case \Elf\Bits::B32:
-                    $this->_m_sectionHeaderOffset = $this->_io->readU4be();
+                    $this->_m_ofsSectionHeaders = $this->_io->readU4be();
                     break;
                 case \Elf\Bits::B64:
-                    $this->_m_sectionHeaderOffset = $this->_io->readU8be();
+                    $this->_m_ofsSectionHeaders = $this->_io->readU8be();
                     break;
             }
             $this->_m_flags = $this->_io->readBytes(4);
             $this->_m_eEhsize = $this->_io->readU2be();
-            $this->_m_lenProgramHeaders = $this->_io->readU2be();
+            $this->_m_programHeaderSize = $this->_io->readU2be();
             $this->_m_numProgramHeaders = $this->_io->readU2be();
-            $this->_m_lenSectionHeaders = $this->_io->readU2be();
+            $this->_m_sectionHeaderSize = $this->_io->readU2be();
             $this->_m_numSectionHeaders = $this->_io->readU2be();
             $this->_m_sectionNamesIdx = $this->_io->readU2be();
         }
@@ -222,13 +222,13 @@ namespace Elf {
             if ($this->_m_programHeaders !== null)
                 return $this->_m_programHeaders;
             $_pos = $this->_io->pos();
-            $this->_io->seek($this->programHeaderOffset());
+            $this->_io->seek($this->ofsProgramHeaders());
             if ($this->_m__is_le) {
                 $this->_m__raw_programHeaders = [];
                 $this->_m_programHeaders = [];
                 $n = $this->numProgramHeaders();
                 for ($i = 0; $i < $n; $i++) {
-                    $this->_m__raw_programHeaders[] = $this->_io->readBytes($this->lenProgramHeaders());
+                    $this->_m__raw_programHeaders[] = $this->_io->readBytes($this->programHeaderSize());
                     $_io__raw_programHeaders = new \Kaitai\Struct\Stream(end($this->_m__raw_programHeaders));
                     $this->_m_programHeaders[] = new \Elf\EndianElf\ProgramHeader($_io__raw_programHeaders, $this, $this->_root, $this->_m__is_le);
                 }
@@ -237,7 +237,7 @@ namespace Elf {
                 $this->_m_programHeaders = [];
                 $n = $this->numProgramHeaders();
                 for ($i = 0; $i < $n; $i++) {
-                    $this->_m__raw_programHeaders[] = $this->_io->readBytes($this->lenProgramHeaders());
+                    $this->_m__raw_programHeaders[] = $this->_io->readBytes($this->programHeaderSize());
                     $_io__raw_programHeaders = new \Kaitai\Struct\Stream(end($this->_m__raw_programHeaders));
                     $this->_m_programHeaders[] = new \Elf\EndianElf\ProgramHeader($_io__raw_programHeaders, $this, $this->_root, $this->_m__is_le);
                 }
@@ -250,13 +250,13 @@ namespace Elf {
             if ($this->_m_sectionHeaders !== null)
                 return $this->_m_sectionHeaders;
             $_pos = $this->_io->pos();
-            $this->_io->seek($this->sectionHeaderOffset());
+            $this->_io->seek($this->ofsSectionHeaders());
             if ($this->_m__is_le) {
                 $this->_m__raw_sectionHeaders = [];
                 $this->_m_sectionHeaders = [];
                 $n = $this->numSectionHeaders();
                 for ($i = 0; $i < $n; $i++) {
-                    $this->_m__raw_sectionHeaders[] = $this->_io->readBytes($this->lenSectionHeaders());
+                    $this->_m__raw_sectionHeaders[] = $this->_io->readBytes($this->sectionHeaderSize());
                     $_io__raw_sectionHeaders = new \Kaitai\Struct\Stream(end($this->_m__raw_sectionHeaders));
                     $this->_m_sectionHeaders[] = new \Elf\EndianElf\SectionHeader($_io__raw_sectionHeaders, $this, $this->_root, $this->_m__is_le);
                 }
@@ -265,7 +265,7 @@ namespace Elf {
                 $this->_m_sectionHeaders = [];
                 $n = $this->numSectionHeaders();
                 for ($i = 0; $i < $n; $i++) {
-                    $this->_m__raw_sectionHeaders[] = $this->_io->readBytes($this->lenSectionHeaders());
+                    $this->_m__raw_sectionHeaders[] = $this->_io->readBytes($this->sectionHeaderSize());
                     $_io__raw_sectionHeaders = new \Kaitai\Struct\Stream(end($this->_m__raw_sectionHeaders));
                     $this->_m_sectionHeaders[] = new \Elf\EndianElf\SectionHeader($_io__raw_sectionHeaders, $this, $this->_root, $this->_m__is_le);
                 }
@@ -297,13 +297,13 @@ namespace Elf {
         protected $_m_machine;
         protected $_m_eVersion;
         protected $_m_entryPoint;
-        protected $_m_programHeaderOffset;
-        protected $_m_sectionHeaderOffset;
+        protected $_m_ofsProgramHeaders;
+        protected $_m_ofsSectionHeaders;
         protected $_m_flags;
         protected $_m_eEhsize;
-        protected $_m_lenProgramHeaders;
+        protected $_m_programHeaderSize;
         protected $_m_numProgramHeaders;
-        protected $_m_lenSectionHeaders;
+        protected $_m_sectionHeaderSize;
         protected $_m_numSectionHeaders;
         protected $_m_sectionNamesIdx;
         protected $_m__raw_programHeaders;
@@ -313,13 +313,13 @@ namespace Elf {
         public function machine() { return $this->_m_machine; }
         public function eVersion() { return $this->_m_eVersion; }
         public function entryPoint() { return $this->_m_entryPoint; }
-        public function programHeaderOffset() { return $this->_m_programHeaderOffset; }
-        public function sectionHeaderOffset() { return $this->_m_sectionHeaderOffset; }
+        public function ofsProgramHeaders() { return $this->_m_ofsProgramHeaders; }
+        public function ofsSectionHeaders() { return $this->_m_ofsSectionHeaders; }
         public function flags() { return $this->_m_flags; }
         public function eEhsize() { return $this->_m_eEhsize; }
-        public function lenProgramHeaders() { return $this->_m_lenProgramHeaders; }
+        public function programHeaderSize() { return $this->_m_programHeaderSize; }
         public function numProgramHeaders() { return $this->_m_numProgramHeaders; }
-        public function lenSectionHeaders() { return $this->_m_lenSectionHeaders; }
+        public function sectionHeaderSize() { return $this->_m_sectionHeaderSize; }
         public function numSectionHeaders() { return $this->_m_numSectionHeaders; }
         public function sectionNamesIdx() { return $this->_m_sectionNamesIdx; }
         public function _raw_programHeaders() { return $this->_m__raw_programHeaders; }

@@ -1043,25 +1043,25 @@ var Elf = (function() {
       }
       switch (this._root.bits) {
       case Elf.Bits.B32:
-        this.programHeaderOffset = this._io.readU4le();
+        this.ofsProgramHeaders = this._io.readU4le();
         break;
       case Elf.Bits.B64:
-        this.programHeaderOffset = this._io.readU8le();
+        this.ofsProgramHeaders = this._io.readU8le();
         break;
       }
       switch (this._root.bits) {
       case Elf.Bits.B32:
-        this.sectionHeaderOffset = this._io.readU4le();
+        this.ofsSectionHeaders = this._io.readU4le();
         break;
       case Elf.Bits.B64:
-        this.sectionHeaderOffset = this._io.readU8le();
+        this.ofsSectionHeaders = this._io.readU8le();
         break;
       }
       this.flags = this._io.readBytes(4);
       this.eEhsize = this._io.readU2le();
-      this.lenProgramHeaders = this._io.readU2le();
+      this.programHeaderSize = this._io.readU2le();
       this.numProgramHeaders = this._io.readU2le();
-      this.lenSectionHeaders = this._io.readU2le();
+      this.sectionHeaderSize = this._io.readU2le();
       this.numSectionHeaders = this._io.readU2le();
       this.sectionNamesIdx = this._io.readU2le();
     }
@@ -1079,25 +1079,25 @@ var Elf = (function() {
       }
       switch (this._root.bits) {
       case Elf.Bits.B32:
-        this.programHeaderOffset = this._io.readU4be();
+        this.ofsProgramHeaders = this._io.readU4be();
         break;
       case Elf.Bits.B64:
-        this.programHeaderOffset = this._io.readU8be();
+        this.ofsProgramHeaders = this._io.readU8be();
         break;
       }
       switch (this._root.bits) {
       case Elf.Bits.B32:
-        this.sectionHeaderOffset = this._io.readU4be();
+        this.ofsSectionHeaders = this._io.readU4be();
         break;
       case Elf.Bits.B64:
-        this.sectionHeaderOffset = this._io.readU8be();
+        this.ofsSectionHeaders = this._io.readU8be();
         break;
       }
       this.flags = this._io.readBytes(4);
       this.eEhsize = this._io.readU2be();
-      this.lenProgramHeaders = this._io.readU2be();
+      this.programHeaderSize = this._io.readU2be();
       this.numProgramHeaders = this._io.readU2be();
-      this.lenSectionHeaders = this._io.readU2be();
+      this.sectionHeaderSize = this._io.readU2be();
       this.numSectionHeaders = this._io.readU2be();
       this.sectionNamesIdx = this._io.readU2be();
     }
@@ -2164,12 +2164,12 @@ var Elf = (function() {
         if (this._m_programHeaders !== undefined)
           return this._m_programHeaders;
         var _pos = this._io.pos;
-        this._io.seek(this.programHeaderOffset);
+        this._io.seek(this.ofsProgramHeaders);
         if (this._is_le) {
           this._raw__m_programHeaders = [];
           this._m_programHeaders = [];
           for (var i = 0; i < this.numProgramHeaders; i++) {
-            this._raw__m_programHeaders.push(this._io.readBytes(this.lenProgramHeaders));
+            this._raw__m_programHeaders.push(this._io.readBytes(this.programHeaderSize));
             var _io__raw__m_programHeaders = new KaitaiStream(this._raw__m_programHeaders[i]);
             this._m_programHeaders.push(new ProgramHeader(_io__raw__m_programHeaders, this, this._root, this._is_le));
           }
@@ -2177,7 +2177,7 @@ var Elf = (function() {
           this._raw__m_programHeaders = [];
           this._m_programHeaders = [];
           for (var i = 0; i < this.numProgramHeaders; i++) {
-            this._raw__m_programHeaders.push(this._io.readBytes(this.lenProgramHeaders));
+            this._raw__m_programHeaders.push(this._io.readBytes(this.programHeaderSize));
             var _io__raw__m_programHeaders = new KaitaiStream(this._raw__m_programHeaders[i]);
             this._m_programHeaders.push(new ProgramHeader(_io__raw__m_programHeaders, this, this._root, this._is_le));
           }
@@ -2191,12 +2191,12 @@ var Elf = (function() {
         if (this._m_sectionHeaders !== undefined)
           return this._m_sectionHeaders;
         var _pos = this._io.pos;
-        this._io.seek(this.sectionHeaderOffset);
+        this._io.seek(this.ofsSectionHeaders);
         if (this._is_le) {
           this._raw__m_sectionHeaders = [];
           this._m_sectionHeaders = [];
           for (var i = 0; i < this.numSectionHeaders; i++) {
-            this._raw__m_sectionHeaders.push(this._io.readBytes(this.lenSectionHeaders));
+            this._raw__m_sectionHeaders.push(this._io.readBytes(this.sectionHeaderSize));
             var _io__raw__m_sectionHeaders = new KaitaiStream(this._raw__m_sectionHeaders[i]);
             this._m_sectionHeaders.push(new SectionHeader(_io__raw__m_sectionHeaders, this, this._root, this._is_le));
           }
@@ -2204,7 +2204,7 @@ var Elf = (function() {
           this._raw__m_sectionHeaders = [];
           this._m_sectionHeaders = [];
           for (var i = 0; i < this.numSectionHeaders; i++) {
-            this._raw__m_sectionHeaders.push(this._io.readBytes(this.lenSectionHeaders));
+            this._raw__m_sectionHeaders.push(this._io.readBytes(this.sectionHeaderSize));
             var _io__raw__m_sectionHeaders = new KaitaiStream(this._raw__m_sectionHeaders[i]);
             this._m_sectionHeaders.push(new SectionHeader(_io__raw__m_sectionHeaders, this, this._root, this._is_le));
           }

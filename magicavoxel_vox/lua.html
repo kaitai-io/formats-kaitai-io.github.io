@@ -272,329 +272,329 @@ section#format-index .row {
 <span class="c1">--</span>
 <span class="c1">-- This file is compatible with Lua 5.3</span>
 
-<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="kd">local</span><span class="w"> </span><span class="nv">class</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
 <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
-<span class="kd">local</span> <span class="n">enum</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;enum&quot;</span><span class="p">)</span>
-<span class="kd">local</span> <span class="n">stringstream</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_stream&quot;</span><span class="p">)</span>
+<span class="kd">local</span><span class="w"> </span><span class="nv">enum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">&quot;enum&quot;</span><span class="p">)</span>
+<span class="kd">local</span><span class="w"> </span><span class="nv">stringstream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_stream&quot;</span><span class="p">)</span>
 
 <span class="c1">-- </span>
 <span class="c1">-- See also: MagicaVoxel Homepage (https://ephtracy.github.io/)</span>
 <span class="c1">-- See also: Format Description (https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox.txt)</span>
-<span class="n">MagicavoxelVox</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+<span class="nv">MagicavoxelVox</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
-<span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">ChunkType</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
-  <span class="n">main</span> <span class="o">=</span> <span class="mi">1296124238</span><span class="p">,</span>
-  <span class="n">matt</span> <span class="o">=</span> <span class="mi">1296127060</span><span class="p">,</span>
-  <span class="n">pack</span> <span class="o">=</span> <span class="mi">1346454347</span><span class="p">,</span>
-  <span class="n">rgba</span> <span class="o">=</span> <span class="mi">1380401729</span><span class="p">,</span>
-  <span class="n">size</span> <span class="o">=</span> <span class="mi">1397316165</span><span class="p">,</span>
-  <span class="n">xyzi</span> <span class="o">=</span> <span class="mi">1482250825</span><span class="p">,</span>
+<span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="py">ChunkType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">enum</span><span class="p">.</span><span class="py">Enum</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nv">main</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1296124238</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">matt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1296127060</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">pack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1346454347</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">rgba</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1380401729</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1397316165</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">xyzi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1482250825</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">MaterialType</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
-  <span class="n">diffuse</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-  <span class="n">metal</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-  <span class="n">glass</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
-  <span class="n">emissive</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+<span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="py">MaterialType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">enum</span><span class="p">.</span><span class="py">Enum</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nv">diffuse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">metal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">glass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">emissive</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">PropertyBitsType</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
-  <span class="n">plastic</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-  <span class="n">roughness</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
-  <span class="n">specular</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
-  <span class="n">ior</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
-  <span class="n">attenuation</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
-  <span class="n">power</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
-  <span class="n">glow</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
-  <span class="n">is_total_power</span> <span class="o">=</span> <span class="mi">128</span><span class="p">,</span>
+<span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="py">PropertyBitsType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">enum</span><span class="p">.</span><span class="py">Enum</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nv">plastic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">roughness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">specular</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ior</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">attenuation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">16</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">power</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">32</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">glow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">64</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">is_total_power</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">128</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="kr">function</span> <span class="nc">MagicavoxelVox</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MagicavoxelVox</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
-<span class="kr">function</span> <span class="nc">MagicavoxelVox</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\086\079\088\032</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
-    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\086\079\088\032</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">magic</span><span class="p">)</span>
-  <span class="kr">end</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">main</span> <span class="o">=</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">Chunk</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MagicavoxelVox</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\086\079\088\032</span><span class="s2">&quot;</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span><span class="w"> </span><span class="o">..</span><span class="w">  </span><span class="s2">&quot;</span><span class="se">\086\079\088\032</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;, but got &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">main</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="nf">Chunk</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
 <span class="c1">-- 150 expected.</span>
 
-<span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">Chunk</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+<span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="py">Chunk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
-<span class="kr">function</span> <span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
-<span class="kr">function</span> <span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">chunk_id</span> <span class="o">=</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">ChunkType</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">())</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">num_bytes_of_chunk_content</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">num_bytes_of_children_chunks</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">num_bytes_of_chunk_content</span> <span class="o">~=</span> <span class="mi">0</span> <span class="kr">then</span>
-    <span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">chunk_id</span>
-    <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">ChunkType</span><span class="p">.</span><span class="n">size</span> <span class="kr">then</span>
-      <span class="n">self</span><span class="p">.</span><span class="n">_raw_chunk_content</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">num_bytes_of_chunk_content</span><span class="p">)</span>
-      <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_chunk_content</span><span class="p">))</span>
-      <span class="n">self</span><span class="p">.</span><span class="n">chunk_content</span> <span class="o">=</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">Size</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-    <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">ChunkType</span><span class="p">.</span><span class="n">matt</span> <span class="kr">then</span>
-      <span class="n">self</span><span class="p">.</span><span class="n">_raw_chunk_content</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">num_bytes_of_chunk_content</span><span class="p">)</span>
-      <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_chunk_content</span><span class="p">))</span>
-      <span class="n">self</span><span class="p">.</span><span class="n">chunk_content</span> <span class="o">=</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">Matt</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-    <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">ChunkType</span><span class="p">.</span><span class="n">rgba</span> <span class="kr">then</span>
-      <span class="n">self</span><span class="p">.</span><span class="n">_raw_chunk_content</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">num_bytes_of_chunk_content</span><span class="p">)</span>
-      <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_chunk_content</span><span class="p">))</span>
-      <span class="n">self</span><span class="p">.</span><span class="n">chunk_content</span> <span class="o">=</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">Rgba</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-    <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">ChunkType</span><span class="p">.</span><span class="n">xyzi</span> <span class="kr">then</span>
-      <span class="n">self</span><span class="p">.</span><span class="n">_raw_chunk_content</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">num_bytes_of_chunk_content</span><span class="p">)</span>
-      <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_chunk_content</span><span class="p">))</span>
-      <span class="n">self</span><span class="p">.</span><span class="n">chunk_content</span> <span class="o">=</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">Xyzi</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-    <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">ChunkType</span><span class="p">.</span><span class="n">pack</span> <span class="kr">then</span>
-      <span class="n">self</span><span class="p">.</span><span class="n">_raw_chunk_content</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">num_bytes_of_chunk_content</span><span class="p">)</span>
-      <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_chunk_content</span><span class="p">))</span>
-      <span class="n">self</span><span class="p">.</span><span class="n">chunk_content</span> <span class="o">=</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">Pack</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-    <span class="kr">else</span>
-      <span class="n">self</span><span class="p">.</span><span class="n">chunk_content</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">num_bytes_of_chunk_content</span><span class="p">)</span>
-    <span class="kr">end</span>
-  <span class="kr">end</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">num_bytes_of_children_chunks</span> <span class="o">~=</span> <span class="mi">0</span> <span class="kr">then</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">children_chunks</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="kr">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">()</span> <span class="kr">do</span>
-      <span class="n">self</span><span class="p">.</span><span class="n">children_chunks</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">Chunk</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-      <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
-    <span class="kr">end</span>
-  <span class="kr">end</span>
-<span class="kr">end</span>
-
-
-<span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">Size</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span> <span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Size</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span> <span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Size</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">size_x</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">size_y</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">size_z</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">chunk_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="nf">ChunkType</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">())</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">num_bytes_of_chunk_content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">num_bytes_of_children_chunks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">num_bytes_of_chunk_content</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">chunk_id</span>
+<span class="w">    </span><span class="kr">if</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="py">ChunkType</span><span class="p">.</span><span class="py">size</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">      </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_chunk_content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">num_bytes_of_chunk_content</span><span class="p">)</span>
+<span class="w">      </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_chunk_content</span><span class="p">))</span>
+<span class="w">      </span><span class="nv">self</span><span class="p">.</span><span class="py">chunk_content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="nf">Size</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">    </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="py">ChunkType</span><span class="p">.</span><span class="py">matt</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">      </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_chunk_content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">num_bytes_of_chunk_content</span><span class="p">)</span>
+<span class="w">      </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_chunk_content</span><span class="p">))</span>
+<span class="w">      </span><span class="nv">self</span><span class="p">.</span><span class="py">chunk_content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="nf">Matt</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">    </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="py">ChunkType</span><span class="p">.</span><span class="py">rgba</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">      </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_chunk_content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">num_bytes_of_chunk_content</span><span class="p">)</span>
+<span class="w">      </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_chunk_content</span><span class="p">))</span>
+<span class="w">      </span><span class="nv">self</span><span class="p">.</span><span class="py">chunk_content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="nf">Rgba</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">    </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="py">ChunkType</span><span class="p">.</span><span class="py">xyzi</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">      </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_chunk_content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">num_bytes_of_chunk_content</span><span class="p">)</span>
+<span class="w">      </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_chunk_content</span><span class="p">))</span>
+<span class="w">      </span><span class="nv">self</span><span class="p">.</span><span class="py">chunk_content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="nf">Xyzi</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">    </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="py">ChunkType</span><span class="p">.</span><span class="py">pack</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">      </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_chunk_content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">num_bytes_of_chunk_content</span><span class="p">)</span>
+<span class="w">      </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_chunk_content</span><span class="p">))</span>
+<span class="w">      </span><span class="nv">self</span><span class="p">.</span><span class="py">chunk_content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="nf">Pack</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">    </span><span class="kr">else</span>
+<span class="w">      </span><span class="nv">self</span><span class="p">.</span><span class="py">chunk_content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">num_bytes_of_chunk_content</span><span class="p">)</span>
+<span class="w">    </span><span class="kr">end</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">num_bytes_of_children_chunks</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">children_chunks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="kr">while</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">is_eof</span><span class="p">()</span><span class="w"> </span><span class="kr">do</span>
+<span class="w">      </span><span class="nv">self</span><span class="p">.</span><span class="py">children_chunks</span><span class="p">[</span><span class="nv">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="nf">Chunk</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="nv">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="kr">end</span>
+<span class="w">  </span><span class="kr">end</span>
 <span class="kr">end</span>
 
 
-<span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">Rgba</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+<span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="py">Size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
-<span class="kr">function</span> <span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Rgba</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Size</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
-<span class="kr">function</span> <span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Rgba</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">colors</span> <span class="o">=</span> <span class="p">{}</span>
-  <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">256</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">Color</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-  <span class="kr">end</span>
-<span class="kr">end</span>
-
-
-<span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">Pack</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span> <span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Pack</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span> <span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Pack</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">num_models</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Size</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">size_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">size_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">size_z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
 <span class="kr">end</span>
 
 
-<span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">Matt</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+<span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="py">Rgba</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
-<span class="kr">function</span> <span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Matt</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Rgba</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
-<span class="kr">function</span> <span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Matt</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">material_type</span> <span class="o">=</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">MaterialType</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">())</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">material_weight</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_f4le</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">property_bits</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">has_plastic</span> <span class="kr">then</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">plastic</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_f4le</span><span class="p">()</span>
-  <span class="kr">end</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">has_roughness</span> <span class="kr">then</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">roughness</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_f4le</span><span class="p">()</span>
-  <span class="kr">end</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">has_specular</span> <span class="kr">then</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">specular</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_f4le</span><span class="p">()</span>
-  <span class="kr">end</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">has_ior</span> <span class="kr">then</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">ior</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_f4le</span><span class="p">()</span>
-  <span class="kr">end</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">has_attenuation</span> <span class="kr">then</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">attenuation</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_f4le</span><span class="p">()</span>
-  <span class="kr">end</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">has_power</span> <span class="kr">then</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">power</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_f4le</span><span class="p">()</span>
-  <span class="kr">end</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">has_glow</span> <span class="kr">then</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">glow</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_f4le</span><span class="p">()</span>
-  <span class="kr">end</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">has_is_total_power</span> <span class="kr">then</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">is_total_power</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_f4le</span><span class="p">()</span>
-  <span class="kr">end</span>
-<span class="kr">end</span>
-
-<span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">Matt</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">has_is_total_power</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Matt</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">has_is_total_power</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_has_is_total_power</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_has_is_total_power</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_has_is_total_power</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">property_bits</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_has_is_total_power</span>
-<span class="kr">end</span>
-
-<span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">Matt</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">has_plastic</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Matt</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">has_plastic</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_has_plastic</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_has_plastic</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_has_plastic</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">property_bits</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_has_plastic</span>
-<span class="kr">end</span>
-
-<span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">Matt</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">has_attenuation</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Matt</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">has_attenuation</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_has_attenuation</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_has_attenuation</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_has_attenuation</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">property_bits</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_has_attenuation</span>
-<span class="kr">end</span>
-
-<span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">Matt</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">has_power</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Matt</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">has_power</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_has_power</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_has_power</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_has_power</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">property_bits</span> <span class="o">&amp;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_has_power</span>
-<span class="kr">end</span>
-
-<span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">Matt</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">has_roughness</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Matt</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">has_roughness</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_has_roughness</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_has_roughness</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_has_roughness</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">property_bits</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_has_roughness</span>
-<span class="kr">end</span>
-
-<span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">Matt</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">has_specular</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Matt</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">has_specular</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_has_specular</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_has_specular</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_has_specular</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">property_bits</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_has_specular</span>
-<span class="kr">end</span>
-
-<span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">Matt</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">has_ior</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Matt</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">has_ior</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_has_ior</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_has_ior</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_has_ior</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">property_bits</span> <span class="o">&amp;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_has_ior</span>
-<span class="kr">end</span>
-
-<span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">Matt</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">has_glow</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Matt</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">has_glow</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_has_glow</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_has_glow</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_has_glow</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">property_bits</span> <span class="o">&amp;</span> <span class="mi">64</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_has_glow</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Rgba</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">colors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="w">  </span><span class="kr">for</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">256</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="kr">do</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">colors</span><span class="p">[</span><span class="nv">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="nf">Color</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
 <span class="kr">end</span>
 
 
-<span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">Xyzi</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+<span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="py">Pack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
-<span class="kr">function</span> <span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Xyzi</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Pack</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
-<span class="kr">function</span> <span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Xyzi</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">num_voxels</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">voxels</span> <span class="o">=</span> <span class="p">{}</span>
-  <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">num_voxels</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">voxels</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">Voxel</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-  <span class="kr">end</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Pack</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">num_models</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
 <span class="kr">end</span>
 
 
-<span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">Color</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+<span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="py">Matt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
-<span class="kr">function</span> <span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Color</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Matt</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
-<span class="kr">function</span> <span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Color</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">r</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">g</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">a</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Matt</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">material_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="nf">MaterialType</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">())</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">material_weight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_f4le</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">property_bits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">has_plastic</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">plastic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_f4le</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">has_roughness</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">roughness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_f4le</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">has_specular</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">specular</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_f4le</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">has_ior</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">ior</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_f4le</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">has_attenuation</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">attenuation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_f4le</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">has_power</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">power</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_f4le</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">has_glow</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">glow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_f4le</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">has_is_total_power</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">is_total_power</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_f4le</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="py">Matt</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">has_is_total_power</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Matt</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">has_is_total_power</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_is_total_power</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_is_total_power</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_is_total_power</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">property_bits</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">128</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_is_total_power</span>
+<span class="kr">end</span>
+
+<span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="py">Matt</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">has_plastic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Matt</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">has_plastic</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_plastic</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_plastic</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_plastic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">property_bits</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_plastic</span>
+<span class="kr">end</span>
+
+<span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="py">Matt</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">has_attenuation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Matt</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">has_attenuation</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_attenuation</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_attenuation</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_attenuation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">property_bits</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">16</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_attenuation</span>
+<span class="kr">end</span>
+
+<span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="py">Matt</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">has_power</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Matt</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">has_power</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_power</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_power</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_power</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">property_bits</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">32</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_power</span>
+<span class="kr">end</span>
+
+<span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="py">Matt</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">has_roughness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Matt</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">has_roughness</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_roughness</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_roughness</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_roughness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">property_bits</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_roughness</span>
+<span class="kr">end</span>
+
+<span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="py">Matt</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">has_specular</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Matt</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">has_specular</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_specular</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_specular</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_specular</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">property_bits</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_specular</span>
+<span class="kr">end</span>
+
+<span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="py">Matt</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">has_ior</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Matt</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">has_ior</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_ior</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_ior</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_ior</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">property_bits</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_ior</span>
+<span class="kr">end</span>
+
+<span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="py">Matt</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">has_glow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Matt</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">has_glow</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_glow</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_glow</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_glow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">property_bits</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">64</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_glow</span>
 <span class="kr">end</span>
 
 
-<span class="n">MagicavoxelVox</span><span class="p">.</span><span class="n">Voxel</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+<span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="py">Xyzi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
-<span class="kr">function</span> <span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Voxel</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Xyzi</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
-<span class="kr">function</span> <span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Voxel</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">color_index</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Xyzi</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">num_voxels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">voxels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="w">  </span><span class="kr">for</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">num_voxels</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="kr">do</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">voxels</span><span class="p">[</span><span class="nv">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="nf">Voxel</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="kr">end</span>
+
+
+<span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="py">Color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Color</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Color</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
+<span class="kr">end</span>
+
+
+<span class="nv">MagicavoxelVox</span><span class="p">.</span><span class="py">Voxel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Voxel</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">MagicavoxelVox</span><span class="p">.</span><span class="nc">Voxel</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">color_index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
 <span class="kr">end</span>
 </pre></div>
 

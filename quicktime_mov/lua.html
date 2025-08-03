@@ -268,348 +268,348 @@ section#format-index .row {
 <span class="c1">--</span>
 <span class="c1">-- This file is compatible with Lua 5.3</span>
 
-<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="kd">local</span><span class="w"> </span><span class="nv">class</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
 <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
-<span class="kd">local</span> <span class="n">enum</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;enum&quot;</span><span class="p">)</span>
-<span class="kd">local</span> <span class="n">stringstream</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_stream&quot;</span><span class="p">)</span>
-<span class="kd">local</span> <span class="n">utils</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;utils&quot;</span><span class="p">)</span>
+<span class="kd">local</span><span class="w"> </span><span class="nv">enum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">&quot;enum&quot;</span><span class="p">)</span>
+<span class="kd">local</span><span class="w"> </span><span class="nv">stringstream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_stream&quot;</span><span class="p">)</span>
+<span class="kd">local</span><span class="w"> </span><span class="nv">utils</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">&quot;utils&quot;</span><span class="p">)</span>
 
 <span class="c1">-- </span>
 <span class="c1">-- See also: Source (https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-BBCGDDDF)</span>
-<span class="n">QuicktimeMov</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+<span class="nv">QuicktimeMov</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
-<span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">AtomType</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
-  <span class="n">xtra</span> <span class="o">=</span> <span class="mi">1484026465</span><span class="p">,</span>
-  <span class="n">dinf</span> <span class="o">=</span> <span class="mi">1684631142</span><span class="p">,</span>
-  <span class="n">dref</span> <span class="o">=</span> <span class="mi">1685218662</span><span class="p">,</span>
-  <span class="n">edts</span> <span class="o">=</span> <span class="mi">1701082227</span><span class="p">,</span>
-  <span class="n">elst</span> <span class="o">=</span> <span class="mi">1701606260</span><span class="p">,</span>
-  <span class="n">free</span> <span class="o">=</span> <span class="mi">1718773093</span><span class="p">,</span>
-  <span class="n">ftyp</span> <span class="o">=</span> <span class="mi">1718909296</span><span class="p">,</span>
-  <span class="n">hdlr</span> <span class="o">=</span> <span class="mi">1751411826</span><span class="p">,</span>
-  <span class="n">iods</span> <span class="o">=</span> <span class="mi">1768907891</span><span class="p">,</span>
-  <span class="n">mdat</span> <span class="o">=</span> <span class="mi">1835295092</span><span class="p">,</span>
-  <span class="n">mdhd</span> <span class="o">=</span> <span class="mi">1835296868</span><span class="p">,</span>
-  <span class="n">mdia</span> <span class="o">=</span> <span class="mi">1835297121</span><span class="p">,</span>
-  <span class="n">meta</span> <span class="o">=</span> <span class="mi">1835365473</span><span class="p">,</span>
-  <span class="n">minf</span> <span class="o">=</span> <span class="mi">1835626086</span><span class="p">,</span>
-  <span class="n">moof</span> <span class="o">=</span> <span class="mi">1836019558</span><span class="p">,</span>
-  <span class="n">moov</span> <span class="o">=</span> <span class="mi">1836019574</span><span class="p">,</span>
-  <span class="n">mvhd</span> <span class="o">=</span> <span class="mi">1836476516</span><span class="p">,</span>
-  <span class="n">smhd</span> <span class="o">=</span> <span class="mi">1936549988</span><span class="p">,</span>
-  <span class="n">stbl</span> <span class="o">=</span> <span class="mi">1937007212</span><span class="p">,</span>
-  <span class="n">stco</span> <span class="o">=</span> <span class="mi">1937007471</span><span class="p">,</span>
-  <span class="n">stsc</span> <span class="o">=</span> <span class="mi">1937011555</span><span class="p">,</span>
-  <span class="n">stsd</span> <span class="o">=</span> <span class="mi">1937011556</span><span class="p">,</span>
-  <span class="n">stsz</span> <span class="o">=</span> <span class="mi">1937011578</span><span class="p">,</span>
-  <span class="n">stts</span> <span class="o">=</span> <span class="mi">1937011827</span><span class="p">,</span>
-  <span class="n">tkhd</span> <span class="o">=</span> <span class="mi">1953196132</span><span class="p">,</span>
-  <span class="n">traf</span> <span class="o">=</span> <span class="mi">1953653094</span><span class="p">,</span>
-  <span class="n">trak</span> <span class="o">=</span> <span class="mi">1953653099</span><span class="p">,</span>
-  <span class="n">tref</span> <span class="o">=</span> <span class="mi">1953654118</span><span class="p">,</span>
-  <span class="n">udta</span> <span class="o">=</span> <span class="mi">1969517665</span><span class="p">,</span>
-  <span class="n">vmhd</span> <span class="o">=</span> <span class="mi">1986881636</span><span class="p">,</span>
+<span class="nv">QuicktimeMov</span><span class="p">.</span><span class="py">AtomType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">enum</span><span class="p">.</span><span class="py">Enum</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nv">xtra</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1484026465</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">dinf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1684631142</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">dref</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1685218662</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">edts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1701082227</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">elst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1701606260</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">free</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1718773093</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ftyp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1718909296</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">hdlr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1751411826</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">iods</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1768907891</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">mdat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1835295092</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">mdhd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1835296868</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">mdia</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1835297121</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">meta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1835365473</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">minf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1835626086</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">moof</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1836019558</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">moov</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1836019574</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">mvhd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1836476516</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">smhd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1936549988</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">stbl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1937007212</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">stco</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1937007471</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">stsc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1937011555</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">stsd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1937011556</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">stsz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1937011578</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">stts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1937011827</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">tkhd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1953196132</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">traf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1953653094</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">trak</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1953653099</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">tref</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1953654118</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">udta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1969517665</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">vmhd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1986881636</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">Brand</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
-  <span class="n">x_3g2a</span> <span class="o">=</span> <span class="mi">862401121</span><span class="p">,</span>
-  <span class="n">x_3ge6</span> <span class="o">=</span> <span class="mi">862414134</span><span class="p">,</span>
-  <span class="n">x_3ge7</span> <span class="o">=</span> <span class="mi">862414135</span><span class="p">,</span>
-  <span class="n">x_3ge9</span> <span class="o">=</span> <span class="mi">862414137</span><span class="p">,</span>
-  <span class="n">x_3gf9</span> <span class="o">=</span> <span class="mi">862414393</span><span class="p">,</span>
-  <span class="n">x_3gg6</span> <span class="o">=</span> <span class="mi">862414646</span><span class="p">,</span>
-  <span class="n">x_3gg9</span> <span class="o">=</span> <span class="mi">862414649</span><span class="p">,</span>
-  <span class="n">x_3gh9</span> <span class="o">=</span> <span class="mi">862414905</span><span class="p">,</span>
-  <span class="n">x_3gm9</span> <span class="o">=</span> <span class="mi">862416185</span><span class="p">,</span>
-  <span class="n">x_3gma</span> <span class="o">=</span> <span class="mi">862416193</span><span class="p">,</span>
-  <span class="n">x_3gp4</span> <span class="o">=</span> <span class="mi">862416948</span><span class="p">,</span>
-  <span class="n">x_3gp5</span> <span class="o">=</span> <span class="mi">862416949</span><span class="p">,</span>
-  <span class="n">x_3gp6</span> <span class="o">=</span> <span class="mi">862416950</span><span class="p">,</span>
-  <span class="n">x_3gp7</span> <span class="o">=</span> <span class="mi">862416951</span><span class="p">,</span>
-  <span class="n">x_3gp8</span> <span class="o">=</span> <span class="mi">862416952</span><span class="p">,</span>
-  <span class="n">x_3gp9</span> <span class="o">=</span> <span class="mi">862416953</span><span class="p">,</span>
-  <span class="n">x_3gr6</span> <span class="o">=</span> <span class="mi">862417462</span><span class="p">,</span>
-  <span class="n">x_3gr9</span> <span class="o">=</span> <span class="mi">862417465</span><span class="p">,</span>
-  <span class="n">x_3gs6</span> <span class="o">=</span> <span class="mi">862417718</span><span class="p">,</span>
-  <span class="n">x_3gs9</span> <span class="o">=</span> <span class="mi">862417721</span><span class="p">,</span>
-  <span class="n">x_3gt8</span> <span class="o">=</span> <span class="mi">862417976</span><span class="p">,</span>
-  <span class="n">x_3gt9</span> <span class="o">=</span> <span class="mi">862417977</span><span class="p">,</span>
-  <span class="n">x_3gtv</span> <span class="o">=</span> <span class="mi">862418038</span><span class="p">,</span>
-  <span class="n">x_3gvr</span> <span class="o">=</span> <span class="mi">862418546</span><span class="p">,</span>
-  <span class="n">x_3vra</span> <span class="o">=</span> <span class="mi">863400545</span><span class="p">,</span>
-  <span class="n">x_3vrb</span> <span class="o">=</span> <span class="mi">863400546</span><span class="p">,</span>
-  <span class="n">x_3vrm</span> <span class="o">=</span> <span class="mi">863400557</span><span class="p">,</span>
-  <span class="n">arri</span> <span class="o">=</span> <span class="mi">1095914057</span><span class="p">,</span>
-  <span class="n">caep</span> <span class="o">=</span> <span class="mi">1128351056</span><span class="p">,</span>
-  <span class="n">cdes</span> <span class="o">=</span> <span class="mi">1128555891</span><span class="p">,</span>
-  <span class="n">j2p0</span> <span class="o">=</span> <span class="mi">1244811312</span><span class="p">,</span>
-  <span class="n">j2p1</span> <span class="o">=</span> <span class="mi">1244811313</span><span class="p">,</span>
-  <span class="n">lcag</span> <span class="o">=</span> <span class="mi">1279476039</span><span class="p">,</span>
-  <span class="n">m4a</span> <span class="o">=</span> <span class="mi">1295270176</span><span class="p">,</span>
-  <span class="n">m4b</span> <span class="o">=</span> <span class="mi">1295270432</span><span class="p">,</span>
-  <span class="n">m4p</span> <span class="o">=</span> <span class="mi">1295274016</span><span class="p">,</span>
-  <span class="n">m4v</span> <span class="o">=</span> <span class="mi">1295275552</span><span class="p">,</span>
-  <span class="n">ma1a</span> <span class="o">=</span> <span class="mi">1296118081</span><span class="p">,</span>
-  <span class="n">ma1b</span> <span class="o">=</span> <span class="mi">1296118082</span><span class="p">,</span>
-  <span class="n">mfsm</span> <span class="o">=</span> <span class="mi">1296454477</span><span class="p">,</span>
-  <span class="n">mgsv</span> <span class="o">=</span> <span class="mi">1296520022</span><span class="p">,</span>
-  <span class="n">mppi</span> <span class="o">=</span> <span class="mi">1297109065</span><span class="p">,</span>
-  <span class="n">msnv</span> <span class="o">=</span> <span class="mi">1297305174</span><span class="p">,</span>
-  <span class="n">miab</span> <span class="o">=</span> <span class="mi">1298743618</span><span class="p">,</span>
-  <span class="n">miac</span> <span class="o">=</span> <span class="mi">1298743619</span><span class="p">,</span>
-  <span class="n">mian</span> <span class="o">=</span> <span class="mi">1298743662</span><span class="p">,</span>
-  <span class="n">mibu</span> <span class="o">=</span> <span class="mi">1298743925</span><span class="p">,</span>
-  <span class="n">micm</span> <span class="o">=</span> <span class="mi">1298744173</span><span class="p">,</span>
-  <span class="n">miha</span> <span class="o">=</span> <span class="mi">1298745409</span><span class="p">,</span>
-  <span class="n">mihb</span> <span class="o">=</span> <span class="mi">1298745410</span><span class="p">,</span>
-  <span class="n">mihe</span> <span class="o">=</span> <span class="mi">1298745413</span><span class="p">,</span>
-  <span class="n">mipr</span> <span class="o">=</span> <span class="mi">1298747506</span><span class="p">,</span>
-  <span class="n">ross</span> <span class="o">=</span> <span class="mi">1380930387</span><span class="p">,</span>
-  <span class="n">seau</span> <span class="o">=</span> <span class="mi">1397047637</span><span class="p">,</span>
-  <span class="n">sebk</span> <span class="o">=</span> <span class="mi">1397047883</span><span class="p">,</span>
-  <span class="n">xavc</span> <span class="o">=</span> <span class="mi">1480676931</span><span class="p">,</span>
-  <span class="n">adti</span> <span class="o">=</span> <span class="mi">1633973353</span><span class="p">,</span>
-  <span class="n">aid3</span> <span class="o">=</span> <span class="mi">1634296883</span><span class="p">,</span>
-  <span class="n">av01</span> <span class="o">=</span> <span class="mi">1635135537</span><span class="p">,</span>
-  <span class="n">avc1</span> <span class="o">=</span> <span class="mi">1635148593</span><span class="p">,</span>
-  <span class="n">avci</span> <span class="o">=</span> <span class="mi">1635148649</span><span class="p">,</span>
-  <span class="n">avcs</span> <span class="o">=</span> <span class="mi">1635148659</span><span class="p">,</span>
-  <span class="n">avde</span> <span class="o">=</span> <span class="mi">1635148901</span><span class="p">,</span>
-  <span class="n">avif</span> <span class="o">=</span> <span class="mi">1635150182</span><span class="p">,</span>
-  <span class="n">avio</span> <span class="o">=</span> <span class="mi">1635150191</span><span class="p">,</span>
-  <span class="n">avis</span> <span class="o">=</span> <span class="mi">1635150195</span><span class="p">,</span>
-  <span class="n">bbxm</span> <span class="o">=</span> <span class="mi">1650620525</span><span class="p">,</span>
-  <span class="n">ca4m</span> <span class="o">=</span> <span class="mi">1667314797</span><span class="p">,</span>
-  <span class="n">ca4s</span> <span class="o">=</span> <span class="mi">1667314803</span><span class="p">,</span>
-  <span class="n">caaa</span> <span class="o">=</span> <span class="mi">1667326305</span><span class="p">,</span>
-  <span class="n">caac</span> <span class="o">=</span> <span class="mi">1667326307</span><span class="p">,</span>
-  <span class="n">cabl</span> <span class="o">=</span> <span class="mi">1667326572</span><span class="p">,</span>
-  <span class="n">cama</span> <span class="o">=</span> <span class="mi">1667329377</span><span class="p">,</span>
-  <span class="n">camc</span> <span class="o">=</span> <span class="mi">1667329379</span><span class="p">,</span>
-  <span class="n">caqv</span> <span class="o">=</span> <span class="mi">1667330422</span><span class="p">,</span>
-  <span class="n">casu</span> <span class="o">=</span> <span class="mi">1667330933</span><span class="p">,</span>
-  <span class="n">ccea</span> <span class="o">=</span> <span class="mi">1667458401</span><span class="p">,</span>
-  <span class="n">ccff</span> <span class="o">=</span> <span class="mi">1667458662</span><span class="p">,</span>
-  <span class="n">cdm1</span> <span class="o">=</span> <span class="mi">1667525937</span><span class="p">,</span>
-  <span class="n">cdm4</span> <span class="o">=</span> <span class="mi">1667525940</span><span class="p">,</span>
-  <span class="n">ceac</span> <span class="o">=</span> <span class="mi">1667588451</span><span class="p">,</span>
-  <span class="n">cfhd</span> <span class="o">=</span> <span class="mi">1667655780</span><span class="p">,</span>
-  <span class="n">cfsd</span> <span class="o">=</span> <span class="mi">1667658596</span><span class="p">,</span>
-  <span class="n">chd1</span> <span class="o">=</span> <span class="mi">1667785777</span><span class="p">,</span>
-  <span class="n">chd2</span> <span class="o">=</span> <span class="mi">1667785778</span><span class="p">,</span>
-  <span class="n">chdf</span> <span class="o">=</span> <span class="mi">1667785830</span><span class="p">,</span>
-  <span class="n">chev</span> <span class="o">=</span> <span class="mi">1667786102</span><span class="p">,</span>
-  <span class="n">chh1</span> <span class="o">=</span> <span class="mi">1667786801</span><span class="p">,</span>
-  <span class="n">chhd</span> <span class="o">=</span> <span class="mi">1667786852</span><span class="p">,</span>
-  <span class="n">cint</span> <span class="o">=</span> <span class="mi">1667853940</span><span class="p">,</span>
-  <span class="n">clg1</span> <span class="o">=</span> <span class="mi">1668048689</span><span class="p">,</span>
-  <span class="n">clg2</span> <span class="o">=</span> <span class="mi">1668048690</span><span class="p">,</span>
-  <span class="n">cmf2</span> <span class="o">=</span> <span class="mi">1668113970</span><span class="p">,</span>
-  <span class="n">cmfc</span> <span class="o">=</span> <span class="mi">1668114019</span><span class="p">,</span>
-  <span class="n">cmff</span> <span class="o">=</span> <span class="mi">1668114022</span><span class="p">,</span>
-  <span class="n">cmfl</span> <span class="o">=</span> <span class="mi">1668114028</span><span class="p">,</span>
-  <span class="n">cmfs</span> <span class="o">=</span> <span class="mi">1668114035</span><span class="p">,</span>
-  <span class="n">cmhm</span> <span class="o">=</span> <span class="mi">1668114541</span><span class="p">,</span>
-  <span class="n">cmhs</span> <span class="o">=</span> <span class="mi">1668114547</span><span class="p">,</span>
-  <span class="n">comp</span> <span class="o">=</span> <span class="mi">1668246896</span><span class="p">,</span>
-  <span class="n">csh1</span> <span class="o">=</span> <span class="mi">1668507697</span><span class="p">,</span>
-  <span class="n">cud1</span> <span class="o">=</span> <span class="mi">1668637745</span><span class="p">,</span>
-  <span class="n">cud2</span> <span class="o">=</span> <span class="mi">1668637746</span><span class="p">,</span>
-  <span class="n">cud8</span> <span class="o">=</span> <span class="mi">1668637752</span><span class="p">,</span>
-  <span class="n">cud9</span> <span class="o">=</span> <span class="mi">1668637753</span><span class="p">,</span>
-  <span class="n">cuvd</span> <span class="o">=</span> <span class="mi">1668642404</span><span class="p">,</span>
-  <span class="n">cvid</span> <span class="o">=</span> <span class="mi">1668704612</span><span class="p">,</span>
-  <span class="n">cvvc</span> <span class="o">=</span> <span class="mi">1668707939</span><span class="p">,</span>
-  <span class="n">cwvt</span> <span class="o">=</span> <span class="mi">1668773492</span><span class="p">,</span>
-  <span class="n">da0a</span> <span class="o">=</span> <span class="mi">1684090977</span><span class="p">,</span>
-  <span class="n">da0b</span> <span class="o">=</span> <span class="mi">1684090978</span><span class="p">,</span>
-  <span class="n">da1a</span> <span class="o">=</span> <span class="mi">1684091233</span><span class="p">,</span>
-  <span class="n">da1b</span> <span class="o">=</span> <span class="mi">1684091234</span><span class="p">,</span>
-  <span class="n">da2a</span> <span class="o">=</span> <span class="mi">1684091489</span><span class="p">,</span>
-  <span class="n">da2b</span> <span class="o">=</span> <span class="mi">1684091490</span><span class="p">,</span>
-  <span class="n">da3a</span> <span class="o">=</span> <span class="mi">1684091745</span><span class="p">,</span>
-  <span class="n">da3b</span> <span class="o">=</span> <span class="mi">1684091746</span><span class="p">,</span>
-  <span class="n">dash</span> <span class="o">=</span> <span class="mi">1684108136</span><span class="p">,</span>
-  <span class="n">dby1</span> <span class="o">=</span> <span class="mi">1684175153</span><span class="p">,</span>
-  <span class="n">dmb1</span> <span class="o">=</span> <span class="mi">1684890161</span><span class="p">,</span>
-  <span class="n">dsms</span> <span class="o">=</span> <span class="mi">1685286259</span><span class="p">,</span>
-  <span class="n">dts1</span> <span class="o">=</span> <span class="mi">1685353265</span><span class="p">,</span>
-  <span class="n">dts2</span> <span class="o">=</span> <span class="mi">1685353266</span><span class="p">,</span>
-  <span class="n">dts3</span> <span class="o">=</span> <span class="mi">1685353267</span><span class="p">,</span>
-  <span class="n">dv1a</span> <span class="o">=</span> <span class="mi">1685467489</span><span class="p">,</span>
-  <span class="n">dv1b</span> <span class="o">=</span> <span class="mi">1685467490</span><span class="p">,</span>
-  <span class="n">dv2a</span> <span class="o">=</span> <span class="mi">1685467745</span><span class="p">,</span>
-  <span class="n">dv2b</span> <span class="o">=</span> <span class="mi">1685467746</span><span class="p">,</span>
-  <span class="n">dv3a</span> <span class="o">=</span> <span class="mi">1685468001</span><span class="p">,</span>
-  <span class="n">dv3b</span> <span class="o">=</span> <span class="mi">1685468002</span><span class="p">,</span>
-  <span class="n">dvr1</span> <span class="o">=</span> <span class="mi">1685484081</span><span class="p">,</span>
-  <span class="n">dvt1</span> <span class="o">=</span> <span class="mi">1685484593</span><span class="p">,</span>
-  <span class="n">dxo</span> <span class="o">=</span> <span class="mi">1685614368</span><span class="p">,</span>
-  <span class="n">emsg</span> <span class="o">=</span> <span class="mi">1701671783</span><span class="p">,</span>
-  <span class="n">heic</span> <span class="o">=</span> <span class="mi">1751476579</span><span class="p">,</span>
-  <span class="n">heim</span> <span class="o">=</span> <span class="mi">1751476589</span><span class="p">,</span>
-  <span class="n">heis</span> <span class="o">=</span> <span class="mi">1751476595</span><span class="p">,</span>
-  <span class="n">heix</span> <span class="o">=</span> <span class="mi">1751476600</span><span class="p">,</span>
-  <span class="n">heoi</span> <span class="o">=</span> <span class="mi">1751478121</span><span class="p">,</span>
-  <span class="n">hevc</span> <span class="o">=</span> <span class="mi">1751479907</span><span class="p">,</span>
-  <span class="n">hevd</span> <span class="o">=</span> <span class="mi">1751479908</span><span class="p">,</span>
-  <span class="n">hevi</span> <span class="o">=</span> <span class="mi">1751479913</span><span class="p">,</span>
-  <span class="n">hevm</span> <span class="o">=</span> <span class="mi">1751479917</span><span class="p">,</span>
-  <span class="n">hevs</span> <span class="o">=</span> <span class="mi">1751479923</span><span class="p">,</span>
-  <span class="n">hevx</span> <span class="o">=</span> <span class="mi">1751479928</span><span class="p">,</span>
-  <span class="n">hvce</span> <span class="o">=</span> <span class="mi">1752589157</span><span class="p">,</span>
-  <span class="n">hvci</span> <span class="o">=</span> <span class="mi">1752589161</span><span class="p">,</span>
-  <span class="n">hvcx</span> <span class="o">=</span> <span class="mi">1752589176</span><span class="p">,</span>
-  <span class="n">hvti</span> <span class="o">=</span> <span class="mi">1752593513</span><span class="p">,</span>
-  <span class="n">ifaa</span> <span class="o">=</span> <span class="mi">1768317281</span><span class="p">,</span>
-  <span class="n">ifah</span> <span class="o">=</span> <span class="mi">1768317288</span><span class="p">,</span>
-  <span class="n">ifai</span> <span class="o">=</span> <span class="mi">1768317289</span><span class="p">,</span>
-  <span class="n">ifas</span> <span class="o">=</span> <span class="mi">1768317299</span><span class="p">,</span>
-  <span class="n">ifau</span> <span class="o">=</span> <span class="mi">1768317301</span><span class="p">,</span>
-  <span class="n">ifav</span> <span class="o">=</span> <span class="mi">1768317302</span><span class="p">,</span>
-  <span class="n">ifhd</span> <span class="o">=</span> <span class="mi">1768319076</span><span class="p">,</span>
-  <span class="n">ifhh</span> <span class="o">=</span> <span class="mi">1768319080</span><span class="p">,</span>
-  <span class="n">ifhr</span> <span class="o">=</span> <span class="mi">1768319090</span><span class="p">,</span>
-  <span class="n">ifhs</span> <span class="o">=</span> <span class="mi">1768319091</span><span class="p">,</span>
-  <span class="n">ifhu</span> <span class="o">=</span> <span class="mi">1768319093</span><span class="p">,</span>
-  <span class="n">ifhx</span> <span class="o">=</span> <span class="mi">1768319096</span><span class="p">,</span>
-  <span class="n">ifrm</span> <span class="o">=</span> <span class="mi">1768321645</span><span class="p">,</span>
-  <span class="n">ifsd</span> <span class="o">=</span> <span class="mi">1768321892</span><span class="p">,</span>
-  <span class="n">im1i</span> <span class="o">=</span> <span class="mi">1768763753</span><span class="p">,</span>
-  <span class="n">im1t</span> <span class="o">=</span> <span class="mi">1768763764</span><span class="p">,</span>
-  <span class="n">im2i</span> <span class="o">=</span> <span class="mi">1768764009</span><span class="p">,</span>
-  <span class="n">im2t</span> <span class="o">=</span> <span class="mi">1768764020</span><span class="p">,</span>
-  <span class="n">isc2</span> <span class="o">=</span> <span class="mi">1769169714</span><span class="p">,</span>
-  <span class="n">iso2</span> <span class="o">=</span> <span class="mi">1769172786</span><span class="p">,</span>
-  <span class="n">iso3</span> <span class="o">=</span> <span class="mi">1769172787</span><span class="p">,</span>
-  <span class="n">iso4</span> <span class="o">=</span> <span class="mi">1769172788</span><span class="p">,</span>
-  <span class="n">iso5</span> <span class="o">=</span> <span class="mi">1769172789</span><span class="p">,</span>
-  <span class="n">iso6</span> <span class="o">=</span> <span class="mi">1769172790</span><span class="p">,</span>
-  <span class="n">iso7</span> <span class="o">=</span> <span class="mi">1769172791</span><span class="p">,</span>
-  <span class="n">iso8</span> <span class="o">=</span> <span class="mi">1769172792</span><span class="p">,</span>
-  <span class="n">iso9</span> <span class="o">=</span> <span class="mi">1769172793</span><span class="p">,</span>
-  <span class="n">isoa</span> <span class="o">=</span> <span class="mi">1769172833</span><span class="p">,</span>
-  <span class="n">isob</span> <span class="o">=</span> <span class="mi">1769172834</span><span class="p">,</span>
-  <span class="n">isoc</span> <span class="o">=</span> <span class="mi">1769172835</span><span class="p">,</span>
-  <span class="n">isom</span> <span class="o">=</span> <span class="mi">1769172845</span><span class="p">,</span>
-  <span class="n">j2is</span> <span class="o">=</span> <span class="mi">1781688691</span><span class="p">,</span>
-  <span class="n">j2ki</span> <span class="o">=</span> <span class="mi">1781689193</span><span class="p">,</span>
-  <span class="n">j2ks</span> <span class="o">=</span> <span class="mi">1781689203</span><span class="p">,</span>
-  <span class="n">jp2</span> <span class="o">=</span> <span class="mi">1785737760</span><span class="p">,</span>
-  <span class="n">jpeg</span> <span class="o">=</span> <span class="mi">1785750887</span><span class="p">,</span>
-  <span class="n">jpgs</span> <span class="o">=</span> <span class="mi">1785751411</span><span class="p">,</span>
-  <span class="n">jpm</span> <span class="o">=</span> <span class="mi">1785752864</span><span class="p">,</span>
-  <span class="n">jpoi</span> <span class="o">=</span> <span class="mi">1785753449</span><span class="p">,</span>
-  <span class="n">jpsi</span> <span class="o">=</span> <span class="mi">1785754473</span><span class="p">,</span>
-  <span class="n">jpx</span> <span class="o">=</span> <span class="mi">1785755680</span><span class="p">,</span>
-  <span class="n">jpxb</span> <span class="o">=</span> <span class="mi">1785755746</span><span class="p">,</span>
-  <span class="n">jxl</span> <span class="o">=</span> <span class="mi">1786276896</span><span class="p">,</span>
-  <span class="n">jxs</span> <span class="o">=</span> <span class="mi">1786278688</span><span class="p">,</span>
-  <span class="n">jxsc</span> <span class="o">=</span> <span class="mi">1786278755</span><span class="p">,</span>
-  <span class="n">jxsi</span> <span class="o">=</span> <span class="mi">1786278761</span><span class="p">,</span>
-  <span class="n">jxss</span> <span class="o">=</span> <span class="mi">1786278771</span><span class="p">,</span>
-  <span class="n">lhte</span> <span class="o">=</span> <span class="mi">1818784869</span><span class="p">,</span>
-  <span class="n">lhti</span> <span class="o">=</span> <span class="mi">1818784873</span><span class="p">,</span>
-  <span class="n">lmsg</span> <span class="o">=</span> <span class="mi">1819112295</span><span class="p">,</span>
-  <span class="n">miaf</span> <span class="o">=</span> <span class="mi">1835622758</span><span class="p">,</span>
-  <span class="n">mif1</span> <span class="o">=</span> <span class="mi">1835623985</span><span class="p">,</span>
-  <span class="n">mif2</span> <span class="o">=</span> <span class="mi">1835623986</span><span class="p">,</span>
-  <span class="n">mj2s</span> <span class="o">=</span> <span class="mi">1835676275</span><span class="p">,</span>
-  <span class="n">mjp2</span> <span class="o">=</span> <span class="mi">1835692082</span><span class="p">,</span>
-  <span class="n">mp21</span> <span class="o">=</span> <span class="mi">1836069425</span><span class="p">,</span>
-  <span class="n">mp41</span> <span class="o">=</span> <span class="mi">1836069937</span><span class="p">,</span>
-  <span class="n">mp42</span> <span class="o">=</span> <span class="mi">1836069938</span><span class="p">,</span>
-  <span class="n">mp71</span> <span class="o">=</span> <span class="mi">1836070705</span><span class="p">,</span>
-  <span class="n">mpuf</span> <span class="o">=</span> <span class="mi">1836086630</span><span class="p">,</span>
-  <span class="n">msdh</span> <span class="o">=</span> <span class="mi">1836278888</span><span class="p">,</span>
-  <span class="n">msf1</span> <span class="o">=</span> <span class="mi">1836279345</span><span class="p">,</span>
-  <span class="n">msix</span> <span class="o">=</span> <span class="mi">1836280184</span><span class="p">,</span>
-  <span class="n">niko</span> <span class="o">=</span> <span class="mi">1852402543</span><span class="p">,</span>
-  <span class="n">nlsl</span> <span class="o">=</span> <span class="mi">1852601196</span><span class="p">,</span>
-  <span class="n">nras</span> <span class="o">=</span> <span class="mi">1852989811</span><span class="p">,</span>
-  <span class="n">oa2d</span> <span class="o">=</span> <span class="mi">1868640868</span><span class="p">,</span>
-  <span class="n">oabl</span> <span class="o">=</span> <span class="mi">1868653164</span><span class="p">,</span>
-  <span class="n">odcf</span> <span class="o">=</span> <span class="mi">1868850022</span><span class="p">,</span>
-  <span class="n">ompp</span> <span class="o">=</span> <span class="mi">1869443184</span><span class="p">,</span>
-  <span class="n">opf2</span> <span class="o">=</span> <span class="mi">1869637170</span><span class="p">,</span>
-  <span class="n">opx2</span> <span class="o">=</span> <span class="mi">1869641778</span><span class="p">,</span>
-  <span class="n">ovdp</span> <span class="o">=</span> <span class="mi">1870029936</span><span class="p">,</span>
-  <span class="n">ovly</span> <span class="o">=</span> <span class="mi">1870031993</span><span class="p">,</span>
-  <span class="n">paff</span> <span class="o">=</span> <span class="mi">1885431398</span><span class="p">,</span>
-  <span class="n">pana</span> <span class="o">=</span> <span class="mi">1885433441</span><span class="p">,</span>
-  <span class="n">piff</span> <span class="o">=</span> <span class="mi">1885955686</span><span class="p">,</span>
-  <span class="n">pmff</span> <span class="o">=</span> <span class="mi">1886217830</span><span class="p">,</span>
-  <span class="n">pnvi</span> <span class="o">=</span> <span class="mi">1886287465</span><span class="p">,</span>
-  <span class="n">pred</span> <span class="o">=</span> <span class="mi">1886545252</span><span class="p">,</span>
-  <span class="n">qt</span> <span class="o">=</span> <span class="mi">1903435808</span><span class="p">,</span>
-  <span class="n">relo</span> <span class="o">=</span> <span class="mi">1919249519</span><span class="p">,</span>
-  <span class="n">risx</span> <span class="o">=</span> <span class="mi">1919513464</span><span class="p">,</span>
-  <span class="n">sdv</span> <span class="o">=</span> <span class="mi">1935963680</span><span class="p">,</span>
-  <span class="n">senv</span> <span class="o">=</span> <span class="mi">1936027254</span><span class="p">,</span>
-  <span class="n">sims</span> <span class="o">=</span> <span class="mi">1936289139</span><span class="p">,</span>
-  <span class="n">sisx</span> <span class="o">=</span> <span class="mi">1936290680</span><span class="p">,</span>
-  <span class="n">siti</span> <span class="o">=</span> <span class="mi">1936290921</span><span class="p">,</span>
-  <span class="n">sitv</span> <span class="o">=</span> <span class="mi">1936290934</span><span class="p">,</span>
-  <span class="n">slh1</span> <span class="o">=</span> <span class="mi">1936484401</span><span class="p">,</span>
-  <span class="n">slh2</span> <span class="o">=</span> <span class="mi">1936484402</span><span class="p">,</span>
-  <span class="n">slh3</span> <span class="o">=</span> <span class="mi">1936484403</span><span class="p">,</span>
-  <span class="n">ssss</span> <span class="o">=</span> <span class="mi">1936946035</span><span class="p">,</span>
-  <span class="n">ttml</span> <span class="o">=</span> <span class="mi">1953787244</span><span class="p">,</span>
-  <span class="n">ttwv</span> <span class="o">=</span> <span class="mi">1953789814</span><span class="p">,</span>
-  <span class="n">uhvi</span> <span class="o">=</span> <span class="mi">1969780329</span><span class="p">,</span>
-  <span class="n">unif</span> <span class="o">=</span> <span class="mi">1970170214</span><span class="p">,</span>
-  <span class="n">uvvu</span> <span class="o">=</span> <span class="mi">1970697845</span><span class="p">,</span>
-  <span class="n">v3mp</span> <span class="o">=</span> <span class="mi">1983081840</span><span class="p">,</span>
-  <span class="n">v3mt</span> <span class="o">=</span> <span class="mi">1983081844</span><span class="p">,</span>
-  <span class="n">v3nt</span> <span class="o">=</span> <span class="mi">1983082100</span><span class="p">,</span>
-  <span class="n">v3st</span> <span class="o">=</span> <span class="mi">1983083380</span><span class="p">,</span>
-  <span class="n">vvci</span> <span class="o">=</span> <span class="mi">1987470185</span><span class="p">,</span>
-  <span class="n">vvoi</span> <span class="o">=</span> <span class="mi">1987473257</span><span class="p">,</span>
-  <span class="n">vwpt</span> <span class="o">=</span> <span class="mi">1987539060</span><span class="p">,</span>
-  <span class="n">yt4</span> <span class="o">=</span> <span class="mi">2037658656</span><span class="p">,</span>
+<span class="nv">QuicktimeMov</span><span class="p">.</span><span class="py">Brand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">enum</span><span class="p">.</span><span class="py">Enum</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nv">x_3g2a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">862401121</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">x_3ge6</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">862414134</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">x_3ge7</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">862414135</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">x_3ge9</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">862414137</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">x_3gf9</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">862414393</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">x_3gg6</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">862414646</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">x_3gg9</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">862414649</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">x_3gh9</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">862414905</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">x_3gm9</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">862416185</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">x_3gma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">862416193</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">x_3gp4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">862416948</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">x_3gp5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">862416949</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">x_3gp6</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">862416950</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">x_3gp7</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">862416951</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">x_3gp8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">862416952</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">x_3gp9</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">862416953</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">x_3gr6</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">862417462</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">x_3gr9</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">862417465</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">x_3gs6</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">862417718</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">x_3gs9</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">862417721</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">x_3gt8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">862417976</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">x_3gt9</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">862417977</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">x_3gtv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">862418038</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">x_3gvr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">862418546</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">x_3vra</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">863400545</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">x_3vrb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">863400546</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">x_3vrm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">863400557</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">arri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1095914057</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">caep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1128351056</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">cdes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1128555891</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">j2p0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1244811312</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">j2p1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1244811313</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">lcag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1279476039</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">m4a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1295270176</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">m4b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1295270432</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">m4p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1295274016</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">m4v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1295275552</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ma1a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1296118081</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ma1b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1296118082</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">mfsm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1296454477</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">mgsv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1296520022</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">mppi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1297109065</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">msnv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1297305174</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">miab</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1298743618</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">miac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1298743619</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">mian</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1298743662</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">mibu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1298743925</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">micm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1298744173</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">miha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1298745409</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">mihb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1298745410</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">mihe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1298745413</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">mipr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1298747506</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ross</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1380930387</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">seau</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1397047637</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">sebk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1397047883</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">xavc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1480676931</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">adti</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1633973353</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">aid3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1634296883</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">av01</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1635135537</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">avc1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1635148593</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">avci</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1635148649</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">avcs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1635148659</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">avde</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1635148901</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">avif</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1635150182</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">avio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1635150191</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">avis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1635150195</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">bbxm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1650620525</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ca4m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1667314797</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ca4s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1667314803</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">caaa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1667326305</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">caac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1667326307</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">cabl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1667326572</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">cama</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1667329377</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">camc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1667329379</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">caqv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1667330422</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">casu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1667330933</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ccea</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1667458401</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ccff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1667458662</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">cdm1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1667525937</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">cdm4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1667525940</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ceac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1667588451</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">cfhd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1667655780</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">cfsd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1667658596</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">chd1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1667785777</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">chd2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1667785778</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">chdf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1667785830</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">chev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1667786102</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">chh1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1667786801</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">chhd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1667786852</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">cint</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1667853940</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">clg1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1668048689</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">clg2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1668048690</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">cmf2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1668113970</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">cmfc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1668114019</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">cmff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1668114022</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">cmfl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1668114028</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">cmfs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1668114035</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">cmhm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1668114541</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">cmhs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1668114547</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">comp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1668246896</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">csh1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1668507697</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">cud1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1668637745</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">cud2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1668637746</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">cud8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1668637752</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">cud9</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1668637753</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">cuvd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1668642404</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">cvid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1668704612</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">cvvc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1668707939</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">cwvt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1668773492</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">da0a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1684090977</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">da0b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1684090978</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">da1a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1684091233</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">da1b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1684091234</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">da2a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1684091489</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">da2b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1684091490</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">da3a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1684091745</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">da3b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1684091746</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">dash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1684108136</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">dby1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1684175153</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">dmb1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1684890161</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">dsms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1685286259</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">dts1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1685353265</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">dts2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1685353266</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">dts3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1685353267</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">dv1a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1685467489</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">dv1b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1685467490</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">dv2a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1685467745</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">dv2b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1685467746</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">dv3a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1685468001</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">dv3b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1685468002</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">dvr1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1685484081</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">dvt1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1685484593</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">dxo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1685614368</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">emsg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1701671783</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">heic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1751476579</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">heim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1751476589</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">heis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1751476595</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">heix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1751476600</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">heoi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1751478121</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">hevc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1751479907</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">hevd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1751479908</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">hevi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1751479913</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">hevm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1751479917</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">hevs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1751479923</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">hevx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1751479928</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">hvce</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1752589157</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">hvci</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1752589161</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">hvcx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1752589176</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">hvti</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1752593513</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ifaa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1768317281</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ifah</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1768317288</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ifai</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1768317289</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ifas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1768317299</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ifau</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1768317301</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ifav</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1768317302</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ifhd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1768319076</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ifhh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1768319080</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ifhr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1768319090</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ifhs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1768319091</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ifhu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1768319093</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ifhx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1768319096</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ifrm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1768321645</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ifsd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1768321892</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">im1i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1768763753</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">im1t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1768763764</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">im2i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1768764009</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">im2t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1768764020</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">isc2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1769169714</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">iso2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1769172786</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">iso3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1769172787</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">iso4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1769172788</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">iso5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1769172789</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">iso6</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1769172790</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">iso7</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1769172791</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">iso8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1769172792</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">iso9</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1769172793</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">isoa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1769172833</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">isob</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1769172834</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">isoc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1769172835</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">isom</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1769172845</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">j2is</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1781688691</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">j2ki</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1781689193</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">j2ks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1781689203</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">jp2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1785737760</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">jpeg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1785750887</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">jpgs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1785751411</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">jpm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1785752864</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">jpoi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1785753449</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">jpsi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1785754473</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">jpx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1785755680</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">jpxb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1785755746</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">jxl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1786276896</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">jxs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1786278688</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">jxsc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1786278755</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">jxsi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1786278761</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">jxss</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1786278771</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">lhte</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1818784869</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">lhti</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1818784873</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">lmsg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1819112295</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">miaf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1835622758</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">mif1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1835623985</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">mif2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1835623986</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">mj2s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1835676275</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">mjp2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1835692082</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">mp21</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1836069425</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">mp41</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1836069937</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">mp42</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1836069938</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">mp71</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1836070705</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">mpuf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1836086630</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">msdh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1836278888</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">msf1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1836279345</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">msix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1836280184</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">niko</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1852402543</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">nlsl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1852601196</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">nras</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1852989811</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">oa2d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1868640868</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">oabl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1868653164</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">odcf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1868850022</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ompp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1869443184</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">opf2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1869637170</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">opx2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1869641778</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ovdp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1870029936</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ovly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1870031993</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">paff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1885431398</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">pana</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1885433441</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">piff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1885955686</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">pmff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1886217830</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">pnvi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1886287465</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">pred</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1886545252</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">qt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1903435808</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">relo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1919249519</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">risx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1919513464</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">sdv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1935963680</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">senv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1936027254</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">sims</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1936289139</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">sisx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1936290680</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">siti</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1936290921</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">sitv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1936290934</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">slh1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1936484401</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">slh2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1936484402</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">slh3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1936484403</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ssss</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1936946035</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ttml</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1953787244</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ttwv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1953789814</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">uhvi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1969780329</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">unif</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1970170214</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">uvvu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1970697845</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">v3mp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1983081840</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">v3mt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1983081844</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">v3nt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1983082100</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">v3st</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1983083380</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">vvci</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1987470185</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">vvoi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1987473257</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">vwpt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1987539060</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">yt4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2037658656</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="kr">function</span> <span class="nc">QuicktimeMov</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">QuicktimeMov</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
-<span class="kr">function</span> <span class="nc">QuicktimeMov</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">AtomList</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">QuicktimeMov</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">atoms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">QuicktimeMov</span><span class="p">.</span><span class="nf">AtomList</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
 <span class="kr">end</span>
 
 
 <span class="c1">-- </span>
 <span class="c1">-- See also: Source (https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-BBCGFGJG)</span>
-<span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">MvhdBody</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+<span class="nv">QuicktimeMov</span><span class="p">.</span><span class="py">MvhdBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
-<span class="kr">function</span> <span class="nc">QuicktimeMov</span><span class="p">.</span><span class="nc">MvhdBody</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">QuicktimeMov</span><span class="p">.</span><span class="nc">MvhdBody</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
-<span class="kr">function</span> <span class="nc">QuicktimeMov</span><span class="p">.</span><span class="nc">MvhdBody</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">flags</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">creation_time</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">modification_time</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">time_scale</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">duration</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">preferred_rate</span> <span class="o">=</span> <span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">Fixed32</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">preferred_volume</span> <span class="o">=</span> <span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">Fixed16</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">reserved1</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">matrix</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">36</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">preview_time</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">preview_duration</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">poster_time</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">selection_time</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">selection_duration</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">current_time</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">next_track_id</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">QuicktimeMov</span><span class="p">.</span><span class="nc">MvhdBody</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">creation_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">modification_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">time_scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">duration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">preferred_rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">QuicktimeMov</span><span class="p">.</span><span class="nf">Fixed32</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">preferred_volume</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">QuicktimeMov</span><span class="p">.</span><span class="nf">Fixed16</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">reserved1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">matrix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">36</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">preview_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">preview_duration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">poster_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">selection_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">selection_duration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">current_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">next_track_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
@@ -650,185 +650,185 @@ section#format-index .row {
 
 <span class="c1">-- </span>
 <span class="c1">-- See also: Source (https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF)</span>
-<span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">FtypBody</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+<span class="nv">QuicktimeMov</span><span class="p">.</span><span class="py">FtypBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
-<span class="kr">function</span> <span class="nc">QuicktimeMov</span><span class="p">.</span><span class="nc">FtypBody</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">QuicktimeMov</span><span class="p">.</span><span class="nc">FtypBody</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
-<span class="kr">function</span> <span class="nc">QuicktimeMov</span><span class="p">.</span><span class="nc">FtypBody</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">major_brand</span> <span class="o">=</span> <span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">Brand</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">())</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">minor_version</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">compatible_brands</span> <span class="o">=</span> <span class="p">{}</span>
-  <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-  <span class="kr">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">()</span> <span class="kr">do</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">compatible_brands</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">Brand</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">())</span>
-    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
-  <span class="kr">end</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">QuicktimeMov</span><span class="p">.</span><span class="nc">FtypBody</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">major_brand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">QuicktimeMov</span><span class="p">.</span><span class="nf">Brand</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">())</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">minor_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">compatible_brands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="kr">while</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">is_eof</span><span class="p">()</span><span class="w"> </span><span class="kr">do</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">compatible_brands</span><span class="p">[</span><span class="nv">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">QuicktimeMov</span><span class="p">.</span><span class="nf">Brand</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">())</span>
+<span class="w">    </span><span class="nv">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">  </span><span class="kr">end</span>
 <span class="kr">end</span>
 
 
 <span class="c1">-- </span>
 <span class="c1">-- Fixed-point 32-bit number.</span>
-<span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">Fixed32</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+<span class="nv">QuicktimeMov</span><span class="p">.</span><span class="py">Fixed32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
-<span class="kr">function</span> <span class="nc">QuicktimeMov</span><span class="p">.</span><span class="nc">Fixed32</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">QuicktimeMov</span><span class="p">.</span><span class="nc">Fixed32</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
-<span class="kr">function</span> <span class="nc">QuicktimeMov</span><span class="p">.</span><span class="nc">Fixed32</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">int_part</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_s2be</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">frac_part</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">QuicktimeMov</span><span class="p">.</span><span class="nc">Fixed32</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">int_part</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_s2be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">frac_part</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
 <span class="kr">end</span>
 
 
 <span class="c1">-- </span>
 <span class="c1">-- Fixed-point 16-bit number.</span>
-<span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">Fixed16</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+<span class="nv">QuicktimeMov</span><span class="p">.</span><span class="py">Fixed16</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
-<span class="kr">function</span> <span class="nc">QuicktimeMov</span><span class="p">.</span><span class="nc">Fixed16</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">QuicktimeMov</span><span class="p">.</span><span class="nc">Fixed16</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
-<span class="kr">function</span> <span class="nc">QuicktimeMov</span><span class="p">.</span><span class="nc">Fixed16</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">int_part</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_s1</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">frac_part</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">QuicktimeMov</span><span class="p">.</span><span class="nc">Fixed16</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">int_part</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_s1</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">frac_part</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
 <span class="kr">end</span>
 
 
-<span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">Atom</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+<span class="nv">QuicktimeMov</span><span class="p">.</span><span class="py">Atom</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
-<span class="kr">function</span> <span class="nc">QuicktimeMov</span><span class="p">.</span><span class="nc">Atom</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">QuicktimeMov</span><span class="p">.</span><span class="nc">Atom</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
-<span class="kr">function</span> <span class="nc">QuicktimeMov</span><span class="p">.</span><span class="nc">Atom</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">len32</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">atom_type</span> <span class="o">=</span> <span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">AtomType</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">())</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">len32</span> <span class="o">==</span> <span class="mi">1</span> <span class="kr">then</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">len64</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u8be</span><span class="p">()</span>
-  <span class="kr">end</span>
-  <span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">atom_type</span>
-  <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">AtomType</span><span class="p">.</span><span class="n">moof</span> <span class="kr">then</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len</span><span class="p">)</span>
-    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span><span class="p">))</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">AtomList</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">AtomType</span><span class="p">.</span><span class="n">tkhd</span> <span class="kr">then</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len</span><span class="p">)</span>
-    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span><span class="p">))</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">TkhdBody</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">AtomType</span><span class="p">.</span><span class="n">stbl</span> <span class="kr">then</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len</span><span class="p">)</span>
-    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span><span class="p">))</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">AtomList</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">AtomType</span><span class="p">.</span><span class="n">traf</span> <span class="kr">then</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len</span><span class="p">)</span>
-    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span><span class="p">))</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">AtomList</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">AtomType</span><span class="p">.</span><span class="n">minf</span> <span class="kr">then</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len</span><span class="p">)</span>
-    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span><span class="p">))</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">AtomList</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">AtomType</span><span class="p">.</span><span class="n">trak</span> <span class="kr">then</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len</span><span class="p">)</span>
-    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span><span class="p">))</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">AtomList</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">AtomType</span><span class="p">.</span><span class="n">moov</span> <span class="kr">then</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len</span><span class="p">)</span>
-    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span><span class="p">))</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">AtomList</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">AtomType</span><span class="p">.</span><span class="n">mdia</span> <span class="kr">then</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len</span><span class="p">)</span>
-    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span><span class="p">))</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">AtomList</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">AtomType</span><span class="p">.</span><span class="n">dinf</span> <span class="kr">then</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len</span><span class="p">)</span>
-    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span><span class="p">))</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">AtomList</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">AtomType</span><span class="p">.</span><span class="n">mvhd</span> <span class="kr">then</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len</span><span class="p">)</span>
-    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span><span class="p">))</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">MvhdBody</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">AtomType</span><span class="p">.</span><span class="n">ftyp</span> <span class="kr">then</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len</span><span class="p">)</span>
-    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span><span class="p">))</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">FtypBody</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-  <span class="kr">else</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len</span><span class="p">)</span>
-  <span class="kr">end</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">QuicktimeMov</span><span class="p">.</span><span class="nc">Atom</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">atom_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">QuicktimeMov</span><span class="p">.</span><span class="nf">AtomType</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">())</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">len32</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">len64</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u8be</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">atom_type</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">QuicktimeMov</span><span class="p">.</span><span class="py">AtomType</span><span class="p">.</span><span class="py">moof</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="p">))</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">QuicktimeMov</span><span class="p">.</span><span class="nf">AtomList</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">QuicktimeMov</span><span class="p">.</span><span class="py">AtomType</span><span class="p">.</span><span class="py">tkhd</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="p">))</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">QuicktimeMov</span><span class="p">.</span><span class="nf">TkhdBody</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">QuicktimeMov</span><span class="p">.</span><span class="py">AtomType</span><span class="p">.</span><span class="py">stbl</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="p">))</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">QuicktimeMov</span><span class="p">.</span><span class="nf">AtomList</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">QuicktimeMov</span><span class="p">.</span><span class="py">AtomType</span><span class="p">.</span><span class="py">traf</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="p">))</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">QuicktimeMov</span><span class="p">.</span><span class="nf">AtomList</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">QuicktimeMov</span><span class="p">.</span><span class="py">AtomType</span><span class="p">.</span><span class="py">minf</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="p">))</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">QuicktimeMov</span><span class="p">.</span><span class="nf">AtomList</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">QuicktimeMov</span><span class="p">.</span><span class="py">AtomType</span><span class="p">.</span><span class="py">trak</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="p">))</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">QuicktimeMov</span><span class="p">.</span><span class="nf">AtomList</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">QuicktimeMov</span><span class="p">.</span><span class="py">AtomType</span><span class="p">.</span><span class="py">moov</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="p">))</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">QuicktimeMov</span><span class="p">.</span><span class="nf">AtomList</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">QuicktimeMov</span><span class="p">.</span><span class="py">AtomType</span><span class="p">.</span><span class="py">mdia</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="p">))</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">QuicktimeMov</span><span class="p">.</span><span class="nf">AtomList</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">QuicktimeMov</span><span class="p">.</span><span class="py">AtomType</span><span class="p">.</span><span class="py">dinf</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="p">))</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">QuicktimeMov</span><span class="p">.</span><span class="nf">AtomList</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">QuicktimeMov</span><span class="p">.</span><span class="py">AtomType</span><span class="p">.</span><span class="py">mvhd</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="p">))</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">QuicktimeMov</span><span class="p">.</span><span class="nf">MvhdBody</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">QuicktimeMov</span><span class="p">.</span><span class="py">AtomType</span><span class="p">.</span><span class="py">ftyp</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="p">))</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">QuicktimeMov</span><span class="p">.</span><span class="nf">FtypBody</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">else</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
 <span class="kr">end</span>
 
-<span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">Atom</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">len</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">QuicktimeMov</span><span class="p">.</span><span class="nc">Atom</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">len</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_len</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_len</span>
-  <span class="kr">end</span>
+<span class="nv">QuicktimeMov</span><span class="p">.</span><span class="py">Atom</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">QuicktimeMov</span><span class="p">.</span><span class="nc">Atom</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">len</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len</span>
+<span class="w">  </span><span class="kr">end</span>
 
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_len</span> <span class="o">=</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">len32</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">8</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span><span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">len32</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">len64</span> <span class="o">-</span> <span class="mi">16</span><span class="p">))</span> <span class="ow">or</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">len32</span> <span class="o">-</span> <span class="mi">8</span><span class="p">)))))</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_len</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">len32</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">8</span><span class="p">))</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">len32</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">len64</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">16</span><span class="p">))</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">len32</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">8</span><span class="p">)))))</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len</span>
 <span class="kr">end</span>
 
 
 <span class="c1">-- </span>
 <span class="c1">-- See also: Source (https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-25550)</span>
-<span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">TkhdBody</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+<span class="nv">QuicktimeMov</span><span class="p">.</span><span class="py">TkhdBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
-<span class="kr">function</span> <span class="nc">QuicktimeMov</span><span class="p">.</span><span class="nc">TkhdBody</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">QuicktimeMov</span><span class="p">.</span><span class="nc">TkhdBody</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
-<span class="kr">function</span> <span class="nc">QuicktimeMov</span><span class="p">.</span><span class="nc">TkhdBody</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">flags</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">creation_time</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">modification_time</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">track_id</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">reserved1</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">duration</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">reserved2</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">layer</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">alternative_group</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">volume</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">reserved3</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">matrix</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">36</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">Fixed32</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">Fixed32</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">QuicktimeMov</span><span class="p">.</span><span class="nc">TkhdBody</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">creation_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">modification_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">track_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">reserved1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">duration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">reserved2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">layer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">alternative_group</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">volume</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">reserved3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">matrix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">36</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">QuicktimeMov</span><span class="p">.</span><span class="nf">Fixed32</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">QuicktimeMov</span><span class="p">.</span><span class="nf">Fixed32</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
 <span class="c1">-- Integer that uniquely identifies the track. The value 0 cannot be used.</span>
 
-<span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">AtomList</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+<span class="nv">QuicktimeMov</span><span class="p">.</span><span class="py">AtomList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
-<span class="kr">function</span> <span class="nc">QuicktimeMov</span><span class="p">.</span><span class="nc">AtomList</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">QuicktimeMov</span><span class="p">.</span><span class="nc">AtomList</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
-<span class="kr">function</span> <span class="nc">QuicktimeMov</span><span class="p">.</span><span class="nc">AtomList</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">items</span> <span class="o">=</span> <span class="p">{}</span>
-  <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-  <span class="kr">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">()</span> <span class="kr">do</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">items</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">QuicktimeMov</span><span class="p">.</span><span class="n">Atom</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
-  <span class="kr">end</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">QuicktimeMov</span><span class="p">.</span><span class="nc">AtomList</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">items</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="kr">while</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">is_eof</span><span class="p">()</span><span class="w"> </span><span class="kr">do</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">items</span><span class="p">[</span><span class="nv">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">QuicktimeMov</span><span class="p">.</span><span class="nf">Atom</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">    </span><span class="nv">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">  </span><span class="kr">end</span>
 <span class="kr">end</span>
 </pre></div>
 

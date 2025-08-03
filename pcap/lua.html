@@ -269,11 +269,11 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
 <span class="c1">--</span>
 <span class="c1">-- This file is compatible with Lua 5.3</span>
 
-<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="kd">local</span><span class="w"> </span><span class="nv">class</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
 <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
-<span class="kd">local</span> <span class="n">enum</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;enum&quot;</span><span class="p">)</span>
-<span class="kd">local</span> <span class="n">utils</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;utils&quot;</span><span class="p">)</span>
-<span class="kd">local</span> <span class="n">stringstream</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_stream&quot;</span><span class="p">)</span>
+<span class="kd">local</span><span class="w"> </span><span class="nv">enum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">&quot;enum&quot;</span><span class="p">)</span>
+<span class="kd">local</span><span class="w"> </span><span class="nv">utils</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">&quot;utils&quot;</span><span class="p">)</span>
+<span class="kd">local</span><span class="w"> </span><span class="nv">stringstream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_stream&quot;</span><span class="p">)</span>
 
 <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;packet_ppi&quot;</span><span class="p">)</span>
 <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;ethernet_frame&quot;</span><span class="p">)</span>
@@ -283,263 +283,263 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
 <span class="c1">-- produced by tools like [tcpdump](https://www.tcpdump.org/) or</span>
 <span class="c1">-- [Wireshark](https://www.wireshark.org/).</span>
 <span class="c1">-- See also: Source (https://wiki.wireshark.org/Development/LibpcapFileFormat)</span>
-<span class="n">Pcap</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+<span class="nv">Pcap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
-<span class="n">Pcap</span><span class="p">.</span><span class="n">Linktype</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
-  <span class="n">null_linktype</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-  <span class="n">ethernet</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-  <span class="n">exp_ethernet</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
-  <span class="n">ax25</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
-  <span class="n">pronet</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
-  <span class="n">chaos</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
-  <span class="n">ieee802_5</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
-  <span class="n">arcnet_bsd</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span>
-  <span class="n">slip</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
-  <span class="n">ppp</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span>
-  <span class="n">fddi</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
-  <span class="n">redback_smartedge</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
-  <span class="n">ppp_hdlc</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
-  <span class="n">ppp_ether</span> <span class="o">=</span> <span class="mi">51</span><span class="p">,</span>
-  <span class="n">symantec_firewall</span> <span class="o">=</span> <span class="mi">99</span><span class="p">,</span>
-  <span class="n">atm_rfc1483</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
-  <span class="n">raw</span> <span class="o">=</span> <span class="mi">101</span><span class="p">,</span>
-  <span class="n">c_hdlc</span> <span class="o">=</span> <span class="mi">104</span><span class="p">,</span>
-  <span class="n">ieee802_11</span> <span class="o">=</span> <span class="mi">105</span><span class="p">,</span>
-  <span class="n">atm_clip</span> <span class="o">=</span> <span class="mi">106</span><span class="p">,</span>
-  <span class="n">frelay</span> <span class="o">=</span> <span class="mi">107</span><span class="p">,</span>
-  <span class="n">loop</span> <span class="o">=</span> <span class="mi">108</span><span class="p">,</span>
-  <span class="n">enc</span> <span class="o">=</span> <span class="mi">109</span><span class="p">,</span>
-  <span class="n">netbsd_hdlc</span> <span class="o">=</span> <span class="mi">112</span><span class="p">,</span>
-  <span class="n">linux_sll</span> <span class="o">=</span> <span class="mi">113</span><span class="p">,</span>
-  <span class="n">ltalk</span> <span class="o">=</span> <span class="mi">114</span><span class="p">,</span>
-  <span class="n">econet</span> <span class="o">=</span> <span class="mi">115</span><span class="p">,</span>
-  <span class="n">ipfilter</span> <span class="o">=</span> <span class="mi">116</span><span class="p">,</span>
-  <span class="n">pflog</span> <span class="o">=</span> <span class="mi">117</span><span class="p">,</span>
-  <span class="n">cisco_ios</span> <span class="o">=</span> <span class="mi">118</span><span class="p">,</span>
-  <span class="n">ieee802_11_prism</span> <span class="o">=</span> <span class="mi">119</span><span class="p">,</span>
-  <span class="n">aironet_header</span> <span class="o">=</span> <span class="mi">120</span><span class="p">,</span>
-  <span class="n">ip_over_fc</span> <span class="o">=</span> <span class="mi">122</span><span class="p">,</span>
-  <span class="n">sunatm</span> <span class="o">=</span> <span class="mi">123</span><span class="p">,</span>
-  <span class="n">rio</span> <span class="o">=</span> <span class="mi">124</span><span class="p">,</span>
-  <span class="n">pci_exp</span> <span class="o">=</span> <span class="mi">125</span><span class="p">,</span>
-  <span class="n">aurora</span> <span class="o">=</span> <span class="mi">126</span><span class="p">,</span>
-  <span class="n">ieee802_11_radiotap</span> <span class="o">=</span> <span class="mi">127</span><span class="p">,</span>
-  <span class="n">tzsp</span> <span class="o">=</span> <span class="mi">128</span><span class="p">,</span>
-  <span class="n">arcnet_linux</span> <span class="o">=</span> <span class="mi">129</span><span class="p">,</span>
-  <span class="n">juniper_mlppp</span> <span class="o">=</span> <span class="mi">130</span><span class="p">,</span>
-  <span class="n">juniper_mlfr</span> <span class="o">=</span> <span class="mi">131</span><span class="p">,</span>
-  <span class="n">juniper_es</span> <span class="o">=</span> <span class="mi">132</span><span class="p">,</span>
-  <span class="n">juniper_ggsn</span> <span class="o">=</span> <span class="mi">133</span><span class="p">,</span>
-  <span class="n">juniper_mfr</span> <span class="o">=</span> <span class="mi">134</span><span class="p">,</span>
-  <span class="n">juniper_atm2</span> <span class="o">=</span> <span class="mi">135</span><span class="p">,</span>
-  <span class="n">juniper_services</span> <span class="o">=</span> <span class="mi">136</span><span class="p">,</span>
-  <span class="n">juniper_atm1</span> <span class="o">=</span> <span class="mi">137</span><span class="p">,</span>
-  <span class="n">apple_ip_over_ieee1394</span> <span class="o">=</span> <span class="mi">138</span><span class="p">,</span>
-  <span class="n">mtp2_with_phdr</span> <span class="o">=</span> <span class="mi">139</span><span class="p">,</span>
-  <span class="n">mtp2</span> <span class="o">=</span> <span class="mi">140</span><span class="p">,</span>
-  <span class="n">mtp3</span> <span class="o">=</span> <span class="mi">141</span><span class="p">,</span>
-  <span class="n">sccp</span> <span class="o">=</span> <span class="mi">142</span><span class="p">,</span>
-  <span class="n">docsis</span> <span class="o">=</span> <span class="mi">143</span><span class="p">,</span>
-  <span class="n">linux_irda</span> <span class="o">=</span> <span class="mi">144</span><span class="p">,</span>
-  <span class="n">ibm_sp</span> <span class="o">=</span> <span class="mi">145</span><span class="p">,</span>
-  <span class="n">ibm_sn</span> <span class="o">=</span> <span class="mi">146</span><span class="p">,</span>
-  <span class="n">user0</span> <span class="o">=</span> <span class="mi">147</span><span class="p">,</span>
-  <span class="n">user1</span> <span class="o">=</span> <span class="mi">148</span><span class="p">,</span>
-  <span class="n">user2</span> <span class="o">=</span> <span class="mi">149</span><span class="p">,</span>
-  <span class="n">user3</span> <span class="o">=</span> <span class="mi">150</span><span class="p">,</span>
-  <span class="n">user4</span> <span class="o">=</span> <span class="mi">151</span><span class="p">,</span>
-  <span class="n">user5</span> <span class="o">=</span> <span class="mi">152</span><span class="p">,</span>
-  <span class="n">user6</span> <span class="o">=</span> <span class="mi">153</span><span class="p">,</span>
-  <span class="n">user7</span> <span class="o">=</span> <span class="mi">154</span><span class="p">,</span>
-  <span class="n">user8</span> <span class="o">=</span> <span class="mi">155</span><span class="p">,</span>
-  <span class="n">user9</span> <span class="o">=</span> <span class="mi">156</span><span class="p">,</span>
-  <span class="n">user10</span> <span class="o">=</span> <span class="mi">157</span><span class="p">,</span>
-  <span class="n">user11</span> <span class="o">=</span> <span class="mi">158</span><span class="p">,</span>
-  <span class="n">user12</span> <span class="o">=</span> <span class="mi">159</span><span class="p">,</span>
-  <span class="n">user13</span> <span class="o">=</span> <span class="mi">160</span><span class="p">,</span>
-  <span class="n">user14</span> <span class="o">=</span> <span class="mi">161</span><span class="p">,</span>
-  <span class="n">user15</span> <span class="o">=</span> <span class="mi">162</span><span class="p">,</span>
-  <span class="n">ieee802_11_avs</span> <span class="o">=</span> <span class="mi">163</span><span class="p">,</span>
-  <span class="n">juniper_monitor</span> <span class="o">=</span> <span class="mi">164</span><span class="p">,</span>
-  <span class="n">bacnet_ms_tp</span> <span class="o">=</span> <span class="mi">165</span><span class="p">,</span>
-  <span class="n">ppp_pppd</span> <span class="o">=</span> <span class="mi">166</span><span class="p">,</span>
-  <span class="n">juniper_pppoe</span> <span class="o">=</span> <span class="mi">167</span><span class="p">,</span>
-  <span class="n">juniper_pppoe_atm</span> <span class="o">=</span> <span class="mi">168</span><span class="p">,</span>
-  <span class="n">gprs_llc</span> <span class="o">=</span> <span class="mi">169</span><span class="p">,</span>
-  <span class="n">gpf_t</span> <span class="o">=</span> <span class="mi">170</span><span class="p">,</span>
-  <span class="n">gpf_f</span> <span class="o">=</span> <span class="mi">171</span><span class="p">,</span>
-  <span class="n">gcom_t1e1</span> <span class="o">=</span> <span class="mi">172</span><span class="p">,</span>
-  <span class="n">gcom_serial</span> <span class="o">=</span> <span class="mi">173</span><span class="p">,</span>
-  <span class="n">juniper_pic_peer</span> <span class="o">=</span> <span class="mi">174</span><span class="p">,</span>
-  <span class="n">erf_eth</span> <span class="o">=</span> <span class="mi">175</span><span class="p">,</span>
-  <span class="n">erf_pos</span> <span class="o">=</span> <span class="mi">176</span><span class="p">,</span>
-  <span class="n">linux_lapd</span> <span class="o">=</span> <span class="mi">177</span><span class="p">,</span>
-  <span class="n">juniper_ether</span> <span class="o">=</span> <span class="mi">178</span><span class="p">,</span>
-  <span class="n">juniper_ppp</span> <span class="o">=</span> <span class="mi">179</span><span class="p">,</span>
-  <span class="n">juniper_frelay</span> <span class="o">=</span> <span class="mi">180</span><span class="p">,</span>
-  <span class="n">juniper_chdlc</span> <span class="o">=</span> <span class="mi">181</span><span class="p">,</span>
-  <span class="n">mfr</span> <span class="o">=</span> <span class="mi">182</span><span class="p">,</span>
-  <span class="n">juniper_vp</span> <span class="o">=</span> <span class="mi">183</span><span class="p">,</span>
-  <span class="n">a429</span> <span class="o">=</span> <span class="mi">184</span><span class="p">,</span>
-  <span class="n">a653_icm</span> <span class="o">=</span> <span class="mi">185</span><span class="p">,</span>
-  <span class="n">usb_freebsd</span> <span class="o">=</span> <span class="mi">186</span><span class="p">,</span>
-  <span class="n">bluetooth_hci_h4</span> <span class="o">=</span> <span class="mi">187</span><span class="p">,</span>
-  <span class="n">ieee802_16_mac_cps</span> <span class="o">=</span> <span class="mi">188</span><span class="p">,</span>
-  <span class="n">usb_linux</span> <span class="o">=</span> <span class="mi">189</span><span class="p">,</span>
-  <span class="n">can20b</span> <span class="o">=</span> <span class="mi">190</span><span class="p">,</span>
-  <span class="n">ieee802_15_4_linux</span> <span class="o">=</span> <span class="mi">191</span><span class="p">,</span>
-  <span class="n">ppi</span> <span class="o">=</span> <span class="mi">192</span><span class="p">,</span>
-  <span class="n">ieee802_16_mac_cps_radio</span> <span class="o">=</span> <span class="mi">193</span><span class="p">,</span>
-  <span class="n">juniper_ism</span> <span class="o">=</span> <span class="mi">194</span><span class="p">,</span>
-  <span class="n">ieee802_15_4_withfcs</span> <span class="o">=</span> <span class="mi">195</span><span class="p">,</span>
-  <span class="n">sita</span> <span class="o">=</span> <span class="mi">196</span><span class="p">,</span>
-  <span class="n">erf</span> <span class="o">=</span> <span class="mi">197</span><span class="p">,</span>
-  <span class="n">raif1</span> <span class="o">=</span> <span class="mi">198</span><span class="p">,</span>
-  <span class="n">ipmb_kontron</span> <span class="o">=</span> <span class="mi">199</span><span class="p">,</span>
-  <span class="n">juniper_st</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span>
-  <span class="n">bluetooth_hci_h4_with_phdr</span> <span class="o">=</span> <span class="mi">201</span><span class="p">,</span>
-  <span class="n">ax25_kiss</span> <span class="o">=</span> <span class="mi">202</span><span class="p">,</span>
-  <span class="n">lapd</span> <span class="o">=</span> <span class="mi">203</span><span class="p">,</span>
-  <span class="n">ppp_with_dir</span> <span class="o">=</span> <span class="mi">204</span><span class="p">,</span>
-  <span class="n">c_hdlc_with_dir</span> <span class="o">=</span> <span class="mi">205</span><span class="p">,</span>
-  <span class="n">frelay_with_dir</span> <span class="o">=</span> <span class="mi">206</span><span class="p">,</span>
-  <span class="n">lapb_with_dir</span> <span class="o">=</span> <span class="mi">207</span><span class="p">,</span>
-  <span class="n">ipmb_linux</span> <span class="o">=</span> <span class="mi">209</span><span class="p">,</span>
-  <span class="n">flexray</span> <span class="o">=</span> <span class="mi">210</span><span class="p">,</span>
-  <span class="n">most</span> <span class="o">=</span> <span class="mi">211</span><span class="p">,</span>
-  <span class="n">lin</span> <span class="o">=</span> <span class="mi">212</span><span class="p">,</span>
-  <span class="n">x2e_serial</span> <span class="o">=</span> <span class="mi">213</span><span class="p">,</span>
-  <span class="n">x2e_xoraya</span> <span class="o">=</span> <span class="mi">214</span><span class="p">,</span>
-  <span class="n">ieee802_15_4_nonask_phy</span> <span class="o">=</span> <span class="mi">215</span><span class="p">,</span>
-  <span class="n">linux_evdev</span> <span class="o">=</span> <span class="mi">216</span><span class="p">,</span>
-  <span class="n">gsmtap_um</span> <span class="o">=</span> <span class="mi">217</span><span class="p">,</span>
-  <span class="n">gsmtap_abis</span> <span class="o">=</span> <span class="mi">218</span><span class="p">,</span>
-  <span class="n">mpls</span> <span class="o">=</span> <span class="mi">219</span><span class="p">,</span>
-  <span class="n">usb_linux_mmapped</span> <span class="o">=</span> <span class="mi">220</span><span class="p">,</span>
-  <span class="n">dect</span> <span class="o">=</span> <span class="mi">221</span><span class="p">,</span>
-  <span class="n">aos</span> <span class="o">=</span> <span class="mi">222</span><span class="p">,</span>
-  <span class="n">wihart</span> <span class="o">=</span> <span class="mi">223</span><span class="p">,</span>
-  <span class="n">fc_2</span> <span class="o">=</span> <span class="mi">224</span><span class="p">,</span>
-  <span class="n">fc_2_with_frame_delims</span> <span class="o">=</span> <span class="mi">225</span><span class="p">,</span>
-  <span class="n">ipnet</span> <span class="o">=</span> <span class="mi">226</span><span class="p">,</span>
-  <span class="n">can_socketcan</span> <span class="o">=</span> <span class="mi">227</span><span class="p">,</span>
-  <span class="n">ipv4</span> <span class="o">=</span> <span class="mi">228</span><span class="p">,</span>
-  <span class="n">ipv6</span> <span class="o">=</span> <span class="mi">229</span><span class="p">,</span>
-  <span class="n">ieee802_15_4_nofcs</span> <span class="o">=</span> <span class="mi">230</span><span class="p">,</span>
-  <span class="n">dbus</span> <span class="o">=</span> <span class="mi">231</span><span class="p">,</span>
-  <span class="n">juniper_vs</span> <span class="o">=</span> <span class="mi">232</span><span class="p">,</span>
-  <span class="n">juniper_srx_e2e</span> <span class="o">=</span> <span class="mi">233</span><span class="p">,</span>
-  <span class="n">juniper_fibrechannel</span> <span class="o">=</span> <span class="mi">234</span><span class="p">,</span>
-  <span class="n">dvb_ci</span> <span class="o">=</span> <span class="mi">235</span><span class="p">,</span>
-  <span class="n">mux27010</span> <span class="o">=</span> <span class="mi">236</span><span class="p">,</span>
-  <span class="n">stanag_5066_d_pdu</span> <span class="o">=</span> <span class="mi">237</span><span class="p">,</span>
-  <span class="n">juniper_atm_cemic</span> <span class="o">=</span> <span class="mi">238</span><span class="p">,</span>
-  <span class="n">nflog</span> <span class="o">=</span> <span class="mi">239</span><span class="p">,</span>
-  <span class="n">netanalyzer</span> <span class="o">=</span> <span class="mi">240</span><span class="p">,</span>
-  <span class="n">netanalyzer_transparent</span> <span class="o">=</span> <span class="mi">241</span><span class="p">,</span>
-  <span class="n">ipoib</span> <span class="o">=</span> <span class="mi">242</span><span class="p">,</span>
-  <span class="n">mpeg_2_ts</span> <span class="o">=</span> <span class="mi">243</span><span class="p">,</span>
-  <span class="n">ng40</span> <span class="o">=</span> <span class="mi">244</span><span class="p">,</span>
-  <span class="n">nfc_llcp</span> <span class="o">=</span> <span class="mi">245</span><span class="p">,</span>
-  <span class="n">pfsync</span> <span class="o">=</span> <span class="mi">246</span><span class="p">,</span>
-  <span class="n">infiniband</span> <span class="o">=</span> <span class="mi">247</span><span class="p">,</span>
-  <span class="n">sctp</span> <span class="o">=</span> <span class="mi">248</span><span class="p">,</span>
-  <span class="n">usbpcap</span> <span class="o">=</span> <span class="mi">249</span><span class="p">,</span>
-  <span class="n">rtac_serial</span> <span class="o">=</span> <span class="mi">250</span><span class="p">,</span>
-  <span class="n">bluetooth_le_ll</span> <span class="o">=</span> <span class="mi">251</span><span class="p">,</span>
-  <span class="n">wireshark_upper_pdu</span> <span class="o">=</span> <span class="mi">252</span><span class="p">,</span>
-  <span class="n">netlink</span> <span class="o">=</span> <span class="mi">253</span><span class="p">,</span>
-  <span class="n">bluetooth_linux_monitor</span> <span class="o">=</span> <span class="mi">254</span><span class="p">,</span>
-  <span class="n">bluetooth_bredr_bb</span> <span class="o">=</span> <span class="mi">255</span><span class="p">,</span>
-  <span class="n">bluetooth_le_ll_with_phdr</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span>
-  <span class="n">profibus_dl</span> <span class="o">=</span> <span class="mi">257</span><span class="p">,</span>
-  <span class="n">pktap</span> <span class="o">=</span> <span class="mi">258</span><span class="p">,</span>
-  <span class="n">epon</span> <span class="o">=</span> <span class="mi">259</span><span class="p">,</span>
-  <span class="n">ipmi_hpm_2</span> <span class="o">=</span> <span class="mi">260</span><span class="p">,</span>
-  <span class="n">zwave_r1_r2</span> <span class="o">=</span> <span class="mi">261</span><span class="p">,</span>
-  <span class="n">zwave_r3</span> <span class="o">=</span> <span class="mi">262</span><span class="p">,</span>
-  <span class="n">wattstopper_dlm</span> <span class="o">=</span> <span class="mi">263</span><span class="p">,</span>
-  <span class="n">iso_14443</span> <span class="o">=</span> <span class="mi">264</span><span class="p">,</span>
-  <span class="n">rds</span> <span class="o">=</span> <span class="mi">265</span><span class="p">,</span>
-  <span class="n">usb_darwin</span> <span class="o">=</span> <span class="mi">266</span><span class="p">,</span>
-  <span class="n">openflow</span> <span class="o">=</span> <span class="mi">267</span><span class="p">,</span>
-  <span class="n">sdlc</span> <span class="o">=</span> <span class="mi">268</span><span class="p">,</span>
-  <span class="n">ti_lln_sniffer</span> <span class="o">=</span> <span class="mi">269</span><span class="p">,</span>
-  <span class="n">loratap</span> <span class="o">=</span> <span class="mi">270</span><span class="p">,</span>
-  <span class="n">vsock</span> <span class="o">=</span> <span class="mi">271</span><span class="p">,</span>
-  <span class="n">nordic_ble</span> <span class="o">=</span> <span class="mi">272</span><span class="p">,</span>
-  <span class="n">docsis31_xra31</span> <span class="o">=</span> <span class="mi">273</span><span class="p">,</span>
-  <span class="n">ethernet_mpacket</span> <span class="o">=</span> <span class="mi">274</span><span class="p">,</span>
-  <span class="n">displayport_aux</span> <span class="o">=</span> <span class="mi">275</span><span class="p">,</span>
-  <span class="n">linux_sll2</span> <span class="o">=</span> <span class="mi">276</span><span class="p">,</span>
-  <span class="n">sercos_monitor</span> <span class="o">=</span> <span class="mi">277</span><span class="p">,</span>
-  <span class="n">openvizsla</span> <span class="o">=</span> <span class="mi">278</span><span class="p">,</span>
-  <span class="n">ebhscr</span> <span class="o">=</span> <span class="mi">279</span><span class="p">,</span>
-  <span class="n">vpp_dispatch</span> <span class="o">=</span> <span class="mi">280</span><span class="p">,</span>
-  <span class="n">dsa_tag_brcm</span> <span class="o">=</span> <span class="mi">281</span><span class="p">,</span>
-  <span class="n">dsa_tag_brcm_prepend</span> <span class="o">=</span> <span class="mi">282</span><span class="p">,</span>
-  <span class="n">ieee802_15_4_tap</span> <span class="o">=</span> <span class="mi">283</span><span class="p">,</span>
-  <span class="n">dsa_tag_dsa</span> <span class="o">=</span> <span class="mi">284</span><span class="p">,</span>
-  <span class="n">dsa_tag_edsa</span> <span class="o">=</span> <span class="mi">285</span><span class="p">,</span>
-  <span class="n">elee</span> <span class="o">=</span> <span class="mi">286</span><span class="p">,</span>
-  <span class="n">zwave_serial</span> <span class="o">=</span> <span class="mi">287</span><span class="p">,</span>
-  <span class="n">usb_2_0</span> <span class="o">=</span> <span class="mi">288</span><span class="p">,</span>
-  <span class="n">atsc_alp</span> <span class="o">=</span> <span class="mi">289</span><span class="p">,</span>
-  <span class="n">etw</span> <span class="o">=</span> <span class="mi">290</span><span class="p">,</span>
-  <span class="n">netanalyzer_ng</span> <span class="o">=</span> <span class="mi">291</span><span class="p">,</span>
-  <span class="n">zboss_ncp</span> <span class="o">=</span> <span class="mi">292</span><span class="p">,</span>
-  <span class="n">usb_2_0_low_speed</span> <span class="o">=</span> <span class="mi">293</span><span class="p">,</span>
-  <span class="n">usb_2_0_full_speed</span> <span class="o">=</span> <span class="mi">294</span><span class="p">,</span>
-  <span class="n">usb_2_0_high_speed</span> <span class="o">=</span> <span class="mi">295</span><span class="p">,</span>
-  <span class="n">auerswald_log</span> <span class="o">=</span> <span class="mi">296</span><span class="p">,</span>
-  <span class="n">zwave_tap</span> <span class="o">=</span> <span class="mi">297</span><span class="p">,</span>
-  <span class="n">silabs_debug_channel</span> <span class="o">=</span> <span class="mi">298</span><span class="p">,</span>
-  <span class="n">fira_uci</span> <span class="o">=</span> <span class="mi">299</span><span class="p">,</span>
+<span class="nv">Pcap</span><span class="p">.</span><span class="py">Linktype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">enum</span><span class="p">.</span><span class="py">Enum</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nv">null_linktype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ethernet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">exp_ethernet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ax25</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">pronet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">chaos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ieee802_5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">arcnet_bsd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">slip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ppp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">fddi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">redback_smartedge</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">32</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ppp_hdlc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ppp_ether</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">51</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">symantec_firewall</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">99</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">atm_rfc1483</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">raw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">101</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">c_hdlc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">104</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ieee802_11</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">105</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">atm_clip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">106</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">frelay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">107</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">loop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">108</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">enc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">109</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">netbsd_hdlc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">112</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">linux_sll</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">113</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ltalk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">114</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">econet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">115</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ipfilter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">116</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">pflog</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">117</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">cisco_ios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">118</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ieee802_11_prism</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">119</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">aironet_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">120</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ip_over_fc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">122</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">sunatm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">rio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">124</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">pci_exp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">125</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">aurora</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">126</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ieee802_11_radiotap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">127</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">tzsp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">128</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">arcnet_linux</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">129</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">juniper_mlppp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">130</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">juniper_mlfr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">131</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">juniper_es</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">132</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">juniper_ggsn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">133</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">juniper_mfr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">134</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">juniper_atm2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">135</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">juniper_services</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">136</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">juniper_atm1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">137</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">apple_ip_over_ieee1394</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">138</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">mtp2_with_phdr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">139</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">mtp2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">140</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">mtp3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">141</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">sccp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">142</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">docsis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">143</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">linux_irda</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">144</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ibm_sp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">145</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ibm_sn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">146</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">user0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">147</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">user1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">148</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">user2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">149</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">user3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">150</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">user4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">151</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">user5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">152</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">user6</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">153</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">user7</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">154</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">user8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">155</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">user9</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">156</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">user10</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">157</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">user11</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">158</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">user12</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">159</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">user13</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">160</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">user14</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">161</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">user15</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">162</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ieee802_11_avs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">163</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">juniper_monitor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">164</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">bacnet_ms_tp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">165</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ppp_pppd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">166</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">juniper_pppoe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">167</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">juniper_pppoe_atm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">168</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">gprs_llc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">169</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">gpf_t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">170</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">gpf_f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">171</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">gcom_t1e1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">172</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">gcom_serial</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">173</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">juniper_pic_peer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">174</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">erf_eth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">175</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">erf_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">176</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">linux_lapd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">177</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">juniper_ether</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">178</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">juniper_ppp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">179</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">juniper_frelay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">180</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">juniper_chdlc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">181</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">mfr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">182</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">juniper_vp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">183</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">a429</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">184</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">a653_icm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">185</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">usb_freebsd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">186</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">bluetooth_hci_h4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">187</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ieee802_16_mac_cps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">188</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">usb_linux</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">189</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">can20b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">190</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ieee802_15_4_linux</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">191</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ppi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">192</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ieee802_16_mac_cps_radio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">193</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">juniper_ism</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">194</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ieee802_15_4_withfcs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">195</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">sita</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">196</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">erf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">197</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">raif1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">198</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ipmb_kontron</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">199</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">juniper_st</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">bluetooth_hci_h4_with_phdr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">201</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ax25_kiss</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">202</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">lapd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">203</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ppp_with_dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">204</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">c_hdlc_with_dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">205</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">frelay_with_dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">206</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">lapb_with_dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">207</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ipmb_linux</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">209</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">flexray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">210</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">most</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">211</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">lin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">212</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">x2e_serial</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">213</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">x2e_xoraya</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">214</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ieee802_15_4_nonask_phy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">215</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">linux_evdev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">216</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">gsmtap_um</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">217</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">gsmtap_abis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">218</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">mpls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">219</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">usb_linux_mmapped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">220</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">dect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">221</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">aos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">222</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">wihart</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">223</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">fc_2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">224</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">fc_2_with_frame_delims</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">225</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ipnet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">226</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">can_socketcan</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">227</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ipv4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">228</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ipv6</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">229</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ieee802_15_4_nofcs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">230</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">dbus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">231</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">juniper_vs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">232</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">juniper_srx_e2e</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">233</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">juniper_fibrechannel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">234</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">dvb_ci</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">235</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">mux27010</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">236</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">stanag_5066_d_pdu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">237</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">juniper_atm_cemic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">238</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">nflog</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">239</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">netanalyzer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">240</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">netanalyzer_transparent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">241</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ipoib</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">242</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">mpeg_2_ts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">243</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ng40</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">244</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">nfc_llcp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">245</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">pfsync</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">246</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">infiniband</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">247</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">sctp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">248</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">usbpcap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">249</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">rtac_serial</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">250</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">bluetooth_le_ll</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">251</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">wireshark_upper_pdu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">252</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">netlink</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">253</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">bluetooth_linux_monitor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">254</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">bluetooth_bredr_bb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">bluetooth_le_ll_with_phdr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">256</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">profibus_dl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">257</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">pktap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">258</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">epon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">259</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ipmi_hpm_2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">260</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">zwave_r1_r2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">261</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">zwave_r3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">262</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">wattstopper_dlm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">263</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">iso_14443</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">264</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">rds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">265</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">usb_darwin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">266</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">openflow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">267</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">sdlc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">268</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ti_lln_sniffer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">269</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">loratap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">270</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">vsock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">271</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">nordic_ble</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">272</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">docsis31_xra31</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">273</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ethernet_mpacket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">274</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">displayport_aux</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">275</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">linux_sll2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">276</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">sercos_monitor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">277</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">openvizsla</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">278</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ebhscr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">279</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">vpp_dispatch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">280</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">dsa_tag_brcm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">281</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">dsa_tag_brcm_prepend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">282</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">ieee802_15_4_tap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">283</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">dsa_tag_dsa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">284</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">dsa_tag_edsa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">285</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">elee</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">286</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">zwave_serial</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">287</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">usb_2_0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">288</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">atsc_alp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">289</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">etw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">290</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">netanalyzer_ng</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">291</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">zboss_ncp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">292</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">usb_2_0_low_speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">293</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">usb_2_0_full_speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">294</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">usb_2_0_high_speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">295</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">auerswald_log</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">296</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">zwave_tap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">297</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">silabs_debug_channel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">298</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">fira_uci</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">299</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="kr">function</span> <span class="nc">Pcap</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">Pcap</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
-<span class="kr">function</span> <span class="nc">Pcap</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">hdr</span> <span class="o">=</span> <span class="n">Pcap</span><span class="p">.</span><span class="n">Header</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">packets</span> <span class="o">=</span> <span class="p">{}</span>
-  <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-  <span class="kr">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">()</span> <span class="kr">do</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">packets</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Pcap</span><span class="p">.</span><span class="n">Packet</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
-  <span class="kr">end</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">Pcap</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">hdr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Pcap</span><span class="p">.</span><span class="nf">Header</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">packets</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="kr">while</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">is_eof</span><span class="p">()</span><span class="w"> </span><span class="kr">do</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">packets</span><span class="p">[</span><span class="nv">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Pcap</span><span class="p">.</span><span class="nf">Packet</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">    </span><span class="nv">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">  </span><span class="kr">end</span>
 <span class="kr">end</span>
 
 
 <span class="c1">-- </span>
 <span class="c1">-- See also: Source (https://wiki.wireshark.org/Development/LibpcapFileFormat#Global_Header)</span>
-<span class="n">Pcap</span><span class="p">.</span><span class="n">Header</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+<span class="nv">Pcap</span><span class="p">.</span><span class="py">Header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
-<span class="kr">function</span> <span class="nc">Pcap</span><span class="p">.</span><span class="nc">Header</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">Pcap</span><span class="p">.</span><span class="nc">Header</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
-<span class="kr">function</span> <span class="nc">Pcap</span><span class="p">.</span><span class="nc">Header</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">magic_number</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">magic_number</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\212\195\178\161</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
-    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\212\195\178\161</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">magic_number</span><span class="p">)</span>
-  <span class="kr">end</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">version_major</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">version_major</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="kr">then</span>
-    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="mi">2</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">version_major</span><span class="p">)</span>
-  <span class="kr">end</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">version_minor</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">thiszone</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_s4le</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">sigfigs</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">snaplen</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">network</span> <span class="o">=</span> <span class="n">Pcap</span><span class="p">.</span><span class="n">Linktype</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">())</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">Pcap</span><span class="p">.</span><span class="nc">Header</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">magic_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">magic_number</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\212\195\178\161</span><span class="s2">&quot;</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span><span class="w"> </span><span class="o">..</span><span class="w">  </span><span class="s2">&quot;</span><span class="se">\212\195\178\161</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;, but got &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">magic_number</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">version_major</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2le</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">version_major</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span><span class="w"> </span><span class="o">..</span><span class="w">  </span><span class="mi">2</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;, but got &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">version_major</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">version_minor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2le</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">thiszone</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_s4le</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">sigfigs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">snaplen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">network</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Pcap</span><span class="p">.</span><span class="nf">Linktype</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">())</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
@@ -558,32 +558,32 @@ produced by tools like <a href="https://www.tcpdump.org/">tcpdump</a> or
 
 <span class="c1">-- </span>
 <span class="c1">-- See also: Source (https://wiki.wireshark.org/Development/LibpcapFileFormat#Record_.28Packet.29_Header)</span>
-<span class="n">Pcap</span><span class="p">.</span><span class="n">Packet</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+<span class="nv">Pcap</span><span class="p">.</span><span class="py">Packet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
-<span class="kr">function</span> <span class="nc">Pcap</span><span class="p">.</span><span class="nc">Packet</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">Pcap</span><span class="p">.</span><span class="nc">Packet</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
-<span class="kr">function</span> <span class="nc">Pcap</span><span class="p">.</span><span class="nc">Packet</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">ts_sec</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">ts_usec</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">incl_len</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">orig_len</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
-  <span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">hdr</span><span class="p">.</span><span class="n">network</span>
-  <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Pcap</span><span class="p">.</span><span class="n">Linktype</span><span class="p">.</span><span class="n">ppi</span> <span class="kr">then</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">incl_len</span> <span class="o">&lt;</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">hdr</span><span class="p">.</span><span class="n">snaplen</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">incl_len</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">hdr</span><span class="p">.</span><span class="n">snaplen</span><span class="p">)))</span>
-    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span><span class="p">))</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">PacketPpi</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
-  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Pcap</span><span class="p">.</span><span class="n">Linktype</span><span class="p">.</span><span class="n">ethernet</span> <span class="kr">then</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">incl_len</span> <span class="o">&lt;</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">hdr</span><span class="p">.</span><span class="n">snaplen</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">incl_len</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">hdr</span><span class="p">.</span><span class="n">snaplen</span><span class="p">)))</span>
-    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span><span class="p">))</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">EthernetFrame</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
-  <span class="kr">else</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">utils</span><span class="p">.</span><span class="n">box_unwrap</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">incl_len</span> <span class="o">&lt;</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">hdr</span><span class="p">.</span><span class="n">snaplen</span><span class="p">)</span> <span class="ow">and</span> <span class="n">utils</span><span class="p">.</span><span class="n">box_wrap</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">incl_len</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">hdr</span><span class="p">.</span><span class="n">snaplen</span><span class="p">)))</span>
-  <span class="kr">end</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">Pcap</span><span class="p">.</span><span class="nc">Packet</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">ts_sec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">ts_usec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">incl_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">orig_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
+<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">hdr</span><span class="p">.</span><span class="py">network</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">Pcap</span><span class="p">.</span><span class="py">Linktype</span><span class="p">.</span><span class="py">ppi</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">incl_len</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">hdr</span><span class="p">.</span><span class="py">snaplen</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">incl_len</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">hdr</span><span class="p">.</span><span class="py">snaplen</span><span class="p">)))</span>
+<span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="p">))</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">PacketPpi</span><span class="p">(</span><span class="nv">_io</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">Pcap</span><span class="p">.</span><span class="py">Linktype</span><span class="p">.</span><span class="py">ethernet</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">incl_len</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">hdr</span><span class="p">.</span><span class="py">snaplen</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">incl_len</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">hdr</span><span class="p">.</span><span class="py">snaplen</span><span class="p">)))</span>
+<span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="p">))</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">EthernetFrame</span><span class="p">(</span><span class="nv">_io</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">else</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">incl_len</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">hdr</span><span class="p">.</span><span class="py">snaplen</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">incl_len</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">hdr</span><span class="p">.</span><span class="py">snaplen</span><span class="p">)))</span>
+<span class="w">  </span><span class="kr">end</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>

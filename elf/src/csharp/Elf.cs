@@ -616,29 +616,29 @@ namespace Kaitai
                 }
                 switch (M_Root.Bits) {
                 case Elf.Bits.B32: {
-                    _programHeaderOffset = m_io.ReadU4le();
+                    _ofsProgramHeaders = m_io.ReadU4le();
                     break;
                 }
                 case Elf.Bits.B64: {
-                    _programHeaderOffset = m_io.ReadU8le();
+                    _ofsProgramHeaders = m_io.ReadU8le();
                     break;
                 }
                 }
                 switch (M_Root.Bits) {
                 case Elf.Bits.B32: {
-                    _sectionHeaderOffset = m_io.ReadU4le();
+                    _ofsSectionHeaders = m_io.ReadU4le();
                     break;
                 }
                 case Elf.Bits.B64: {
-                    _sectionHeaderOffset = m_io.ReadU8le();
+                    _ofsSectionHeaders = m_io.ReadU8le();
                     break;
                 }
                 }
                 _flags = m_io.ReadBytes(4);
                 _eEhsize = m_io.ReadU2le();
-                _lenProgramHeaders = m_io.ReadU2le();
+                _programHeaderSize = m_io.ReadU2le();
                 _numProgramHeaders = m_io.ReadU2le();
-                _lenSectionHeaders = m_io.ReadU2le();
+                _sectionHeaderSize = m_io.ReadU2le();
                 _numSectionHeaders = m_io.ReadU2le();
                 _sectionNamesIdx = m_io.ReadU2le();
             }
@@ -659,29 +659,29 @@ namespace Kaitai
                 }
                 switch (M_Root.Bits) {
                 case Elf.Bits.B32: {
-                    _programHeaderOffset = m_io.ReadU4be();
+                    _ofsProgramHeaders = m_io.ReadU4be();
                     break;
                 }
                 case Elf.Bits.B64: {
-                    _programHeaderOffset = m_io.ReadU8be();
+                    _ofsProgramHeaders = m_io.ReadU8be();
                     break;
                 }
                 }
                 switch (M_Root.Bits) {
                 case Elf.Bits.B32: {
-                    _sectionHeaderOffset = m_io.ReadU4be();
+                    _ofsSectionHeaders = m_io.ReadU4be();
                     break;
                 }
                 case Elf.Bits.B64: {
-                    _sectionHeaderOffset = m_io.ReadU8be();
+                    _ofsSectionHeaders = m_io.ReadU8be();
                     break;
                 }
                 }
                 _flags = m_io.ReadBytes(4);
                 _eEhsize = m_io.ReadU2be();
-                _lenProgramHeaders = m_io.ReadU2be();
+                _programHeaderSize = m_io.ReadU2be();
                 _numProgramHeaders = m_io.ReadU2be();
-                _lenSectionHeaders = m_io.ReadU2be();
+                _sectionHeaderSize = m_io.ReadU2be();
                 _numSectionHeaders = m_io.ReadU2be();
                 _sectionNamesIdx = m_io.ReadU2be();
             }
@@ -2191,13 +2191,13 @@ namespace Kaitai
                     if (f_programHeaders)
                         return _programHeaders;
                     long _pos = m_io.Pos;
-                    m_io.Seek(ProgramHeaderOffset);
+                    m_io.Seek(OfsProgramHeaders);
                     if (m_isLe == true) {
                         __raw_programHeaders = new List<byte[]>();
                         _programHeaders = new List<ProgramHeader>();
                         for (var i = 0; i < NumProgramHeaders; i++)
                         {
-                            __raw_programHeaders.Add(m_io.ReadBytes(LenProgramHeaders));
+                            __raw_programHeaders.Add(m_io.ReadBytes(ProgramHeaderSize));
                             var io___raw_programHeaders = new KaitaiStream(__raw_programHeaders[__raw_programHeaders.Count - 1]);
                             _programHeaders.Add(new ProgramHeader(io___raw_programHeaders, this, m_root, m_isLe));
                         }
@@ -2206,7 +2206,7 @@ namespace Kaitai
                         _programHeaders = new List<ProgramHeader>();
                         for (var i = 0; i < NumProgramHeaders; i++)
                         {
-                            __raw_programHeaders.Add(m_io.ReadBytes(LenProgramHeaders));
+                            __raw_programHeaders.Add(m_io.ReadBytes(ProgramHeaderSize));
                             var io___raw_programHeaders = new KaitaiStream(__raw_programHeaders[__raw_programHeaders.Count - 1]);
                             _programHeaders.Add(new ProgramHeader(io___raw_programHeaders, this, m_root, m_isLe));
                         }
@@ -2225,13 +2225,13 @@ namespace Kaitai
                     if (f_sectionHeaders)
                         return _sectionHeaders;
                     long _pos = m_io.Pos;
-                    m_io.Seek(SectionHeaderOffset);
+                    m_io.Seek(OfsSectionHeaders);
                     if (m_isLe == true) {
                         __raw_sectionHeaders = new List<byte[]>();
                         _sectionHeaders = new List<SectionHeader>();
                         for (var i = 0; i < NumSectionHeaders; i++)
                         {
-                            __raw_sectionHeaders.Add(m_io.ReadBytes(LenSectionHeaders));
+                            __raw_sectionHeaders.Add(m_io.ReadBytes(SectionHeaderSize));
                             var io___raw_sectionHeaders = new KaitaiStream(__raw_sectionHeaders[__raw_sectionHeaders.Count - 1]);
                             _sectionHeaders.Add(new SectionHeader(io___raw_sectionHeaders, this, m_root, m_isLe));
                         }
@@ -2240,7 +2240,7 @@ namespace Kaitai
                         _sectionHeaders = new List<SectionHeader>();
                         for (var i = 0; i < NumSectionHeaders; i++)
                         {
-                            __raw_sectionHeaders.Add(m_io.ReadBytes(LenSectionHeaders));
+                            __raw_sectionHeaders.Add(m_io.ReadBytes(SectionHeaderSize));
                             var io___raw_sectionHeaders = new KaitaiStream(__raw_sectionHeaders[__raw_sectionHeaders.Count - 1]);
                             _sectionHeaders.Add(new SectionHeader(io___raw_sectionHeaders, this, m_root, m_isLe));
                         }
@@ -2280,13 +2280,13 @@ namespace Kaitai
             private Machine _machine;
             private uint _eVersion;
             private ulong _entryPoint;
-            private ulong _programHeaderOffset;
-            private ulong _sectionHeaderOffset;
+            private ulong _ofsProgramHeaders;
+            private ulong _ofsSectionHeaders;
             private byte[] _flags;
             private ushort _eEhsize;
-            private ushort _lenProgramHeaders;
+            private ushort _programHeaderSize;
             private ushort _numProgramHeaders;
-            private ushort _lenSectionHeaders;
+            private ushort _sectionHeaderSize;
             private ushort _numSectionHeaders;
             private ushort _sectionNamesIdx;
             private Elf m_root;
@@ -2298,13 +2298,13 @@ namespace Kaitai
             public Machine Machine { get { return _machine; } }
             public uint EVersion { get { return _eVersion; } }
             public ulong EntryPoint { get { return _entryPoint; } }
-            public ulong ProgramHeaderOffset { get { return _programHeaderOffset; } }
-            public ulong SectionHeaderOffset { get { return _sectionHeaderOffset; } }
+            public ulong OfsProgramHeaders { get { return _ofsProgramHeaders; } }
+            public ulong OfsSectionHeaders { get { return _ofsSectionHeaders; } }
             public byte[] Flags { get { return _flags; } }
             public ushort EEhsize { get { return _eEhsize; } }
-            public ushort LenProgramHeaders { get { return _lenProgramHeaders; } }
+            public ushort ProgramHeaderSize { get { return _programHeaderSize; } }
             public ushort NumProgramHeaders { get { return _numProgramHeaders; } }
-            public ushort LenSectionHeaders { get { return _lenSectionHeaders; } }
+            public ushort SectionHeaderSize { get { return _sectionHeaderSize; } }
             public ushort NumSectionHeaders { get { return _numSectionHeaders; } }
             public ushort SectionNamesIdx { get { return _sectionNamesIdx; } }
             public Elf M_Root { get { return m_root; } }

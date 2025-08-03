@@ -281,11 +281,11 @@ and choose <strong>Brushes</strong> to see the recognized Brush Folders or to ad
 <span class="c1">--</span>
 <span class="c1">-- This file is compatible with Lua 5.3</span>
 
-<span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="kd">local</span><span class="w"> </span><span class="nv">class</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
 <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
-<span class="kd">local</span> <span class="n">enum</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;enum&quot;</span><span class="p">)</span>
-<span class="kd">local</span> <span class="n">stringstream</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_stream&quot;</span><span class="p">)</span>
-<span class="kd">local</span> <span class="n">str_decode</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_decode&quot;</span><span class="p">)</span>
+<span class="kd">local</span><span class="w"> </span><span class="nv">enum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">&quot;enum&quot;</span><span class="p">)</span>
+<span class="kd">local</span><span class="w"> </span><span class="nv">stringstream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_stream&quot;</span><span class="p">)</span>
+<span class="kd">local</span><span class="w"> </span><span class="nv">str_decode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_decode&quot;</span><span class="p">)</span>
 
 <span class="c1">-- </span>
 <span class="c1">-- GIMP brush format is native to the GIMP image editor for storing a brush or a texture.</span>
@@ -299,86 +299,86 @@ and choose <strong>Brushes</strong> to see the recognized Brush Folders or to ad
 <span class="c1">-- select **Edit** &gt; **Preferences** in the menu bar, expand the **Folders** section</span>
 <span class="c1">-- and choose **Brushes** to see the recognized Brush Folders or to add new ones.</span>
 <span class="c1">-- See also: Source (https://github.com/GNOME/gimp/blob/441631322b/devel-docs/gbr.txt)</span>
-<span class="n">GimpBrush</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+<span class="nv">GimpBrush</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
-<span class="n">GimpBrush</span><span class="p">.</span><span class="n">ColorDepth</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
-  <span class="n">grayscale</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-  <span class="n">rgba</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+<span class="nv">GimpBrush</span><span class="p">.</span><span class="py">ColorDepth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">enum</span><span class="p">.</span><span class="py">Enum</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nv">grayscale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">rgba</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="kr">function</span> <span class="nc">GimpBrush</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">GimpBrush</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
-<span class="kr">function</span> <span class="nc">GimpBrush</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">len_header</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_raw_header</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">len_header</span> <span class="o">-</span> <span class="mi">4</span><span class="p">))</span>
-  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_header</span><span class="p">))</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">GimpBrush</span><span class="p">.</span><span class="n">Header</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">GimpBrush</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">len_header</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">))</span>
+<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_header</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">GimpBrush</span><span class="p">.</span><span class="nf">Header</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
 <span class="kr">end</span>
 
-<span class="n">GimpBrush</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">len_body</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">GimpBrush</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">len_body</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_len_body</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_len_body</span>
-  <span class="kr">end</span>
+<span class="nv">GimpBrush</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">len_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">GimpBrush</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">len_body</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_body</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_body</span>
+<span class="w">  </span><span class="kr">end</span>
 
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_len_body</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">width</span> <span class="o">*</span> <span class="n">self</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">height</span><span class="p">)</span> <span class="o">*</span> <span class="n">self</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">bytes_per_pixel</span><span class="p">.</span><span class="n">value</span><span class="p">)</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_len_body</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">header</span><span class="p">.</span><span class="py">width</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">header</span><span class="p">.</span><span class="py">height</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">header</span><span class="p">.</span><span class="py">bytes_per_pixel</span><span class="p">.</span><span class="py">value</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_body</span>
 <span class="kr">end</span>
 
-<span class="n">GimpBrush</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">GimpBrush</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">body</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span>
-  <span class="kr">end</span>
+<span class="nv">GimpBrush</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">GimpBrush</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">body</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_body</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_body</span>
+<span class="w">  </span><span class="kr">end</span>
 
-  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_header</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_body</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span>
+<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">pos</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_header</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_body</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">_pos</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_body</span>
 <span class="kr">end</span>
 
 
-<span class="n">GimpBrush</span><span class="p">.</span><span class="n">Header</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+<span class="nv">GimpBrush</span><span class="p">.</span><span class="py">Header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
-<span class="kr">function</span> <span class="nc">GimpBrush</span><span class="p">.</span><span class="nc">Header</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">GimpBrush</span><span class="p">.</span><span class="nc">Header</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
-<span class="kr">function</span> <span class="nc">GimpBrush</span><span class="p">.</span><span class="nc">Header</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">version</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="kr">then</span>
-    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="mi">2</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">version</span><span class="p">)</span>
-  <span class="kr">end</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">width</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="kr">then</span>
-    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;ValidationLessThanError&quot;</span><span class="p">)</span>
-  <span class="kr">end</span>
-  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">width</span> <span class="o">&lt;=</span> <span class="mi">10000</span><span class="p">)</span> <span class="kr">then</span>
-    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;ValidationGreaterThanError&quot;</span><span class="p">)</span>
-  <span class="kr">end</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">height</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="kr">then</span>
-    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;ValidationLessThanError&quot;</span><span class="p">)</span>
-  <span class="kr">end</span>
-  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">height</span> <span class="o">&lt;=</span> <span class="mi">10000</span><span class="p">)</span> <span class="kr">then</span>
-    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;ValidationGreaterThanError&quot;</span><span class="p">)</span>
-  <span class="kr">end</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">bytes_per_pixel</span> <span class="o">=</span> <span class="n">GimpBrush</span><span class="p">.</span><span class="n">ColorDepth</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">())</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\071\073\077\080</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
-    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\071\073\077\080</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">magic</span><span class="p">)</span>
-  <span class="kr">end</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">spacing</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">brush_name</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">bytes_terminate</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes_full</span><span class="p">(),</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">GimpBrush</span><span class="p">.</span><span class="nc">Header</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">version</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span><span class="w"> </span><span class="o">..</span><span class="w">  </span><span class="mi">2</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;, but got &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">version</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">width</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;ValidationLessThanError&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">width</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">10000</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;ValidationGreaterThanError&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">height</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;ValidationLessThanError&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">height</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">10000</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;ValidationGreaterThanError&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">bytes_per_pixel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">GimpBrush</span><span class="p">.</span><span class="nf">ColorDepth</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">())</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\071\073\077\080</span><span class="s2">&quot;</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span><span class="w"> </span><span class="o">..</span><span class="w">  </span><span class="s2">&quot;</span><span class="se">\071\073\077\080</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;, but got &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">spacing</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">brush_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">str_decode</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="nv">KaitaiStream</span><span class="p">.</span><span class="nf">bytes_terminate</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes_full</span><span class="p">(),</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">),</span><span class="w"> </span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
@@ -390,113 +390,113 @@ and choose <strong>Brushes</strong> to see the recognized Brush Folders or to ad
 <span class="c1">-- </span>
 <span class="c1">-- Default spacing to be used for brush. Percentage of brush width.</span>
 
-<span class="n">GimpBrush</span><span class="p">.</span><span class="n">Bitmap</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+<span class="nv">GimpBrush</span><span class="p">.</span><span class="py">Bitmap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
-<span class="kr">function</span> <span class="nc">GimpBrush</span><span class="p">.</span><span class="nc">Bitmap</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">GimpBrush</span><span class="p">.</span><span class="nc">Bitmap</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
-<span class="kr">function</span> <span class="nc">GimpBrush</span><span class="p">.</span><span class="nc">Bitmap</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">rows</span> <span class="o">=</span> <span class="p">{}</span>
-  <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">height</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">rows</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">GimpBrush</span><span class="p">.</span><span class="n">Row</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-  <span class="kr">end</span>
-<span class="kr">end</span>
-
-
-<span class="n">GimpBrush</span><span class="p">.</span><span class="n">Row</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span> <span class="nc">GimpBrush</span><span class="p">.</span><span class="nc">Row</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span> <span class="nc">GimpBrush</span><span class="p">.</span><span class="nc">Row</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">pixels</span> <span class="o">=</span> <span class="p">{}</span>
-  <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">width</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
-    <span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">bytes_per_pixel</span>
-    <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">GimpBrush</span><span class="p">.</span><span class="n">ColorDepth</span><span class="p">.</span><span class="n">grayscale</span> <span class="kr">then</span>
-      <span class="n">self</span><span class="p">.</span><span class="n">pixels</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">GimpBrush</span><span class="p">.</span><span class="n">Row</span><span class="p">.</span><span class="n">PixelGray</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-    <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">GimpBrush</span><span class="p">.</span><span class="n">ColorDepth</span><span class="p">.</span><span class="n">rgba</span> <span class="kr">then</span>
-      <span class="n">self</span><span class="p">.</span><span class="n">pixels</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">GimpBrush</span><span class="p">.</span><span class="n">Row</span><span class="p">.</span><span class="n">PixelRgba</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-    <span class="kr">end</span>
-  <span class="kr">end</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">GimpBrush</span><span class="p">.</span><span class="nc">Bitmap</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">rows</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="w">  </span><span class="kr">for</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">header</span><span class="p">.</span><span class="py">height</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="kr">do</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">rows</span><span class="p">[</span><span class="nv">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">GimpBrush</span><span class="p">.</span><span class="nf">Row</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
 <span class="kr">end</span>
 
 
-<span class="n">GimpBrush</span><span class="p">.</span><span class="n">Row</span><span class="p">.</span><span class="n">PixelGray</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+<span class="nv">GimpBrush</span><span class="p">.</span><span class="py">Row</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
-<span class="kr">function</span> <span class="nc">GimpBrush</span><span class="p">.</span><span class="nc">Row</span><span class="p">.</span><span class="nc">PixelGray</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">GimpBrush</span><span class="p">.</span><span class="nc">Row</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
-<span class="kr">function</span> <span class="nc">GimpBrush</span><span class="p">.</span><span class="nc">Row</span><span class="p">.</span><span class="nc">PixelGray</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">gray</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="n">GimpBrush</span><span class="p">.</span><span class="n">Row</span><span class="p">.</span><span class="n">PixelGray</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">red</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">GimpBrush</span><span class="p">.</span><span class="nc">Row</span><span class="p">.</span><span class="nc">PixelGray</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">red</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_red</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_red</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_red</span> <span class="o">=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_red</span>
-<span class="kr">end</span>
-
-<span class="n">GimpBrush</span><span class="p">.</span><span class="n">Row</span><span class="p">.</span><span class="n">PixelGray</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">green</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">GimpBrush</span><span class="p">.</span><span class="nc">Row</span><span class="p">.</span><span class="nc">PixelGray</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">green</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_green</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_green</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_green</span> <span class="o">=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_green</span>
-<span class="kr">end</span>
-
-<span class="n">GimpBrush</span><span class="p">.</span><span class="n">Row</span><span class="p">.</span><span class="n">PixelGray</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">blue</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">GimpBrush</span><span class="p">.</span><span class="nc">Row</span><span class="p">.</span><span class="nc">PixelGray</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">blue</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_blue</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_blue</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_blue</span> <span class="o">=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_blue</span>
-<span class="kr">end</span>
-
-<span class="n">GimpBrush</span><span class="p">.</span><span class="n">Row</span><span class="p">.</span><span class="n">PixelGray</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">GimpBrush</span><span class="p">.</span><span class="nc">Row</span><span class="p">.</span><span class="nc">PixelGray</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">alpha</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_alpha</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_alpha</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_alpha</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">gray</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_alpha</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">GimpBrush</span><span class="p">.</span><span class="nc">Row</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">pixels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="w">  </span><span class="kr">for</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">header</span><span class="p">.</span><span class="py">width</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="kr">do</span>
+<span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">header</span><span class="p">.</span><span class="py">bytes_per_pixel</span>
+<span class="w">    </span><span class="kr">if</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">GimpBrush</span><span class="p">.</span><span class="py">ColorDepth</span><span class="p">.</span><span class="py">grayscale</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">      </span><span class="nv">self</span><span class="p">.</span><span class="py">pixels</span><span class="p">[</span><span class="nv">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">GimpBrush</span><span class="p">.</span><span class="py">Row</span><span class="p">.</span><span class="nf">PixelGray</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">    </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">GimpBrush</span><span class="p">.</span><span class="py">ColorDepth</span><span class="p">.</span><span class="py">rgba</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">      </span><span class="nv">self</span><span class="p">.</span><span class="py">pixels</span><span class="p">[</span><span class="nv">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">GimpBrush</span><span class="p">.</span><span class="py">Row</span><span class="p">.</span><span class="nf">PixelRgba</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">    </span><span class="kr">end</span>
+<span class="w">  </span><span class="kr">end</span>
 <span class="kr">end</span>
 
 
-<span class="n">GimpBrush</span><span class="p">.</span><span class="n">Row</span><span class="p">.</span><span class="n">PixelRgba</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+<span class="nv">GimpBrush</span><span class="p">.</span><span class="py">Row</span><span class="p">.</span><span class="py">PixelGray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
-<span class="kr">function</span> <span class="nc">GimpBrush</span><span class="p">.</span><span class="nc">Row</span><span class="p">.</span><span class="nc">PixelRgba</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">GimpBrush</span><span class="p">.</span><span class="nc">Row</span><span class="p">.</span><span class="nc">PixelGray</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
-<span class="kr">function</span> <span class="nc">GimpBrush</span><span class="p">.</span><span class="nc">Row</span><span class="p">.</span><span class="nc">PixelRgba</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">red</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">green</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">blue</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">GimpBrush</span><span class="p">.</span><span class="nc">Row</span><span class="p">.</span><span class="nc">PixelGray</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">gray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="nv">GimpBrush</span><span class="p">.</span><span class="py">Row</span><span class="p">.</span><span class="py">PixelGray</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">red</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">GimpBrush</span><span class="p">.</span><span class="nc">Row</span><span class="p">.</span><span class="nc">PixelGray</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">red</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_red</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_red</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_red</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_red</span>
+<span class="kr">end</span>
+
+<span class="nv">GimpBrush</span><span class="p">.</span><span class="py">Row</span><span class="p">.</span><span class="py">PixelGray</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">green</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">GimpBrush</span><span class="p">.</span><span class="nc">Row</span><span class="p">.</span><span class="nc">PixelGray</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">green</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_green</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_green</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_green</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_green</span>
+<span class="kr">end</span>
+
+<span class="nv">GimpBrush</span><span class="p">.</span><span class="py">Row</span><span class="p">.</span><span class="py">PixelGray</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">blue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">GimpBrush</span><span class="p">.</span><span class="nc">Row</span><span class="p">.</span><span class="nc">PixelGray</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">blue</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_blue</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_blue</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_blue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_blue</span>
+<span class="kr">end</span>
+
+<span class="nv">GimpBrush</span><span class="p">.</span><span class="py">Row</span><span class="p">.</span><span class="py">PixelGray</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">GimpBrush</span><span class="p">.</span><span class="nc">Row</span><span class="p">.</span><span class="nc">PixelGray</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">alpha</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_alpha</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_alpha</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">gray</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_alpha</span>
+<span class="kr">end</span>
+
+
+<span class="nv">GimpBrush</span><span class="p">.</span><span class="py">Row</span><span class="p">.</span><span class="py">PixelRgba</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">GimpBrush</span><span class="p">.</span><span class="nc">Row</span><span class="p">.</span><span class="nc">PixelRgba</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">GimpBrush</span><span class="p">.</span><span class="nc">Row</span><span class="p">.</span><span class="nc">PixelRgba</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">red</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">green</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">blue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
 <span class="kr">end</span>
 </pre></div>
 

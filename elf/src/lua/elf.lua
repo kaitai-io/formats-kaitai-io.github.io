@@ -649,21 +649,21 @@ function Elf.EndianElf:_read_le()
   end
   local _on = self._root.bits
   if _on == Elf.Bits.b32 then
-    self.program_header_offset = self._io:read_u4le()
+    self.ofs_program_headers = self._io:read_u4le()
   elseif _on == Elf.Bits.b64 then
-    self.program_header_offset = self._io:read_u8le()
+    self.ofs_program_headers = self._io:read_u8le()
   end
   local _on = self._root.bits
   if _on == Elf.Bits.b32 then
-    self.section_header_offset = self._io:read_u4le()
+    self.ofs_section_headers = self._io:read_u4le()
   elseif _on == Elf.Bits.b64 then
-    self.section_header_offset = self._io:read_u8le()
+    self.ofs_section_headers = self._io:read_u8le()
   end
   self.flags = self._io:read_bytes(4)
   self.e_ehsize = self._io:read_u2le()
-  self.len_program_headers = self._io:read_u2le()
+  self.program_header_size = self._io:read_u2le()
   self.num_program_headers = self._io:read_u2le()
-  self.len_section_headers = self._io:read_u2le()
+  self.section_header_size = self._io:read_u2le()
   self.num_section_headers = self._io:read_u2le()
   self.section_names_idx = self._io:read_u2le()
 end
@@ -680,21 +680,21 @@ function Elf.EndianElf:_read_be()
   end
   local _on = self._root.bits
   if _on == Elf.Bits.b32 then
-    self.program_header_offset = self._io:read_u4be()
+    self.ofs_program_headers = self._io:read_u4be()
   elseif _on == Elf.Bits.b64 then
-    self.program_header_offset = self._io:read_u8be()
+    self.ofs_program_headers = self._io:read_u8be()
   end
   local _on = self._root.bits
   if _on == Elf.Bits.b32 then
-    self.section_header_offset = self._io:read_u4be()
+    self.ofs_section_headers = self._io:read_u4be()
   elseif _on == Elf.Bits.b64 then
-    self.section_header_offset = self._io:read_u8be()
+    self.ofs_section_headers = self._io:read_u8be()
   end
   self.flags = self._io:read_bytes(4)
   self.e_ehsize = self._io:read_u2be()
-  self.len_program_headers = self._io:read_u2be()
+  self.program_header_size = self._io:read_u2be()
   self.num_program_headers = self._io:read_u2be()
-  self.len_section_headers = self._io:read_u2be()
+  self.section_header_size = self._io:read_u2be()
   self.num_section_headers = self._io:read_u2be()
   self.section_names_idx = self._io:read_u2be()
 end
@@ -706,12 +706,12 @@ function Elf.EndianElf.property.program_headers:get()
   end
 
   local _pos = self._io:pos()
-  self._io:seek(self.program_header_offset)
+  self._io:seek(self.ofs_program_headers)
   if self._is_le then
     self._raw__m_program_headers = {}
     self._m_program_headers = {}
     for i = 0, self.num_program_headers - 1 do
-      self._raw__m_program_headers[i + 1] = self._io:read_bytes(self.len_program_headers)
+      self._raw__m_program_headers[i + 1] = self._io:read_bytes(self.program_header_size)
       local _io = KaitaiStream(stringstream(self._raw__m_program_headers[i + 1]))
       self._m_program_headers[i + 1] = Elf.EndianElf.ProgramHeader(_io, self, self._root, self._is_le)
     end
@@ -719,7 +719,7 @@ function Elf.EndianElf.property.program_headers:get()
     self._raw__m_program_headers = {}
     self._m_program_headers = {}
     for i = 0, self.num_program_headers - 1 do
-      self._raw__m_program_headers[i + 1] = self._io:read_bytes(self.len_program_headers)
+      self._raw__m_program_headers[i + 1] = self._io:read_bytes(self.program_header_size)
       local _io = KaitaiStream(stringstream(self._raw__m_program_headers[i + 1]))
       self._m_program_headers[i + 1] = Elf.EndianElf.ProgramHeader(_io, self, self._root, self._is_le)
     end
@@ -735,12 +735,12 @@ function Elf.EndianElf.property.section_headers:get()
   end
 
   local _pos = self._io:pos()
-  self._io:seek(self.section_header_offset)
+  self._io:seek(self.ofs_section_headers)
   if self._is_le then
     self._raw__m_section_headers = {}
     self._m_section_headers = {}
     for i = 0, self.num_section_headers - 1 do
-      self._raw__m_section_headers[i + 1] = self._io:read_bytes(self.len_section_headers)
+      self._raw__m_section_headers[i + 1] = self._io:read_bytes(self.section_header_size)
       local _io = KaitaiStream(stringstream(self._raw__m_section_headers[i + 1]))
       self._m_section_headers[i + 1] = Elf.EndianElf.SectionHeader(_io, self, self._root, self._is_le)
     end
@@ -748,7 +748,7 @@ function Elf.EndianElf.property.section_headers:get()
     self._raw__m_section_headers = {}
     self._m_section_headers = {}
     for i = 0, self.num_section_headers - 1 do
-      self._raw__m_section_headers[i + 1] = self._io:read_bytes(self.len_section_headers)
+      self._raw__m_section_headers[i + 1] = self._io:read_bytes(self.section_header_size)
       local _io = KaitaiStream(stringstream(self._raw__m_section_headers[i + 1]))
       self._m_section_headers[i + 1] = Elf.EndianElf.SectionHeader(_io, self, self._root, self._is_le)
     end
