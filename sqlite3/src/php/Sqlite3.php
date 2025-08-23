@@ -175,7 +175,7 @@ namespace {
 
 namespace Sqlite3 {
     class Serial extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Sqlite3 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, \Sqlite3\Serials $_parent = null, \Sqlite3 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -283,7 +283,7 @@ namespace Sqlite3 {
             $this->_m_entries = [];
             $i = 0;
             while (!$this->_io->isEof()) {
-                $this->_m_entries[] = new \VlqBase128Be($this->_io);
+                $this->_m_entries[] = new \Sqlite3\Serial($this->_io, $this, $this->_root);
                 $i++;
             }
         }
@@ -391,9 +391,9 @@ namespace Sqlite3 {
 
 namespace Sqlite3 {
     class ColumnContent extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Struct $ser, \Kaitai\Struct\Stream $_io, \Sqlite3\CellPayload $_parent = null, \Sqlite3 $_root = null) {
+        public function __construct(\Sqlite3\Serial $serialType, \Kaitai\Struct\Stream $_io, \Sqlite3\CellPayload $_parent = null, \Sqlite3 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
-            $this->_m_ser = $ser;
+            $this->_m_serialType = $serialType;
             $this->_read();
         }
 
@@ -428,23 +428,16 @@ namespace Sqlite3 {
             }
             $this->_m_asStr = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->serialType()->lenContent()), "UTF-8");
         }
-        protected $_m_serialType;
-        public function serialType() {
-            if ($this->_m_serialType !== null)
-                return $this->_m_serialType;
-            $this->_m_serialType = $this->ser();
-            return $this->_m_serialType;
-        }
         protected $_m_asInt;
         protected $_m_asFloat;
         protected $_m_asBlob;
         protected $_m_asStr;
-        protected $_m_ser;
+        protected $_m_serialType;
         public function asInt() { return $this->_m_asInt; }
         public function asFloat() { return $this->_m_asFloat; }
         public function asBlob() { return $this->_m_asBlob; }
         public function asStr() { return $this->_m_asStr; }
-        public function ser() { return $this->_m_ser; }
+        public function serialType() { return $this->_m_serialType; }
     }
 }
 

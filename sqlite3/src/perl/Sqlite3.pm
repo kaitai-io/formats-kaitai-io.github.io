@@ -420,7 +420,7 @@ sub _read {
 
     $self->{entries} = ();
     while (!$self->{_io}->is_eof()) {
-        push @{$self->{entries}}, VlqBase128Be->new($self->{_io});
+        push @{$self->{entries}}, Sqlite3::Serial->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -708,13 +708,6 @@ sub _read {
     $self->{as_str} = Encode::decode("UTF-8", $self->{_io}->read_bytes($self->serial_type()->len_content()));
 }
 
-sub serial_type {
-    my ($self) = @_;
-    return $self->{serial_type} if ($self->{serial_type});
-    $self->{serial_type} = $self->ser();
-    return $self->{serial_type};
-}
-
 sub as_int {
     my ($self) = @_;
     return $self->{as_int};
@@ -735,9 +728,9 @@ sub as_str {
     return $self->{as_str};
 }
 
-sub ser {
+sub serial_type {
     my ($self) = @_;
-    return $self->{ser};
+    return $self->{serial_type};
 }
 
 ########################################################################

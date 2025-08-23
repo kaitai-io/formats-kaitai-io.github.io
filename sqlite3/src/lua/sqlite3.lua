@@ -221,7 +221,7 @@ function Sqlite3.Serials:_read()
   self.entries = {}
   local i = 0
   while not self._io:is_eof() do
-    self.entries[i + 1] = VlqBase128Be(self._io)
+    self.entries[i + 1] = Sqlite3.Serial(self._io, self, self._root)
     i = i + 1
   end
 end
@@ -309,11 +309,11 @@ end
 
 Sqlite3.ColumnContent = class.class(KaitaiStruct)
 
-function Sqlite3.ColumnContent:_init(ser, io, parent, root)
+function Sqlite3.ColumnContent:_init(serial_type, io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
   self._root = root or self
-  self.ser = ser
+  self.serial_type = serial_type
   self:_read()
 end
 
@@ -341,16 +341,6 @@ function Sqlite3.ColumnContent:_read()
     self.as_blob = self._io:read_bytes(self.serial_type.len_content)
   end
   self.as_str = str_decode.decode(self._io:read_bytes(self.serial_type.len_content), "UTF-8")
-end
-
-Sqlite3.ColumnContent.property.serial_type = {}
-function Sqlite3.ColumnContent.property.serial_type:get()
-  if self._m_serial_type ~= nil then
-    return self._m_serial_type
-  end
-
-  self._m_serial_type = self.ser
-  return self._m_serial_type
 end
 
 

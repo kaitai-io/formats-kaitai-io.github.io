@@ -115,11 +115,11 @@ public class Sqlite3 extends KaitaiStruct {
             this(_io, null, null);
         }
 
-        public Serial(KaitaiStream _io, KaitaiStruct _parent) {
+        public Serial(KaitaiStream _io, Sqlite3.Serials _parent) {
             this(_io, _parent, null);
         }
 
-        public Serial(KaitaiStream _io, KaitaiStruct _parent, Sqlite3 _root) {
+        public Serial(KaitaiStream _io, Sqlite3.Serials _parent, Sqlite3 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
@@ -156,10 +156,10 @@ public class Sqlite3 extends KaitaiStruct {
         }
         private VlqBase128Be code;
         private Sqlite3 _root;
-        private KaitaiStruct _parent;
+        private Sqlite3.Serials _parent;
         public VlqBase128Be code() { return code; }
         public Sqlite3 _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
+        public Sqlite3.Serials _parent() { return _parent; }
     }
     public static class BtreePage extends KaitaiStruct {
         public static BtreePage fromFile(String fileName) throws IOException {
@@ -273,19 +273,19 @@ public class Sqlite3 extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.entries = new ArrayList<VlqBase128Be>();
+            this.entries = new ArrayList<Serial>();
             {
                 int i = 0;
                 while (!this._io.isEof()) {
-                    this.entries.add(new VlqBase128Be(this._io));
+                    this.entries.add(new Serial(this._io, this, _root));
                     i++;
                 }
             }
         }
-        private ArrayList<VlqBase128Be> entries;
+        private ArrayList<Serial> entries;
         private Sqlite3 _root;
         private Sqlite3.CellPayload _parent;
-        public ArrayList<VlqBase128Be> entries() { return entries; }
+        public ArrayList<Serial> entries() { return entries; }
         public Sqlite3 _root() { return _root; }
         public Sqlite3.CellPayload _parent() { return _parent; }
     }
@@ -459,19 +459,19 @@ public class Sqlite3 extends KaitaiStruct {
     }
     public static class ColumnContent extends KaitaiStruct {
 
-        public ColumnContent(KaitaiStream _io, KaitaiStruct ser) {
-            this(_io, null, null, ser);
+        public ColumnContent(KaitaiStream _io, Serial serialType) {
+            this(_io, null, null, serialType);
         }
 
-        public ColumnContent(KaitaiStream _io, Sqlite3.CellPayload _parent, KaitaiStruct ser) {
-            this(_io, _parent, null, ser);
+        public ColumnContent(KaitaiStream _io, Sqlite3.CellPayload _parent, Serial serialType) {
+            this(_io, _parent, null, serialType);
         }
 
-        public ColumnContent(KaitaiStream _io, Sqlite3.CellPayload _parent, Sqlite3 _root, KaitaiStruct ser) {
+        public ColumnContent(KaitaiStream _io, Sqlite3.CellPayload _parent, Sqlite3 _root, Serial serialType) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            this.ser = ser;
+            this.serialType = serialType;
             _read();
         }
         private void _read() {
@@ -511,25 +511,18 @@ public class Sqlite3 extends KaitaiStruct {
             }
             this.asStr = new String(this._io.readBytes(serialType().lenContent()), Charset.forName("UTF-8"));
         }
-        private Sqlite3.Serial serialType;
-        public Sqlite3.Serial serialType() {
-            if (this.serialType != null)
-                return this.serialType;
-            this.serialType = ((Sqlite3.Serial) (ser()));
-            return this.serialType;
-        }
         private Integer asInt;
         private Double asFloat;
         private byte[] asBlob;
         private String asStr;
-        private KaitaiStruct ser;
+        private Serial serialType;
         private Sqlite3 _root;
         private Sqlite3.CellPayload _parent;
         public Integer asInt() { return asInt; }
         public Double asFloat() { return asFloat; }
         public byte[] asBlob() { return asBlob; }
         public String asStr() { return asStr; }
-        public KaitaiStruct ser() { return ser; }
+        public Serial serialType() { return serialType; }
         public Sqlite3 _root() { return _root; }
         public Sqlite3.CellPayload _parent() { return _parent; }
     }

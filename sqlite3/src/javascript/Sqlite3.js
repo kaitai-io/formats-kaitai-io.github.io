@@ -183,7 +183,7 @@ var Sqlite3 = (function() {
       this.entries = [];
       var i = 0;
       while (!this._io.isEof()) {
-        this.entries.push(new VlqBase128Be(this._io, this, null));
+        this.entries.push(new Serial(this._io, this, this._root));
         i++;
       }
     }
@@ -284,11 +284,11 @@ var Sqlite3 = (function() {
   })();
 
   var ColumnContent = Sqlite3.ColumnContent = (function() {
-    function ColumnContent(_io, _parent, _root, ser) {
+    function ColumnContent(_io, _parent, _root, serialType) {
       this._io = _io;
       this._parent = _parent;
       this._root = _root || this;
-      this.ser = ser;
+      this.serialType = serialType;
 
       this._read();
     }
@@ -323,14 +323,6 @@ var Sqlite3 = (function() {
       }
       this.asStr = KaitaiStream.bytesToStr(this._io.readBytes(this.serialType.lenContent), "UTF-8");
     }
-    Object.defineProperty(ColumnContent.prototype, 'serialType', {
-      get: function() {
-        if (this._m_serialType !== undefined)
-          return this._m_serialType;
-        this._m_serialType = this.ser;
-        return this._m_serialType;
-      }
-    });
 
     return ColumnContent;
   })();

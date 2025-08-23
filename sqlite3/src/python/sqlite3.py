@@ -158,7 +158,7 @@ class Sqlite3(KaitaiStruct):
             self.entries = []
             i = 0
             while not self._io.is_eof():
-                self.entries.append(vlq_base128_be.VlqBase128Be(self._io))
+                self.entries.append(Sqlite3.Serial(self._io, self, self._root))
                 i += 1
 
 
@@ -240,11 +240,11 @@ class Sqlite3(KaitaiStruct):
 
 
     class ColumnContent(KaitaiStruct):
-        def __init__(self, ser, _io, _parent=None, _root=None):
+        def __init__(self, serial_type, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
             self._root = _root if _root else self
-            self.ser = ser
+            self.serial_type = serial_type
             self._read()
 
         def _read(self):
@@ -270,14 +270,6 @@ class Sqlite3(KaitaiStruct):
                 self.as_blob = self._io.read_bytes(self.serial_type.len_content)
 
             self.as_str = (self._io.read_bytes(self.serial_type.len_content)).decode(u"UTF-8")
-
-        @property
-        def serial_type(self):
-            if hasattr(self, '_m_serial_type'):
-                return self._m_serial_type
-
-            self._m_serial_type = self.ser
-            return getattr(self, '_m_serial_type', None)
 
 
     class RefCell(KaitaiStruct):

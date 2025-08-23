@@ -68,7 +68,7 @@ public:
 
     public:
 
-        serial_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, sqlite3_t* p__root = 0);
+        serial_t(kaitai::kstream* p__io, sqlite3_t::serials_t* p__parent = 0, sqlite3_t* p__root = 0);
 
     private:
         void _read();
@@ -107,12 +107,12 @@ public:
     private:
         vlq_base128_be_t* m_code;
         sqlite3_t* m__root;
-        kaitai::kstruct* m__parent;
+        sqlite3_t::serials_t* m__parent;
 
     public:
         vlq_base128_be_t* code() const { return m_code; }
         sqlite3_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
+        sqlite3_t::serials_t* _parent() const { return m__parent; }
     };
 
     class btree_page_t : public kaitai::kstruct {
@@ -205,12 +205,12 @@ public:
         ~serials_t();
 
     private:
-        std::vector<vlq_base128_be_t*>* m_entries;
+        std::vector<serial_t*>* m_entries;
         sqlite3_t* m__root;
         sqlite3_t::cell_payload_t* m__parent;
 
     public:
-        std::vector<vlq_base128_be_t*>* entries() const { return m_entries; }
+        std::vector<serial_t*>* entries() const { return m_entries; }
         sqlite3_t* _root() const { return m__root; }
         sqlite3_t::cell_payload_t* _parent() const { return m__parent; }
     };
@@ -357,7 +357,7 @@ public:
 
     public:
 
-        column_content_t(kaitai::kstruct* p_ser, kaitai::kstream* p__io, sqlite3_t::cell_payload_t* p__parent = 0, sqlite3_t* p__root = 0);
+        column_content_t(serial_t* p_serial_type, kaitai::kstream* p__io, sqlite3_t::cell_payload_t* p__parent = 0, sqlite3_t* p__root = 0);
 
     private:
         void _read();
@@ -365,13 +365,6 @@ public:
 
     public:
         ~column_content_t();
-
-    private:
-        bool f_serial_type;
-        sqlite3_t::serial_t* m_serial_type;
-
-    public:
-        sqlite3_t::serial_t* serial_type();
 
     private:
         int32_t m_as_int;
@@ -396,7 +389,7 @@ public:
 
     private:
         std::string m_as_str;
-        kaitai::kstruct* m_ser;
+        serial_t* m_serial_type;
         sqlite3_t* m__root;
         sqlite3_t::cell_payload_t* m__parent;
 
@@ -405,7 +398,7 @@ public:
         double as_float() const { return m_as_float; }
         std::string as_blob() const { return m_as_blob; }
         std::string as_str() const { return m_as_str; }
-        kaitai::kstruct* ser() const { return m_ser; }
+        serial_t* serial_type() const { return m_serial_type; }
         sqlite3_t* _root() const { return m__root; }
         sqlite3_t::cell_payload_t* _parent() const { return m__parent; }
     };

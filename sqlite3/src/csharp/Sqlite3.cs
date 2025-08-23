@@ -88,7 +88,7 @@ namespace Kaitai
                 return new Serial(new KaitaiStream(fileName));
             }
 
-            public Serial(KaitaiStream p__io, KaitaiStruct p__parent = null, Sqlite3 p__root = null) : base(p__io)
+            public Serial(KaitaiStream p__io, Sqlite3.Serials p__parent = null, Sqlite3 p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -144,10 +144,10 @@ namespace Kaitai
             }
             private VlqBase128Be _code;
             private Sqlite3 m_root;
-            private KaitaiStruct m_parent;
+            private Sqlite3.Serials m_parent;
             public VlqBase128Be Code { get { return _code; } }
             public Sqlite3 M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
+            public Sqlite3.Serials M_Parent { get { return m_parent; } }
         }
         public partial class BtreePage : KaitaiStruct
         {
@@ -247,19 +247,19 @@ namespace Kaitai
             }
             private void _read()
             {
-                _entries = new List<VlqBase128Be>();
+                _entries = new List<Serial>();
                 {
                     var i = 0;
                     while (!m_io.IsEof) {
-                        _entries.Add(new VlqBase128Be(m_io));
+                        _entries.Add(new Serial(m_io, this, m_root));
                         i++;
                     }
                 }
             }
-            private List<VlqBase128Be> _entries;
+            private List<Serial> _entries;
             private Sqlite3 m_root;
             private Sqlite3.CellPayload m_parent;
-            public List<VlqBase128Be> Entries { get { return _entries; } }
+            public List<Serial> Entries { get { return _entries; } }
             public Sqlite3 M_Root { get { return m_root; } }
             public Sqlite3.CellPayload M_Parent { get { return m_parent; } }
         }
@@ -414,12 +414,11 @@ namespace Kaitai
         }
         public partial class ColumnContent : KaitaiStruct
         {
-            public ColumnContent(KaitaiStruct p_ser, KaitaiStream p__io, Sqlite3.CellPayload p__parent = null, Sqlite3 p__root = null) : base(p__io)
+            public ColumnContent(Serial p_serialType, KaitaiStream p__io, Sqlite3.CellPayload p__parent = null, Sqlite3 p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
-                _ser = p_ser;
-                f_serialType = false;
+                _serialType = p_serialType;
                 _read();
             }
             private void _read()
@@ -460,31 +459,18 @@ namespace Kaitai
                 }
                 _asStr = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(SerialType.LenContent));
             }
-            private bool f_serialType;
-            private Sqlite3.Serial _serialType;
-            public Sqlite3.Serial SerialType
-            {
-                get
-                {
-                    if (f_serialType)
-                        return _serialType;
-                    _serialType = (Sqlite3.Serial) (((Sqlite3.Serial) (Ser)));
-                    f_serialType = true;
-                    return _serialType;
-                }
-            }
             private int _asInt;
             private double? _asFloat;
             private byte[] _asBlob;
             private string _asStr;
-            private KaitaiStruct _ser;
+            private Serial _serialType;
             private Sqlite3 m_root;
             private Sqlite3.CellPayload m_parent;
             public int AsInt { get { return _asInt; } }
             public double? AsFloat { get { return _asFloat; } }
             public byte[] AsBlob { get { return _asBlob; } }
             public string AsStr { get { return _asStr; } }
-            public KaitaiStruct Ser { get { return _ser; } }
+            public Serial SerialType { get { return _serialType; } }
             public Sqlite3 M_Root { get { return m_root; } }
             public Sqlite3.CellPayload M_Parent { get { return m_parent; } }
         }

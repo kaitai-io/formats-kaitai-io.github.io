@@ -157,7 +157,7 @@ class Sqlite3 < Kaitai::Struct::Struct
       @entries = []
       i = 0
       while not @_io.eof?
-        @entries << VlqBase128Be.new(@_io)
+        @entries << Serial.new(@_io, self, @_root)
         i += 1
       end
       self
@@ -251,9 +251,9 @@ class Sqlite3 < Kaitai::Struct::Struct
     attr_reader :_raw_payload
   end
   class ColumnContent < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self, ser)
+    def initialize(_io, _parent = nil, _root = self, serial_type)
       super(_io, _parent, _root)
-      @ser = ser
+      @serial_type = serial_type
       _read
     end
 
@@ -283,16 +283,11 @@ class Sqlite3 < Kaitai::Struct::Struct
       @as_str = (@_io.read_bytes(serial_type.len_content)).force_encoding("UTF-8")
       self
     end
-    def serial_type
-      return @serial_type unless @serial_type.nil?
-      @serial_type = ser
-      @serial_type
-    end
     attr_reader :as_int
     attr_reader :as_float
     attr_reader :as_blob
     attr_reader :as_str
-    attr_reader :ser
+    attr_reader :serial_type
   end
   class RefCell < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)

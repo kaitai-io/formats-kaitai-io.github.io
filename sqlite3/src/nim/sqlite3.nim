@@ -41,7 +41,7 @@ type
     utf_16be = 3
   Sqlite3_Serial* = ref object of KaitaiStruct
     `code`*: VlqBase128Be
-    `parent`*: KaitaiStruct
+    `parent`*: Sqlite3_Serials
     `isBlobInst`: bool
     `isBlobInstFlag`: bool
     `isStringInst`: bool
@@ -63,7 +63,7 @@ type
     `parent`*: Sqlite3_RefCell
     `rawPayload`*: seq[byte]
   Sqlite3_Serials* = ref object of KaitaiStruct
-    `entries`*: seq[VlqBase128Be]
+    `entries`*: seq[Sqlite3_Serial]
     `parent`*: Sqlite3_CellPayload
   Sqlite3_CellTableLeaf* = ref object of KaitaiStruct
     `lenPayload`*: VlqBase128Be
@@ -92,10 +92,8 @@ type
     `asFloat`*: float64
     `asBlob`*: seq[byte]
     `asStr`*: string
-    `ser`*: KaitaiStruct
+    `serialType`*: Sqlite3_Serial
     `parent`*: Sqlite3_CellPayload
-    `serialTypeInst`: Sqlite3_Serial
-    `serialTypeInstFlag`: bool
   Sqlite3_RefCell* = ref object of KaitaiStruct
     `ofsBody`*: uint16
     `parent`*: Sqlite3_BtreePage
@@ -103,7 +101,7 @@ type
     `bodyInstFlag`: bool
 
 proc read*(_: typedesc[Sqlite3], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Sqlite3
-proc read*(_: typedesc[Sqlite3_Serial], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Sqlite3_Serial
+proc read*(_: typedesc[Sqlite3_Serial], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3_Serials): Sqlite3_Serial
 proc read*(_: typedesc[Sqlite3_BtreePage], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3): Sqlite3_BtreePage
 proc read*(_: typedesc[Sqlite3_CellIndexLeaf], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3_RefCell): Sqlite3_CellIndexLeaf
 proc read*(_: typedesc[Sqlite3_Serials], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3_CellPayload): Sqlite3_Serials
@@ -111,14 +109,13 @@ proc read*(_: typedesc[Sqlite3_CellTableLeaf], io: KaitaiStream, root: KaitaiStr
 proc read*(_: typedesc[Sqlite3_CellPayload], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Sqlite3_CellPayload
 proc read*(_: typedesc[Sqlite3_CellTableInterior], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3_RefCell): Sqlite3_CellTableInterior
 proc read*(_: typedesc[Sqlite3_CellIndexInterior], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3_RefCell): Sqlite3_CellIndexInterior
-proc read*(_: typedesc[Sqlite3_ColumnContent], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3_CellPayload, ser: any): Sqlite3_ColumnContent
+proc read*(_: typedesc[Sqlite3_ColumnContent], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3_CellPayload, serialType: any): Sqlite3_ColumnContent
 proc read*(_: typedesc[Sqlite3_RefCell], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3_BtreePage): Sqlite3_RefCell
 
 proc lenPage*(this: Sqlite3): int
 proc isBlob*(this: Sqlite3_Serial): bool
 proc isString*(this: Sqlite3_Serial): bool
 proc lenContent*(this: Sqlite3_Serial): int
-proc serialType*(this: Sqlite3_ColumnContent): Sqlite3_Serial
 proc body*(this: Sqlite3_RefCell): KaitaiStruct
 
 
@@ -270,7 +267,7 @@ proc lenPage(this: Sqlite3): int =
 proc fromFile*(_: typedesc[Sqlite3], filename: string): Sqlite3 =
   Sqlite3.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[Sqlite3_Serial], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Sqlite3_Serial =
+proc read*(_: typedesc[Sqlite3_Serial], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3_Serials): Sqlite3_Serial =
   template this: untyped = result
   this = new(Sqlite3_Serial)
   let root = if root == nil: cast[Sqlite3](this) else: cast[Sqlite3](root)
@@ -371,7 +368,7 @@ proc read*(_: typedesc[Sqlite3_Serials], io: KaitaiStream, root: KaitaiStruct, p
   block:
     var i: int
     while not this.io.isEof:
-      let it = VlqBase128Be.read(this.io, this.root, this)
+      let it = Sqlite3_Serial.read(this.io, this.root, this)
       this.entries.add(it)
       inc i
 
@@ -474,15 +471,15 @@ proc read*(_: typedesc[Sqlite3_CellIndexInterior], io: KaitaiStream, root: Kaita
 proc fromFile*(_: typedesc[Sqlite3_CellIndexInterior], filename: string): Sqlite3_CellIndexInterior =
   Sqlite3_CellIndexInterior.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[Sqlite3_ColumnContent], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3_CellPayload, ser: any): Sqlite3_ColumnContent =
+proc read*(_: typedesc[Sqlite3_ColumnContent], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3_CellPayload, serialType: any): Sqlite3_ColumnContent =
   template this: untyped = result
   this = new(Sqlite3_ColumnContent)
   let root = if root == nil: cast[Sqlite3](this) else: cast[Sqlite3](root)
   this.io = io
   this.root = root
   this.parent = parent
-  let serExpr = KaitaiStruct(ser)
-  this.ser = serExpr
+  let serialTypeExpr = Sqlite3_Serial(serialType)
+  this.serialType = serialTypeExpr
 
   if  ((this.serialType.code.value >= 1) and (this.serialType.code.value <= 6)) :
     block:
@@ -513,14 +510,6 @@ proc read*(_: typedesc[Sqlite3_ColumnContent], io: KaitaiStream, root: KaitaiStr
     this.asBlob = asBlobExpr
   let asStrExpr = encode(this.io.readBytes(int(this.serialType.lenContent)), "UTF-8")
   this.asStr = asStrExpr
-
-proc serialType(this: Sqlite3_ColumnContent): Sqlite3_Serial = 
-  if this.serialTypeInstFlag:
-    return this.serialTypeInst
-  let serialTypeInstExpr = Sqlite3_Serial((Sqlite3_Serial(this.ser)))
-  this.serialTypeInst = serialTypeInstExpr
-  this.serialTypeInstFlag = true
-  return this.serialTypeInst
 
 proc fromFile*(_: typedesc[Sqlite3_ColumnContent], filename: string): Sqlite3_ColumnContent =
   Sqlite3_ColumnContent.read(newKaitaiFileStream(filename), nil, nil)

@@ -48,7 +48,7 @@ sqlite3_t::~sqlite3_t() {
 void sqlite3_t::_clean_up() {
 }
 
-sqlite3_t::serial_t::serial_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, sqlite3_t* p__root) : kaitai::kstruct(p__io) {
+sqlite3_t::serial_t::serial_t(kaitai::kstream* p__io, sqlite3_t::serials_t* p__parent, sqlite3_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
     m_code = nullptr;
@@ -162,11 +162,11 @@ sqlite3_t::serials_t::serials_t(kaitai::kstream* p__io, sqlite3_t::cell_payload_
 }
 
 void sqlite3_t::serials_t::_read() {
-    m_entries = std::unique_ptr<std::vector<std::unique_ptr<vlq_base128_be_t>>>(new std::vector<std::unique_ptr<vlq_base128_be_t>>());
+    m_entries = std::unique_ptr<std::vector<std::unique_ptr<serial_t>>>(new std::vector<std::unique_ptr<serial_t>>());
     {
         int i = 0;
         while (!m__io->is_eof()) {
-            m_entries->push_back(std::move(std::unique_ptr<vlq_base128_be_t>(new vlq_base128_be_t(m__io))));
+            m_entries->push_back(std::move(std::unique_ptr<serial_t>(new serial_t(m__io, this, m__root))));
             i++;
         }
     }
@@ -276,11 +276,10 @@ sqlite3_t::cell_index_interior_t::~cell_index_interior_t() {
 void sqlite3_t::cell_index_interior_t::_clean_up() {
 }
 
-sqlite3_t::column_content_t::column_content_t(kaitai::kstruct* p_ser, kaitai::kstream* p__io, sqlite3_t::cell_payload_t* p__parent, sqlite3_t* p__root) : kaitai::kstruct(p__io) {
+sqlite3_t::column_content_t::column_content_t(serial_t* p_serial_type, kaitai::kstream* p__io, sqlite3_t::cell_payload_t* p__parent, sqlite3_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
-    m_ser = p_ser;
-    f_serial_type = false;
+    m_serial_type = p_serial_type;
     _read();
 }
 
@@ -346,14 +345,6 @@ void sqlite3_t::column_content_t::_clean_up() {
     }
     if (!n_as_blob) {
     }
-}
-
-sqlite3_t::serial_t* sqlite3_t::column_content_t::serial_type() {
-    if (f_serial_type)
-        return m_serial_type;
-    m_serial_type = static_cast<sqlite3_t::serial_t*>(ser());
-    f_serial_type = true;
-    return m_serial_type;
 }
 
 sqlite3_t::ref_cell_t::ref_cell_t(kaitai::kstream* p__io, sqlite3_t::btree_page_t* p__parent, sqlite3_t* p__root) : kaitai::kstruct(p__io) {
